@@ -5,7 +5,7 @@
 // Supports: integers, decimals, fractions, ordered pairs, expressions, etc.
 // =============================================================================
 
-import type { AnswerType } from './mathathlone-generators';
+import type { AnswerType } from './generators';
 
 export interface ValidationResult {
   is_correct: boolean;

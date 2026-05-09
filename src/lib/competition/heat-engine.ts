@@ -7,8 +7,8 @@
 // =============================================================================
 
 import { createClient, SupabaseClient, RealtimeChannel } from '@supabase/supabase-js';
-import { generateQuestion, type GeneratedQuestion, type DifficultyLevel } from './mathathlone-generators';
-import { validateAnswer, calculateCTAScore, type ValidationResult, type CTAScoreComponents } from './mathathlone-validation';
+import { generateQuestion, type GeneratedQuestion, type DifficultyLevel } from './generators';
+import { validateAnswer, calculateCTAScore, type ValidationResult, type CTAScoreComponents } from './validation';
 
 // -----------------------------------------------------------------------------
 // TYPES

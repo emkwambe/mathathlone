@@ -8,7 +8,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabase/client';
+import { createClient } from '@/lib/supabase/client';
 import {
   Flame,
   Clock,
@@ -157,6 +157,7 @@ function IntegrityLevelCard({ config, isSelected, onSelect }: IntegrityLevelCard
 
 export default function CreateHeatPage() {
   const router = useRouter();
+  const supabase = createClient();
 
   // Form state
   const [heatType, setHeatType] = useState<HeatType>('sprint');

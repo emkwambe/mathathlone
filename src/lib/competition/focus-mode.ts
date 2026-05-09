@@ -4,7 +4,7 @@
 // src/lib/competition/focus-mode.ts
 // =============================================================================
 
-import { supabase } from '@/lib/supabase/client';
+import { createClient } from '@/lib/supabase/client';
 
 // -----------------------------------------------------------------------------
 // Types
@@ -87,7 +87,10 @@ export class FocusMode {
   private blurStart: number | null = null;
   private totalPenaltySeconds = 0;
   private isFullscreen = false;
-
+  
+  // Supabase client for persisting violations
+  private supabase = createClient();
+  
   constructor(
     participationId: string,
     config: IntegrityConfig,
@@ -421,7 +424,7 @@ export class FocusMode {
 
   private async persistViolation(violation: FocusViolation): Promise<void> {
     try {
-      const { error } = await supabase
+      const { error } = await this.supabase
         .from('focus_violations')
         .insert({
           heat_participation_id: violation.heat_participation_id,
@@ -474,6 +477,7 @@ export class FocusMode {
 // -----------------------------------------------------------------------------
 
 export async function loadIntegrityConfig(level: IntegrityLevel): Promise<IntegrityConfig | null> {
+  const supabase = createClient();
   
   const { data, error } = await supabase
     .from('integrity_configs')

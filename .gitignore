@@ -46,3 +46,12 @@ next-env.d.ts
 # Supabase local dev
 **/supabase/.branches
 **/supabase/.temp
+# Database backups (never commit)
+*.backup.gz
+*.dump
+*.sql.gz
+
+# Database backups (never commit)
+*.backup.gz
+*.dump
+*.sql.gz

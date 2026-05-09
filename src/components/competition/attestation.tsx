@@ -7,7 +7,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { supabase } from '@/lib/supabase/client';
+import { createClient } from '@/lib/supabase/client';
 import {
   ShieldCheck,
   UserCheck,
@@ -67,6 +67,7 @@ export function TeacherAttestationForm({
   integrityLevel,
   onComplete,
 }: AttestationFormProps) {
+  const supabase = createClient();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
@@ -461,6 +462,7 @@ interface QualificationGateProps {
 }
 
 export function QualificationGate({ leagueId, fromLevel, toLevel }: QualificationGateProps) {
+  const supabase = createClient();
   const [reviews, setReviews] = useState<QualificationReview[]>([]);
   const [loading, setLoading] = useState(true);
 
