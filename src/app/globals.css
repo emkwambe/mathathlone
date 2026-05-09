@@ -1,0 +1,174 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* KaTeX math rendering */
+@import 'katex/dist/katex.min.css';
+
+/* Base styles */
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+  }
+
+  body {
+    @apply bg-white text-gray-900 antialiased;
+  }
+}
+
+/* Custom components */
+@layer components {
+  /* Medal badges */
+  .medal-gold {
+    @apply bg-gradient-to-br from-amber-300 to-amber-500 text-amber-900 shadow-lg;
+  }
+
+  .medal-silver {
+    @apply bg-gradient-to-br from-gray-300 to-gray-400 text-gray-800 shadow-lg;
+  }
+
+  .medal-bronze {
+    @apply bg-gradient-to-br from-amber-600 to-amber-700 text-amber-100 shadow-lg;
+  }
+
+  /* Depth level indicators */
+  .depth-badge {
+    @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-medium;
+  }
+
+  .depth-1 { @apply bg-green-100 text-green-800; }
+  .depth-2 { @apply bg-blue-100 text-blue-800; }
+  .depth-3 { @apply bg-purple-100 text-purple-800; }
+  .depth-4 { @apply bg-red-100 text-red-800; }
+
+  /* CTA score display */
+  .cta-score {
+    @apply text-4xl font-bold tabular-nums;
+  }
+
+  /* Progress bars */
+  .progress-bar {
+    @apply h-2 rounded-full bg-gray-200 overflow-hidden;
+  }
+
+  .progress-fill {
+    @apply h-full rounded-full transition-all duration-300;
+  }
+
+  /* Question card */
+  .question-card {
+    @apply bg-white rounded-xl shadow-lg p-8 border border-gray-100;
+  }
+
+  /* Answer input */
+  .answer-input {
+    @apply w-full text-center text-2xl font-mono py-4 px-6 border-2 border-gray-300 rounded-lg 
+           focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 outline-none
+           transition-colors;
+  }
+
+  /* Submit button */
+  .submit-btn {
+    @apply w-full py-4 px-8 bg-brand-primary text-white font-semibold rounded-lg
+           hover:bg-blue-700 active:bg-blue-800 transition-colors
+           disabled:bg-gray-300 disabled:cursor-not-allowed;
+  }
+
+  /* Timer display */
+  .timer-display {
+    @apply font-mono text-xl tabular-nums;
+  }
+
+  .timer-warning {
+    @apply text-amber-600 animate-pulse;
+  }
+
+  .timer-critical {
+    @apply text-red-600 animate-pulse-slow;
+  }
+
+  /* Pace indicator */
+  .pace-indicator {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
+  }
+
+  /* Podium styles */
+  .podium-first {
+    @apply bg-gradient-to-b from-amber-200 to-amber-400;
+  }
+
+  .podium-second {
+    @apply bg-gradient-to-b from-gray-200 to-gray-300;
+  }
+
+  .podium-third {
+    @apply bg-gradient-to-b from-amber-500 to-amber-600;
+  }
+
+  /* Fair Play banner */
+  .fair-play-banner {
+    @apply bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500 p-4 rounded-r-lg;
+  }
+}
+
+/* Utility classes */
+@layer utilities {
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Country flag sizing */
+  .flag-sm { @apply w-4 h-3; }
+  .flag-md { @apply w-6 h-4; }
+  .flag-lg { @apply w-8 h-6; }
+
+  /* Tabular numbers for scores */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* KaTeX overrides for competition display */
+.katex-display {
+  @apply text-2xl my-4;
+}
+
+.katex {
+  font-size: 1.1em;
+}
+
+/* Focus detection overlay */
+.focus-warning-overlay {
+  @apply fixed inset-0 bg-red-500/90 flex items-center justify-center z-50;
+}
+
+/* Heat waiting room animations */
+@keyframes waitingDot {
+  0%, 20% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.waiting-dots span {
+  animation: waitingDot 1.4s infinite;
+}
+
+.waiting-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.waiting-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
