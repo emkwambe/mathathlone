@@ -1,8 +1,9 @@
-// =============================================================================
-// MathAthlone Heat Creation Page with Integrity Settings
-// =============================================================================
+// ============================================================
+// MathAthlone — Create Heat Page (Schema-Corrected)
 // src/app/compete/create/page.tsx
-// =============================================================================
+// Maps to actual heats table columns
+// © Mpingo Systems LLC
+// ============================================================
 
 'use client';
 
@@ -10,237 +11,167 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import {
-  Flame,
-  Clock,
-  Target,
-  Trophy,
-  ChevronRight,
-  Shield,
-  ShieldCheck,
-  ShieldAlert,
-  Lock,
-  Eye,
-  Video,
-  UserCheck,
-  AlertTriangle,
-  Info,
-  Check,
+  Flame, Clock, Target, Trophy, Shield, ShieldCheck, ShieldAlert,
+  Lock, Eye, Video, UserCheck, AlertTriangle, Check, ChevronRight,
 } from 'lucide-react';
 
-// -----------------------------------------------------------------------------
-// Types
-// -----------------------------------------------------------------------------
-
-type IntegrityLevel = 'practice' | 'school' | 'district' | 'regional' | 'state' | 'national';
-type HeatType = 'sprint' | 'target' | 'practice' | 'championship';
-
-interface IntegrityConfig {
-  level: IntegrityLevel;
-  display_name: string;
-  description: string;
-  focus_mode_enabled: boolean;
-  fullscreen_required: boolean;
-  copy_paste_blocked: boolean;
-  lockdown_browser_required: boolean;
-  synchronized_start: boolean;
-  teacher_attestation_required: boolean;
-  identity_verification_required: boolean;
-  session_recording_enabled: boolean;
-  anomaly_detection_enabled: boolean;
-  warning_threshold: number;
-  flag_threshold: number;
-}
+// ────────────────────────────────────────────────────────────
+// TYPES
+// ────────────────────────────────────────────────────────────
 
 interface Topic {
   id: string;
   name: string;
-  course_id: string;
 }
 
-// -----------------------------------------------------------------------------
-// Integrity Level Card Component
-// -----------------------------------------------------------------------------
-
-interface IntegrityLevelCardProps {
-  config: IntegrityConfig;
-  isSelected: boolean;
-  onSelect: () => void;
+interface IntegrityConfig {
+  focus_mode_enabled: boolean;
+  fullscreen_required: boolean;
+  copy_paste_blocked: boolean;
+  anomaly_detection: boolean;
+  teacher_attestation_required: boolean;
+  lockdown_browser_required: boolean;
+  recording_required: boolean;
+  synchronized_start: boolean;
 }
 
-function IntegrityLevelCard({ config, isSelected, onSelect }: IntegrityLevelCardProps) {
-  const levelIcons: Record<IntegrityLevel, React.ReactNode> = {
-    practice: <Shield className="w-6 h-6" />,
-    school: <ShieldCheck className="w-6 h-6" />,
-    district: <ShieldCheck className="w-6 h-6" />,
-    regional: <ShieldAlert className="w-6 h-6" />,
-    state: <Lock className="w-6 h-6" />,
-    national: <Lock className="w-6 h-6" />,
-  };
+type HeatPreset = 'sprint' | 'target' | 'practice' | 'championship';
+type IntegrityLevel = 'practice' | 'school' | 'district' | 'regional' | 'state' | 'national';
+type DifficultyTier = 'bronze' | 'silver' | 'gold' | 'platinum';
 
-  const levelColors: Record<IntegrityLevel, { bg: string; border: string; text: string; icon: string }> = {
-    practice: { bg: 'bg-cyan-50', border: 'border-cyan-200', text: 'text-cyan-700', icon: 'text-cyan-500' },
-    school: { bg: 'bg-green-50', border: 'border-green-200', text: 'text-green-700', icon: 'text-green-500' },
-    district: { bg: 'bg-yellow-50', border: 'border-yellow-200', text: 'text-yellow-700', icon: 'text-yellow-600' },
-    regional: { bg: 'bg-orange-50', border: 'border-orange-200', text: 'text-orange-700', icon: 'text-orange-500' },
-    state: { bg: 'bg-red-50', border: 'border-red-200', text: 'text-red-700', icon: 'text-red-500' },
-    national: { bg: 'bg-purple-50', border: 'border-purple-200', text: 'text-purple-700', icon: 'text-purple-500' },
-  };
+// ────────────────────────────────────────────────────────────
+// CONSTANTS
+// ────────────────────────────────────────────────────────────
 
-  const colors = levelColors[config.level];
+const HEAT_PRESETS: Record<HeatPreset, { label: string; icon: React.ReactNode; questions: number; minutes: number; desc: string }> = {
+  sprint:       { label: 'Sprint',       icon: <Flame className="w-5 h-5" />,  questions: 20, minutes: 15, desc: '15 min · 20 questions' },
+  target:       { label: 'Target',       icon: <Target className="w-5 h-5" />, questions: 10, minutes: 20, desc: '20 min · 10 questions' },
+  practice:     { label: 'Practice',     icon: <Clock className="w-5 h-5" />,  questions: 15, minutes: 30, desc: '30 min · 15 questions' },
+  championship: { label: 'Championship', icon: <Trophy className="w-5 h-5" />, questions: 25, minutes: 25, desc: '25 min · 25 questions' },
+};
 
-  // Features to display
-  const features = [
-    { enabled: config.focus_mode_enabled, label: 'Focus Mode', icon: Eye },
-    { enabled: config.fullscreen_required, label: 'Fullscreen', icon: Lock },
-    { enabled: config.lockdown_browser_required, label: 'Lockdown', icon: ShieldAlert },
-    { enabled: config.teacher_attestation_required, label: 'Attestation', icon: UserCheck },
-    { enabled: config.session_recording_enabled, label: 'Recording', icon: Video },
-  ].filter(f => f.enabled);
+const DIFFICULTY_TIERS: Record<DifficultyTier, { label: string; depthMin: number; depthMax: number; color: string }> = {
+  bronze:   { label: 'Bronze',   depthMin: 1, depthMax: 2, color: 'text-amber-700 bg-amber-100 border-amber-300' },
+  silver:   { label: 'Silver',   depthMin: 2, depthMax: 3, color: 'text-gray-600 bg-gray-100 border-gray-300' },
+  gold:     { label: 'Gold',     depthMin: 3, depthMax: 4, color: 'text-yellow-700 bg-yellow-100 border-yellow-300' },
+  platinum: { label: 'Platinum', depthMin: 4, depthMax: 4, color: 'text-indigo-700 bg-indigo-100 border-indigo-300' },
+};
+
+const INTEGRITY_LEVELS: Record<IntegrityLevel, { label: string; icon: React.ReactNode; desc: string; config: IntegrityConfig }> = {
+  practice: {
+    label: 'Practice', icon: <Shield className="w-5 h-5" />,
+    desc: 'Classroom practice with light logging',
+    config: { focus_mode_enabled: false, fullscreen_required: false, copy_paste_blocked: false, anomaly_detection: false, teacher_attestation_required: false, lockdown_browser_required: false, recording_required: false, synchronized_start: false },
+  },
+  school: {
+    label: 'School League', icon: <ShieldCheck className="w-5 h-5" />,
+    desc: 'Internal school competition with Focus Mode',
+    config: { focus_mode_enabled: true, fullscreen_required: false, copy_paste_blocked: false, anomaly_detection: false, teacher_attestation_required: false, lockdown_browser_required: false, recording_required: false, synchronized_start: false },
+  },
+  district: {
+    label: 'District League', icon: <ShieldAlert className="w-5 h-5" />,
+    desc: 'District competition requiring review',
+    config: { focus_mode_enabled: true, fullscreen_required: true, copy_paste_blocked: true, anomaly_detection: true, teacher_attestation_required: false, lockdown_browser_required: false, recording_required: false, synchronized_start: false },
+  },
+  regional: {
+    label: 'Regional Qualifier', icon: <Eye className="w-5 h-5" />,
+    desc: 'Regional competition with teacher attestation',
+    config: { focus_mode_enabled: true, fullscreen_required: true, copy_paste_blocked: true, anomaly_detection: true, teacher_attestation_required: true, lockdown_browser_required: false, recording_required: false, synchronized_start: true },
+  },
+  state: {
+    label: 'State Championship', icon: <Lock className="w-5 h-5" />,
+    desc: 'State competition with lockdown browser',
+    config: { focus_mode_enabled: true, fullscreen_required: true, copy_paste_blocked: true, anomaly_detection: true, teacher_attestation_required: true, lockdown_browser_required: true, recording_required: false, synchronized_start: true },
+  },
+  national: {
+    label: 'National Finals', icon: <Video className="w-5 h-5" />,
+    desc: 'National competition with full proctoring',
+    config: { focus_mode_enabled: true, fullscreen_required: true, copy_paste_blocked: true, anomaly_detection: true, teacher_attestation_required: true, lockdown_browser_required: true, recording_required: true, synchronized_start: true },
+  },
+};
+
+function generateHeatCode(): string {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code = 'MA';
+  for (let i = 0; i < 4; i++) code += chars[Math.floor(Math.random() * chars.length)];
+  return code;
+}
+
+// ────────────────────────────────────────────────────────────
+// INTEGRITY BADGES
+// ────────────────────────────────────────────────────────────
+
+function IntegrityBadges({ config }: { config: IntegrityConfig }) {
+  const badges = [
+    { on: config.focus_mode_enabled, label: 'Focus Mode', icon: <Eye className="w-3 h-3" /> },
+    { on: config.fullscreen_required, label: 'Fullscreen', icon: <Lock className="w-3 h-3" /> },
+    { on: config.lockdown_browser_required, label: 'Lockdown', icon: <ShieldAlert className="w-3 h-3" /> },
+    { on: config.teacher_attestation_required, label: 'Attestation', icon: <UserCheck className="w-3 h-3" /> },
+    { on: config.recording_required, label: 'Recording', icon: <Video className="w-3 h-3" /> },
+  ];
+
+  const active = badges.filter(b => b.on);
+  if (active.length === 0) return <span className="text-xs text-gray-400 italic">No restrictions</span>;
 
   return (
-    <button
-      onClick={onSelect}
-      className={`
-        w-full p-4 rounded-xl border-2 transition-all text-left
-        ${isSelected
-          ? `${colors.bg} ${colors.border} ring-2 ring-offset-2 ring-${config.level === 'practice' ? 'cyan' : config.level === 'school' ? 'green' : config.level === 'district' ? 'yellow' : config.level === 'regional' ? 'orange' : config.level === 'state' ? 'red' : 'purple'}-400`
-          : 'bg-white border-gray-200 hover:border-gray-300'}
-      `}
-    >
-      <div className="flex items-start gap-3">
-        <div className={`p-2 rounded-lg ${isSelected ? colors.bg : 'bg-gray-100'}`}>
-          <div className={isSelected ? colors.icon : 'text-gray-400'}>
-            {levelIcons[config.level]}
-          </div>
-        </div>
-        
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center justify-between">
-            <h3 className={`font-semibold ${isSelected ? colors.text : 'text-gray-900'}`}>
-              {config.display_name}
-            </h3>
-            {isSelected && (
-              <Check className={`w-5 h-5 ${colors.text}`} />
-            )}
-          </div>
-          
-          <p className="text-sm text-gray-500 mt-1">
-            {config.description}
-          </p>
-
-          {/* Features */}
-          {features.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 mt-3">
-              {features.map((f, i) => (
-                <span
-                  key={i}
-                  className={`
-                    inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium
-                    ${isSelected ? colors.bg + ' ' + colors.text : 'bg-gray-100 text-gray-600'}
-                  `}
-                >
-                  <f.icon className="w-3 h-3" />
-                  {f.label}
-                </span>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-    </button>
+    <div className="flex flex-wrap gap-1.5">
+      {active.map(b => (
+        <span key={b.label} className="inline-flex items-center gap-1 text-xs font-medium text-indigo-700 bg-indigo-50 border border-indigo-200 rounded-full px-2 py-0.5">
+          {b.icon} {b.label}
+        </span>
+      ))}
+    </div>
   );
 }
 
-// -----------------------------------------------------------------------------
-// Main Page Component
-// -----------------------------------------------------------------------------
+// ────────────────────────────────────────────────────────────
+// MAIN COMPONENT
+// ────────────────────────────────────────────────────────────
 
 export default function CreateHeatPage() {
   const router = useRouter();
   const supabase = createClient();
 
-  // Form state
-  const [heatType, setHeatType] = useState<HeatType>('sprint');
-  const [integrityLevel, setIntegrityLevel] = useState<IntegrityLevel>('school');
-  const [selectedTopic, setSelectedTopic] = useState<string>('');
-  const [difficulty, setDifficulty] = useState<number>(2);
-  const [questionCount, setQuestionCount] = useState<number>(20);
-  const [timeMinutes, setTimeMinutes] = useState<number>(15);
-
-  // Data state
-  const [integrityConfigs, setIntegrityConfigs] = useState<IntegrityConfig[]>([]);
+  // State
   const [topics, setTopics] = useState<Topic[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [selectedTopic, setSelectedTopic] = useState<string>('');
+  const [heatPreset, setHeatPreset] = useState<HeatPreset>('sprint');
+  const [difficulty, setDifficulty] = useState<DifficultyTier>('silver');
+  const [integrityLevel, setIntegrityLevel] = useState<IntegrityLevel>('practice');
+  const [questionCount, setQuestionCount] = useState(20);
+  const [durationMinutes, setDurationMinutes] = useState(15);
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Load data on mount
+  // Load topics
   useEffect(() => {
-    async function loadData() {
-      try {
-        // Load integrity configs
-        const { data: configs, error: configError } = await supabase
-          .from('integrity_configs')
-          .select('*')
-          .order('level');
-
-        if (configError) throw configError;
-        setIntegrityConfigs(configs || []);
-
-        // Load topics
-        const { data: topicsData, error: topicsError } = await supabase
-          .from('topics')
-          .select('*')
-          .order('name');
-
-        if (topicsError) throw topicsError;
-        setTopics(topicsData || []);
-
-        if (topicsData && topicsData.length > 0) {
-          setSelectedTopic(topicsData[0].id);
-        }
-      } catch (err) {
-        console.error('Error loading data:', err);
-        setError('Failed to load configuration');
-      } finally {
-        setLoading(false);
+    async function loadTopics() {
+      const { data, error } = await supabase
+        .from('topics')
+        .select('id, name')
+        .order('name');
+      if (data) {
+        setTopics(data);
+        if (data.length > 0) setSelectedTopic(data[0].id);
       }
+      if (error) console.error('Failed to load topics:', error);
+      setLoading(false);
     }
+    loadTopics();
+  }, []);
 
-    loadData();
-  }, [supabase]);
-
-  // Get current integrity config
-  const currentConfig = integrityConfigs.find(c => c.level === integrityLevel);
-
-  // Heat type configs
-  const heatTypes: { type: HeatType; label: string; icon: React.ReactNode; time: number; questions: number }[] = [
-    { type: 'sprint', label: 'Sprint', icon: <Flame className="w-5 h-5" />, time: 15, questions: 20 },
-    { type: 'target', label: 'Target', icon: <Target className="w-5 h-5" />, time: 20, questions: 10 },
-    { type: 'practice', label: 'Practice', icon: <Clock className="w-5 h-5" />, time: 30, questions: 15 },
-    { type: 'championship', label: 'Championship', icon: <Trophy className="w-5 h-5" />, time: 25, questions: 25 },
-  ];
-
-  // Update time/questions when heat type changes
+  // Sync preset → question count + duration
   useEffect(() => {
-    const config = heatTypes.find(h => h.type === heatType);
-    if (config) {
-      setTimeMinutes(config.time);
-      setQuestionCount(config.questions);
-    }
-  }, [heatType]);
+    const preset = HEAT_PRESETS[heatPreset];
+    setQuestionCount(preset.questions);
+    setDurationMinutes(preset.minutes);
+  }, [heatPreset]);
 
-  // Generate heat code
-  function generateHeatCode(): string {
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-    let code = 'MA-';
-    for (let i = 0; i < 4; i++) {
-      code += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return code;
-  }
+  const currentIntegrity = INTEGRITY_LEVELS[integrityLevel];
+  const currentDifficulty = DIFFICULTY_TIERS[difficulty];
 
-  // Create heat
+  // ── CREATE HEAT ──────────────────────────────────────────
   async function handleCreateHeat() {
     if (!selectedTopic) {
       setError('Please select a topic');
@@ -252,26 +183,36 @@ export default function CreateHeatPage() {
 
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('Not authenticated');
+      if (!user) throw new Error('Not authenticated — please log in');
+
+      // Get user's school
+      const { data: profile } = await supabase
+        .from('users')
+        .select('school_id')
+        .eq('id', user.id)
+        .single();
 
       const code = generateHeatCode();
 
+      // Insert with ACTUAL heats table columns
       const { data: heat, error: createError } = await supabase
         .from('heats')
         .insert({
           code,
-          heat_type: heatType,
-          integrity_level: integrityLevel,
+          type: heatPreset,                                       // sprint, target, practice, championship
+          integrity_level: integrityLevel,                        // practice, school, district, etc.
           topic_id: selectedTopic,
-          difficulty,
+          depth_min: currentDifficulty.depthMin,                  // 1-4
+          depth_max: currentDifficulty.depthMax,                  // 1-4
           question_count: questionCount,
-          time_limit_minutes: timeMinutes,
-          status: 'waiting',
+          duration_seconds: durationMinutes * 60,                  // convert to seconds
+          status: 'lobby',
           created_by: user.id,
-          requires_attestation: currentConfig?.teacher_attestation_required || false,
-          lockdown_required: currentConfig?.lockdown_browser_required || false,
-          synchronized_start_at: currentConfig?.synchronized_start 
-            ? new Date(Date.now() + 5 * 60 * 1000).toISOString() // 5 min from now
+          school_id: profile?.school_id || null,
+          requires_attestation: currentIntegrity.config.teacher_attestation_required,
+          lockdown_required: currentIntegrity.config.lockdown_browser_required,
+          synchronized_start_at: currentIntegrity.config.synchronized_start
+            ? new Date(Date.now() + 5 * 60 * 1000).toISOString()
             : null,
         })
         .select()
@@ -279,7 +220,6 @@ export default function CreateHeatPage() {
 
       if (createError) throw createError;
 
-      // Navigate to the heat lobby
       router.push(`/compete/${code}`);
     } catch (err) {
       console.error('Error creating heat:', err);
@@ -289,244 +229,240 @@ export default function CreateHeatPage() {
     }
   }
 
+  // ── LOADING ──────────────────────────────────────────────
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <div className="w-12 h-12 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading...</p>
+          <div className="w-10 h-10 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mx-auto" />
+          <p className="mt-4 text-gray-500 text-sm">Loading topics...</p>
         </div>
       </div>
     );
   }
 
+  // ── RENDER ───────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4">
+    <div className="min-h-screen bg-gray-50 py-8 px-4">
+      <div className="max-w-2xl mx-auto">
+
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Create a Heat</h1>
-          <p className="text-gray-600 mt-2">
-            Set up a new competition for your students
-          </p>
+          <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
+            <Flame className="w-8 h-8 text-amber-500" />
+            Create a Heat
+          </h1>
+          <p className="text-gray-500 mt-1">Set up a new competition for your mathletes</p>
         </div>
 
         {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3">
-            <AlertTriangle className="w-5 h-5 text-red-500" />
-            <p className="text-red-700">{error}</p>
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3">
+            <AlertTriangle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="text-sm font-medium text-red-800">Failed to create Heat</p>
+              <p className="text-sm text-red-600 mt-0.5">{error}</p>
+            </div>
           </div>
         )}
 
-        <div className="grid gap-8">
-          {/* Section 1: Heat Type */}
-          <section className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Heat Type</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {heatTypes.map(({ type, label, icon, time, questions }) => (
-                <button
-                  key={type}
-                  onClick={() => setHeatType(type)}
-                  className={`
-                    p-4 rounded-xl border-2 transition-all text-center
-                    ${heatType === type
-                      ? 'border-indigo-500 bg-indigo-50'
-                      : 'border-gray-200 hover:border-gray-300'}
-                  `}
-                >
-                  <div className={`mx-auto mb-2 ${heatType === type ? 'text-indigo-600' : 'text-gray-400'}`}>
-                    {icon}
-                  </div>
-                  <p className={`font-medium ${heatType === type ? 'text-indigo-700' : 'text-gray-700'}`}>
-                    {label}
+        {/* ── SECTION 1: Heat Type ────────────────────────── */}
+        <div className="bg-white rounded-2xl border border-gray-100 p-6 mb-4">
+          <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">Heat type</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {(Object.entries(HEAT_PRESETS) as [HeatPreset, typeof HEAT_PRESETS[HeatPreset]][]).map(([key, preset]) => (
+              <button
+                key={key}
+                onClick={() => setHeatPreset(key)}
+                className={`p-4 rounded-xl border-2 text-center transition-all
+                  ${heatPreset === key
+                    ? 'border-indigo-500 bg-indigo-50'
+                    : 'border-gray-100 hover:border-gray-200 bg-white'}`}
+              >
+                <div className={`mx-auto mb-2 ${heatPreset === key ? 'text-indigo-600' : 'text-gray-400'}`}>
+                  {preset.icon}
+                </div>
+                <p className={`font-semibold text-sm ${heatPreset === key ? 'text-indigo-900' : 'text-gray-700'}`}>
+                  {preset.label}
+                </p>
+                <p className="text-xs text-gray-400 mt-0.5">{preset.desc}</p>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* ── SECTION 2: Integrity Level ──────────────────── */}
+        <div className="bg-white rounded-2xl border border-gray-100 p-6 mb-4">
+          <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-1">Integrity level</h2>
+          <p className="text-xs text-gray-400 mb-4">Higher stakes = stricter monitoring</p>
+
+          <div className="space-y-2">
+            {(Object.entries(INTEGRITY_LEVELS) as [IntegrityLevel, typeof INTEGRITY_LEVELS[IntegrityLevel]][]).map(([key, level]) => (
+              <button
+                key={key}
+                onClick={() => setIntegrityLevel(key)}
+                className={`w-full flex items-center gap-4 p-3.5 rounded-xl border-2 text-left transition-all
+                  ${integrityLevel === key
+                    ? 'border-indigo-500 bg-indigo-50'
+                    : 'border-gray-100 hover:border-gray-200 bg-white'}`}
+              >
+                <div className={`${integrityLevel === key ? 'text-indigo-600' : 'text-gray-400'}`}>
+                  {level.icon}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className={`font-semibold text-sm ${integrityLevel === key ? 'text-indigo-900' : 'text-gray-700'}`}>
+                    {level.label}
                   </p>
-                  <p className="text-xs text-gray-500 mt-1">
-                    {time}min • {questions}Q
+                  <p className="text-xs text-gray-400">{level.desc}</p>
+                </div>
+                {integrityLevel === key && <Check className="w-5 h-5 text-indigo-600 flex-shrink-0" />}
+              </button>
+            ))}
+          </div>
+
+          {/* Active enforcement badges */}
+          <div className="mt-4 p-3 rounded-lg bg-gray-50">
+            <p className="text-xs text-gray-400 mb-2 font-medium">What this means for students:</p>
+            <IntegrityBadges config={currentIntegrity.config} />
+          </div>
+        </div>
+
+        {/* ── SECTION 3: Topic & Difficulty ────────────────── */}
+        <div className="bg-white rounded-2xl border border-gray-100 p-6 mb-4">
+          <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">Content settings</h2>
+
+          {/* Topic */}
+          <div className="mb-5">
+            <label className="block text-sm font-medium text-gray-700 mb-2">Topic</label>
+            <div className="flex flex-wrap gap-2">
+              {topics.map((topic) => (
+                <button
+                  key={topic.id}
+                  onClick={() => setSelectedTopic(topic.id)}
+                  className={`px-3.5 py-2 rounded-lg text-sm font-medium border transition-all
+                    ${selectedTopic === topic.id
+                      ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
+                      : 'border-gray-200 text-gray-600 hover:border-gray-300'}`}
+                >
+                  {topic.name}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Difficulty */}
+          <div className="mb-5">
+            <label className="block text-sm font-medium text-gray-700 mb-2">Difficulty</label>
+            <div className="grid grid-cols-4 gap-2">
+              {(Object.entries(DIFFICULTY_TIERS) as [DifficultyTier, typeof DIFFICULTY_TIERS[DifficultyTier]][]).map(([key, tier]) => (
+                <button
+                  key={key}
+                  onClick={() => setDifficulty(key)}
+                  className={`p-3 rounded-xl border-2 text-center transition-all text-sm font-semibold
+                    ${difficulty === key
+                      ? `${tier.color} border-current`
+                      : 'border-gray-100 text-gray-400 hover:border-gray-200'}`}
+                >
+                  {tier.label}
+                  <p className="text-[10px] font-normal mt-0.5 opacity-60">
+                    Depth {tier.depthMin}–{tier.depthMax}
                   </p>
                 </button>
               ))}
             </div>
-          </section>
+          </div>
 
-          {/* Section 2: Integrity Level */}
-          <section className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900">Integrity Level</h2>
-              <div className="flex items-center gap-2 text-sm text-gray-500">
-                <Info className="w-4 h-4" />
-                <span>Higher stakes = stricter monitoring</span>
-              </div>
+          {/* Questions & Time (customizable) */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Questions</label>
+              <input
+                type="number"
+                min={5}
+                max={50}
+                value={questionCount}
+                onChange={(e) => setQuestionCount(Number(e.target.value))}
+                className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-400"
+              />
             </div>
-            
-            <div className="grid gap-3">
-              {integrityConfigs.map((config) => (
-                <IntegrityLevelCard
-                  key={config.level}
-                  config={config}
-                  isSelected={integrityLevel === config.level}
-                  onSelect={() => setIntegrityLevel(config.level)}
-                />
-              ))}
-            </div>
-
-            {/* Requirements summary */}
-            {currentConfig && (
-              <div className="mt-4 p-4 bg-gray-50 rounded-xl">
-                <h4 className="text-sm font-medium text-gray-700 mb-3">
-                  What this means for students:
-                </h4>
-                <ul className="space-y-2 text-sm text-gray-600">
-                  {currentConfig.focus_mode_enabled && (
-                    <li className="flex items-center gap-2">
-                      <Eye className="w-4 h-4 text-amber-500" />
-                      Tab switches and window changes will be detected
-                    </li>
-                  )}
-                  {currentConfig.fullscreen_required && (
-                    <li className="flex items-center gap-2">
-                      <Lock className="w-4 h-4 text-blue-500" />
-                      Fullscreen mode required throughout
-                    </li>
-                  )}
-                  {currentConfig.copy_paste_blocked && (
-                    <li className="flex items-center gap-2">
-                      <ShieldCheck className="w-4 h-4 text-green-500" />
-                      Copy/paste and right-click disabled
-                    </li>
-                  )}
-                  {currentConfig.anomaly_detection_enabled && (
-                    <li className="flex items-center gap-2">
-                      <ShieldAlert className="w-4 h-4 text-purple-500" />
-                      AI anomaly detection active
-                    </li>
-                  )}
-                  {currentConfig.teacher_attestation_required && (
-                    <li className="flex items-center gap-2">
-                      <UserCheck className="w-4 h-4 text-indigo-500" />
-                      You must attest to supervising this Heat
-                    </li>
-                  )}
-                  {!currentConfig.focus_mode_enabled && (
-                    <li className="flex items-center gap-2 text-gray-400">
-                      <Shield className="w-4 h-4" />
-                      Light logging only — trust-based
-                    </li>
-                  )}
-                </ul>
-              </div>
-            )}
-          </section>
-
-          {/* Section 3: Topic & Difficulty */}
-          <section className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Content Settings</h2>
-            
-            <div className="grid md:grid-cols-2 gap-6">
-              {/* Topic */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Topic
-                </label>
-                <select
-                  value={selectedTopic}
-                  onChange={(e) => setSelectedTopic(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                >
-                  {topics.map((topic) => (
-                    <option key={topic.id} value={topic.id}>
-                      {topic.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Difficulty */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Difficulty: {['Bronze', 'Silver', 'Gold', 'Platinum'][difficulty - 1]}
-                </label>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Time limit</label>
+              <div className="relative">
                 <input
-                  type="range"
-                  min={1}
-                  max={4}
-                  value={difficulty}
-                  onChange={(e) => setDifficulty(Number(e.target.value))}
-                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
-                />
-                <div className="flex justify-between text-xs text-gray-500 mt-1">
-                  <span>Bronze</span>
-                  <span>Silver</span>
-                  <span>Gold</span>
-                  <span>Platinum</span>
-                </div>
-              </div>
-
-              {/* Question count */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Questions: {questionCount}
-                </label>
-                <input
-                  type="range"
+                  type="number"
                   min={5}
-                  max={30}
-                  step={5}
-                  value={questionCount}
-                  onChange={(e) => setQuestionCount(Number(e.target.value))}
-                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                  max={60}
+                  value={durationMinutes}
+                  onChange={(e) => setDurationMinutes(Number(e.target.value))}
+                  className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-400 pr-12"
                 />
-              </div>
-
-              {/* Time limit */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Time Limit: {timeMinutes} minutes
-                </label>
-                <input
-                  type="range"
-                  min={5}
-                  max={45}
-                  step={5}
-                  value={timeMinutes}
-                  onChange={(e) => setTimeMinutes(Number(e.target.value))}
-                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
-                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">min</span>
               </div>
             </div>
-          </section>
+          </div>
+        </div>
 
-          {/* Create Button */}
-          <div className="flex justify-end gap-4">
+        {/* ── SUMMARY & CREATE ────────────────────────────── */}
+        <div className="bg-white rounded-2xl border border-gray-100 p-6">
+          <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">Summary</h2>
+
+          <div className="grid grid-cols-2 gap-3 mb-6">
+            <div className="rounded-lg bg-gray-50 p-3">
+              <p className="text-xs text-gray-400">Type</p>
+              <p className="text-sm font-semibold text-gray-900 capitalize">{heatPreset}</p>
+            </div>
+            <div className="rounded-lg bg-gray-50 p-3">
+              <p className="text-xs text-gray-400">Difficulty</p>
+              <p className="text-sm font-semibold text-gray-900 capitalize">{difficulty}</p>
+            </div>
+            <div className="rounded-lg bg-gray-50 p-3">
+              <p className="text-xs text-gray-400">Topic</p>
+              <p className="text-sm font-semibold text-gray-900">
+                {topics.find(t => t.id === selectedTopic)?.name || '—'}
+              </p>
+            </div>
+            <div className="rounded-lg bg-gray-50 p-3">
+              <p className="text-xs text-gray-400">Format</p>
+              <p className="text-sm font-semibold text-gray-900">
+                {questionCount}Q · {durationMinutes} min
+              </p>
+            </div>
+          </div>
+
+          <div className="rounded-lg bg-indigo-50 border border-indigo-100 p-3 mb-6">
+            <p className="text-xs text-indigo-400 mb-1 font-medium">Integrity: {currentIntegrity.label}</p>
+            <IntegrityBadges config={currentIntegrity.config} />
+          </div>
+
+          <div className="flex gap-3">
             <button
               onClick={() => router.back()}
-              className="px-6 py-3 text-gray-700 font-medium rounded-xl border border-gray-300 hover:bg-gray-50 transition-colors"
+              className="px-6 py-3 rounded-xl border border-gray-200 text-gray-600 font-medium hover:bg-gray-50 transition-all"
             >
               Cancel
             </button>
             <button
               onClick={handleCreateHeat}
               disabled={creating || !selectedTopic}
-              className={`
-                px-8 py-3 rounded-xl font-semibold transition-all flex items-center gap-2
+              className={`flex-1 flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-white transition-all
                 ${creating || !selectedTopic
-                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700 shadow-lg hover:shadow-xl'}
-              `}
+                  ? 'bg-gray-300 cursor-not-allowed'
+                  : 'bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98]'}`}
             >
               {creating ? (
                 <>
-                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                   Creating...
                 </>
               ) : (
                 <>
+                  <Flame className="w-5 h-5" />
                   Create Heat
-                  <ChevronRight className="w-5 h-5" />
                 </>
               )}
             </button>
           </div>
         </div>
+
       </div>
     </div>
   );

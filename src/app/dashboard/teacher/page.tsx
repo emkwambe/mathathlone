@@ -81,7 +81,7 @@ export default async function TeacherDashboard() {
               Create a new competition for your class. Choose the topic and difficulty.
             </p>
             <Link
-              href="/heat/create"
+              href="/compete/create"
               className="inline-block px-6 py-3 bg-white text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition"
             >
               Create Heat
@@ -158,7 +158,7 @@ export default async function TeacherDashboard() {
               {recentHeats.map((heat: any) => (
                 <Link
                   key={heat.id}
-                  href={`/heat/${heat.id}/results`}
+                  href={`/compete/${heat.id}`}
                   className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition"
                 >
                   <div>

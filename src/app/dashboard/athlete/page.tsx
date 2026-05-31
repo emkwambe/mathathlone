@@ -130,13 +130,13 @@ export default async function AthleteDashboard() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <Link
-              href="/heat/join"
+              href="/compete"
               className="px-6 py-3 bg-white text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition text-center"
             >
               Enter Heat Code
             </Link>
             <Link
-              href="/heat/practice"
+              href="/compete"
               className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-400 transition text-center"
             >
               Practice Heat
