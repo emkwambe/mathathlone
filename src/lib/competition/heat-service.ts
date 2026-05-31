@@ -73,7 +73,7 @@ export interface CreateHeatParams {
 export interface Heat {
   id: string;
   code: string;
-  topic_id: string;
+  topic_id: string | null;          // legacy FK; nullable after migration 016
   division_id: string | null;
   unit_topic_id: string | null;
   depth_min: number;
@@ -154,10 +154,14 @@ export function generateHeatCode(): string {
 // -----------------------------------------------------------------------------
 // INTERNAL: legacy-topic fallback
 // -----------------------------------------------------------------------------
-// heats.topic_id is NOT NULL with an FK to the legacy `topics` table. Until we
-// can drop that FK (Sprint 6+), we satisfy it by picking any existing row.
+// heats.topic_id is a legacy FK to the `topics` table. Sprint 0 / Sprint 2:
+//   - Migration 010 added the forward column heats.unit_topic_id.
+//   - Migration 016 dropped the NOT NULL constraint on heats.topic_id.
+// This helper still tries to find a legacy topic row so older queries that
+// JOIN heats → topics keep working, but it returns null gracefully when
+// the legacy table is empty (post-016 the column accepts NULL).
 
-async function fetchPlaceholderTopicId(supabase: SupabaseClient): Promise<string> {
+async function fetchPlaceholderTopicId(supabase: SupabaseClient): Promise<string | null> {
   const { data, error } = await supabase
     .from('topics')
     .select('id')
@@ -165,15 +169,11 @@ async function fetchPlaceholderTopicId(supabase: SupabaseClient): Promise<string
     .maybeSingle();
 
   if (error) {
-    throw new Error(`Cannot resolve legacy topics.topic_id placeholder: ${error.message}`);
+    // If the topics table is gone entirely, log and continue with NULL.
+    console.warn('[heat-service] topics lookup failed:', error.message);
+    return null;
   }
-  if (!data?.id) {
-    throw new Error(
-      'No rows in the legacy `topics` table — required to satisfy heats.topic_id NOT NULL FK. ' +
-      'Seed at least one row before creating Heats.'
-    );
-  }
-  return data.id;
+  return data?.id ?? null;
 }
 
 // -----------------------------------------------------------------------------
