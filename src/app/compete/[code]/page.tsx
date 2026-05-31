@@ -46,6 +46,8 @@ import {
   useHeatParticipants,
   useHeatRealtime,
 } from '@/lib/competition/heat-realtime';
+import CompetitionView from '@/components/competition/CompetitionView';
+import TeacherMonitor from '@/components/competition/TeacherMonitor';
 
 // -----------------------------------------------------------------------------
 // TYPES
@@ -286,14 +288,32 @@ export default function HeatLobbyPage() {
     );
   }
 
-  // 2. Active / in_progress (Sprint 4 placeholder)
+  // 2. Active / in_progress — Sprint 4 competition UI
   if (effectiveStatus && ACTIVE_STATUSES.includes(effectiveStatus)) {
+    // Teacher → monitoring dashboard. They don't compete; they observe.
+    if (isTeacher) {
+      return (
+        <TeacherMonitor
+          heatId={heat.id}
+          heatCode={heat.code}
+          questionCount={heat.question_count}
+          durationSeconds={heat.duration_seconds}
+        />
+      );
+    }
+
+    // Student → gameplay. Need their participation row from the live roster
+    // to resolve participation_id (no need for an extra DB round-trip).
+    const myParticipation = participants.find((p) => p.athlete_id === user?.id);
+    if (!myParticipation) {
+      return <FullScreenSpinner label="Syncing your slot…" />;
+    }
     return (
-      <FullScreenMessage
-        icon={<Rocket className="w-10 h-10 text-emerald-300 animate-pulse" />}
-        title="Heat is live"
-        message="The competition UI ships in Sprint 4. Hang tight — your scores are being captured."
-        tone="active"
+      <CompetitionView
+        heatId={heat.id}
+        participationId={myParticipation.id}
+        durationSeconds={heat.duration_seconds}
+        integrityLevel={heat.integrity_level ?? 'practice'}
       />
     );
   }
