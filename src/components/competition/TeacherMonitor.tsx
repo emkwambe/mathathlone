@@ -124,6 +124,7 @@ export default function TeacherMonitor({
   useEffect(() => {
     if (!heatId) return;
     const channel = subscribeToHeat(supabase, heatId, {
+      channelSuffix: 'monitor',                      // own channel — parent page already runs useHeatParticipants
       onParticipantInsert: async () => {
         // New joiner mid-Heat (rare) — refetch to pick up display_name
         const list = await listHeatParticipants(supabase, heatId);

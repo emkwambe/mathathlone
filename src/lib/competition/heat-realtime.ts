@@ -38,19 +38,76 @@ export interface SubscribeOptions {
   onParticipantInsert?: (participation: { id: string; athlete_id: string; heat_id: string }) => void;
   onParticipantUpdate?: (participation: { id: string; athlete_id: string; heat_id: string }) => void;
   onSubmissionBroadcast?: (payload: { athlete_id: string; question_number: number; is_correct: boolean }) => void;
+
+  /**
+   * Optional channel-name suffix. Use a different suffix per parallel
+   * listener (e.g. `'status'`, `'participants'`, `'bus'`) so they each get
+   * their own channel instance.
+   *
+   * Why this matters: `supabase.channel(name)` returns the SAME channel
+   * instance if called twice with the same name on the same client. If two
+   * callers share the channel and one of them has already called
+   * `.subscribe()`, the second caller's `.on('postgres_changes', ...)` will
+   * throw "cannot add postgres_changes callbacks after subscribe()".
+   */
+  channelSuffix?: string;
 }
 
 /**
- * Subscribe to a Heat's lifecycle on the underlying Supabase channel.
+ * Generate a short random token (alphanumeric, ~6 chars) that makes a
+ * channel name globally unique per invocation. Falls back to Math.random()
+ * if crypto isn't available (e.g., older browser, SSR shell).
+ */
+function shortRandomId(): string {
+  try {
+    if (typeof crypto !== 'undefined') {
+      if (typeof (crypto as any).randomUUID === 'function') {
+        return (crypto as any).randomUUID().split('-')[0]!;
+      }
+      if (typeof crypto.getRandomValues === 'function') {
+        const arr = new Uint8Array(4);
+        crypto.getRandomValues(arr);
+        return Array.from(arr, (b) => b.toString(16).padStart(2, '0')).join('');
+      }
+    }
+  } catch {
+    /* fall through */
+  }
+  return Math.random().toString(36).slice(2, 10);
+}
+
+/**
+ * Subscribe to a Heat's lifecycle on a dedicated Supabase channel.
  * Returns the channel so callers can later unsubscribe via
  * `supabase.removeChannel(channel)`.
+ *
+ * All `.on(...)` registrations happen BEFORE `.subscribe()` (required by
+ * supabase-realtime-js — postgres_changes callbacks cannot be added after
+ * the channel has been subscribed).
+ *
+ * EVERY call returns a brand-new channel. We append a random per-call token
+ * to the channel name because `supabase.channel(name)` returns the SAME
+ * instance when called twice with the same name, and React 18 Strict Mode
+ * (or any rapid mount/unmount cycle) can fire two subscribeToHeat calls
+ * before the previous removeChannel() — which is asynchronous — has
+ * finished cleaning up. The random token sidesteps that race entirely.
+ *
+ * `channelSuffix` is kept for human-readable grouping in DevTools, e.g.
+ * `heat:abc:status:9f2a4c1d`.
  */
 export function subscribeToHeat(
   supabase: SupabaseClient,
   heatId: string,
   opts: SubscribeOptions
 ): RealtimeChannel {
-  const channel = supabase.channel(`heat:${heatId}`);
+  const suffix = opts.channelSuffix ? `:${opts.channelSuffix}` : '';
+  const channelName = `heat:${heatId}${suffix}:${shortRandomId()}`;
+  const channel = supabase.channel(channelName);
+
+  // ── ALL .on(...) registrations MUST happen before .subscribe() ──────────
+  // supabase-realtime-js rejects postgres_changes handlers added after the
+  // channel has joined, with: "tried to push 'access_token' to ... before
+  // joined" or "cannot add postgres_changes callbacks after subscribe()".
 
   if (opts.onHeatUpdate) {
     channel.on(
@@ -92,6 +149,7 @@ export function subscribeToHeat(
     });
   }
 
+  // ── Now (and only now) join the channel ─────────────────────────────────
   channel.subscribe();
   return channel;
 }
@@ -160,6 +218,7 @@ export function useHeatRealtime(heatId: string | null | undefined): {
     })();
 
     channelRef.current = subscribeToHeat(supabase, heatId, {
+      channelSuffix: 'status',                       // isolated channel per hook
       onHeatUpdate: (partial) => {
         setHeat((prev) => (prev ? { ...prev, ...partial } : (partial as Heat)));
         if (partial.status) setStatus(partial.status);
@@ -216,6 +275,7 @@ export function useHeatParticipants(heatId: string | null | undefined): {
     })();
 
     channelRef.current = subscribeToHeat(supabase, heatId, {
+      channelSuffix: 'participants',                 // isolated channel per hook
       onParticipantInsert: () => void refetch(),
       onParticipantUpdate: () => void refetch(),
     });
@@ -249,6 +309,7 @@ export function useHeatSubmissions(heatId: string | null | undefined): {
     const supabase = createClient();
 
     channelRef.current = subscribeToHeat(supabase, heatId, {
+      channelSuffix: 'bus',                          // isolated channel per hook
       onSubmissionBroadcast: (payload) => setLastSubmission(payload),
     });
 

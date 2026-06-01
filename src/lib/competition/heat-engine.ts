@@ -437,6 +437,7 @@ export class HeatEngine {
     }
 
     this.channel = subscribeToHeat(this.supabase, heatId, {
+      channelSuffix: 'engine',                       // legacy class isolated from hook channels
       onHeatUpdate: (partial) => {
         if (partial.status) {
           if (this.currentHeat) {

@@ -44,6 +44,18 @@ export interface GenerateQuestionsParams {
 // HELPERS
 // -----------------------------------------------------------------------------
 
+/**
+ * Canonical UUID v1-v5 shape check. Used to guard generator_id values before
+ * they're sent to Supabase — heat_questions.generator_id is an FK to
+ * question_generators.id, and any non-UUID value (or non-existent UUID)
+ * triggers a FK violation at insert time.
+ */
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+function isUuid(value: unknown): value is string {
+  return typeof value === 'string' && UUID_RE.test(value);
+}
+
 function randomInRange(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -135,9 +147,24 @@ async function loadEligibleGenerators(
   }
 
   const codeKnown = new Set(Object.keys(GENERATORS));
-  return (generators as GeneratorRow[] | null ?? []).filter((g) =>
-    codeKnown.has(g.generator_type)
+  const all = (generators as GeneratorRow[] | null) ?? [];
+
+  // Defensive filter: only keep rows whose id is a real UUID AND whose
+  // generator_type matches a known code generator. This protects the
+  // downstream INSERT from FK violations on heat_questions.generator_id.
+  const filtered = all.filter(
+    (g) => isUuid(g.id) && codeKnown.has(g.generator_type)
   );
+
+  const dropped = all.length - filtered.length;
+  if (dropped > 0) {
+    console.warn(
+      `[question-delivery] Skipped ${dropped} question_generators row(s) — ` +
+        'either id is not a UUID or generator_type is unknown to the code. ' +
+        'Re-run Sprint 0 migration 014c if this is unexpected.'
+    );
+  }
+  return filtered;
 }
 
 // -----------------------------------------------------------------------------
@@ -272,6 +299,19 @@ export async function generateAndInsertQuestions(
       console.warn('[question-delivery] no generator available to pick — skipping slot', i);
       continue;
     }
+
+    // FK-safety: refuse to push a row whose generator_id isn't a valid UUID.
+    // loadEligibleGenerators() already filters these out, but we guard again
+    // here because a stale cache / replication lag / type-coercion bug would
+    // surface as an FK violation on heat_questions.generator_id at insert.
+    if (!isUuid(generator.id)) {
+      console.error(
+        '[question-delivery] generator row has non-UUID id — skipping:',
+        { generator_type: generator.generator_type, id: generator.id }
+      );
+      continue;
+    }
+
     recentGenerators.push(generator.generator_type);
     if (recentGenerators.length > Math.min(8, generators.length - 1)) {
       recentGenerators.shift();
@@ -285,10 +325,12 @@ export async function generateAndInsertQuestions(
     }
     if (!q) continue;
 
+    const generatorUuid: string = generator.id;            // narrowed by isUuid()
+
     inserts.push({
       heat_id: heatId,
       question_number: 0,                                  // assigned after shuffle
-      generator_id: generator.id,
+      generator_id: generatorUuid,                         // verified UUID from question_generators.id
       difficulty,
       question_latex: q.question_latex,
       question_text: q.question_text,
@@ -315,11 +357,15 @@ export async function generateAndInsertQuestions(
 
     // Per Sprint 1 spec: SVG goes in question_text, short prompt in question_latex.
     // The UI layer reads question_text and detects the SVG via a leading "<svg".
+    //
+    // Visual questions have NO row in question_generators — they're generated
+    // entirely in code by visual-generators.ts. generator_id MUST be null so
+    // the heat_questions.generator_id FK isn't violated.
     const difficulty = Math.min(4, Math.max(1, v.difficulty)) as DifficultyLevel;
-    inserts.push({
+    const visualRow: HeatQuestionInsert = {
       heat_id: heatId,
       question_number: 0,
-      generator_id: null,
+      generator_id: null,                                  // visual: no question_generators row
       difficulty,
       question_latex: v.question_text,                     // prompt text
       question_text: v.question_svg,                       // raw SVG markup
@@ -334,7 +380,8 @@ export async function generateAndInsertQuestions(
       },
       points_value: pointsForDifficulty(difficulty),
       time_limit_seconds: 45,                              // MC is faster
-    });
+    };
+    inserts.push(visualRow);
   }
 
   // --- Static multiple-choice questions ---------------------------------------
@@ -342,10 +389,13 @@ export async function generateAndInsertQuestions(
     const shuffledStatics = shuffle(staticPool).slice(0, staticCount);
     for (const sq of shuffledStatics) {
       const difficulty = Math.min(4, Math.max(1, sq.difficulty)) as DifficultyLevel;
-      inserts.push({
+
+      // Static questions live in their own table (static_questions) — they
+      // also have NO row in question_generators. generator_id MUST be null.
+      const staticRow: HeatQuestionInsert = {
         heat_id: heatId,
         question_number: 0,
-        generator_id: null,
+        generator_id: null,                                // static: no question_generators row
         difficulty,
         question_latex: sq.question_latex ?? sq.question_text,
         question_text: sq.question_text,
@@ -358,7 +408,8 @@ export async function generateAndInsertQuestions(
         },
         points_value: pointsForDifficulty(difficulty),
         time_limit_seconds: 45,
-      });
+      };
+      inserts.push(staticRow);
     }
   }
 
@@ -366,14 +417,92 @@ export async function generateAndInsertQuestions(
     throw new Error('No questions could be generated for this Heat.');
   }
 
+  // --- FK-safety sweep: every generator_id must be either NULL or a UUID -----
+  // Catches anything that slipped past the per-source guards above. Rows that
+  // fail this check would otherwise produce a FK violation on
+  // heat_questions.generator_id → question_generators.id.
+  const safeInserts = inserts.filter((row) => {
+    if (row.generator_id === null) return true;
+    if (isUuid(row.generator_id)) return true;
+    console.error(
+      '[question-delivery] dropping row with malformed generator_id:',
+      { generator_id: row.generator_id, type: typeof row.generator_id }
+    );
+    return false;
+  });
+  if (safeInserts.length === 0) {
+    throw new Error(
+      'All candidate questions were rejected (invalid generator_id). ' +
+        'Verify question_generators is seeded by migration 014c.'
+    );
+  }
+
+  // --- Pre-flight FK probe ---------------------------------------------------
+  // Before sending the batch, verify every non-null generator_id ACTUALLY
+  // exists in question_generators. If any are missing, the FK constraint on
+  // heat_questions.generator_id is likely targeting a different table (e.g.
+  // question_generators_legacy). Run migration 017_fix_heat_questions_fk.sql
+  // to re-bind the constraint.
+  const distinctGeneratorIds = Array.from(
+    new Set(
+      safeInserts
+        .map((r) => r.generator_id)
+        .filter((id): id is string => id !== null)
+    )
+  );
+  if (distinctGeneratorIds.length > 0) {
+    const { data: existingRows, error: probeError } = await supabase
+      .from('question_generators')
+      .select('id')
+      .in('id', distinctGeneratorIds);
+
+    if (probeError) {
+      console.warn(
+        '[question-delivery] FK pre-flight probe failed (will attempt insert anyway):',
+        probeError.message
+      );
+    } else {
+      const found = new Set((existingRows ?? []).map((r: any) => r.id as string));
+      const missing = distinctGeneratorIds.filter((id) => !found.has(id));
+      if (missing.length > 0) {
+        console.error(
+          '[question-delivery] FK pre-flight FAILED: ' +
+            `${missing.length}/${distinctGeneratorIds.length} generator_id(s) selected ` +
+            'from question_generators are NOT visible to a subsequent INSERT. ' +
+            'This almost always means the heat_questions.generator_id FK is bound ' +
+            'to the wrong table (typically question_generators_legacy). ' +
+            'Apply supabase/migrations/017_fix_heat_questions_fk.sql to repair the FK. ' +
+            'Missing UUIDs: ' + JSON.stringify(missing.slice(0, 5))
+        );
+        throw new Error(
+          'Cannot insert heat_questions: the generator_id FK is pointing at the ' +
+            'wrong table. Run migration 017_fix_heat_questions_fk.sql in Supabase.'
+        );
+      }
+    }
+  }
+
   // --- Shuffle for variety, then assign sequential question_number ------------
-  const finalQuestions = shuffle(inserts).map((q, i) => ({
+  const finalQuestions = shuffle(safeInserts).map((q, i) => ({
     ...q,
     question_number: i + 1,
   }));
 
   const { error } = await supabase.from('heat_questions').insert(finalQuestions);
   if (error) {
+    // Diagnostic: show how many rows had a generator_id vs null, and a sample
+    // of the first non-null id. Helps triage FK violations against the live
+    // question_generators table.
+    const withId = finalQuestions.filter((q) => q.generator_id !== null).length;
+    const sampleIds = finalQuestions
+      .map((q) => q.generator_id)
+      .filter((id): id is string => id !== null)
+      .slice(0, 3);
+    console.error(
+      `[question-delivery] heat_questions insert failed (${withId} with generator_id, ` +
+        `${finalQuestions.length - withId} null). Sample generator_ids: ${JSON.stringify(sampleIds)}. ` +
+        `Supabase error: ${error.message}`
+    );
     throw new Error(`Failed to insert heat_questions: ${error.message}`);
   }
 }
