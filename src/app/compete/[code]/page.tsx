@@ -48,6 +48,8 @@ import {
 } from '@/lib/competition/heat-realtime';
 import CompetitionView from '@/components/competition/CompetitionView';
 import TeacherMonitor from '@/components/competition/TeacherMonitor';
+import StudentResults from '@/components/competition/StudentResults';
+import TeacherResults from '@/components/competition/TeacherResults';
 
 // -----------------------------------------------------------------------------
 // TYPES
@@ -330,15 +332,39 @@ export default function HeatLobbyPage() {
     );
   }
 
-  // 4. Complete / finished (Sprint 5 placeholder)
+  // 4. Complete / finished — Sprint 5 results UI
   if (effectiveStatus && COMPLETE_STATUSES.includes(effectiveStatus)) {
+    if (isTeacher) {
+      return (
+        <TeacherResults
+          heatId={heat.id}
+          heatCode={heat.code}
+          integrityLevel={heat.integrity_level ?? 'practice'}
+        />
+      );
+    }
+
+    // Student → personal results. Reuse the live participants array to
+    // resolve participation_id without an extra fetch.
+    const myParticipation = participants.find((p) => p.athlete_id === user?.id);
+    if (!myParticipation || !user) {
+      return (
+        <FullScreenMessage
+          icon={<Trophy className="w-10 h-10 text-amber-300" />}
+          title="Heat complete"
+          message="We couldn't find your participation row for this Heat — ask your teacher to check the roster."
+          action={{ label: 'Back to compete', href: '/compete' }}
+          tone="active"
+        />
+      );
+    }
     return (
-      <FullScreenMessage
-        icon={<Trophy className="w-10 h-10 text-amber-300" />}
-        title="Heat complete"
-        message="The full results dashboard ships in Sprint 5. Stay tuned for awards and concept mastery."
-        action={{ label: 'Back to compete', href: '/compete' }}
-        tone="active"
+      <StudentResults
+        heatId={heat.id}
+        heatCode={heat.code}
+        participationId={myParticipation.id}
+        userId={user.id}
+        integrityLevel={heat.integrity_level ?? 'practice'}
       />
     );
   }

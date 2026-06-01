@@ -303,7 +303,189 @@ export async function calculateHeatResults(
     }
   }
 
+  // 10. ELO rating updates (non-blocking — failure must not block results).
+  try {
+    await updateAthleteRatingsFromHeat(supabase, heatId, divisionId, results);
+  } catch (err) {
+    console.warn('[scoring-service] ELO update skipped:', err);
+  }
+
   return results;
+}
+
+// -----------------------------------------------------------------------------
+// ELO RATING UPDATES
+// -----------------------------------------------------------------------------
+
+/**
+ * Update athlete_ratings + insert rating_history for every participant of
+ * a finished Heat. Idempotent on second call (we short-circuit if any
+ * rating_history row already exists for this heat_id).
+ *
+ * If `athlete_ratings` has no row for a participant yet, we create one with
+ * Glicko-2-friendly defaults from RATING_CONFIG.
+ */
+export async function updateAthleteRatingsFromHeat(
+  supabase: SupabaseClient,
+  heatId: string,
+  divisionId: string | null,
+  results: ParticipantScore[]
+): Promise<void> {
+  if (results.length === 0) return;
+
+  // Lazy-import league-engine.ts so a missing/broken import here can't
+  // crash calculateHeatResults().
+  const { EloEngine, RATING_CONFIG } = await import('@/lib/league-engine');
+
+  // Idempotency guard: if any rating_history row already exists for this
+  // Heat, treat the update as already done.
+  const { count: historyCount } = await supabase
+    .from('rating_history')
+    .select('id', { count: 'exact', head: true })
+    .eq('heat_id', heatId);
+
+  if ((historyCount ?? 0) > 0) {
+    console.info('[scoring-service] Heat already processed for ELO — skipping');
+    return;
+  }
+
+  const athleteIds = results.map((r) => r.athlete_id);
+
+  // Fetch existing ratings for these athletes (filtered to this division
+  // when possible). athlete_ratings has UNIQUE(athlete_id, division_id) —
+  // null division_id is a valid separate slot.
+  let ratingsQuery = supabase
+    .from('athlete_ratings')
+    .select('*')
+    .in('athlete_id', athleteIds);
+  if (divisionId) {
+    ratingsQuery = ratingsQuery.eq('division_id', divisionId);
+  } else {
+    ratingsQuery = ratingsQuery.is('division_id', null);
+  }
+  const { data: existingRatings, error: rErr } = await ratingsQuery;
+  if (rErr) {
+    throw new Error(`Failed to load athlete_ratings: ${rErr.message}`);
+  }
+
+  const ratingsMap = new Map<string, any>(
+    (existingRatings ?? []).map((row: any) => [row.athlete_id, row])
+  );
+
+  // Insert default rows for athletes without one
+  const missing = athleteIds.filter((id) => !ratingsMap.has(id));
+  if (missing.length > 0) {
+    const seedRows = missing.map((athleteId) => ({
+      athlete_id: athleteId,
+      division_id: divisionId,
+      rating: RATING_CONFIG.STARTING,
+      rating_deviation: RATING_CONFIG.STARTING_RD,
+      volatility: RATING_CONFIG.STARTING_VOLATILITY,
+      games_played: 0,
+      peak_rating: RATING_CONFIG.STARTING,
+      floor_rating: RATING_CONFIG.FLOOR,
+      is_provisional: true,
+    }));
+    const { data: inserted, error: insErr } = await supabase
+      .from('athlete_ratings')
+      .insert(seedRows)
+      .select();
+    if (insErr) {
+      throw new Error(`Failed to seed athlete_ratings: ${insErr.message}`);
+    }
+    for (const row of inserted ?? []) {
+      ratingsMap.set((row as any).athlete_id, row);
+    }
+  }
+
+  // Average rating across the field is our "opponent rating" estimator.
+  const totalRating = [...ratingsMap.values()].reduce(
+    (sum, r: any) => sum + (r.rating ?? RATING_CONFIG.STARTING),
+    0
+  );
+  const avgRating = totalRating / Math.max(1, ratingsMap.size);
+
+  const nowIso = new Date().toISOString();
+  const totalParticipants = results.length;
+
+  for (const r of results) {
+    const current = ratingsMap.get(r.athlete_id);
+    if (!current) continue;
+
+    const player: any = {
+      athlete_id: current.athlete_id,
+      rating: current.rating ?? RATING_CONFIG.STARTING,
+      rating_deviation: current.rating_deviation ?? RATING_CONFIG.STARTING_RD,
+      volatility: current.volatility ?? RATING_CONFIG.STARTING_VOLATILITY,
+      games_played: current.games_played ?? 0,
+      peak_rating: current.peak_rating ?? RATING_CONFIG.STARTING,
+      is_provisional: current.is_provisional ?? true,
+      last_competition: current.last_competition ?? null,
+    };
+
+    const heatResult = {
+      athlete_id: r.athlete_id,
+      cta_score: r.cta_score,
+      accuracy: r.accuracy_score,
+      time_ms: r.total_time_ms,
+      rank_in_heat: r.rank_in_heat,
+      total_participants: totalParticipants,
+    };
+
+    const { newRating } = EloEngine.updateFromHeat(player, heatResult, avgRating);
+
+    // Translate Heat rank into the same 1.0 / 0.5 / 0.0 score buckets that
+    // the ELO engine uses for the expected/actual delta.
+    const percentile = 1 - (r.rank_in_heat - 1) / Math.max(1, totalParticipants);
+    const actualScore = percentile >= 0.75 ? 1.0 : percentile >= 0.5 ? 0.5 : 0.0;
+    const expectedScore = EloEngine.expectedScore(player.rating, avgRating);
+    const kFactor = EloEngine.kFactor(player);
+
+    // Update athlete_ratings
+    let updateQuery = supabase
+      .from('athlete_ratings')
+      .update({
+        rating: newRating,
+        games_played: player.games_played + 1,
+        peak_rating: Math.max(player.peak_rating, newRating),
+        is_provisional: player.games_played + 1 < 5,
+        last_competition: nowIso,
+        updated_at: nowIso,
+      })
+      .eq('athlete_id', r.athlete_id);
+    if (divisionId) {
+      updateQuery = updateQuery.eq('division_id', divisionId);
+    } else {
+      updateQuery = updateQuery.is('division_id', null);
+    }
+    const { error: updateErr } = await updateQuery;
+    if (updateErr) {
+      console.warn(
+        `[scoring-service] athlete_ratings update failed for ${r.athlete_id}:`,
+        updateErr.message
+      );
+      continue;
+    }
+
+    // Audit row in rating_history (no FK enforcement on division_id here)
+    const { error: historyErr } = await supabase.from('rating_history').insert({
+      athlete_id: r.athlete_id,
+      heat_id: heatId,
+      rating_before: player.rating,
+      rating_after: newRating,
+      rd_before: player.rating_deviation,
+      rd_after: player.rating_deviation,        // ELO doesn't change RD
+      k_factor_used: kFactor,
+      expected_score: Number(expectedScore.toFixed(4)),
+      actual_score: actualScore,
+    });
+    if (historyErr) {
+      console.warn(
+        `[scoring-service] rating_history insert failed for ${r.athlete_id}:`,
+        historyErr.message
+      );
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------
