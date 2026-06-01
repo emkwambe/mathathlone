@@ -261,6 +261,7 @@ export default function LandingPage() {
             <a href="#demo" className="hover:text-gray-900 transition-colors">Live demo</a>
             <a href="#leagues" className="hover:text-gray-900 transition-colors">Leagues</a>
             <a href="#educators" className="hover:text-gray-900 transition-colors">For educators</a>
+            <a href="#pricing" className="hover:text-gray-900 transition-colors">Pricing</a>
           </div>
           <div className="flex items-center gap-3">
             <Link href="/auth/login" className="text-sm text-gray-600 hover:text-gray-900 transition-colors px-4 py-2">
@@ -323,10 +324,10 @@ export default function LandingPage() {
 
               <div className="slide-up slide-up-4 flex flex-wrap gap-10">
                 {[
-                  { n: 84, s: '', label: 'NC Math 1 concepts' },
-                  { n: 54, s: '+', label: 'Question generators' },
+                  { n: 111, s: '', label: 'NC Math 1 concepts' },
+                  { n: 66, s: '+', label: 'Question generators' },
                   { n: 6, s: '', label: 'Competition levels' },
-                  { n: 4, s: '', label: 'Divisions' },
+                  { n: 5, s: '', label: 'Divisions' },
                 ].map((stat) => (
                   <div key={stat.label}>
                     <p className="text-3xl font-extrabold text-white">
@@ -534,20 +535,31 @@ export default function LandingPage() {
             <h2 className="text-4xl font-bold text-gray-900">Find your division, climb the ranks</h2>
           </div>
 
-          {/* Divisions */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-5 mb-16">
+          {/* Divisions (official rulebook: JR / INT / ADV / JV / SV) */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-16">
             {[
-              { name: 'Rising Stars', grades: 'Grades 3–5', icon: '🌱', border: 'border-t-emerald-400', bg: 'bg-emerald-50' },
-              { name: 'Challengers', grades: 'Grades 6–7', icon: '⚡', border: 'border-t-blue-400', bg: 'bg-blue-50' },
-              { name: 'Contenders', grades: 'Grades 8–9', icon: '🔥', border: 'border-t-amber-400', bg: 'bg-amber-50' },
-              { name: 'Varsity', grades: 'Math 1+', icon: '👑', border: 'border-t-purple-400', bg: 'bg-purple-50' },
+              { name: 'Junior',         grades: 'Grades 3–4',   icon: '🌱', border: 'border-t-emerald-400', bg: 'bg-emerald-50', comingSoon: true  },
+              { name: 'Intermediate',   grades: 'Grades 5–6',   icon: '⚡', border: 'border-t-sky-400',     bg: 'bg-sky-50',     comingSoon: true  },
+              { name: 'Advanced',       grades: 'Grades 7–8',   icon: '🔥', border: 'border-t-amber-400',   bg: 'bg-amber-50',   comingSoon: false },
+              { name: 'Junior Varsity', grades: 'Grades 9–10',  icon: '🚀', border: 'border-t-indigo-400',  bg: 'bg-indigo-50',  comingSoon: false },
+              { name: 'Senior Varsity', grades: 'Grades 11–12', icon: '👑', border: 'border-t-rose-400',    bg: 'bg-rose-50',    comingSoon: false },
             ].map((d) => (
-              <div key={d.name} className={`rounded-2xl border border-gray-100 ${d.border} border-t-4 p-6 text-center hover:shadow-lg hover:-translate-y-1 transition-all duration-300`}>
-                <div className={`w-16 h-16 rounded-full ${d.bg} flex items-center justify-center text-3xl mx-auto mb-3`}>
+              <div
+                key={d.name}
+                className={`relative rounded-2xl border border-gray-100 ${d.border} border-t-4 p-5 text-center hover:shadow-lg hover:-translate-y-1 transition-all duration-300 ${
+                  d.comingSoon ? 'opacity-70' : ''
+                }`}
+              >
+                {d.comingSoon && (
+                  <span className="absolute top-2 right-2 inline-block text-[9px] font-bold uppercase tracking-wider text-gray-500 bg-gray-100 border border-gray-200 rounded-full px-1.5 py-0.5">
+                    Soon
+                  </span>
+                )}
+                <div className={`w-14 h-14 rounded-full ${d.bg} flex items-center justify-center text-2xl mx-auto mb-3`}>
                   {d.icon}
                 </div>
-                <h3 className="font-bold text-gray-900 text-lg">{d.name}</h3>
-                <p className="text-sm text-gray-400">{d.grades}</p>
+                <h3 className="font-bold text-gray-900 text-base">{d.name}</h3>
+                <p className="text-xs text-gray-400">{d.grades}</p>
               </div>
             ))}
           </div>
@@ -691,6 +703,109 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ── PRICING ─────────────────────────────────────── */}
+      <section id="pricing" className="py-24 bg-gray-50">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="text-center mb-14">
+            <p className="text-sm font-semibold text-indigo-600 mb-2 uppercase tracking-wider">Pricing</p>
+            <h2 className="text-4xl font-bold text-gray-900">Free for teachers. Fair for schools.</h2>
+            <p className="text-gray-500 mt-3 max-w-2xl mx-auto">
+              Start free forever. Upgrade when you outgrow it. Per-student pricing only
+              kicks in when an entire school is in.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[
+              {
+                tier: 'Free',
+                price: '$0',
+                cadence: 'forever',
+                blurb: 'Try MathAthlone with a class or two.',
+                features: ['3 classrooms', '30 Mathletes/class', 'Practice integrity level', 'NC Math 1 content'],
+                cta: { label: 'Get started', href: '/auth/register' },
+                style: 'plain',
+              },
+              {
+                tier: 'Pro',
+                price: '$59',
+                cadence: '/year',
+                blurb: 'For teachers paying with their own budget.',
+                features: ['Unlimited classrooms', 'All integrity levels', 'League brackets + standings', 'CSV export & analytics'],
+                cta: { label: 'Upgrade', href: '/auth/register?plan=pro' },
+                style: 'highlight',
+              },
+              {
+                tier: 'School',
+                price: '$4',
+                cadence: '/Mathlete/yr',
+                blurb: 'Whole-school license. Min $500/year.',
+                features: ['Unlimited teachers', 'School-wide leagues', 'Admin dashboard + SSO', 'Priority support'],
+                cta: { label: 'Contact us', href: 'mailto:eddy@mpingosystems.com?subject=MathAthlone%20School%20License' },
+                style: 'plain',
+              },
+              {
+                tier: 'District',
+                price: '$2.50',
+                cadence: '/Mathlete/yr',
+                blurb: 'Cross-school leagues. Min $2,500/year.',
+                features: ['All schools in district', 'Cross-school brackets', 'Dedicated onboarding', 'API access'],
+                cta: { label: 'Contact us', href: 'mailto:eddy@mpingosystems.com?subject=MathAthlone%20District%20License' },
+                style: 'plain',
+              },
+            ].map((tier) => {
+              const isHighlight = tier.style === 'highlight';
+              return (
+                <div
+                  key={tier.tier}
+                  className={`relative rounded-2xl border-2 bg-white p-6 flex flex-col ${
+                    isHighlight
+                      ? 'border-indigo-500 ring-2 ring-indigo-200 lg:-translate-y-2 shadow-xl'
+                      : 'border-gray-200 hover:shadow-md transition-shadow'
+                  }`}
+                >
+                  {isHighlight && (
+                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-white bg-indigo-600">
+                      Recommended
+                    </span>
+                  )}
+                  <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">
+                    {tier.tier}
+                  </h3>
+                  <div className="flex items-baseline gap-1 mb-3">
+                    <span className="text-3xl font-extrabold text-gray-900">{tier.price}</span>
+                    <span className="text-sm text-gray-400">{tier.cadence}</span>
+                  </div>
+                  <p className="text-xs text-gray-500 mb-5 min-h-[40px]">{tier.blurb}</p>
+                  <ul className="space-y-2 mb-6 flex-1">
+                    {tier.features.map((f) => (
+                      <li key={f} className="flex items-start gap-2 text-xs text-gray-600">
+                        <span className="text-emerald-500 mt-0.5">✓</span>
+                        <span>{f}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <Link
+                    href={tier.cta.href}
+                    className={`inline-flex items-center justify-center w-full px-4 py-2.5 rounded-xl text-sm font-semibold transition-all min-h-[44px] ${
+                      isHighlight
+                        ? 'bg-indigo-600 text-white hover:bg-indigo-700'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    {tier.cta.label}
+                  </Link>
+                </div>
+              );
+            })}
+          </div>
+
+          <p className="text-center text-xs text-gray-400 mt-8">
+            Title I schools get 50% off every paid tier — built into the price, no paperwork dance.
+          </p>
+        </div>
+      </section>
+
       {/* ── FINAL CTA ───────────────────────────────────── */}
       <section className="py-24" style={{ background: 'linear-gradient(135deg, #312e81 0%, #4338ca 40%, #6366f1 100%)' }}>
         <div className="max-w-4xl mx-auto px-6 text-center">
@@ -716,13 +831,13 @@ export default function LandingPage() {
             Free forever for individual teachers. No credit card. Set up your first Heat in under 60 seconds.
           </p>
 
-          <div className="flex flex-wrap gap-4 justify-center mb-12">
+          <div className="flex flex-col sm:flex-row flex-wrap gap-4 justify-center mb-12">
             <Link href="/auth/register"
-                  className="glow-btn px-10 py-5 bg-amber-400 hover:bg-amber-300 text-indigo-950 font-bold text-xl rounded-2xl transition-all active:scale-95 shadow-lg shadow-amber-400/25">
+                  className="glow-btn px-6 sm:px-10 py-4 sm:py-5 bg-amber-400 hover:bg-amber-300 text-indigo-950 font-bold text-lg sm:text-xl rounded-2xl transition-all active:scale-95 shadow-lg shadow-amber-400/25 min-h-[44px] inline-flex items-center justify-center">
               Create your free account
             </Link>
             <a href="mailto:eddy@mpingosystems.com"
-               className="px-10 py-5 bg-white/10 hover:bg-white/20 text-white font-semibold text-xl rounded-2xl transition-all border border-white/20">
+               className="px-6 sm:px-10 py-4 sm:py-5 bg-white/10 hover:bg-white/20 text-white font-semibold text-lg sm:text-xl rounded-2xl transition-all border border-white/20 min-h-[44px] inline-flex items-center justify-center">
               Book a school demo
             </a>
           </div>

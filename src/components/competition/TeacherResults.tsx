@@ -9,6 +9,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import Link from 'next/link';
 import {
   AlertCircle,
   ArrowLeft,
@@ -396,7 +397,7 @@ export default function TeacherResults({ heatId, heatCode, integrityLevel }: Tea
           <button
             type="button"
             onClick={handleExport}
-            className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 border border-white/20 text-white text-sm hover:bg-white/20 transition-colors"
+            className="inline-flex items-center justify-center gap-2 px-4 py-3 min-h-[44px] rounded-xl bg-white/10 border border-white/20 text-white text-sm hover:bg-white/20 transition-colors"
           >
             <Download className="w-4 h-4" />
             Export CSV
@@ -488,6 +489,17 @@ export default function TeacherResults({ heatId, heatCode, integrityLevel }: Tea
             </p>
           </div>
         )}
+
+        {/* Back to dashboard */}
+        <div className="mb-6">
+          <Link
+            href="/dashboard/teacher"
+            className="inline-flex items-center gap-2 px-4 py-2.5 min-h-[44px] rounded-xl bg-white/10 border border-white/15 text-white/80 hover:text-white hover:bg-white/15 text-sm transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to dashboard
+          </Link>
+        </div>
 
         {/* Full leaderboard */}
         <div className="bg-white/10 backdrop-blur-lg border border-white/15 rounded-2xl overflow-hidden mb-6">

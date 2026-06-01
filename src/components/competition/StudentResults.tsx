@@ -21,6 +21,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   AlertCircle,
+  ArrowLeft,
   Check,
   ChevronDown,
   ChevronUp,
@@ -36,6 +37,7 @@ import {
   TrendingUp,
   X,
 } from 'lucide-react';
+import Link from 'next/link';
 
 import { createClient } from '@/lib/supabase/client';
 import {
@@ -598,7 +600,7 @@ export default function StudentResults({
             <button
               type="button"
               onClick={handleShare}
-              className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gray-900 text-white text-sm font-semibold hover:bg-gray-800 active:scale-[0.98] transition-all"
+              className="inline-flex items-center justify-center gap-2 px-5 py-3 min-h-[44px] rounded-xl bg-gray-900 text-white text-sm font-semibold hover:bg-gray-800 active:scale-[0.98] transition-all"
             >
               <Share2 className="w-4 h-4" />
               Share result
@@ -675,6 +677,17 @@ export default function StudentResults({
               })}
             </ul>
           )}
+        </div>
+
+        {/* Back to dashboard */}
+        <div className="text-center mb-6">
+          <Link
+            href="/dashboard/athlete"
+            className="inline-flex items-center gap-2 px-4 py-2.5 min-h-[44px] rounded-xl bg-white/10 border border-white/15 text-white/80 hover:text-white hover:bg-white/15 text-sm transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to dashboard
+          </Link>
         </div>
 
         {/* ── Question Review (collapsible) ───────────────────────────── */}

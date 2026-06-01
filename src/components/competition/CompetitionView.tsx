@@ -771,7 +771,7 @@ function FreeTextInput({
       <button
         type="submit"
         disabled={disabled || !value.trim()}
-        className={`px-6 py-3 rounded-xl font-bold transition-all flex items-center justify-center gap-2 ${
+        className={`px-6 py-3 min-h-[48px] rounded-xl font-bold transition-all flex items-center justify-center gap-2 ${
           disabled || !value.trim()
             ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
             : 'bg-indigo-600 text-white hover:bg-indigo-700 active:scale-[0.98]'
@@ -803,7 +803,7 @@ function MCButtons({
             type="button"
             onClick={() => onPick(letter)}
             disabled={disabled}
-            className={`group flex items-center gap-3 p-4 rounded-xl border-2 text-left transition-all ${
+            className={`group flex items-center gap-3 p-4 min-h-[56px] rounded-xl border-2 text-left transition-all ${
               disabled
                 ? 'border-gray-100 bg-gray-50 text-gray-400 cursor-not-allowed'
                 : 'border-gray-200 bg-white text-gray-900 hover:border-indigo-400 hover:bg-indigo-50 active:scale-[0.99]'

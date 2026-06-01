@@ -185,39 +185,58 @@ export default async function AthleteDashboard() {
 
         {/* Recent Heats */}
         <div className="bg-white rounded-xl shadow-sm p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Recent Heats</h2>
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">My recent results</h2>
           {recentHeats && recentHeats.length > 0 ? (
             <div className="space-y-3">
-              {recentHeats.map((participation: any) => (
-                <div 
-                  key={participation.id}
-                  className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
-                >
-                  <div>
-                    <p className="font-medium text-gray-900">
-                      {participation.heats?.topics?.name || 'Heat'}
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      {participation.heats?.started_at ? new Date(participation.heats.started_at).toLocaleDateString() : '—'}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    {participation.medal && (
-                      <span className="text-xl">
-                        {participation.medal === 'gold' ? '🥇' : participation.medal === 'silver' ? '🥈' : '🥉'}
-                      </span>
-                    )}
-                    <div className="text-right">
-                      <p className="font-bold text-blue-600">{participation.cta_score?.toFixed(0)}</p>
-                      <p className="text-xs text-gray-500">CTA Score</p>
+              {recentHeats.map((participation: any) => {
+                const heatCode = participation.heats?.code;
+                const rank = participation.rank_in_heat;
+                return (
+                  <Link
+                    key={participation.id}
+                    href={heatCode ? `/compete/${heatCode}` : '/compete'}
+                    className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition min-h-[44px]"
+                  >
+                    <div className="min-w-0">
+                      <p className="font-medium text-gray-900 truncate">
+                        {participation.heats?.topics?.name || 'Heat'}
+                        {heatCode && (
+                          <span className="ml-2 text-xs text-gray-400 font-mono">{heatCode}</span>
+                        )}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        {participation.heats?.started_at
+                          ? new Date(participation.heats.started_at).toLocaleDateString()
+                          : '—'}
+                        {rank && <span className="ml-2">· rank #{rank}</span>}
+                      </p>
                     </div>
-                  </div>
-                </div>
-              ))}
+                    <div className="flex items-center gap-4 flex-shrink-0">
+                      {participation.medal && (
+                        <span className="text-xl" aria-label={`${participation.medal} medal`}>
+                          {participation.medal === 'gold' ? '🥇' : participation.medal === 'silver' ? '🥈' : '🥉'}
+                        </span>
+                      )}
+                      <div className="text-right">
+                        <p className="font-bold text-blue-600">
+                          {participation.cta_score != null
+                            ? Number(participation.cta_score).toFixed(0)
+                            : '—'}
+                        </p>
+                        <p className="text-xs text-gray-500">CTA</p>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
           ) : (
             <p className="text-gray-500 text-center py-8">
-              No Heats completed yet. Join your first Heat to start competing!
+              No Heats completed yet.{' '}
+              <Link href="/compete" className="text-blue-600 hover:underline">
+                Join your first Heat
+              </Link>{' '}
+              to start competing!
             </p>
           )}
         </div>

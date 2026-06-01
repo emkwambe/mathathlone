@@ -158,12 +158,12 @@ export default async function TeacherDashboard() {
               {recentHeats.map((heat: any) => (
                 <Link
                   key={heat.id}
-                  href={`/compete/${heat.id}`}
+                  href={`/compete/${heat.code}`}
                   className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition"
                 >
                   <div>
                     <p className="font-medium text-gray-900">
-                      {heat.topics?.name || 'Heat'} • {heat.code}
+                      {heat.topics?.name || 'Heat'} • <span className="font-mono">{heat.code}</span>
                     </p>
                     <p className="text-sm text-gray-500">
                       {heat.started_at ? new Date(heat.started_at).toLocaleDateString() : 'Scheduled'}
@@ -171,14 +171,14 @@ export default async function TeacherDashboard() {
                   </div>
                   <div className="flex items-center gap-4">
                     <span className={`text-xs px-2 py-1 rounded ${
-                      heat.status === 'complete' ? 'bg-green-100 text-green-700' :
-                      heat.status === 'in_progress' ? 'bg-blue-100 text-blue-700' :
+                      heat.status === 'complete' || heat.status === 'finished' ? 'bg-green-100 text-green-700' :
+                      heat.status === 'active' || heat.status === 'in_progress' ? 'bg-blue-100 text-blue-700' :
                       'bg-gray-100 text-gray-600'
                     }`}>
                       {heat.status}
                     </span>
                     <span className="text-sm text-gray-600">
-                      {heat.heat_participations?.[0]?.count || 0} mathletes
+                      {heat.heat_participations?.[0]?.count || 0} Mathletes
                     </span>
                   </div>
                 </Link>
