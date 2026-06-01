@@ -1,22 +1,27 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createSupabaseServer } from '@/lib/supabase/server';
+import MissingProfile from '@/components/auth/MissingProfile';
 
 export default async function AthleteDashboard() {
   const supabase = await createSupabaseServer();
-  
-  // Get current user
+
+  // Get current user (middleware already redirects unauthenticated users)
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/auth/login');
 
-  // Get user profile
+  // Get user profile. If it's missing we render a recoverable error instead
+  // of redirecting — redirecting to /auth/login would bounce through the
+  // middleware back to /dashboard → /dashboard/athlete → here, infinite loop.
   const { data: profile } = await supabase
     .from('users')
     .select('*')
     .eq('id', user.id)
-    .single();
+    .maybeSingle();
 
-  if (!profile) redirect('/auth/login');
+  if (!profile) {
+    return <MissingProfile email={user.email} role="mathlete" />;
+  }
 
   // Get user's ranking
   const { data: ranking } = await supabase

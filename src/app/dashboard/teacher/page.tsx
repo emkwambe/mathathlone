@@ -1,15 +1,19 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createSupabaseServer } from '@/lib/supabase/server';
+import MissingProfile from '@/components/auth/MissingProfile';
 
 export default async function TeacherDashboard() {
   const supabase = await createSupabaseServer();
-  
-  // Get current user
+
+  // Get current user (middleware already redirects unauthenticated users)
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/auth/login');
 
-  // Get user profile with school
+  // Get user profile with school. If it's missing we render a recoverable
+  // error instead of redirecting — redirecting to /auth/login would bounce
+  // through middleware back to /dashboard → /dashboard/teacher → here,
+  // infinite loop.
   const { data: profile } = await supabase
     .from('users')
     .select(`
@@ -17,8 +21,10 @@ export default async function TeacherDashboard() {
       schools!users_school_id_fkey ( name, district, state )
     `)
     .eq('id', user.id)
-    .single();
-  if (!profile) redirect('/auth/login');
+    .maybeSingle();
+  if (!profile) {
+    return <MissingProfile email={user.email} role="teacher" />;
+  }
 
   // Get teacher's classes with athlete counts
   const { data: classes } = await supabase

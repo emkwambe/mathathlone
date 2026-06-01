@@ -30,6 +30,19 @@ function isAuthRedirectRoute(pathname: string): boolean {
   );
 }
 
+/**
+ * Validate a `?next=` query value. Only allow internal paths starting with
+ * `/` (so the middleware can't be tricked into redirecting to an external
+ * domain), and reject paths that would loop us right back to an auth page.
+ */
+function safeNextPath(next: string | null): string | null {
+  if (!next) return null;
+  if (!next.startsWith('/')) return null;          // external / protocol-relative — reject
+  if (next.startsWith('//')) return null;          // protocol-relative — reject
+  if (isAuthRedirectRoute(next)) return null;      // would just loop back
+  return next;
+}
+
 export async function updateSession(request: NextRequest): Promise<NextResponse> {
   let response = NextResponse.next({ request });
 
@@ -73,7 +86,11 @@ export async function updateSession(request: NextRequest): Promise<NextResponse>
   }
 
   if (user && isAuthRedirectRoute(path)) {
-    return NextResponse.redirect(new URL('/dashboard', request.url));
+    // Honor ?next= when it's a safe internal path (e.g. a Heat join link
+    // that bounced through login). Otherwise fall back to /dashboard, which
+    // forwards to the role-specific dashboard.
+    const requested = safeNextPath(request.nextUrl.searchParams.get('next'));
+    return NextResponse.redirect(new URL(requested ?? '/dashboard', request.url));
   }
 
   return response;

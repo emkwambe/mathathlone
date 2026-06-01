@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createSupabaseServer } from '@/lib/supabase/server';
+import MissingProfile from '@/components/auth/MissingProfile';
 
 export default async function BroadcastDashboard() {
   const supabase = await createSupabaseServer();
@@ -14,7 +15,11 @@ export default async function BroadcastDashboard() {
     .eq('id', user.id)
     .maybeSingle();
 
-  if (!profile) redirect('/auth/login');
+  // Render recoverable error instead of redirecting — see athlete/page.tsx
+  // for why redirecting here would create an infinite middleware loop.
+  if (!profile) {
+    return <MissingProfile email={user.email} role="broadcast_host" />;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
