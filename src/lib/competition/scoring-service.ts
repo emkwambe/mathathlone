@@ -134,25 +134,51 @@ export async function calculateHeatResults(
     return [];
   }
 
-  // 3. Load all submissions for those participations (we recompute counters
+  // 3. Load this Heat's questions so we can classify each submission as
+  //    free-response (generator_id NOT NULL → procedural generator) or
+  //    multiple-choice (generator_id IS NULL → static/visual). This drives
+  //    the new Content formula that weights free-response 2× MC.
+  const { data: heatQuestions, error: qError } = await supabase
+    .from('heat_questions')
+    .select('id, generator_id')
+    .eq('heat_id', heatId);
+  if (qError) {
+    throw new Error(`Failed to load heat_questions: ${qError.message}`);
+  }
+  const isFreeResponseByQuestion = new Map<string, boolean>(
+    (heatQuestions ?? []).map((q: any) => [q.id as string, q.generator_id !== null])
+  );
+
+  // Heat-wide FR/MC totals (every Mathlete has the same question pool)
+  let frTotal = 0;
+  let mcTotal = 0;
+  for (const isFr of isFreeResponseByQuestion.values()) {
+    if (isFr) frTotal++; else mcTotal++;
+  }
+
+  // 4. Load all submissions for those participations (we recompute counters
   //    from submissions to make scoring robust against partial updates).
   const participationIds = participations.map((p: any) => p.id);
   const { data: submissions, error: sError } = await supabase
     .from('question_submissions')
-    .select('heat_participation_id, is_correct, time_taken_ms, attempt_number, points_earned')
+    .select(
+      'heat_participation_id, heat_question_id, is_correct, time_taken_ms, attempt_number, points_earned'
+    )
     .in('heat_participation_id', participationIds);
 
   if (sError) {
     throw new Error(`Failed to load question_submissions: ${sError.message}`);
   }
 
-  // 4. Aggregate per-participation stats from submissions
+  // 5. Aggregate per-participation stats from submissions
   type Agg = {
     attempts: number;
     correct: number;
     firstTouchCorrect: number;
     totalTimeMs: number;
     rawPoints: number;
+    frCorrect: number;          // free-response (generator_id NOT NULL) correct
+    mcCorrect: number;          // multiple-choice (visual/static) correct
   };
   const aggregates = new Map<string, Agg>();
   for (const pid of participationIds) {
@@ -162,19 +188,39 @@ export async function calculateHeatResults(
       firstTouchCorrect: 0,
       totalTimeMs: 0,
       rawPoints: 0,
+      frCorrect: 0,
+      mcCorrect: 0,
     });
   }
   for (const s of (submissions ?? []) as any[]) {
     const a = aggregates.get(s.heat_participation_id);
     if (!a) continue;
     a.attempts += 1;
-    if (s.is_correct) a.correct += 1;
+    if (s.is_correct) {
+      a.correct += 1;
+      // Bucket the correct answer by question type
+      const isFr = isFreeResponseByQuestion.get(s.heat_question_id);
+      if (isFr === true) a.frCorrect += 1;
+      else if (isFr === false) a.mcCorrect += 1;
+      // (if isFr is undefined the question row was deleted — count toward correct
+      // but skip the FR/MC weight contribution rather than guessing)
+    }
     if (s.is_correct && s.attempt_number === 1) a.firstTouchCorrect += 1;
     a.totalTimeMs += s.time_taken_ms ?? 0;
     a.rawPoints += s.points_earned ?? 0;
   }
 
-  // 5. Compute scores per participation
+  // 6. Compute scores per participation using the CTA framework
+  //    (see docs/CTA_SCORING_FRAMEWORK.md).
+  //
+  //    Content   = (fr_correct × 2 + mc_correct × 1)
+  //              / (fr_total × 2 + mc_total × 1) × 100
+  //    Timing    = (coverage × 0.6 + efficiency × 0.4) × 100
+  //                where coverage   = attempts / questions_available
+  //                      efficiency = max(0, (timeAllowed - timeUsed) / timeAllowed)
+  //    Accuracy  = first_touch_correct / attempts × 100
+  //    CTA       = C × 0.40 + T × 0.30 + A × 0.30
+  const contentDenominator = frTotal * 2 + mcTotal * 1;
   const scored = participations.map((p: any) => {
     const a = aggregates.get(p.id)!;
     const attempts = a.attempts || (p.questions_attempted ?? 0);
@@ -183,20 +229,26 @@ export async function calculateHeatResults(
       a.firstTouchCorrect || (p.first_touch_correct ?? 0);
     const totalTimeMs = a.totalTimeMs || (p.total_time_ms ?? 0);
 
-    // Content: % of questions answered correctly (normalize to total_questions
-    // so quitting early hurts your score).
-    const contentScore = round2((correct / totalQuestions) * 100);
+    // ── C: Content — free-response weighted 2×
+    const contentNumerator = a.frCorrect * 2 + a.mcCorrect * 1;
+    const contentScore =
+      contentDenominator > 0
+        ? round2((contentNumerator / contentDenominator) * 100)
+        : 0;
 
-    // Time: 100 at instant, linearly decaying to 0 at full duration.
-    // Only credited if user actually attempted questions.
-    const timeFraction = clamp(totalTimeMs / durationMs, 0, 1);
-    const timeScore = attempts > 0 ? round2((1 - timeFraction) * 100) : 0;
+    // ── T: Timing — coverage + efficiency
+    const coverage = clamp(attempts / totalQuestions, 0, 1);
+    const efficiency =
+      attempts > 0
+        ? Math.max(0, (durationMs - totalTimeMs) / durationMs)
+        : 0;
+    const timeScore = round2((coverage * 0.6 + efficiency * 0.4) * 100);
 
-    // Accuracy: first-touch correctness rate (drives the eligibility gate).
+    // ── A: Accuracy — first-touch correctness rate
     const accuracyScore =
       attempts > 0 ? round2((firstTouchCorrect / attempts) * 100) : 0;
 
-    // CTA composite (content 40 / time 30 / accuracy 30 — per Sprint 1 spec).
+    // ── CTA composite (40 / 30 / 30)
     const ctaScore = round2(
       contentScore * 0.4 + timeScore * 0.3 + accuracyScore * 0.3
     );

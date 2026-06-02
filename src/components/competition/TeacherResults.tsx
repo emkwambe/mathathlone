@@ -404,12 +404,21 @@ export default function TeacherResults({ heatId, heatCode, integrityLevel }: Tea
           </button>
         </div>
 
-        {/* Overview stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+        {/* Overview stats — CTA framework (docs/CTA_SCORING_FRAMEWORK.md) */}
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4">
           <Tile label="Competed" value={competed.toString()} icon={<Users className="w-4 h-4" />} />
           <Tile label="Avg accuracy" value={`${avgAccuracy}%`} icon={<Target className="w-4 h-4" />} />
-          <Tile label="Avg CTA" value={avgCta.toString()} icon={<TrendingUp className="w-4 h-4" />} />
+          <Tile label="Avg CTA" value={`${avgCta}/100`} icon={<TrendingUp className="w-4 h-4" />} />
           <Tile label="Avg time" value={formatTime(avgTimeMs)} icon={<Clock className="w-4 h-4" />} />
+          <Tile
+            label="Concepts mastered"
+            value={
+              conceptBuckets.length > 0
+                ? `${conceptBuckets.filter((b) => b.accuracy >= 80).length}/${conceptBuckets.length}`
+                : '—'
+            }
+            icon={<Award className="w-4 h-4" />}
+          />
         </div>
 
         {/* Award distribution */}
@@ -678,7 +687,7 @@ function DrillDownModal({
 
         {/* Stat strip */}
         <div className="grid grid-cols-4 gap-2 p-5 border-b border-gray-100">
-          <SmallStat label="CTA" value={Math.round(row.cta_score ?? 0).toString()} />
+          <SmallStat label="CTA" value={`${Math.round(row.cta_score ?? 0)}/100`} />
           <SmallStat label="Accuracy" value={`${Math.round(row.accuracy_score ?? 0)}%`} />
           <SmallStat label="Correct" value={`${row.questions_correct}/${row.questions_attempted}`} />
           <SmallStat label="Time" value={formatTime(row.total_time_ms)} />

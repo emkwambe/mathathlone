@@ -116,6 +116,13 @@ interface SubmissionWithQuestion {
     answer_type: string;
     points_value: number;
     solution_steps: any;
+    question_generators?: {
+      atomic_concepts?: {
+        name: string;
+        lesson_number: string;
+        unit_topics?: { name: string } | null;
+      } | null;
+    } | null;
   } | null;
 }
 
@@ -292,7 +299,13 @@ export default function StudentResults({
                 points_earned, attempt_number,
                 heat_questions:heat_question_id (
                   id, question_number, question_text, question_latex,
-                  correct_answer, answer_type, points_value, solution_steps
+                  correct_answer, answer_type, points_value, solution_steps,
+                  question_generators:generator_id (
+                    atomic_concepts:concept_id (
+                      name, lesson_number,
+                      unit_topics:unit_topic_id ( name )
+                    )
+                  )
                 )
               `
               )
@@ -441,6 +454,43 @@ export default function StudentResults({
     return best;
   }, [submissions]);
 
+  // Concept-mastery summary (CTA framework, docs/CTA_SCORING_FRAMEWORK.md).
+  // Buckets submissions by the linked atomic_concept (or unit_topic / visual /
+  // static fallback) and counts a concept as MASTERED when ≥80% of attempts
+  // in it were correct. Mirrors the rubric in TeacherResults.
+  const conceptMastery = useMemo(() => {
+    type Bucket = { attempts: number; correct: number };
+    const buckets = new Map<string, Bucket>();
+    for (const s of submissions) {
+      const q = s.heat_questions;
+      if (!q) continue;
+      const concept = q.question_generators?.atomic_concepts;
+      const steps: any = q.solution_steps;
+      let key: string;
+      if (concept?.lesson_number) {
+        key = `concept:${concept.lesson_number}`;
+      } else if (concept?.unit_topics?.name) {
+        key = `unit:${concept.unit_topics.name}`;
+      } else if (steps && typeof steps === 'object' && steps.kind === 'visual') {
+        key = 'visual';
+      } else if (steps && typeof steps === 'object' && steps.kind === 'static') {
+        key = 'static';
+      } else {
+        key = 'other';
+      }
+      const b = buckets.get(key) ?? { attempts: 0, correct: 0 };
+      b.attempts += 1;
+      if (s.is_correct) b.correct += 1;
+      buckets.set(key, b);
+    }
+    const total = buckets.size;
+    let mastered = 0;
+    buckets.forEach((b) => {
+      if (b.attempts > 0 && b.correct / b.attempts >= 0.8) mastered += 1;
+    });
+    return { mastered, total };
+  }, [submissions]);
+
   // Window the leaderboard: always show top 5 + (if needed) ... + user + neighbours
   const visibleLeaderboard = useMemo(() => {
     if (leaderboard.length === 0) return [];
@@ -465,7 +515,7 @@ export default function StudentResults({
       myRank
         ? `#${myRank} of ${totalParticipants} Mathletes`
         : `${totalParticipants} Mathletes competed`,
-      `CTA: ${Math.round(me.cta_score ?? 0)} · Accuracy: ${Math.round(me.accuracy_score ?? 0)}%`,
+      `CTA: ${Math.round(me.cta_score ?? 0)}/100 · Accuracy: ${Math.round(me.accuracy_score ?? 0)}%`,
       `${courseName} · ${topicName}`,
       'Can you beat my score? mathathlone.com/compete',
     ].join('\n');
@@ -575,7 +625,11 @@ export default function StudentResults({
 
           {/* Stats tiles */}
           <div className="grid grid-cols-3 gap-3 mt-6">
-            <StatTile label="CTA" value={Math.round(me.cta_score ?? 0).toString()} icon={<TrendingUp className="w-4 h-4" />} />
+            <StatTile
+              label="CTA"
+              value={`${Math.round(me.cta_score ?? 0)}/100`}
+              icon={<TrendingUp className="w-4 h-4" />}
+            />
             <StatTile
               label="Accuracy"
               value={`${Math.round(me.accuracy_score ?? 0)}%`}
@@ -589,8 +643,12 @@ export default function StudentResults({
             />
             <StatTile label="Best streak" value={correctStreakBest.toString()} icon={<Flame className="w-4 h-4" />} />
             <StatTile
-              label="Points"
-              value={(me.ranking_points_earned ?? 0).toLocaleString()}
+              label="Concepts mastered"
+              value={
+                conceptMastery.total > 0
+                  ? `${conceptMastery.mastered}/${conceptMastery.total}`
+                  : '—'
+              }
               icon={<TrendingUp className="w-4 h-4" />}
             />
           </div>

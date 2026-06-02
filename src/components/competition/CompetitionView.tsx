@@ -252,9 +252,10 @@ export default function CompetitionView({
   const questionDisplayedAtRef = useRef<number>(0);
 
   // ── Score / streak ──────────────────────────────────────────────────────
-  const [score, setScore] = useState(0);
+  const [score, setScore] = useState(0);                  // running points (used only for FeedbackOverlay)
   const [streak, setStreak] = useState(0);
   const [questionsAttempted, setQuestionsAttempted] = useState(0);
+  const [questionsCorrect, setQuestionsCorrect] = useState(0); // surfaced as "Correct: X/Y" in HUD
 
   // ── Feedback overlay ────────────────────────────────────────────────────
   const [feedback, setFeedback] = useState<
@@ -535,6 +536,7 @@ export default function CompetitionView({
       setScore((s) => s + pointsEarned);
       setStreak((s) => (isCorrect ? s + 1 : 0));
       setQuestionsAttempted(nextAttempted);
+      if (isCorrect) setQuestionsCorrect((c) => c + 1);
       setFeedback({
         isCorrect,
         pointsEarned,
@@ -619,7 +621,8 @@ export default function CompetitionView({
         icon={<Trophy className="w-10 h-10 text-amber-300" />}
         title="You're done!"
         message="Hang tight — waiting for your teacher to end the Heat so we can score everyone."
-        score={score}
+        correct={questionsCorrect}
+        total={questions.length}
         streak={streak}
       />
     );
@@ -631,7 +634,8 @@ export default function CompetitionView({
         icon={<Clock className="w-10 h-10 text-amber-300" />}
         title="Time's up!"
         message="The timer ran out. Your answers have been saved — waiting for results."
-        score={score}
+        correct={questionsCorrect}
+        total={questions.length}
         streak={streak}
       />
     );
@@ -674,10 +678,15 @@ export default function CompetitionView({
               )}
             </div>
             <div className="text-right">
+              {/* CTA framework: hide raw point totals during gameplay — they
+                  encourage "pointsification" (Kapp 2012). Show progress
+                  toward correctness instead, which is pedagogically actionable. */}
               <p className="text-xs text-white/50 uppercase tracking-wider leading-none mb-0.5">
-                Score
+                Correct
               </p>
-              <p className="text-lg font-bold text-amber-300 font-mono leading-none">{score}</p>
+              <p className="text-lg font-bold text-emerald-300 font-mono leading-none">
+                {questionsCorrect}/{questions.length}
+              </p>
             </div>
             <div className="flex items-center gap-2">
               <Clock className={`w-5 h-5 ${timerColor}`} />
@@ -962,13 +971,15 @@ function FullScreenMessage({
   icon,
   title,
   message,
-  score,
+  correct,
+  total,
   streak,
 }: {
   icon: React.ReactNode;
   title: string;
   message: string;
-  score?: number;
+  correct?: number;
+  total?: number;
   streak?: number;
 }) {
   return (
@@ -979,16 +990,18 @@ function FullScreenMessage({
         </div>
         <h1 className="text-2xl md:text-3xl font-bold text-white mb-3">{title}</h1>
         <p className="text-indigo-200 text-sm md:text-base">{message}</p>
-        {typeof score === 'number' && (
+        {typeof correct === 'number' && typeof total === 'number' && (
           <div className="mt-6 flex items-center justify-center gap-6">
             <div>
-              <p className="text-xs text-white/50 uppercase tracking-wider">Score</p>
-              <p className="text-3xl font-bold text-amber-300 font-mono">{score}</p>
+              <p className="text-xs text-white/50 uppercase tracking-wider">Correct</p>
+              <p className="text-3xl font-bold text-emerald-300 font-mono">
+                {correct}/{total}
+              </p>
             </div>
             {typeof streak === 'number' && (
               <div>
                 <p className="text-xs text-white/50 uppercase tracking-wider">Best streak</p>
-                <p className="text-3xl font-bold text-emerald-300 font-mono">{streak}</p>
+                <p className="text-3xl font-bold text-amber-300 font-mono">{streak}</p>
               </div>
             )}
           </div>
