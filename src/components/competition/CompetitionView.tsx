@@ -68,6 +68,8 @@ interface HeatQuestionRow {
   solution_steps: any;
   points_value: number;
   time_limit_seconds: number;
+  /** Joined from question_generators when generator_id is set. */
+  question_generators?: { generator_type: string } | null;
 }
 
 interface CompetitionViewProps {
@@ -144,6 +146,66 @@ function renderMath(input: string): { __html: string } {
     .replace(/_(-?\d+)/g, '<sub>$1</sub>')
     .replace(/\*/g, '·');
   return { __html: html };
+}
+
+/**
+ * Format-hint resolver for free-text questions. Returns a short instruction
+ * shown beneath the answer input so Mathletes know the expected form.
+ *
+ * Priority: generator_type substring match wins over raw answer_type because
+ * some generators (e.g. `linear_eq_*`) produce numeric answers stored as
+ * `integer`/`text` while still benefiting from a structural hint, and others
+ * (`point_slope_form`) require a specific equation layout.
+ */
+function formatHintFor(
+  answerType: string | null | undefined,
+  generatorType: string | null | undefined
+): string {
+  const at = (answerType ?? '').toLowerCase();
+  const gt = (generatorType ?? '').toLowerCase();
+
+  // Generator-shape rules (apply across text / equation / expression types)
+  if (gt.includes('point_slope')) {
+    return 'Format: y - b = m(x - a) (e.g., y - 2 = 3(x - 4))';
+  }
+  if (gt.includes('linear_eq') || gt.includes('write_linear_eq') || gt.includes('write_parallel_perp_eq')) {
+    return 'Format: y = mx + b (e.g., y = 2x + 3)';
+  }
+  if (gt.includes('inequality')) {
+    return 'Format: x > 5 or x ≤ -3';
+  }
+  if (gt.includes('factor')) {
+    return 'Format: (x + a)(x + b) (e.g., (x + 2)(x - 3))';
+  }
+  if (gt.includes('system_solution')) {
+    return 'Format: no solution, infinite, or one solution';
+  }
+
+  // Pure answer_type fallbacks
+  switch (at) {
+    case 'integer':
+      return 'Enter a whole number (e.g., 5)';
+    case 'decimal':
+      return 'Enter a number (e.g., 3.5)';
+    case 'fraction':
+      return 'Enter as a fraction (e.g., 3/4 or -1/2)';
+    case 'ordered_pair':
+    case 'point':
+      return 'Format: (x, y) (e.g., (2, 3))';
+    case 'integer_pair':
+      return 'Format: {a, b} (order doesn\'t matter)';
+    case 'inequality':
+      return 'Format: x > 5 or x ≤ -3';
+    case 'interval':
+      return 'Format: (a, b), [a, b], (a, b], or [a, b)';
+    case 'equation':
+      return 'Format: y = mx + b (e.g., y = 2x + 3)';
+    case 'expression':
+      return 'Enter the simplified expression';
+    case 'text':
+    default:
+      return 'Enter your answer exactly';
+  }
 }
 
 function formatClock(totalSeconds: number): string {
@@ -233,7 +295,7 @@ export default function CompetitionView({
     (async () => {
       const { data, error } = await supabase
         .from('heat_questions')
-        .select('*')
+        .select('*, question_generators ( generator_type )')
         .eq('heat_id', heatId)
         .order('question_number', { ascending: true });
 
@@ -660,12 +722,20 @@ export default function CompetitionView({
 
             {/* Input */}
             {shape.kind === 'free_text' ? (
-              <FreeTextInput
-                value={answer}
-                onChange={setAnswer}
-                onSubmit={() => handleSubmit(answer)}
-                disabled={submitting || !!feedback}
-              />
+              <>
+                <FreeTextInput
+                  value={answer}
+                  onChange={setAnswer}
+                  onSubmit={() => handleSubmit(answer)}
+                  disabled={submitting || !!feedback}
+                />
+                <p className="mt-2 text-xs text-gray-500">
+                  {formatHintFor(
+                    currentQuestion.answer_type,
+                    currentQuestion.question_generators?.generator_type ?? null
+                  )}
+                </p>
+              </>
             ) : (
               <MCButtons
                 options={shape.options}

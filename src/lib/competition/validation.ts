@@ -19,10 +19,51 @@ export interface ValidationResult {
 // -----------------------------------------------------------------------------
 
 /**
- * Remove whitespace and normalize case
+ * Pre-normalization applied to every answer before type-specific parsing.
+ *
+ * Handles the most common copy-paste / typography issues:
+ *   - Unicode dashes (en-dash, em-dash, minus-sign, hyphen variants) → ASCII '-'
+ *   - Unicode comparison operators (≤, ≥) → '<=', '>='
+ *   - Unicode multiplication / division (×, ÷) → '*', '/'
+ *   - "Smart" quotes / apostrophes → ASCII
+ *   - Trailing punctuation (`.`, `,`) stripped
+ *   - Leading/trailing whitespace trimmed
+ *
+ * NOTE: this preserves INTERNAL whitespace — individual validators strip
+ * that themselves so their per-type regexes behave the same as before.
+ */
+export function prenormalize(input: string): string {
+  if (!input) return '';
+  let s = input;
+
+  // Unicode dashes/minuses → ASCII hyphen-minus
+  // U+2010 hyphen, U+2011 non-breaking hyphen, U+2012 figure dash,
+  // U+2013 en-dash, U+2014 em-dash, U+2015 horizontal bar, U+2212 minus sign,
+  // U+FE63 small hyphen-minus, U+FF0D fullwidth hyphen-minus
+  s = s.replace(/[‐-―−﹣－]/g, '-');
+
+  // Comparison operators
+  s = s.replace(/≤/g, '<=').replace(/≥/g, '>=').replace(/≠/g, '!=');
+
+  // Multiplication / division operators
+  s = s.replace(/[×·⋅∙]/g, '*');
+  s = s.replace(/÷/g, '/');
+
+  // Smart quotes / apostrophes
+  s = s.replace(/[‘’ʼ]/g, "'");
+  s = s.replace(/[“”]/g, '"');
+
+  // Trim, then strip trailing periods / commas (e.g. "x = 5." or "5,")
+  s = s.trim().replace(/[.,]+$/, '');
+
+  return s;
+}
+
+/**
+ * Remove whitespace and normalize case (used by text-style validators).
  */
 function normalize(str: string): string {
-  return str.replace(/\s+/g, '').toLowerCase();
+  return prenormalize(str).replace(/\s+/g, '').toLowerCase();
 }
 
 /**
@@ -207,8 +248,8 @@ function parseLinearEquation(eq: string): { m: number; b: number } | null {
  * Validate integer answer
  */
 function validateInteger(submitted: string, correct: string): ValidationResult {
-  const subVal = parseInt(submitted.trim(), 10);
-  const corVal = parseInt(correct.trim(), 10);
+  const subVal = parseInt(prenormalize(submitted), 10);
+  const corVal = parseInt(prenormalize(correct), 10);
   
   if (isNaN(subVal)) {
     return {
@@ -230,8 +271,8 @@ function validateInteger(submitted: string, correct: string): ValidationResult {
  * Validate decimal answer with tolerance
  */
 function validateDecimal(submitted: string, correct: string, tolerance = 0.01): ValidationResult {
-  const subVal = parseFloat(submitted.trim());
-  const corVal = parseFloat(correct.trim());
+  const subVal = parseFloat(prenormalize(submitted));
+  const corVal = parseFloat(prenormalize(correct));
   
   if (isNaN(subVal)) {
     return {
@@ -255,12 +296,16 @@ function validateDecimal(submitted: string, correct: string, tolerance = 0.01): 
  * Validate fraction answer (must be in simplified form)
  */
 function validateFraction(submitted: string, correct: string): ValidationResult {
-  const subFrac = parseFraction(submitted.trim());
-  const corFrac = parseFraction(correct.trim());
-  
+  // Normalize whitespace + Unicode dashes so "3 / 4" and "−3/4" both parse.
+  const subClean = prenormalize(submitted).replace(/\s+/g, '');
+  const corClean = prenormalize(correct).replace(/\s+/g, '');
+
+  const subFrac = parseFraction(subClean);
+  const corFrac = parseFraction(corClean);
+
   if (!subFrac) {
     // Maybe they entered an integer?
-    const intVal = parseInt(submitted.trim(), 10);
+    const intVal = parseInt(subClean, 10);
     if (!isNaN(intVal)) {
       const corSimp = corFrac ? simplifyFraction(corFrac[0], corFrac[1]) : null;
       if (corSimp && corSimp[1] === 1 && corSimp[0] === intVal) {
@@ -311,8 +356,10 @@ function validateFraction(submitted: string, correct: string): ValidationResult 
  * Validate ordered pair (x, y)
  */
 function validateOrderedPair(submitted: string, correct: string): ValidationResult {
-  const subPair = parseOrderedPair(submitted.trim());
-  const corPair = parseOrderedPair(correct.trim());
+  // prenormalize handles Unicode minus; parseOrderedPair already strips
+  // whitespace internally, so "(2, 3)" and "(2,3)" both match.
+  const subPair = parseOrderedPair(prenormalize(submitted));
+  const corPair = parseOrderedPair(prenormalize(correct));
   
   if (!subPair) {
     return {
@@ -347,8 +394,8 @@ function validateOrderedPair(submitted: string, correct: string): ValidationResu
  * Validate integer pair {a, b} (order doesn't matter)
  */
 function validateIntegerPair(submitted: string, correct: string): ValidationResult {
-  const subPair = parseIntegerPair(submitted.trim());
-  const corPair = parseIntegerPair(correct.trim());
+  const subPair = parseIntegerPair(prenormalize(submitted));
+  const corPair = parseIntegerPair(prenormalize(correct));
   
   if (!subPair) {
     return {
@@ -382,12 +429,14 @@ function validateIntegerPair(submitted: string, correct: string): ValidationResu
  * Validate algebraic expression
  */
 function validateExpression(submitted: string, correct: string): ValidationResult {
-  const isCorrect = expressionsEquivalent(submitted, correct);
-  
+  const sub = prenormalize(submitted);
+  const cor = prenormalize(correct);
+  const isCorrect = expressionsEquivalent(sub, cor);
+
   return {
     is_correct: isCorrect,
-    normalized_submitted: normalizeExpression(submitted),
-    normalized_correct: normalizeExpression(correct),
+    normalized_submitted: normalizeExpression(sub),
+    normalized_correct: normalizeExpression(cor),
   };
 }
 
@@ -395,10 +444,22 @@ function validateExpression(submitted: string, correct: string): ValidationResul
  * Validate linear equation (y = mx + b)
  */
 function validateEquation(submitted: string, correct: string): ValidationResult {
-  const subEq = parseLinearEquation(submitted.trim());
-  const corEq = parseLinearEquation(correct.trim());
-  
+  // Equations like "y - 2 = 4(x - 4)" and "y-2=4(x-4)" must match.
+  // prenormalize handles Unicode dashes; parseLinearEquation strips internal
+  // whitespace via its own .replace(/\s+/g, ''), so the formats unify.
+  const subClean = prenormalize(submitted);
+  const corClean = prenormalize(correct);
+
+  const subEq = parseLinearEquation(subClean);
+  const corEq = parseLinearEquation(corClean);
+
   if (!subEq) {
+    // Couldn't parse as y=mx+b. Fall back to expression comparison so
+    // point-slope form (y - b = m(x - a)) and similar still validate by
+    // structural equality after whitespace stripping.
+    if (!corEq) {
+      return validateExpression(subClean, corClean);
+    }
     return {
       is_correct: false,
       normalized_submitted: submitted,
@@ -406,16 +467,16 @@ function validateEquation(submitted: string, correct: string): ValidationResult 
       feedback: 'Please enter an equation in the form y = mx + b',
     };
   }
-  
+
   if (!corEq) {
     // Fallback to expression comparison
-    return validateExpression(submitted, correct);
+    return validateExpression(subClean, corClean);
   }
-  
-  const isCorrect = 
-    Math.abs(subEq.m - corEq.m) < 0.01 && 
+
+  const isCorrect =
+    Math.abs(subEq.m - corEq.m) < 0.01 &&
     Math.abs(subEq.b - corEq.b) < 0.01;
-  
+
   return {
     is_correct: isCorrect,
     normalized_submitted: `y = ${subEq.m}x + ${subEq.b}`,
@@ -427,16 +488,11 @@ function validateEquation(submitted: string, correct: string): ValidationResult 
  * Validate inequality (x > 5, x ≤ -3, etc.)
  */
 function validateInequality(submitted: string, correct: string): ValidationResult {
-  // Normalize inequality symbols
-  const normalizeIneq = (s: string) => {
-    return s.replace(/\s+/g, '')
-      .replace(/≤/g, '<=')
-      .replace(/≥/g, '>=')
-      .replace(/</g, '<')
-      .replace(/>/g, '>')
-      .toLowerCase();
-  };
-  
+  // prenormalize already converts ≤ → <= and ≥ → >=, and handles Unicode
+  // dashes. This validator just strips remaining whitespace + lowercases.
+  const normalizeIneq = (s: string) =>
+    prenormalize(s).replace(/\s+/g, '').toLowerCase();
+
   const subNorm = normalizeIneq(submitted);
   const corNorm = normalizeIneq(correct);
   
@@ -454,8 +510,8 @@ function validateInequality(submitted: string, correct: string): ValidationResul
  * Validate interval notation
  */
 function validateInterval(submitted: string, correct: string): ValidationResult {
-  const subInt = parseInterval(submitted.trim());
-  const corInt = parseInterval(correct.trim());
+  const subInt = parseInterval(prenormalize(submitted));
+  const corInt = parseInterval(prenormalize(correct));
   
   if (!subInt) {
     return {
