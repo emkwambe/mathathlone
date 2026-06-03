@@ -110,6 +110,23 @@ const HEAT_TYPE_META: Record<HeatType, { label: string; icon: React.ReactNode; q
 // Picker-visible heat types only. 'official' is internal (used by legacy data).
 const HEAT_TYPE_OPTIONS: HeatType[] = ['sprint', 'target', 'practice', 'championship'];
 
+/**
+ * FR/MC mix per heat type, mirroring HEAT_PRESETS in question-service.ts.
+ * Championship raises FR to 50% (harder Heat → stronger Content signal);
+ * Practice lowers FR to 30% to ease cognitive load; Sprint + Target use the
+ * standard 40/60 baseline. See docs/CTA_SCORING_FRAMEWORK.md.
+ */
+const HEAT_TYPE_MIX: Record<
+  HeatType,
+  { fr_ratio: number; mc_ratio: number; mc_visual_share: number }
+> = {
+  sprint:       { fr_ratio: 0.4, mc_ratio: 0.6, mc_visual_share: 0.5 },
+  target:       { fr_ratio: 0.4, mc_ratio: 0.6, mc_visual_share: 0.5 },
+  practice:     { fr_ratio: 0.3, mc_ratio: 0.7, mc_visual_share: 0.5 },
+  championship: { fr_ratio: 0.5, mc_ratio: 0.5, mc_visual_share: 0.5 },
+  official:     { fr_ratio: 0.4, mc_ratio: 0.6, mc_visual_share: 0.5 },
+};
+
 const DIFFICULTY_TIERS: Record<DifficultyTier, { label: string; depthMin: number; depthMax: number; pill: string; accent: string }> = {
   bronze:   { label: 'Bronze',   depthMin: 1, depthMax: 2, pill: 'text-amber-700 bg-amber-50 border-amber-200',   accent: 'text-amber-700 border-amber-400 bg-amber-50' },
   silver:   { label: 'Silver',   depthMin: 2, depthMax: 3, pill: 'text-slate-700 bg-slate-50 border-slate-200',    accent: 'text-slate-700 border-slate-400 bg-slate-50' },
@@ -409,6 +426,7 @@ export default function CreateHeatPage() {
     setCreating(true);
 
     try {
+      const mix = HEAT_TYPE_MIX[heatType];
       const heat = await createHeat(supabase, {
         division_id: selectedDivision.id,
         unit_topic_id:
@@ -421,6 +439,10 @@ export default function CreateHeatPage() {
         duration_seconds: durationMinutes * 60,
         school_id: profile?.school_id ?? null,
         scope: 'class',
+        // CTA framework mix — see HEAT_TYPE_MIX above.
+        fr_ratio: mix.fr_ratio,
+        mc_ratio: mix.mc_ratio,
+        mc_visual_share: mix.mc_visual_share,
         requires_attestation: currentIntegrity.config.teacher_attestation_required,
         lockdown_required: currentIntegrity.config.lockdown_browser_required,
         synchronized_start_at: currentIntegrity.config.synchronized_start

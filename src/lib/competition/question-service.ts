@@ -88,8 +88,12 @@ export interface UnifiedQuestion {
 
 export interface HeatQuestionConfig {
   total_questions: number;
-  static_ratio?: number;                   // 0..1 fraction from static_questions
-  visual_ratio?: number;                   // 0..1 fraction from visual generators
+  /** Fraction (0..1) of free-response (procedural generator) questions. Default 0.4. */
+  fr_ratio?: number;
+  /** Fraction (0..1) of multiple-choice questions. Default 0.6. */
+  mc_ratio?: number;
+  /** Within the MC portion, share allocated to visual SVG MC. Default 0.5. */
+  mc_visual_share?: number;
   concept_ids?: string[];                  // restrict static pool by concept
   difficulty_distribution?: {
     1: number;                             // Bronze count
@@ -199,23 +203,31 @@ export class QuestionService {
   async generateHeatQuestions(config: HeatQuestionConfig): Promise<UnifiedQuestion[]> {
     const {
       total_questions,
-      static_ratio = 0.3,
-      visual_ratio = 0.2,
       concept_ids,
       difficulty_distribution = { 1: 5, 2: 8, 3: 5, 4: 2 },
     } = config;
 
-    // Carve out fixed counts for each source. Static + visual come out of the
-    // non-generator portion of the total — generator gets the remainder.
-    const visualCount = Math.min(
-      total_questions,
-      Math.max(0, Math.round(total_questions * visual_ratio))
-    );
-    const staticCount = Math.min(
-      total_questions - visualCount,
-      Math.max(0, Math.round(total_questions * static_ratio))
-    );
-    const generatorCount = total_questions - visualCount - staticCount;
+    // Resolve FR/MC ratios (matches the rules in question-delivery.ts).
+    const clamp01 = (n: number) => (!Number.isFinite(n) ? 0 : Math.max(0, Math.min(1, n)));
+    let frRatio = config.fr_ratio ?? (config.mc_ratio !== undefined ? 1 - config.mc_ratio : 0.4);
+    let mcRatio = config.mc_ratio ?? (config.fr_ratio !== undefined ? 1 - config.fr_ratio : 0.6);
+    frRatio = clamp01(frRatio);
+    mcRatio = clamp01(mcRatio);
+    const sum = frRatio + mcRatio;
+    if (sum <= 0) {
+      frRatio = 0.4; mcRatio = 0.6;
+    } else if (Math.abs(sum - 1) > 0.001) {
+      frRatio = frRatio / sum; mcRatio = mcRatio / sum;
+    }
+    const mcVisualShare = clamp01(config.mc_visual_share ?? 0.5);
+
+    // Carve out counts: MC total first (rounded), FR fills remainder.
+    // Within MC, split by mcVisualShare. FR gets any rounding remainder.
+    let mcTotal = Math.round(total_questions * mcRatio);
+    if (mcTotal > total_questions) mcTotal = total_questions;
+    const generatorCount = total_questions - mcTotal;
+    const visualCount = Math.min(mcTotal, Math.round(mcTotal * mcVisualShare));
+    const staticCount = mcTotal - visualCount;
 
     const questions: UnifiedQuestion[] = [];
     let questionNumber = 1;
@@ -417,51 +429,58 @@ export function createQuestionService(supabase: SupabaseClient): QuestionService
 // -----------------------------------------------------------------------------
 
 export const HEAT_PRESETS = {
-  // Standard: 50% generator, 30% static, 20% visual
+  // CTA framework defaults — 40% free-response / 60% multiple-choice.
+  // FR carries 2× Content weight, so even at 40% it dominates the C score.
   STANDARD: {
     total_questions: 20,
-    static_ratio: 0.3,
-    visual_ratio: 0.2,
+    fr_ratio: 0.4,
+    mc_ratio: 0.6,
+    mc_visual_share: 0.5,                    // 6 static + 6 visual for a 20-Q Heat
     difficulty_distribution: { 1: 5, 2: 8, 3: 5, 4: 2 },
   },
 
-  // Pure procedural (no MC at all)
+  // Pure procedural — all FR, for advanced practice / verification heats.
   PURE_CALC: {
     total_questions: 20,
-    static_ratio: 0,
-    visual_ratio: 0,
+    fr_ratio: 1.0,
+    mc_ratio: 0.0,
+    mc_visual_share: 0.5,
     difficulty_distribution: { 1: 5, 2: 8, 3: 5, 4: 2 },
   },
 
-  // Visual-heavy (great for geometry/graphing units)
+  // Visual-heavy — same FR/MC ratio, but skew MC toward visual SVG questions.
   VISUAL_HEAVY: {
     total_questions: 15,
-    static_ratio: 0.2,
-    visual_ratio: 0.5,
+    fr_ratio: 0.4,
+    mc_ratio: 0.6,
+    mc_visual_share: 0.85,
     difficulty_distribution: { 1: 4, 2: 6, 3: 4, 4: 1 },
   },
 
-  // Concept review (more MC)
+  // Concept review — same MC tilt, skew toward static (text-based) MC.
   CONCEPT_REVIEW: {
     total_questions: 15,
-    static_ratio: 0.5,
-    visual_ratio: 0.2,
+    fr_ratio: 0.4,
+    mc_ratio: 0.6,
+    mc_visual_share: 0.25,
     difficulty_distribution: { 1: 6, 2: 6, 3: 3, 4: 0 },
   },
 
-  // Championship (harder, balanced)
+  // Championship — harder Heat raises FR share. 50/50 maximizes Content signal.
   CHAMPIONSHIP: {
     total_questions: 25,
-    static_ratio: 0.2,
-    visual_ratio: 0.2,
+    fr_ratio: 0.5,
+    mc_ratio: 0.5,
+    mc_visual_share: 0.5,
     difficulty_distribution: { 1: 4, 2: 8, 3: 8, 4: 5 },
   },
 
-  // Quick practice (easy, mostly MC)
+  // Quick practice — accessibility-first, more MC, less typing.
   QUICK_PRACTICE: {
     total_questions: 10,
-    static_ratio: 0.4,
-    visual_ratio: 0.3,
+    fr_ratio: 0.3,
+    mc_ratio: 0.7,
+    mc_visual_share: 0.5,
     difficulty_distribution: { 1: 5, 2: 4, 3: 1, 4: 0 },
   },
 };

@@ -34,10 +34,30 @@ export interface GenerateQuestionsParams {
   depthMin: number;                    // 1..4
   depthMax: number;                    // 1..4
   questionCount: number;
-  /** Fraction (0..1) of static multiple-choice questions to include. Default 0. */
-  staticRatio?: number;
-  /** Fraction (0..1) of visual SVG questions to include. Default 0.2 (~20%). */
-  visualRatio?: number;
+
+  // -- CTA framework knobs (docs/CTA_SCORING_FRAMEWORK.md) -------------------
+  // Heats are composed of two question families:
+  //   FR (free-response, generator-based, typed answer)
+  //   MC (multiple-choice, split evenly between static and visual)
+  // The CTA Content formula weights FR correct × 2 and MC correct × 1, so
+  // the FR floor of 40% guarantees a meaningful Content signal even when
+  // the bulk of the Heat is accessibility-friendly MC.
+  //
+  // If both are omitted the defaults apply (FR 0.4 / MC 0.6).
+  // If only frRatio is provided, mcRatio = 1 - frRatio (and vice versa).
+  // If both are provided and don't sum to 1, they're normalized.
+
+  /** Fraction (0..1) of free-response (procedural generator) questions. Default 0.4. */
+  frRatio?: number;
+  /** Fraction (0..1) of multiple-choice questions. Default 0.6. */
+  mcRatio?: number;
+
+  /**
+   * Within the MC portion, the share that should be VISUAL (SVG) MC. The rest
+   * is static MC pulled from `static_questions`. Default 0.5 — i.e. an even
+   * split. Backfill kicks in if either pool is short.
+   */
+  mcVisualShare?: number;
 }
 
 // -----------------------------------------------------------------------------
@@ -58,6 +78,13 @@ function isUuid(value: unknown): value is string {
 
 function randomInRange(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function clamp01(n: number): number {
+  if (!Number.isFinite(n)) return 0;
+  if (n < 0) return 0;
+  if (n > 1) return 1;
+  return n;
 }
 
 function pickDifficulty(min: number, max: number): DifficultyLevel {
@@ -259,34 +286,126 @@ export async function generateAndInsertQuestions(
     depthMin,
     depthMax,
     questionCount,
-    staticRatio = 0,
-    visualRatio = 0.2,
   } = params;
 
   if (questionCount <= 0) return;
 
-  const visualCount = Math.min(
-    questionCount,
-    Math.max(0, Math.round(questionCount * visualRatio))
-  );
-  const staticCount = Math.min(
-    questionCount - visualCount,
-    Math.max(0, Math.round(questionCount * staticRatio))
-  );
-  const generatorCount = questionCount - visualCount - staticCount;
+  // ── Resolve FR / MC ratios (defaults from the CTA framework) ──────────────
+  // The user may pass either, both, or neither. We clamp to [0,1] and
+  // normalize so they always sum to 1 — a defensive measure against config
+  // typos like { frRatio: 0.4, mcRatio: 0.7 } that would otherwise produce
+  // more questions than questionCount.
+  let frRatio = params.frRatio ?? (params.mcRatio !== undefined ? 1 - params.mcRatio : 0.4);
+  let mcRatio = params.mcRatio ?? (params.frRatio !== undefined ? 1 - params.frRatio : 0.6);
+  frRatio = clamp01(frRatio);
+  mcRatio = clamp01(mcRatio);
+  const ratioSum = frRatio + mcRatio;
+  if (ratioSum <= 0) {
+    frRatio = 0.4;
+    mcRatio = 0.6;
+  } else if (Math.abs(ratioSum - 1) > 0.001) {
+    frRatio = frRatio / ratioSum;
+    mcRatio = mcRatio / ratioSum;
+  }
+  const mcVisualShare = clamp01(params.mcVisualShare ?? 0.5);
 
-  // Load eligible generator catalog ahead of time
+  // ── Target counts (before backfill) ───────────────────────────────────────
+  // We round MC up so the spec "60% MC of 20 = 12 MC" holds exactly even when
+  // frRatio×questionCount has rounding ties.
+  let mcTargetTotal = Math.round(questionCount * mcRatio);
+  if (mcTargetTotal > questionCount) mcTargetTotal = questionCount;
+  let frTarget = questionCount - mcTargetTotal;
+
+  let visualTarget = Math.round(mcTargetTotal * mcVisualShare);
+  if (visualTarget > mcTargetTotal) visualTarget = mcTargetTotal;
+  let staticTarget = mcTargetTotal - visualTarget;
+
+  // ── Load pools ────────────────────────────────────────────────────────────
   const generators = await loadEligibleGenerators(supabase, unitTopicId);
-  if (generators.length === 0 && generatorCount > 0) {
+  if (generators.length === 0 && frTarget > 0) {
     throw new Error(
       `No active question_generators found for unit_topic ${unitTopicId ?? '(mixed)'}. ` +
       'Run Sprint 0 migration 014c (or verify the unit_topic_id) before creating Heats.'
     );
   }
 
-  // Optionally load static pool
+  // Static pool comes from the static_questions table — finite, often small.
   const staticPool =
-    staticCount > 0 ? await loadStaticPool(supabase, unitTopicId, depthMin, depthMax) : [];
+    staticTarget > 0 ? await loadStaticPool(supabase, unitTopicId, depthMin, depthMax) : [];
+
+  // Visual pool — each visual generator can be called repeatedly with
+  // different random seeds, but we treat the distinct-generator count as the
+  // practical cap to keep questions varied within a Heat.
+  const visualKeyCount = Object.keys(VISUAL_GENERATORS).length;
+
+  // ── Backfill spillover ────────────────────────────────────────────────────
+  // Per the spec: if a pool is short, push the shortfall to the OTHER MC pool.
+  // If both MC pools are exhausted, fall back to FR (procedural generators).
+  // Generators are effectively unbounded so they always absorb whatever's left.
+  const staticAvailable = staticPool.length;
+  const visualAvailable = visualKeyCount;
+
+  const staticShort = Math.max(0, staticTarget - staticAvailable);
+  if (staticShort > 0) {
+    // Try to absorb the shortfall in visual
+    const visualHeadroom = visualAvailable - visualTarget;
+    const visualTake = Math.min(staticShort, Math.max(0, visualHeadroom));
+    visualTarget += visualTake;
+    staticTarget -= visualTake;
+    // Any leftover spills to FR
+    const leftover = staticShort - visualTake;
+    if (leftover > 0) {
+      frTarget += leftover;
+      staticTarget -= leftover;
+    }
+  }
+
+  const visualShort = Math.max(0, visualTarget - visualAvailable);
+  if (visualShort > 0) {
+    // Try static next (using fresh availability, since static may not have been topped)
+    const staticHeadroom = staticAvailable - staticTarget;
+    const staticTake = Math.min(visualShort, Math.max(0, staticHeadroom));
+    staticTarget += staticTake;
+    visualTarget -= staticTake;
+    const leftover = visualShort - staticTake;
+    if (leftover > 0) {
+      frTarget += leftover;
+      visualTarget -= leftover;
+    }
+  }
+
+  // Final clamps in case of rounding drift
+  frTarget = Math.max(0, frTarget);
+  staticTarget = Math.max(0, Math.min(staticTarget, staticAvailable));
+  visualTarget = Math.max(0, Math.min(visualTarget, visualAvailable));
+  const slotSum = frTarget + staticTarget + visualTarget;
+  if (slotSum < questionCount) {
+    // Last-ditch: top up with FR (generators are unbounded)
+    frTarget += questionCount - slotSum;
+  } else if (slotSum > questionCount) {
+    // Trim from MC first (FR carries higher Content weight, preserve it)
+    let overshoot = slotSum - questionCount;
+    const visualTrim = Math.min(overshoot, visualTarget);
+    visualTarget -= visualTrim;
+    overshoot -= visualTrim;
+    const staticTrim = Math.min(overshoot, staticTarget);
+    staticTarget -= staticTrim;
+    overshoot -= staticTrim;
+    if (overshoot > 0) frTarget = Math.max(0, frTarget - overshoot);
+  }
+
+  // Map the post-backfill targets back into the legacy variable names used
+  // by the generation loops below (no behavior change inside the loops).
+  const generatorCount = frTarget;
+  const visualCount = visualTarget;
+  const staticCount = staticTarget;
+
+  if (generatorCount > 0 && generators.length === 0) {
+    throw new Error(
+      `Cannot fulfill ${generatorCount} FR slot(s): no active question_generators ` +
+        `for unit_topic ${unitTopicId ?? '(mixed)'}.`
+    );
+  }
 
   const inserts: HeatQuestionInsert[] = [];
   const recentGenerators: string[] = [];                  // sliding repeat-avoidance window
@@ -343,10 +462,12 @@ export async function generateAndInsertQuestions(
   }
 
   // --- Visual questions -------------------------------------------------------
-  const visualKeys = Object.keys(VISUAL_GENERATORS);
-  for (let i = 0; i < visualCount; i++) {
-    if (visualKeys.length === 0) break;
-    const key = visualKeys[Math.floor(Math.random() * visualKeys.length)];
+  // Shuffle without replacement so each visual generator is used at most once
+  // per Heat — this matches the cap used in the backfill math above and
+  // keeps the question set varied.
+  const visualKeys = shuffle(Object.keys(VISUAL_GENERATORS)).slice(0, visualCount);
+  for (let i = 0; i < visualKeys.length; i++) {
+    const key = visualKeys[i]!;
     let v: VisualQuestion | null = null;
     try {
       v = generateVisualQuestion(key);

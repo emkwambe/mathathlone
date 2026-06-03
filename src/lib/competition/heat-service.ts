@@ -59,8 +59,18 @@ export interface CreateHeatParams {
   school_id?: string | null;
   class_id?: string | null;
   scope?: HeatScope;
-  static_ratio?: number;                  // 0..1 mix of multiple-choice static questions
-  visual_ratio?: number;                  // 0..1 mix of visual SVG questions
+
+  // -- CTA framework knobs (docs/CTA_SCORING_FRAMEWORK.md) -------------------
+  // FR = free-response (procedural generator, typed answer, 2× Content weight)
+  // MC = multiple choice (static + visual SVG, 1× Content weight)
+  // Defaults: fr_ratio 0.4, mc_ratio 0.6, mc_visual_share 0.5.
+  /** Fraction (0..1) of free-response questions. Default 0.4. */
+  fr_ratio?: number;
+  /** Fraction (0..1) of multiple-choice questions. Default 0.6. */
+  mc_ratio?: number;
+  /** Within the MC portion, share allocated to visual SVG MC. Default 0.5. */
+  mc_visual_share?: number;
+
   synchronized_start_at?: string | null;  // ISO timestamp for high-integrity Heats
   requires_attestation?: boolean;
   lockdown_required?: boolean;
@@ -259,7 +269,10 @@ export async function createHeat(
     throw new Error(`Failed to create Heat: ${insertError.message}`);
   }
 
-  // Generate and insert questions for this Heat
+  // Generate and insert questions for this Heat. Defaults (FR 0.4 / MC 0.6
+  // with an even MC split) come from the CTA framework. Callers may override
+  // via fr_ratio / mc_ratio / mc_visual_share — but if any value is omitted,
+  // question-delivery falls back to the framework defaults.
   try {
     await generateAndInsertQuestions(supabase, {
       heatId: heat.id,
@@ -267,8 +280,9 @@ export async function createHeat(
       depthMin: params.depth_min,
       depthMax: params.depth_max,
       questionCount: params.question_count,
-      staticRatio: params.static_ratio ?? 0,
-      visualRatio: params.visual_ratio ?? 0.2,
+      frRatio: params.fr_ratio,
+      mcRatio: params.mc_ratio,
+      mcVisualShare: params.mc_visual_share,
     });
   } catch (err) {
     // If question generation fails, mark the Heat cancelled rather than
