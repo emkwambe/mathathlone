@@ -811,8 +811,17 @@ function buildConceptBuckets(subs: SubmissionRow[]): ConceptBucket[] {
       label = concept.unit_topics.name;
       category = 'unit_topic';
     } else if (s.heat_questions?.solution_steps?.kind === 'visual') {
-      key = 'visual';
-      label = 'Visual questions';
+      // Use the per-question concept name that question-delivery stored, so
+      // visual questions show their real concept (e.g. "Scatter Plot
+      // Interpretation") instead of a generic bucket.
+      const visualName =
+        (typeof s.heat_questions?.solution_steps?.concept_name === 'string' &&
+          s.heat_questions.solution_steps.concept_name) ||
+        (typeof s.heat_questions?.solution_steps?.generator_key === 'string' &&
+          s.heat_questions.solution_steps.generator_key) ||
+        'Visual questions';
+      key = `visual:${visualName}`;
+      label = visualName;
       category = 'visual';
     } else if (s.heat_questions?.solution_steps?.kind === 'static') {
       key = 'static';

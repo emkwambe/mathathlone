@@ -24,6 +24,28 @@ import {
   type VisualQuestion,
 } from './visual-generators';
 
+/**
+ * Maps each visual generator key to a human-readable concept name. This is
+ * stored alongside the visual question in heat_questions.solution_steps so
+ * the concept-mastery heatmap in TeacherResults / StudentResults can bucket
+ * visual questions by their actual concept (not the generic "Visual questions"
+ * label). Keys match the entries in visual-generators.ts VISUAL_GENERATORS.
+ */
+const VISUAL_CONCEPT_NAME: Record<string, string> = {
+  inequality_number_line: 'Graphing Inequalities',
+  vertical_line_test:     'Vertical Line Test',
+  slope_intercept_graph:  'Graphing Slope-Intercept',
+  horiz_vert_lines:       'Horizontal/Vertical Lines',
+  two_var_inequality:     'Graphing 2-Variable Inequalities',
+  compare_functions:      'Comparing Functions',
+  system_graphing:        'Solving Systems by Graphing',
+  system_inequalities:    'System of Inequalities',
+  scatter_plot:           'Interpreting Scatter Plots',
+  transformation_type:    'Transformations',
+  line_symmetry:          'Line Symmetry',
+  rotational_symmetry:    'Rotational Symmetry',
+};
+
 // -----------------------------------------------------------------------------
 // PARAMS
 // -----------------------------------------------------------------------------
@@ -309,6 +331,8 @@ export async function generateAndInsertQuestions(
   }
   const mcVisualShare = clamp01(params.mcVisualShare ?? 0.5);
 
+  console.log('[question-delivery] ratios:', { frRatio, mcRatio, mcVisualShare });
+
   // ── Target counts (before backfill) ───────────────────────────────────────
   // We round MC up so the spec "60% MC of 20 = 12 MC" holds exactly even when
   // frRatio×questionCount has rounding ties.
@@ -319,6 +343,8 @@ export async function generateAndInsertQuestions(
   let visualTarget = Math.round(mcTargetTotal * mcVisualShare);
   if (visualTarget > mcTargetTotal) visualTarget = mcTargetTotal;
   let staticTarget = mcTargetTotal - visualTarget;
+
+  console.log('[question-delivery] targets:', { frTarget, staticTarget, visualTarget });
 
   // ── Load pools ────────────────────────────────────────────────────────────
   const generators = await loadEligibleGenerators(supabase, unitTopicId);
@@ -337,6 +363,8 @@ export async function generateAndInsertQuestions(
   // different random seeds, but we treat the distinct-generator count as the
   // practical cap to keep questions varied within a Heat.
   const visualKeyCount = Object.keys(VISUAL_GENERATORS).length;
+
+  console.log('[question-delivery] pools:', { generators: generators.length, staticPool: staticPool.length, visualKeyCount });
 
   // ── Backfill spillover ────────────────────────────────────────────────────
   // Per the spec: if a pool is short, push the shortfall to the OTHER MC pool.
@@ -393,6 +421,8 @@ export async function generateAndInsertQuestions(
     overshoot -= staticTrim;
     if (overshoot > 0) frTarget = Math.max(0, frTarget - overshoot);
   }
+
+  console.log('[question-delivery] after backfill:', { frTarget, staticTarget, visualTarget });
 
   // Map the post-backfill targets back into the legacy variable names used
   // by the generation loops below (no behavior change inside the loops).
@@ -483,6 +513,8 @@ export async function generateAndInsertQuestions(
     // entirely in code by visual-generators.ts. generator_id MUST be null so
     // the heat_questions.generator_id FK isn't violated.
     const difficulty = Math.min(4, Math.max(1, v.difficulty)) as DifficultyLevel;
+    const conceptName =
+      VISUAL_CONCEPT_NAME[key] ?? v.concept_name ?? 'Visual questions';
     const visualRow: HeatQuestionInsert = {
       heat_id: heatId,
       question_number: 0,
@@ -494,6 +526,10 @@ export async function generateAndInsertQuestions(
       answer_type: 'text',                                 // MC letter
       solution_steps: {
         kind: 'visual',
+        // Persist the visual-generator identity so concept-mastery bucketing
+        // can name this row correctly (instead of a generic "Visual questions").
+        generator_key: key,
+        concept_name: conceptName,
         options: v.options,
         correct_answer_index: v.correct_answer_index,
         explanation: v.explanation,
@@ -533,6 +569,12 @@ export async function generateAndInsertQuestions(
       inserts.push(staticRow);
     }
   }
+
+  console.log('[question-delivery] final inserts:', {
+    total: inserts.length,
+    fr: inserts.filter(i => i.generator_id !== null).length,
+    mc: inserts.filter(i => i.generator_id === null).length,
+  });
 
   if (inserts.length === 0) {
     throw new Error('No questions could be generated for this Heat.');

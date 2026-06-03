@@ -702,13 +702,32 @@ export function generate_perp_line_slope(difficulty: DifficultyLevel): Generated
 }
 
 // 23. M1.FLF.4.3 - Write Parallel/Perpendicular Equation
+//
+// Self-test:
+//   parallel to y=2x, through (1,3)  → m=2,  b=3-2·1=1  → "y = 2x + 1"
+//   parallel to y=-3x, through (0,4) → m=-3, b=4       → "y = -3x + 4"
+//   perp to y=x,    through (2,5)    → m=-1, b=5-(-1)·2=7 → "y = -1x + 7"
+//   perp to y=-x,   through (3,1)    → m=1,  b=1-1·3=-2  → "y = 1x - 2"
+//
+// The perpendicular slope of m is -1/m. For arbitrary integer m other than ±1,
+// the perpendicular is fractional ("-1/2", "-1/3"), which our equation
+// validator (parseLinearEquation) does NOT accept — it expects integer slopes.
+// To keep the answer machine-checkable we constrain the original slope to ±1
+// for perpendicular questions, so the perpendicular is also an integer (∓1).
+// Parallel questions keep the broader integer range.
 export function generate_write_parallel_perp_eq(difficulty: DifficultyLevel): GeneratedQuestion {
-  const m = randomNonZeroInt(-4, 4);
+  const isParallel = randomInt(0, 1) === 0;
+  // For perpendicular: restrict m to ±1 so newM = -1/m is also ±1 (integer).
+  // For parallel: full integer range is fine since newM = m.
+  const m = isParallel
+    ? randomNonZeroInt(-4, 4)
+    : (randomInt(0, 1) === 0 ? 1 : -1);
   const x1 = randomInt(-5, 5);
   const y1 = randomInt(-5, 5);
-  const isParallel = randomInt(0, 1) === 0;
-  
-  const newM = isParallel ? m : (m === 1 ? -1 : m === -1 ? 1 : -1);
+
+  // Perpendicular slope is the NEGATIVE RECIPROCAL of m.
+  // (Constrained above so -1/m is always integer here.)
+  const newM = isParallel ? m : -1 / m;
   const newB = y1 - newM * x1;
   
   const signB = newB >= 0 ? '+' : '-';
@@ -736,12 +755,21 @@ export function generate_write_parallel_perp_eq(difficulty: DifficultyLevel): Ge
 // =============================================================================
 
 // 24. M1.SYS.2.1 - Substitution
+//
+// Self-test:
+//   x=2, y=3, a=1, c=2 → eq1: y=x+1, eq2: 2x+y=7. Check: (2,3) → 3=2+1✓, 4+3=7✓
+//   x=-1, y=2, a=-2, c=3 → eq1: y=-2x+0, eq2: 3x+y=-1. Check: (-1,2) → 2=2+0✓, -3+2=-1✓
+//
+// Avoid a+c=0: that makes the system either inconsistent or degenerate.
+// Substituting eq1 into eq2: (a+c)x = e - b. If a+c=0, no unique x.
 export function generate_system_substitution(difficulty: DifficultyLevel): GeneratedQuestion {
   const x = randomInt(-5, 5);
   const y = randomInt(-5, 5);
   const a = randomNonZeroInt(-3, 3);
   const b = y - a * x;
-  const c = randomNonZeroInt(1, 4);
+  // Re-roll c until a + c ≠ 0 so the linear combination has a unique solution.
+  let c = randomNonZeroInt(1, 4);
+  while (a + c === 0) c = randomNonZeroInt(1, 4);
   const e = c * x + y;
   
   const signB = b >= 0 ? '+' : '-';
@@ -1146,11 +1174,23 @@ export function generate_multiply_binomials(difficulty: DifficultyLevel): Genera
 }
 
 // 39. M1.POLY.3.1 - Factor GCF
+//
+// Self-test:
+//   gcf=3, a=4, b=5 → 12x + 15  ⇒  3(4x + 5)   (gcd(4,5)=1 ✓ greatest)
+//   gcf=4, a=3, b=2 → 12x +  8  ⇒  4(3x + 2)   (gcd(3,2)=1 ✓ greatest)
+//   gcf=2, a=2, b=4 → would yield 4x + 8 — actual GCF is 4, not 2. We
+//   require gcd(a,b)=1 so the chosen "gcf" really is the greatest factor.
 export function generate_factor_gcf(difficulty: DifficultyLevel): GeneratedQuestion {
   const gcf = randomInt(2, 6);
-  const a = randomInt(1, 5);
-  const b = randomInt(1, 5);
-  
+  // Re-roll until a and b are coprime so `gcf` is the true greatest factor
+  // (otherwise the "factored" answer wouldn't be fully simplified).
+  let a = randomInt(1, 5);
+  let b = randomInt(1, 5);
+  while (gcd(a, b) !== 1) {
+    a = randomInt(1, 5);
+    b = randomInt(1, 5);
+  }
+
   const term1 = gcf * a;
   const term2 = gcf * b;
   
@@ -1378,13 +1418,27 @@ export function generate_quadratic_formula(difficulty: DifficultyLevel): Generat
 // =============================================================================
 
 // 48. M1.DAS.2.1 - Central Tendency
+// computeMedian — handles odd AND even length arrays.
+//   {3, 5, 7}            → 5        (odd: middle element)
+//   {2, 4, 6, 8}         → 5        (even: (4+6)/2)
+//   {6, 9, 9, 13, 14, 18}→ 11       (even: (9+13)/2)
+//   {5}                  → 5
+//   {3, 7}               → 5
+function computeMedian(sortedArr: number[]): number {
+  const n = sortedArr.length;
+  if (n === 0) return 0;
+  if (n % 2 === 1) return sortedArr[Math.floor(n / 2)]!;
+  return (sortedArr[n / 2 - 1]! + sortedArr[n / 2]!) / 2;
+}
+
 export function generate_calculate_central_tendency(difficulty: DifficultyLevel): GeneratedQuestion {
   const measure = ['mean', 'median'][randomInt(0, 1)];
-  const n = randomInt(5, 7);
-  
+  // Allow even AND odd counts so the median branch exercises both formulas.
+  const n = randomInt(5, 8);
+
   let data: number[];
   let answer: number;
-  
+
   if (measure === 'mean') {
     const targetMean = randomInt(8, 20);
     const targetSum = targetMean * n;
@@ -1400,17 +1454,29 @@ export function generate_calculate_central_tendency(difficulty: DifficultyLevel)
     answer = targetMean;
   } else {
     data = Array.from({ length: n }, () => randomInt(5, 25)).sort((a, b) => a - b);
-    answer = data[Math.floor(n / 2)];
+    answer = computeMedian(data);
   }
-  
+
+  const isWhole = Number.isInteger(answer);
+  // Print one decimal place when fractional (e.g. 5.5), no decimals when whole.
+  const answerStr = isWhole ? String(answer) : answer.toFixed(1);
+
   return {
     question_latex: `\\text{Find the ${measure} of } \\{${data.join(', ')}\\}`,
     question_text: `Find the ${measure} of {${data.join(', ')}}`,
-    correct_answer: String(answer),
-    answer_type: 'integer',
-    solution_steps: measure === 'mean'
-      ? [`Sum = ${data.reduce((a, b) => a + b)}`, `Mean = Sum ÷ ${n} = ${answer}`]
-      : [`Ordered: {${data.join(', ')}}`, `Middle value = ${answer}`],
+    correct_answer: answerStr,
+    // Median of even-length data can be fractional; use 'decimal' so the
+    // validator's tolerance (0.01) catches "5.5" / "5.50" / "5.500".
+    answer_type: isWhole ? 'integer' : 'decimal',
+    solution_steps:
+      measure === 'mean'
+        ? [`Sum = ${data.reduce((a, b) => a + b)}`, `Mean = Sum ÷ ${n} = ${answer}`]
+        : n % 2 === 1
+        ? [`Ordered: {${data.join(', ')}}`, `Middle value = ${answerStr}`]
+        : [
+            `Ordered: {${data.join(', ')}}`,
+            `Even count — average of two middle values: (${data[n / 2 - 1]} + ${data[n / 2]}) / 2 = ${answerStr}`,
+          ],
     difficulty,
     concept_id: 'M1.DAS.2.1',
     generator_type: 'calculate_central_tendency',

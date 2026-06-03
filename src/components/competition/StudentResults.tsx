@@ -472,7 +472,14 @@ export default function StudentResults({
       } else if (concept?.unit_topics?.name) {
         key = `unit:${concept.unit_topics.name}`;
       } else if (steps && typeof steps === 'object' && steps.kind === 'visual') {
-        key = 'visual';
+        // Use the visual-specific concept name written by question-delivery
+        // so the mastery count reflects e.g. "Scatter Plot Interpretation"
+        // rather than collapsing every visual question into one "Visual" bucket.
+        const visualName =
+          (typeof steps.concept_name === 'string' && steps.concept_name) ||
+          (typeof steps.generator_key === 'string' && steps.generator_key) ||
+          'visual';
+        key = `visual:${visualName}`;
       } else if (steps && typeof steps === 'object' && steps.kind === 'static') {
         key = 'static';
       } else {
