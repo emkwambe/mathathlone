@@ -31,20 +31,51 @@ import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 
 // -----------------------------------------------------------------------------
-// CODE NORMALIZATION
+// CODE NORMALIZATION (live, per-keystroke)
 // -----------------------------------------------------------------------------
-// Accepted variants: "ma-7x4k", "MA7X4K", "7X4K", "ma  7x4k"
-// Canonical form:    "MA-7X4K"
+// Canonical form: "MA-XXXX". The normalizer is applied on every keystroke so
+// the input always displays the formatted code regardless of how the student
+// typed/pasted it.
+//
+// Mapping table (every entry verified against the rules below):
+//   ""           → ""            (empty)
+//   "m"          → "M"           (waiting for "A")
+//   "ma"         → "MA-"         (dash appears once the prefix is complete)
+//   "ma7"        → "MA-7"        (body char 1)
+//   "ma7x4k"     → "MA-7X4K"     (full code, prefix-led)
+//   "MA7X4K"     → "MA-7X4K"     (uppercase prefix-led)
+//   "ma-7x4k"    → "MA-7X4K"     (existing dash stripped + re-inserted)
+//   "7"          → "MA-7"        (body-first → auto-prepend "MA-")
+//   "7x4k"       → "MA-7X4K"     (body-first paste)
+//   "  ma 7x4k " → "MA-7X4K"     (spaces ignored)
+//   non-alpha    → ""            (purely-symbol input collapses)
+//
+// Rules:
+//   1. Strip everything that isn't [A-Z0-9] (after uppercasing) — drops
+//      spaces, dashes, and any stray punctuation.
+//   2. If the result is a single "M", show "M" (so a user who just hit "m"
+//      doesn't see a phantom "MA-M" before they get to type "A").
+//   3. If the result starts with "MA", insert the dash and take up to 4 body
+//      chars: "MA" → "MA-", "MA7" → "MA-7", "MA7X4K" → "MA-7X4K".
+//   4. Otherwise the user typed the body directly — auto-prepend "MA-" and
+//      take up to 4 body chars.
 
 const HEAT_CODE_PATTERN = /^MA-[A-Z0-9]{4}$/;
 
 function normalizeHeatCode(raw: string): string {
   const cleaned = raw.toUpperCase().replace(/[^A-Z0-9]/g, '');
   if (cleaned.length === 0) return '';
+
+  // Single "M" → user is mid-typing "MA". Show just "M" so the dash doesn't
+  // jump in prematurely.
+  if (cleaned === 'M') return 'M';
+
   if (cleaned.startsWith('MA')) {
     const body = cleaned.slice(2);
     return body.length > 0 ? `MA-${body.slice(0, 4)}` : 'MA-';
   }
+
+  // Doesn't start with "MA" — user typed the body first. Auto-prepend "MA-".
   return `MA-${cleaned.slice(0, 4)}`;
 }
 
@@ -173,7 +204,11 @@ export default function JoinHeatPage() {
             autoComplete="off"
             spellCheck={false}
             maxLength={8}
-            value={normalized || rawCode.toUpperCase()}
+            // Controlled value is always the normalized form — symbols,
+            // lowercase, and stray dashes can never reach the DOM. The
+            // 8-char maxLength gives a 1-char buffer over the canonical
+            // 7-char "MA-XXXX" so typing flow stays smooth.
+            value={normalized}
             onChange={(e) => handleChange(e.target.value)}
             placeholder="MA-XXXX"
             className="w-full px-4 py-4 text-center text-2xl md:text-3xl font-mono font-bold tracking-[0.3em] bg-white/15 border-2 border-white/20 rounded-xl text-white placeholder-white/30 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-400/40 transition-all"
