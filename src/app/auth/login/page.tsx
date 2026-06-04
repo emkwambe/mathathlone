@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 
-export default function LoginPage() {
+function LoginPageInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const next = searchParams.get('next') || '/dashboard';
@@ -59,6 +59,10 @@ export default function LoginPage() {
   // We DON'T disable on authLoading — that initial check completes in <1s
   // and there's no harm in letting the user start typing.
   const buttonDisabled = submitting;
+  // (component body continues below in JSX return)
+  // NB: the default export at the bottom of this file wraps LoginPageInner
+  // in <Suspense> because useSearchParams() requires a Suspense boundary
+  // during prerender (Next.js production build requirement).
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 px-4">
@@ -173,5 +177,25 @@ export default function LoginPage() {
         )}
       </div>
     </div>
+  );
+}
+
+/**
+ * Suspense wrapper — required because LoginPageInner calls useSearchParams(),
+ * which Next.js 14 production builds will refuse to prerender without a
+ * surrounding <Suspense> boundary. Keeping the spinner inline here so we
+ * don't depend on an external loading.tsx.
+ */
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="animate-spin h-8 w-8 border-4 border-indigo-500 border-t-transparent rounded-full" />
+        </div>
+      }
+    >
+      <LoginPageInner />
+    </Suspense>
   );
 }

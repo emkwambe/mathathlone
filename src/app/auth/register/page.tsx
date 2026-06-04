@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { Suspense, useState, useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { createSupabaseBrowser } from '@/lib/supabase/client';
@@ -27,7 +27,7 @@ const COUNTRIES = [
 
 const GRADES = [5, 6, 7, 8, 9, 10, 11, 12];
 
-export default function RegisterPage() {
+function RegisterPageInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const initialRole = searchParams.get('role') as 'athlete' | 'teacher' || 'athlete';
@@ -467,5 +467,24 @@ export default function RegisterPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+/**
+ * Suspense wrapper — required because RegisterPageInner calls useSearchParams()
+ * (to read ?role=teacher / ?role=athlete), which Next.js 14 production builds
+ * refuse to prerender without a surrounding <Suspense> boundary.
+ */
+export default function RegisterPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="animate-spin h-8 w-8 border-4 border-indigo-500 border-t-transparent rounded-full" />
+        </div>
+      }
+    >
+      <RegisterPageInner />
+    </Suspense>
   );
 }

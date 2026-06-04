@@ -41,7 +41,7 @@ export async function createSupabaseServer(): Promise<SupabaseClient> {
         getAll() {
           return cookieStore.getAll();
         },
-        setAll(cookiesToSet) {
+        setAll(cookiesToSet: { name: string; value: string; options?: any }[]) {
           try {
             cookiesToSet.forEach(({ name, value, options }) =>
               cookieStore.set(name, value, options as CookieOptions)

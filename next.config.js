@@ -1,5 +1,5 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig = { experimental: { missingSuspenseWithCSRBailout: false },
   // Strict mode for catching bugs early
   reactStrictMode: true,
 
