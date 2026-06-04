@@ -31,6 +31,7 @@ import {
 } from 'lucide-react';
 
 import { createClient } from '@/lib/supabase/client';
+import { resolveDisplayLabel } from '@/lib/competition/heat-service';
 
 // -----------------------------------------------------------------------------
 // PROPS
@@ -120,6 +121,22 @@ const AWARD_META: Record<AwardLevel, { label: string; emoji: string; icon: React
 
 const AWARD_ORDER: AwardLevel[] = ['champion', 'platinum', 'gold', 'silver', 'bronze', 'participation'];
 
+/**
+ * Format an ISO timestamp as "MMM D, YYYY" (e.g. "Jun 4, 2026") for the
+ * results header. Returns null when the input is null/undefined/invalid so
+ * the caller can omit the date line entirely instead of rendering "—".
+ */
+function formatHeatDate(iso: string | null | undefined): string | null {
+  if (!iso) return null;
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return null;
+  return d.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+}
+
 function formatTime(ms: number): string {
   if (!ms || ms < 0) return '0:00';
   const total = Math.floor(ms / 1000);
@@ -163,6 +180,7 @@ export default function TeacherResults({ heatId, heatCode, integrityLevel }: Tea
   const [error, setError] = useState<string | null>(null);
   const [drillId, setDrillId] = useState<string | null>(null);
   const [questionCount, setQuestionCount] = useState(0);
+  const [createdAt, setCreatedAt] = useState<string | null>(null);
 
   // ── Load everything ─────────────────────────────────────────────────────
   useEffect(() => {
@@ -172,7 +190,11 @@ export default function TeacherResults({ heatId, heatCode, integrityLevel }: Tea
       setError(null);
       try {
         const [heatResult, participationsResult, awardsResult] = await Promise.all([
-          supabase.from('heats').select('question_count').eq('id', heatId).maybeSingle(),
+          supabase
+            .from('heats')
+            .select('question_count, created_at')
+            .eq('id', heatId)
+            .maybeSingle(),
           supabase
             .from('heat_participations')
             .select(
@@ -182,7 +204,7 @@ export default function TeacherResults({ heatId, heatCode, integrityLevel }: Tea
               total_time_ms, accuracy_score, cta_score, ranking_points_earned,
               rank_in_heat, percentile, medal,
               is_flagged, focus_violation_count,
-              users:athlete_id ( display_name, grade_level )
+              users:athlete_id ( display_name, grade_level, email )
             `
             )
             .eq('heat_id', heatId)
@@ -197,6 +219,7 @@ export default function TeacherResults({ heatId, heatCode, integrityLevel }: Tea
         }
 
         setQuestionCount(heatResult.data?.question_count ?? 0);
+        setCreatedAt(heatResult.data?.created_at ?? null);
 
         const awardsMap = new Map<string, AwardLevel>(
           ((awardsResult.data ?? []) as any[]).map((a) => [a.athlete_id, a.award_level])
@@ -205,7 +228,14 @@ export default function TeacherResults({ heatId, heatCode, integrityLevel }: Tea
         const merged: ResultRow[] = (participationsResult.data ?? []).map((p: any) => ({
           id: p.id,
           athlete_id: p.athlete_id,
-          display_name: p.users?.display_name ?? 'Mathlete',
+          // Resolver returns display_name → email local-part → short id.
+          // We never want the teacher leaderboard to show "Mathlete" when a
+          // real name (or even just an email) is available.
+          display_name: resolveDisplayLabel({
+            display_name: p.users?.display_name,
+            email: p.users?.email,
+            athlete_id: p.athlete_id,
+          }),
           grade_level: p.users?.grade_level ?? null,
           questions_attempted: p.questions_attempted ?? 0,
           questions_correct: p.questions_correct ?? 0,
@@ -388,10 +418,19 @@ export default function TeacherResults({ heatId, heatCode, integrityLevel }: Tea
             <h1 className="text-2xl md:text-3xl font-bold text-white">
               Heat <span className="font-mono">{heatCode}</span>
             </h1>
-            <p className="text-indigo-200 text-sm mt-1 flex items-center gap-1.5">
+            <p className="text-indigo-200 text-sm mt-1 flex items-center gap-1.5 flex-wrap">
               <Crown className="w-3.5 h-3.5 text-amber-300" />
-              Class summary · integrity{' '}
-              <span className="capitalize">{integrityLevel}</span>
+              {formatHeatDate(createdAt) && (
+                <>
+                  <span>{formatHeatDate(createdAt)}</span>
+                  <span aria-hidden>·</span>
+                </>
+              )}
+              <span>Class summary</span>
+              <span aria-hidden>·</span>
+              <span>
+                integrity <span className="capitalize">{integrityLevel}</span>
+              </span>
             </p>
           </div>
           <button

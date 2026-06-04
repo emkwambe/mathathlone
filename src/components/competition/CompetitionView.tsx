@@ -189,6 +189,11 @@ function formatHintFor(
       return 'Enter a number (e.g., 3.5)';
     case 'fraction':
       return 'Enter as a fraction (e.g., 3/4 or -1/2)';
+    case 'number_or_fraction':
+      // Deliberately broad — used when the answer could be integer, decimal,
+      // or fraction depending on the random parameters. Narrowing this hint
+      // would tip students off about which form the answer takes.
+      return 'Enter a number or fraction (e.g., -2 or 3/4)';
     case 'ordered_pair':
     case 'point':
       return 'Format: (x, y) (e.g., (2, 3))';

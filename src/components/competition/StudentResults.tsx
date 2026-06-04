@@ -131,6 +131,7 @@ interface HeatMeta {
   question_count: number;
   duration_seconds: number;
   type: string | null;
+  created_at: string | null;
   division: { id: string; name: string; code: string } | null;
   unit_topic: { id: string; name: string; code: string } | null;
   course: { id: string; name: string } | null;
@@ -214,6 +215,18 @@ function splitName(displayName: string): { first: string; last: string } {
   return { first: parts[0]!, last: parts.slice(-1).join('') };
 }
 
+/** "Jun 4, 2026" — returns null for missing/invalid timestamps. */
+function formatHeatDate(iso: string | null | undefined): string | null {
+  if (!iso) return null;
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return null;
+  return d.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+}
+
 function formatTime(ms: number): string {
   if (!ms || ms < 0) return '0:00';
   const total = Math.floor(ms / 1000);
@@ -269,7 +282,7 @@ export default function StudentResults({
               .from('heats')
               .select(
                 `
-                code, question_count, duration_seconds, type,
+                code, question_count, duration_seconds, type, created_at,
                 division:division_id ( id, name, code ),
                 unit_topic:unit_topic_id ( id, name, code ),
                 course:unit_topic_id ( courses ( id, name ) )
@@ -325,6 +338,7 @@ export default function StudentResults({
           question_count: h?.question_count ?? 0,
           duration_seconds: h?.duration_seconds ?? 0,
           type: h?.type ?? null,
+          created_at: h?.created_at ?? null,
           division: h?.division ?? null,
           unit_topic: h?.unit_topic ?? null,
           course: h?.course?.courses ?? null,
@@ -580,6 +594,11 @@ export default function StudentResults({
             Heat {heatMeta?.code ?? heatCode} · Complete
           </p>
           <h1 className="text-2xl md:text-3xl font-bold text-white">Your Results</h1>
+          {formatHeatDate(heatMeta?.created_at) && (
+            <p className="text-indigo-300/80 text-xs mt-1.5">
+              {formatHeatDate(heatMeta?.created_at)}
+            </p>
+          )}
         </div>
 
         {/* ── Personal summary card ────────────────────────────────────── */}

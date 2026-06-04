@@ -161,6 +161,35 @@ export function generateHeatCode(): string {
   return `MA-${body}`;
 }
 
+/**
+ * Resolve the best available human-readable label for a Mathlete.
+ *
+ * Order of preference:
+ *   1. users.display_name (the canonical name)
+ *   2. email local-part (everything before "@") — useful when display_name
+ *      was never populated (Supabase Studio insert, broken signup trigger)
+ *   3. last 6 chars of the athlete_id, prefixed with "#"
+ *
+ * Avoids the generic "Mathlete" placeholder that hid real student identity
+ * from teachers in the post-Heat leaderboard.
+ */
+export function resolveDisplayLabel(opts: {
+  display_name?: string | null;
+  email?: string | null;
+  athlete_id?: string | null;
+}): string {
+  const name = (opts.display_name ?? '').trim();
+  if (name) return name;
+  const email = (opts.email ?? '').trim();
+  if (email && email.includes('@')) {
+    const local = email.split('@')[0]!.trim();
+    if (local) return local;
+  }
+  const id = (opts.athlete_id ?? '').trim();
+  if (id.length >= 6) return `#${id.slice(-6)}`;
+  return id ? `#${id}` : 'Unknown Mathlete';
+}
+
 // -----------------------------------------------------------------------------
 // INTERNAL: legacy-topic fallback
 // -----------------------------------------------------------------------------
@@ -350,12 +379,19 @@ export async function joinHeat(
   if (existing) {
     const { data: profile } = await supabase
       .from('users')
-      .select('display_name')
+      .select('display_name, email')
       .eq('id', user.id)
       .maybeSingle();
     return {
       heat: heat as Heat,
-      participation: { ...(existing as HeatParticipation), display_name: profile?.display_name ?? 'Mathlete' },
+      participation: {
+        ...(existing as HeatParticipation),
+        display_name: resolveDisplayLabel({
+          display_name: profile?.display_name,
+          email: profile?.email,
+          athlete_id: user.id,
+        }),
+      },
     };
   }
 
@@ -376,13 +412,18 @@ export async function joinHeat(
     throw new Error(`Failed to join Heat: ${participationError.message}`);
   }
 
-  // Pull display_name from users (canonical source, not heat_participations)
+  // Pull display_name from users (canonical source, not heat_participations).
+  // Also pull email so we have a usable fallback for accounts with no name set.
   const { data: profile } = await supabase
     .from('users')
-    .select('display_name')
+    .select('display_name, email')
     .eq('id', user.id)
     .maybeSingle();
-  const displayName = profile?.display_name ?? 'Mathlete';
+  const displayName = resolveDisplayLabel({
+    display_name: profile?.display_name,
+    email: profile?.email,
+    athlete_id: user.id,
+  });
 
   // Best-effort bump of participant_count (advisory only — RPC would be safer).
   const newCount = (heat.participant_count ?? 0) + 1;
@@ -498,9 +539,13 @@ export async function listHeatParticipants(
   supabase: SupabaseClient,
   heatId: string
 ): Promise<HeatParticipationWithDisplay[]> {
+  // JOIN email so resolveDisplayLabel can fall back to the local-part when
+  // display_name is null/empty (rather than collapsing every such row to
+  // the generic "Mathlete" placeholder, which hid real names on the teacher
+  // monitor + leaderboard).
   const { data, error } = await supabase
     .from('heat_participations')
-    .select('*, users:athlete_id (display_name)')
+    .select('*, users:athlete_id (display_name, email)')
     .eq('heat_id', heatId)
     .order('joined_at', { ascending: true });
 
@@ -510,7 +555,11 @@ export async function listHeatParticipants(
     const { users, ...rest } = row;
     return {
       ...(rest as HeatParticipation),
-      display_name: users?.display_name ?? 'Mathlete',
+      display_name: resolveDisplayLabel({
+        display_name: users?.display_name,
+        email: users?.email,
+        athlete_id: rest.athlete_id,
+      }),
     };
   });
 }

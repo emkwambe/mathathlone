@@ -551,6 +551,63 @@ function validateInterval(submitted: string, correct: string): ValidationResult 
 }
 
 /**
+ * Validate a "number or fraction" answer — accepts any equivalent numeric form
+ * so the format hint doesn't leak whether the answer is integer / decimal /
+ * fraction. Matches succeed when the parsed values are within 1e-3 of each
+ * other. Used for slopes, exponent results, statistics medians — anywhere
+ * the answer could be either an integer or a fraction depending on inputs.
+ *
+ *   "5"      vs "5"      ✓        "5"     vs "5.0"   ✓
+ *   "-2"     vs "-2"     ✓        "-1/2"  vs "-0.5"  ✓
+ *   "3/4"    vs "3/4"    ✓        "3 / 4" vs "0.75"  ✓
+ *   "1/2"    vs "2/4"    ✓ (equivalent — both parse to 0.5)
+ *   "abc"    vs anything ✗ (feedback: "enter a number or fraction")
+ */
+function validateNumberOrFraction(submitted: string, correct: string): ValidationResult {
+  const parse = (raw: string): number | null => {
+    const s = prenormalize(raw).replace(/\s+/g, '');
+    if (s.length === 0) return null;
+    // a/b form (allow decimals in numerator/denominator just in case)
+    const frac = s.match(/^(-?\d+(?:\.\d+)?)\/(-?\d+(?:\.\d+)?)$/);
+    if (frac) {
+      const num = parseFloat(frac[1]!);
+      const den = parseFloat(frac[2]!);
+      if (!Number.isFinite(num) || !Number.isFinite(den) || den === 0) return null;
+      return num / den;
+    }
+    // Plain integer or decimal
+    const n = parseFloat(s);
+    return Number.isFinite(n) ? n : null;
+  };
+
+  const subVal = parse(submitted);
+  const corVal = parse(correct);
+
+  if (subVal === null) {
+    return {
+      is_correct: false,
+      normalized_submitted: submitted,
+      normalized_correct: correct,
+      feedback: 'Enter a number or fraction (e.g., -2 or 3/4)',
+    };
+  }
+  if (corVal === null) {
+    return {
+      is_correct: false,
+      normalized_submitted: submitted,
+      normalized_correct: correct,
+      feedback: 'Invalid correct-answer format',
+    };
+  }
+
+  return {
+    is_correct: Math.abs(subVal - corVal) < 1e-3,
+    normalized_submitted: String(subVal),
+    normalized_correct: String(corVal),
+  };
+}
+
+/**
  * Validate text answer (exact match, case-insensitive)
  */
 function validateText(submitted: string, correct: string): ValidationResult {
@@ -618,6 +675,8 @@ export function validateAnswer(
       return validateDecimal(submitted, correct);
     case 'fraction':
       return validateFraction(submitted, correct);
+    case 'number_or_fraction':
+      return validateNumberOrFraction(submitted, correct);
     case 'ordered_pair':
       return validateOrderedPair(submitted, correct);
     case 'integer_pair':

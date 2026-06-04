@@ -9,16 +9,19 @@
 // TYPES
 // -----------------------------------------------------------------------------
 
-export type AnswerType = 
-  | 'integer' 
-  | 'decimal' 
-  | 'fraction' 
-  | 'ordered_pair' 
-  | 'expression' 
-  | 'equation' 
-  | 'inequality' 
-  | 'interval' 
-  | 'integer_pair' 
+export type AnswerType =
+  | 'integer'
+  | 'decimal'
+  | 'fraction'
+  | 'number_or_fraction'  // accepts integer / decimal / fraction equivalently —
+                          // used when the answer COULD be any of those forms,
+                          // so the format hint can't narrow the answer space.
+  | 'ordered_pair'
+  | 'expression'
+  | 'equation'
+  | 'inequality'
+  | 'interval'
+  | 'integer_pair'
   | 'text';
 
 export type DifficultyLevel = 1 | 2 | 3 | 4;
@@ -532,7 +535,9 @@ export function generate_calculate_slope(difficulty: DifficultyLevel): Generated
     question_latex: `\\text{Find the slope through } (${x1}, ${y1}) \\text{ and } (${x2}, ${y2})`,
     question_text: `Find the slope of the line through (${x1}, ${y1}) and (${x2}, ${y2})`,
     correct_answer: slopeStr,
-    answer_type: sDen === 1 ? 'integer' : 'fraction',
+    // Slope can be integer or fraction; using number_or_fraction so the hint
+    // doesn't reveal which one this random instance produced.
+    answer_type: 'number_or_fraction',
     solution_steps: [
       `m = (y₂ - y₁) / (x₂ - x₁)`,
       `m = (${y2} - ${y1}) / (${x2} - ${x1})`,
@@ -662,7 +667,9 @@ export function generate_parallel_line_slope(difficulty: DifficultyLevel): Gener
     question_latex: `\\text{Find the slope parallel to } y = ${m}x ${signB} ${Math.abs(b)}`,
     question_text: `What is the slope of a line parallel to y = ${m}x ${signB} ${Math.abs(b)}?`,
     correct_answer: String(m),
-    answer_type: 'integer',
+    // Use number_or_fraction so the hint doesn't tip off the student that
+    // the answer is necessarily an integer — slopes in general can be either.
+    answer_type: 'number_or_fraction',
     solution_steps: [
       `Parallel lines have equal slopes`,
       `Given line has slope ${m}`,
@@ -689,7 +696,9 @@ export function generate_perp_line_slope(difficulty: DifficultyLevel): Generated
     question_latex: `\\text{Find the slope perpendicular to a line with slope } ${givenSlope}`,
     question_text: `What is the slope perpendicular to a line with slope ${givenSlope}?`,
     correct_answer: perpSlope,
-    answer_type: pDen === 1 ? 'integer' : 'fraction',
+    // Perpendicular slope can be integer (when given slope is 1/k) or
+    // fraction (when given is k/1). Don't leak which case via the hint.
+    answer_type: 'number_or_fraction',
     solution_steps: [
       `Perpendicular slopes are negative reciprocals`,
       `Given slope: ${givenSlope}`,
@@ -968,7 +977,10 @@ export function generate_exponent_zero_negative(difficulty: DifficultyLevel): Ge
       question_latex: `${base}^{0}`,
       question_text: `Evaluate: ${base}^0`,
       correct_answer: '1',
-      answer_type: 'integer',
+      // number_or_fraction so the zero-exponent branch (answer "1") and the
+      // negative-exponent branch (answer "1/N") share the same hint and the
+      // student can't infer the branch from the format hint.
+      answer_type: 'number_or_fraction',
       solution_steps: [`Any non-zero number to the 0 power = 1`, `${base}^0 = 1`],
       difficulty,
       concept_id: 'M1.EXP.1.4',
@@ -978,12 +990,12 @@ export function generate_exponent_zero_negative(difficulty: DifficultyLevel): Ge
     const base = randomInt(2, 5);
     const exp = randomInt(1, 3);
     const result = Math.pow(base, exp);
-    
+
     return {
       question_latex: `${base}^{-${exp}}`,
       question_text: `Evaluate: ${base}^-${exp}`,
       correct_answer: `1/${result}`,
-      answer_type: 'fraction',
+      answer_type: 'number_or_fraction',
       solution_steps: [
         `Negative exponent: a^-n = 1/a^n`,
         `${base}^-${exp} = 1/${base}^${exp} = 1/${result}`
@@ -1465,9 +1477,10 @@ export function generate_calculate_central_tendency(difficulty: DifficultyLevel)
     question_latex: `\\text{Find the ${measure} of } \\{${data.join(', ')}\\}`,
     question_text: `Find the ${measure} of {${data.join(', ')}}`,
     correct_answer: answerStr,
-    // Median of even-length data can be fractional; use 'decimal' so the
-    // validator's tolerance (0.01) catches "5.5" / "5.50" / "5.500".
-    answer_type: isWhole ? 'integer' : 'decimal',
+    // Mean is always integer here; median of even-length data can be
+    // fractional. Use number_or_fraction so the hint doesn't tell the
+    // student whether their answer should be whole or a half-integer.
+    answer_type: 'number_or_fraction',
     solution_steps:
       measure === 'mean'
         ? [`Sum = ${data.reduce((a, b) => a + b)}`, `Mean = Sum ÷ ${n} = ${answer}`]
