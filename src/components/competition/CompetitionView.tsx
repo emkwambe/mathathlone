@@ -50,6 +50,17 @@ import {
   FlaggedBanner,
   FocusWarningOverlay,
 } from '@/components/competition/focus-mode-ui';
+import {
+  clearSnapshot,
+  loadSnapshot,
+  saveSnapshot,
+} from '@/lib/competition/state-persistence';
+import {
+  clearQueue,
+  enqueue as enqueueSubmission,
+  flushQueue,
+  queueSize,
+} from '@/lib/competition/submission-queue';
 
 // -----------------------------------------------------------------------------
 // TYPES
@@ -74,6 +85,8 @@ interface HeatQuestionRow {
 
 interface CompetitionViewProps {
   heatId: string;
+  /** Heat code (e.g. "MA-7X4K") — used as the sessionStorage snapshot key. */
+  heatCode: string;
   participationId: string;
   durationSeconds: number;
   integrityLevel: string;        // 'practice' | 'school' | 'district' | ...
@@ -237,6 +250,7 @@ const INTEGRITY_LEVEL_REQUIRES_FOCUS: Record<string, boolean> = {
 
 export default function CompetitionView({
   heatId,
+  heatCode,
   participationId,
   durationSeconds,
   integrityLevel,
@@ -247,20 +261,43 @@ export default function CompetitionView({
   const requiresFocus =
     INTEGRITY_LEVEL_REQUIRES_FOCUS[integrityLevel as IntegrityLevel] ?? false;
 
-  const [phase, setPhase] = useState<Phase>(requiresFocus ? 'integrity_check' : 'loading');
-  const [questions, setQuestions] = useState<HeatQuestionRow[]>([]);
+  // FIX 2 — sessionStorage restore. If we have a valid snapshot for this
+  // heatCode + participationId, hydrate every piece of state from it before
+  // any effect runs. The snapshot is dropped if the timer has already
+  // expired (loadSnapshot does this check internally).
+  const initialSnapshot = useMemo(() => {
+    const snap = loadSnapshot(heatCode);
+    if (!snap) return null;
+    if (snap.participationId !== participationId) return null;
+    if (snap.heatId !== heatId) return null;
+    return snap;
+  }, [heatCode, participationId, heatId]);
+
+  const [phase, setPhase] = useState<Phase>(() => {
+    if (initialSnapshot) return initialSnapshot.phase;
+    return requiresFocus ? 'integrity_check' : 'loading';
+  });
+  const [questions, setQuestions] = useState<HeatQuestionRow[]>(
+    () => (initialSnapshot?.questions as HeatQuestionRow[]) ?? []
+  );
   const [loadError, setLoadError] = useState<string | null>(null);
 
   // ── Active question state ───────────────────────────────────────────────
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [answer, setAnswer] = useState('');
-  const questionDisplayedAtRef = useRef<number>(0);
+  const [currentIndex, setCurrentIndex] = useState(initialSnapshot?.currentIndex ?? 0);
+  const [answer, setAnswer] = useState(initialSnapshot?.answer ?? '');
+  const questionDisplayedAtRef = useRef<number>(
+    initialSnapshot?.questionDisplayedAt ?? 0
+  );
 
   // ── Score / streak ──────────────────────────────────────────────────────
-  const [score, setScore] = useState(0);                  // running points (used only for FeedbackOverlay)
-  const [streak, setStreak] = useState(0);
-  const [questionsAttempted, setQuestionsAttempted] = useState(0);
-  const [questionsCorrect, setQuestionsCorrect] = useState(0); // surfaced as "Correct: X/Y" in HUD
+  const [score, setScore] = useState(initialSnapshot?.score ?? 0);
+  const [streak, setStreak] = useState(initialSnapshot?.streak ?? 0);
+  const [questionsAttempted, setQuestionsAttempted] = useState(
+    initialSnapshot?.questionsAttempted ?? 0
+  );
+  const [questionsCorrect, setQuestionsCorrect] = useState(
+    initialSnapshot?.questionsCorrect ?? 0
+  );
 
   // ── Feedback overlay ────────────────────────────────────────────────────
   const [feedback, setFeedback] = useState<
@@ -275,8 +312,18 @@ export default function CompetitionView({
   const [submitting, setSubmitting] = useState(false);
 
   // ── Global timer ────────────────────────────────────────────────────────
-  const [secondsRemaining, setSecondsRemaining] = useState(durationSeconds);
-  const heatStartedAtRef = useRef<number>(Date.now());
+  // If we restored from a snapshot, decrement from "duration - elapsed since
+  // heatStartedAt" so the clock doesn't jump forward.
+  const heatStartedAtRef = useRef<number>(
+    initialSnapshot?.heatStartedAt ?? Date.now()
+  );
+  const [secondsRemaining, setSecondsRemaining] = useState(() => {
+    if (initialSnapshot) {
+      const elapsed = Math.floor((Date.now() - initialSnapshot.heatStartedAt) / 1000);
+      return Math.max(0, durationSeconds - elapsed);
+    }
+    return durationSeconds;
+  });
 
   // ── Focus Mode ──────────────────────────────────────────────────────────
   const focusModeRef = useRef<FocusMode | null>(null);
@@ -286,8 +333,16 @@ export default function CompetitionView({
     violationCount: number;
     penaltySeconds?: number;
   } | null>(null);
-  const [isFlagged, setIsFlagged] = useState(false);
-  const [violationCount, setViolationCount] = useState(0);
+  const [isFlagged, setIsFlagged] = useState(initialSnapshot?.isFlagged ?? false);
+  const [violationCount, setViolationCount] = useState(
+    initialSnapshot?.violationCount ?? 0
+  );
+
+  // ── Connectivity + submission queue ─────────────────────────────────────
+  const [isOnline, setIsOnline] = useState<boolean>(() =>
+    typeof navigator !== 'undefined' ? navigator.onLine : true
+  );
+  const [pendingSubmissions, setPendingSubmissions] = useState<number>(() => queueSize());
 
   // ───────────────────────────────────────────────────────────────────────
   // Load Heat questions
@@ -296,36 +351,52 @@ export default function CompetitionView({
   useEffect(() => {
     if (phase === 'integrity_check') return;        // wait for user consent
     if (phase !== 'loading') return;
-    let cancelled = false;
-
-    (async () => {
-      const { data, error } = await supabase
-        .from('heat_questions')
-        .select('*, question_generators ( generator_type )')
-        .eq('heat_id', heatId)
-        .order('question_number', { ascending: true });
-
-      if (cancelled) return;
-
-      if (error) {
-        setLoadError(error.message);
-        return;
-      }
-      if (!data || data.length === 0) {
-        setLoadError('No questions found for this Heat.');
-        return;
-      }
-
-      setQuestions(data as HeatQuestionRow[]);
-      heatStartedAtRef.current = Date.now();
-      questionDisplayedAtRef.current = Date.now();
+    // FIX 2: if we already restored questions from a snapshot, skip the fetch.
+    if (questions.length > 0) {
+      questionDisplayedAtRef.current = questionDisplayedAtRef.current || Date.now();
       setPhase('playing');
+      return;
+    }
+
+    let cancelled = false;
+    // FIX 7 — exponential backoff for question fetch. Retry up to 3 times
+    // (1s, 2s, 4s) on transient errors so a momentary network blip can't
+    // kill the load.
+    (async () => {
+      for (let attempt = 0; attempt < 3; attempt++) {
+        const { data, error } = await supabase
+          .from('heat_questions')
+          .select('*, question_generators ( generator_type )')
+          .eq('heat_id', heatId)
+          .order('question_number', { ascending: true });
+
+        if (cancelled) return;
+
+        if (!error && data && data.length > 0) {
+          setQuestions(data as HeatQuestionRow[]);
+          heatStartedAtRef.current = Date.now();
+          questionDisplayedAtRef.current = Date.now();
+          setPhase('playing');
+          return;
+        }
+
+        // Final attempt → surface the error.
+        if (attempt === 2) {
+          if (error) setLoadError(error.message);
+          else setLoadError('No questions found for this Heat.');
+          return;
+        }
+
+        const delayMs = 1000 * Math.pow(2, attempt);
+        console.warn(`[CompetitionView] question fetch retry ${attempt + 1} after ${delayMs}ms`, error);
+        await new Promise((r) => setTimeout(r, delayMs));
+      }
     })();
 
     return () => {
       cancelled = true;
     };
-  }, [phase, heatId, supabase]);
+  }, [phase, heatId, supabase, questions.length]);
 
   // ───────────────────────────────────────────────────────────────────────
   // Global countdown timer
@@ -491,8 +562,13 @@ export default function CompetitionView({
       const cappedBonus = Math.min(timeBonus, 50);
       const pointsEarned = isCorrect ? basePoints + cappedBonus : 0;
 
-      // INSERT question_submissions (verified column names)
-      const { error: subError } = await supabase.from('question_submissions').insert({
+      // FIX 4 — INSERT question_submissions with offline-resilient queue.
+      // If the insert fails for ANY reason (network down, transient auth,
+      // RLS hiccup), enqueue it locally and let the background flusher
+      // retry every 5s. The student keeps competing without seeing an
+      // error — their score is updated optimistically client-side, and the
+      // scoring-service recomputes from question_submissions at end-of-Heat.
+      const submissionPayload = {
         heat_participation_id: participationId,
         heat_question_id: currentQuestion.id,
         submitted_answer: trimmed,
@@ -500,42 +576,47 @@ export default function CompetitionView({
         time_taken_ms: timeTakenMs,
         attempt_number: 1,
         points_earned: pointsEarned,
-      });
+      };
 
-      if (subError) {
-        console.error('[CompetitionView] failed to save submission:', subError.message);
+      try {
+        const { error: subError } = await supabase
+          .from('question_submissions')
+          .insert(submissionPayload);
+        if (subError) throw subError;
+      } catch (subError: any) {
+        console.warn('[CompetitionView] submission failed → enqueued for retry', subError?.message);
+        enqueueSubmission(submissionPayload);
+        setPendingSubmissions(queueSize());
       }
 
-      // Update heat_participations counters (verified column names)
+      // Update heat_participations counters (best-effort — same fallback
+      // behaviour as the submission insert above). The scoring service
+      // re-derives the canonical counters at end-of-Heat anyway, so we
+      // never block on this UPDATE.
       const nextAttempted = questionsAttempted + 1;
-      const updates: Record<string, any> = {
-        questions_attempted: nextAttempted,
-        questions_correct: score > 0 || isCorrect ? undefined : 0, // placeholder
-        total_time_ms: (Date.now() - heatStartedAtRef.current),
-        ranking_points_earned: score + pointsEarned,
-      };
-      // Compute correctly via DB read-modify? — keep client-authoritative for
-      // MVP. The scoring-service.calculateHeatResults() recomputes from the
-      // submission rows at end-of-Heat anyway, so transient drift is fine.
-      const { data: cur } = await supabase
-        .from('heat_participations')
-        .select('questions_correct, first_touch_correct')
-        .eq('id', participationId)
-        .maybeSingle();
+      try {
+        const { data: cur } = await supabase
+          .from('heat_participations')
+          .select('questions_correct, first_touch_correct')
+          .eq('id', participationId)
+          .maybeSingle();
 
-      const newCorrect = (cur?.questions_correct ?? 0) + (isCorrect ? 1 : 0);
-      const newFirstTouch = (cur?.first_touch_correct ?? 0) + (isCorrect ? 1 : 0);
+        const newCorrect = (cur?.questions_correct ?? 0) + (isCorrect ? 1 : 0);
+        const newFirstTouch = (cur?.first_touch_correct ?? 0) + (isCorrect ? 1 : 0);
 
-      await supabase
-        .from('heat_participations')
-        .update({
-          questions_attempted: nextAttempted,
-          questions_correct: newCorrect,
-          first_touch_correct: newFirstTouch,
-          ranking_points_earned: score + pointsEarned,
-          total_time_ms: Date.now() - heatStartedAtRef.current,
-        })
-        .eq('id', participationId);
+        await supabase
+          .from('heat_participations')
+          .update({
+            questions_attempted: nextAttempted,
+            questions_correct: newCorrect,
+            first_touch_correct: newFirstTouch,
+            ranking_points_earned: score + pointsEarned,
+            total_time_ms: Date.now() - heatStartedAtRef.current,
+          })
+          .eq('id', participationId);
+      } catch (err) {
+        console.warn('[CompetitionView] participation counter update failed', err);
+      }
 
       // Local state updates
       setScore((s) => s + pointsEarned);
@@ -584,6 +665,156 @@ export default function CompetitionView({
       focusModeRef.current.stop();
       focusModeRef.current = null;
     }
+  }, [phase]);
+
+  // ───────────────────────────────────────────────────────────────────────
+  // FIX 2 — snapshot to sessionStorage on every state change
+  // ───────────────────────────────────────────────────────────────────────
+  // Writes are synchronous and ~free; we don't throttle. Cleared when the
+  // Heat finishes / times out so a stale snapshot can't ressurrect a
+  // completed Heat on a future load.
+
+  useEffect(() => {
+    if (phase === 'integrity_check' || phase === 'loading') return;
+    if (phase === 'finished' || phase === 'time_up') {
+      clearSnapshot(heatCode);
+      return;
+    }
+    saveSnapshot({
+      heatId,
+      heatCode,
+      participationId,
+      phase,
+      currentIndex,
+      questions,
+      questionsAttempted,
+      questionsCorrect,
+      score,
+      streak,
+      violationCount,
+      isFlagged,
+      answer,
+      heatStartedAt: heatStartedAtRef.current,
+      durationSeconds,
+      questionDisplayedAt: questionDisplayedAtRef.current,
+    });
+  }, [
+    phase,
+    heatId,
+    heatCode,
+    participationId,
+    currentIndex,
+    questions,
+    questionsAttempted,
+    questionsCorrect,
+    score,
+    streak,
+    violationCount,
+    isFlagged,
+    answer,
+    durationSeconds,
+  ]);
+
+  // ───────────────────────────────────────────────────────────────────────
+  // FIX 4 — online/offline detection + background queue flusher
+  // ───────────────────────────────────────────────────────────────────────
+
+  useEffect(() => {
+    const handleOnline = (): void => {
+      setIsOnline(true);
+      // Eager flush — don't wait the next 5s tick when we just regained net.
+      void flushQueue(supabase).then((res) => {
+        setPendingSubmissions(res.remaining);
+      });
+    };
+    const handleOffline = (): void => setIsOnline(false);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, [supabase]);
+
+  useEffect(() => {
+    if (phase !== 'playing') return;
+
+    const interval = window.setInterval(async () => {
+      if (typeof navigator !== 'undefined' && !navigator.onLine) return;
+      if (queueSize() === 0) {
+        setPendingSubmissions(0);
+        return;
+      }
+      const res = await flushQueue(supabase);
+      setPendingSubmissions(res.remaining);
+    }, 5_000);
+
+    return () => window.clearInterval(interval);
+  }, [phase, supabase]);
+
+  // Clear the queue on Heat completion — anything that hasn't synced by
+  // now has either been flushed or will be repaired by the scoring service
+  // recomputation. Keeping stale items in sessionStorage would have them
+  // re-attempted on the next Heat the same browser joins.
+  useEffect(() => {
+    if (phase === 'finished' || phase === 'time_up') {
+      void flushQueue(supabase).then(() => {
+        clearQueue();
+        setPendingSubmissions(0);
+      });
+    }
+  }, [phase, supabase]);
+
+  // ───────────────────────────────────────────────────────────────────────
+  // FIX 5 — beforeunload + back-button trap
+  // ───────────────────────────────────────────────────────────────────────
+
+  useEffect(() => {
+    if (phase !== 'playing') return;
+
+    const onBeforeUnload = (e: BeforeUnloadEvent): string => {
+      // Modern browsers ignore the custom string but still show the native
+      // "Leave site?" prompt. The student's snapshot is already saved, so
+      // they can rejoin from the same URL — but the prompt prevents
+      // accidental tab-close mid-question.
+      e.preventDefault();
+      e.returnValue = "You're in the middle of a Heat. Leave anyway?";
+      return e.returnValue;
+    };
+
+    // Push a sentinel state so the very next "Back" hits popstate.
+    try {
+      window.history.pushState({ mathathloneHeatGuard: true }, '', window.location.href);
+    } catch {
+      /* history.pushState can fail in unusual sandbox configs — skip silently */
+    }
+
+    const onPopState = (): void => {
+      // Re-push so a future back press is also intercepted.
+      try {
+        window.history.pushState({ mathathloneHeatGuard: true }, '', window.location.href);
+      } catch {
+        /* ignore */
+      }
+      const leave = window.confirm(
+        "You're in the middle of a Heat. Leave the competition?"
+      );
+      if (leave) {
+        // Use replace + go(-1) so we exit the guard cleanly without
+        // re-entering the sentinel.
+        window.removeEventListener('popstate', onPopState);
+        window.removeEventListener('beforeunload', onBeforeUnload);
+        window.history.go(-1);
+      }
+    };
+
+    window.addEventListener('beforeunload', onBeforeUnload);
+    window.addEventListener('popstate', onPopState);
+    return () => {
+      window.removeEventListener('beforeunload', onBeforeUnload);
+      window.removeEventListener('popstate', onPopState);
+    };
   }, [phase]);
 
   // ───────────────────────────────────────────────────────────────────────
@@ -666,6 +897,10 @@ export default function CompetitionView({
           onAcknowledge={() => setIsFlagged(false)}
         />
       )}
+
+      {/* FIX 4/7 — connectivity + sync indicator. Stays out of the way at
+          the bottom-right unless something is actually wrong. */}
+      <ConnectivityToast isOnline={isOnline} pending={pendingSubmissions} />
 
       {/* Top bar */}
       <div className="border-b border-white/10 bg-black/20 backdrop-blur-md sticky top-0 z-30">
@@ -966,6 +1201,41 @@ function FeedbackOverlay({
               />
             </p>
           )
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ConnectivityToast({
+  isOnline,
+  pending,
+}: {
+  isOnline: boolean;
+  pending: number;
+}) {
+  // Stay silent when everything is healthy.
+  if (isOnline && pending === 0) return null;
+
+  const tone = !isOnline
+    ? 'bg-amber-500/15 border-amber-400/40 text-amber-100'
+    : 'bg-indigo-500/15 border-indigo-400/40 text-indigo-100';
+
+  return (
+    <div className="fixed bottom-4 right-4 z-30 pointer-events-none">
+      <div
+        className={`rounded-xl border backdrop-blur-md px-3.5 py-2 shadow-lg text-xs font-medium flex items-center gap-2 ${tone}`}
+      >
+        {!isOnline ? (
+          <>
+            <span className="w-2 h-2 rounded-full bg-amber-300 animate-pulse" />
+            You&apos;re offline. Your answers are saved — we&apos;ll sync when you&apos;re back.
+          </>
+        ) : (
+          <>
+            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+            Syncing {pending} answer{pending === 1 ? '' : 's'}…
+          </>
         )}
       </div>
     </div>

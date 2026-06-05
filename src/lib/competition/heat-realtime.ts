@@ -189,6 +189,7 @@ export function useHeatRealtime(heatId: string | null | undefined): {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const channelRef = useRef<RealtimeChannel | null>(null);
+  const lastEventAtRef = useRef<number>(Date.now());
 
   useEffect(() => {
     if (!heatId) {
@@ -198,7 +199,7 @@ export function useHeatRealtime(heatId: string | null | undefined): {
     let cancelled = false;
     const supabase = createClient();
 
-    (async () => {
+    const refetchHeat = async (): Promise<void> => {
       const { data, error: fetchError } = await supabase
         .from('heats')
         .select('*')
@@ -207,26 +208,69 @@ export function useHeatRealtime(heatId: string | null | undefined): {
       if (cancelled) return;
       if (fetchError) {
         setError(fetchError.message);
-        setLoading(false);
         return;
       }
       if (data) {
         setHeat(data as Heat);
         setStatus((data as Heat).status);
       }
-      setLoading(false);
+      lastEventAtRef.current = Date.now();
+    };
+
+    (async () => {
+      await refetchHeat();
+      if (!cancelled) setLoading(false);
     })();
 
-    channelRef.current = subscribeToHeat(supabase, heatId, {
-      channelSuffix: 'status',                       // isolated channel per hook
-      onHeatUpdate: (partial) => {
-        setHeat((prev) => (prev ? { ...prev, ...partial } : (partial as Heat)));
-        if (partial.status) setStatus(partial.status);
-      },
-    });
+    const subscribe = (): void => {
+      channelRef.current = subscribeToHeat(supabase, heatId, {
+        channelSuffix: 'status',                     // isolated channel per hook
+        onHeatUpdate: (partial) => {
+          lastEventAtRef.current = Date.now();
+          setHeat((prev) => (prev ? { ...prev, ...partial } : (partial as Heat)));
+          if (partial.status) setStatus(partial.status);
+        },
+      });
+    };
+    subscribe();
+
+    // FIX 3 — Realtime heartbeat / reconnect.
+    //
+    // Browsers throttle WebSocket activity when a tab is backgrounded. When
+    // the tab returns to focus we (a) refetch the heat row so any state we
+    // missed while away is captured, and (b) check whether the channel has
+    // been silent for an unusually long time — if so, rebuild it so the
+    // student never sits on a stale connection.
+    const onVisibility = (): void => {
+      if (document.visibilityState === 'visible') {
+        void refetchHeat();
+        const silentMs = Date.now() - lastEventAtRef.current;
+        if (silentMs > 30_000 && channelRef.current) {
+          console.warn('[useHeatRealtime] channel silent for >30s, resubscribing');
+          supabase.removeChannel(channelRef.current);
+          channelRef.current = null;
+          subscribe();
+        }
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+
+    // Periodic heartbeat (every 30s) — covers the case where the tab is
+    // foreground but the connection has silently dropped.
+    const heartbeat = window.setInterval(() => {
+      const silentMs = Date.now() - lastEventAtRef.current;
+      if (silentMs > 60_000 && channelRef.current) {
+        console.warn('[useHeatRealtime] no events in 60s, resubscribing');
+        supabase.removeChannel(channelRef.current);
+        channelRef.current = null;
+        subscribe();
+      }
+    }, 30_000);
 
     return () => {
       cancelled = true;
+      document.removeEventListener('visibilitychange', onVisibility);
+      window.clearInterval(heartbeat);
       if (channelRef.current) {
         supabase.removeChannel(channelRef.current);
         channelRef.current = null;

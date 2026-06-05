@@ -274,15 +274,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } else {
         setProfile(null);
 
-        // BUG 4: redirect to login when the session is GENUINELY gone on a
-        // protected page (signed out from another tab, refresh-token failure
-        // surfaced as SIGNED_OUT). BUG 6: we deliberately do NOT trigger on
-        // TOKEN_REFRESHED / USER_UPDATED / INITIAL_SESSION — Supabase fires
-        // those with a transient null session when a backgrounded tab regains
-        // focus, before the refresh completes. Treating those as "session
-        // expired" remounts every protected page (including CompetitionView)
-        // and obliterates in-progress Heat state. We also exempt
-        // /compete/[code] entirely — that route handles its own auth lifecycle.
+        // BUG 4 / Competition Resilience FIX 1: redirect to login ONLY when
+        // the session is GENUINELY gone on a protected, non-competition page.
+        //
+        // The /compete/* tree is the sacred path. ANY auth event with a null
+        // session on those routes is treated as a transient artifact of the
+        // Supabase token refresh cycle (tab backgrounding, network blip,
+        // realtime reconnect). We never redirect from there — the
+        // competition view owns its own lifecycle, the sessionStorage
+        // snapshot will restore state from a true reload, and the submission
+        // queue tolerates intermittent network failures.
+        //
+        // We also restrict the trigger event to SIGNED_OUT (not
+        // TOKEN_REFRESHED / USER_UPDATED / INITIAL_SESSION) because Supabase
+        // emits those with a transient null session during reconnect.
         if (
           hadSession &&
           event === 'SIGNED_OUT' &&
@@ -295,10 +300,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             event,
           });
           router.push(`/auth/login?next=${next}`);
-        } else if (hadSession && event === 'SIGNED_OUT' && isLiveCompetitionPath(pathname)) {
-          // Diagnostic only — never redirect. The lobby/competition view will
-          // surface session_expired on its next Supabase call.
-          console.warn('[AuthContext] session ended on live competition page — letting page handle it', {
+        } else if (isLiveCompetitionPath(pathname)) {
+          // Diagnostic only — never redirect from a competition page. The
+          // student keeps competing while the SDK quietly refreshes the
+          // token; any inserts that fail in the meantime are queued by the
+          // submission-queue and retried.
+          console.warn('[AuthContext] auth event on live competition page — ignored', {
             pathname,
             event,
           });

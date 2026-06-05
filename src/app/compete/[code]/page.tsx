@@ -379,7 +379,7 @@ export default function HeatLobbyPage() {
   // ───────────────────────────────────────────────────────────────────────
 
   if (authLoading || (isAuthenticated && loadState === 'loading')) {
-    return <FullScreenSpinner label="Loading Heat…" />;
+    return <LobbyLoadingSpinner />;
   }
   if (!isAuthenticated) return null;       // redirect already in flight
 
@@ -488,6 +488,7 @@ export default function HeatLobbyPage() {
     return (
       <CompetitionView
         heatId={heat.id}
+        heatCode={heat.code}
         participationId={myParticipation.id}
         durationSeconds={heat.duration_seconds}
         integrityLevel={heat.integrity_level ?? 'practice'}
@@ -848,6 +849,46 @@ function FullScreenSpinner({ label }: { label: string }) {
     <div className="min-h-screen bg-gradient-to-b from-indigo-950 via-indigo-900 to-purple-900 flex flex-col items-center justify-center">
       <Loader2 className="w-10 h-10 text-amber-300 animate-spin" />
       <p className="mt-4 text-white/70 text-sm">{label}</p>
+    </div>
+  );
+}
+
+/**
+ * FIX 7 — Lobby-specific loading spinner that escalates its message after a
+ * 5-second wait so the student isn't staring at "Loading Heat..." forever.
+ * The actual retry/timeout logic lives in the load useEffect.
+ */
+function LobbyLoadingSpinner() {
+  const [elapsedTier, setElapsedTier] = useState<0 | 1 | 2>(0);
+  useEffect(() => {
+    const t5 = window.setTimeout(() => setElapsedTier(1), 5_000);
+    const t8 = window.setTimeout(() => setElapsedTier(2), 8_000);
+    return () => {
+      window.clearTimeout(t5);
+      window.clearTimeout(t8);
+    };
+  }, []);
+
+  const label =
+    elapsedTier === 0
+      ? 'Loading Heat…'
+      : elapsedTier === 1
+      ? 'Taking longer than usual. Retrying…'
+      : 'Still working on it — hold tight…';
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-indigo-950 via-indigo-900 to-purple-900 flex flex-col items-center justify-center px-4">
+      <Loader2 className="w-10 h-10 text-amber-300 animate-spin" />
+      <p className="mt-4 text-white/70 text-sm text-center">{label}</p>
+      {elapsedTier === 2 && (
+        <button
+          type="button"
+          onClick={() => window.location.reload()}
+          className="mt-6 px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white text-xs hover:bg-white/20 transition-colors"
+        >
+          Try again
+        </button>
+      )}
     </div>
   );
 }
