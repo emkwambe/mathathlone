@@ -79,7 +79,7 @@ export default async function TeacherDashboard() {
         </div>
 
         {/* Quick Actions */}
-        <div className="grid md:grid-cols-2 gap-6 mb-8">
+        <div className="mb-8">
           {/* Start Heat */}
           <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white">
             <h2 className="text-2xl font-bold mb-2">🏁 Start a Heat</h2>
@@ -93,35 +93,15 @@ export default async function TeacherDashboard() {
               Create Heat
             </Link>
           </div>
-
-          {/* View Analytics */}
-          <div className="bg-white rounded-2xl shadow-sm p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">📊 Class Analytics</h2>
-            <p className="text-gray-600 mb-6">
-              Review performance data and identify learning gaps.
-            </p>
-            <Link
-              href="/analytics"
-              className="inline-block px-6 py-3 bg-gray-100 text-gray-700 font-semibold rounded-lg hover:bg-gray-200 transition"
-            >
-              View Analytics
-            </Link>
-          </div>
         </div>
 
         {/* Classes */}
-        <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900">My Classes</h2>
-            <Link 
-              href="/class/create"
-              className="text-sm text-blue-600 hover:underline"
-            >
-              + Add Class
-            </Link>
-          </div>
-          
-          {classes && classes.length > 0 ? (
+        {classes && classes.length > 0 && (
+          <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-gray-900">My Classes</h2>
+            </div>
+
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
               {classes.map((cls: any) => (
                 <Link
@@ -142,18 +122,8 @@ export default async function TeacherDashboard() {
                 </Link>
               ))}
             </div>
-          ) : (
-            <div className="text-center py-8">
-              <p className="text-gray-500 mb-4">No classes yet</p>
-              <Link
-                href="/class/create"
-                className="text-blue-600 hover:underline"
-              >
-                Create your first class
-              </Link>
-            </div>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Recent Heats */}
         <div className="bg-white rounded-xl shadow-sm p-6">

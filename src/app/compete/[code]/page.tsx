@@ -60,7 +60,14 @@ interface HeatWithMeta extends Heat {
   unit_topic: { id: string; name: string; code: string } | null;
 }
 
-type LoadState = 'loading' | 'found' | 'not_found' | 'error';
+type LoadState =
+  | 'loading'
+  | 'found'
+  | 'not_found'
+  | 'expired_lobby'
+  | 'session_expired'
+  | 'student_locked_out'
+  | 'error';
 
 // -----------------------------------------------------------------------------
 // HELPERS
@@ -124,7 +131,8 @@ export default function HeatLobbyPage() {
 
   // ── Realtime: live heat status + participant roster ────────────────────
   const { status: liveStatus } = useHeatRealtime(heat?.id ?? null);
-  const { participants } = useHeatParticipants(heat?.id ?? null);
+  const { participants, loading: participantsLoading } = useHeatParticipants(heat?.id ?? null);
+  const participantsLoaded = !participantsLoading;
 
   // Effective status: prefer the live channel, fall back to initial load
   const effectiveStatus: HeatStatus | null =
@@ -138,42 +146,137 @@ export default function HeatLobbyPage() {
     }
   }, [authLoading, isAuthenticated, router, code]);
 
-  // ── Load Heat by code (with division + unit_topic JOINs) ───────────────
+  // ── Load Heat by code (with retries + status-aware error mapping) ──────
+  // BUG 0 fix: when the teacher just created the Heat, the row may not yet
+  // be visible to a follow-up SELECT (RLS, replication, prepared-statement
+  // caches). We retry up to 3 times with 1-second intervals before giving
+  // up, and we set a 10-second overall hard cap so the spinner never spins
+  // forever. BUG 1/2/5: missing rows, cancelled/complete heats, expired
+  // sessions, and stale lobbies each get a specific error message instead
+  // of an infinite spinner.
   useEffect(() => {
     if (!code) return;
     if (authLoading || !isAuthenticated) return;
     let cancelled = false;
 
+    const MAX_ATTEMPTS = 3;
+    const ATTEMPT_DELAY_MS = 1000;
+    const HARD_TIMEOUT_MS = 10_000;
+    const LOBBY_EXPIRY_MS = 30 * 60 * 1000;             // 30 min
+
     (async () => {
       setLoadState('loading');
       setLoadError(null);
 
-      const { data, error } = await supabase
-        .from('heats')
-        .select(`
-          *,
-          division:division_id ( id, name, code ),
-          unit_topic:unit_topic_id ( id, name, code )
-        `)
-        .eq('code', code)
-        .maybeSingle();
+      const startedAt = Date.now();
+      console.log('[HeatLobby] load:start', { code, at: new Date().toISOString() });
+
+      // Hard timeout — if we haven't resolved a row within 10s, surface an
+      // error rather than spinning indefinitely.
+      const timeoutId = setTimeout(() => {
+        if (cancelled) return;
+        console.warn('[HeatLobby] load:timeout', { code });
+        setLoadError("This Heat is taking too long to load. Check your connection and try again.");
+        setLoadState('error');
+        cancelled = true;
+      }, HARD_TIMEOUT_MS);
+
+      let lastError: string | null = null;
+
+      for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+        if (cancelled) return;
+
+        console.log('[HeatLobby] load:attempt', { code, attempt });
+
+        const { data, error } = await supabase
+          .from('heats')
+          .select(`
+            *,
+            division:division_id ( id, name, code ),
+            unit_topic:unit_topic_id ( id, name, code )
+          `)
+          .eq('code', code)
+          .maybeSingle();
+
+        if (cancelled) return;
+
+        if (error) {
+          // Auth-shaped errors → session expired
+          const msg = (error.message || '').toLowerCase();
+          if (msg.includes('jwt') || msg.includes('expired') || (error as any).code === 'PGRST301') {
+            console.warn('[HeatLobby] load:session_expired', { code, error: error.message });
+            clearTimeout(timeoutId);
+            setLoadError("Your session expired. Please log in again.");
+            setLoadState('session_expired');
+            return;
+          }
+          lastError = error.message;
+          console.warn('[HeatLobby] load:error', { code, attempt, message: error.message });
+        } else if (data) {
+          // Found it — finish.
+          clearTimeout(timeoutId);
+          const heatRow = data as HeatWithMeta;
+          console.log('[HeatLobby] load:found', {
+            code,
+            attempt,
+            status: heatRow.status,
+            created_by: heatRow.created_by,
+            elapsedMs: Date.now() - startedAt,
+          });
+
+          // BUG 2: auto-expire stale lobbies (status='lobby' AND > 30 min old).
+          const isOwner = !!user && heatRow.created_by === user.id;
+          if (
+            heatRow.status === 'lobby' &&
+            heatRow.created_at &&
+            Date.now() - new Date(heatRow.created_at).getTime() > LOBBY_EXPIRY_MS
+          ) {
+            console.warn('[HeatLobby] load:lobby_expired', {
+              code,
+              created_at: heatRow.created_at,
+            });
+            // Only the creator can flip it (RLS). If anyone else lands on it,
+            // we still surface the expired UI so they don't sit in the lobby.
+            if (isOwner) {
+              await supabase
+                .from('heats')
+                .update({ status: 'cancelled' })
+                .eq('id', heatRow.id);
+            }
+            setHeat({ ...heatRow, status: 'cancelled' as any });
+            setIsTeacher(isOwner);
+            setLoadState('expired_lobby');
+            return;
+          }
+
+          // BUG 5: prevent students from auto-joining an active/calculating/
+          // complete Heat they weren't already part of. We don't have the
+          // participants list yet at this point, so the dedicated lock-out
+          // check runs later in a separate effect below.
+          setHeat(heatRow);
+          setIsTeacher(isOwner);
+          setLoadState('found');
+          return;
+        }
+
+        // Not found yet on this attempt — wait then retry (unless last).
+        if (attempt < MAX_ATTEMPTS) {
+          console.log('[HeatLobby] load:retry-wait', { code, attempt });
+          await new Promise((r) => setTimeout(r, ATTEMPT_DELAY_MS));
+        }
+      }
 
       if (cancelled) return;
+      clearTimeout(timeoutId);
 
-      if (error) {
-        setLoadError(error.message);
+      if (lastError) {
+        console.error('[HeatLobby] load:gave_up_with_error', { code, lastError });
+        setLoadError(lastError);
         setLoadState('error');
-        return;
-      }
-      if (!data) {
+      } else {
+        console.warn('[HeatLobby] load:not_found_after_retries', { code });
         setLoadState('not_found');
-        return;
       }
-
-      const heatRow = data as HeatWithMeta;
-      setHeat(heatRow);
-      setLoadState('found');
-      if (user) setIsTeacher(heatRow.created_by === user.id);
     })();
 
     return () => {
@@ -258,9 +361,42 @@ export default function HeatLobbyPage() {
     return (
       <FullScreenMessage
         icon={<AlertTriangle className="w-10 h-10 text-amber-300" />}
-        title="Heat not found"
+        title="This Heat doesn't exist"
         message={`We couldn't find a Heat with the code ${code}. Double-check with your teacher.`}
         action={{ label: 'Back to join', href: '/compete' }}
+      />
+    );
+  }
+  if (loadState === 'session_expired') {
+    return (
+      <FullScreenMessage
+        icon={<AlertTriangle className="w-10 h-10 text-amber-300" />}
+        title="Session expired"
+        message="You've been signed out. Please log in again to rejoin this Heat."
+        action={{
+          label: 'Log in',
+          href: `/auth/login?next=${encodeURIComponent(`/compete/${code}`)}`,
+        }}
+      />
+    );
+  }
+  if (loadState === 'expired_lobby') {
+    return (
+      <FullScreenMessage
+        icon={<AlertTriangle className="w-10 h-10 text-amber-300" />}
+        title="This Heat expired"
+        message="It sat in the lobby for more than 30 minutes without starting. Ask your teacher to create a fresh one."
+        action={{ label: 'Back to compete', href: '/compete' }}
+      />
+    );
+  }
+  if (loadState === 'student_locked_out') {
+    return (
+      <FullScreenMessage
+        icon={<AlertTriangle className="w-10 h-10 text-amber-300" />}
+        title="This Heat has already started"
+        message="You weren't part of this Heat when it began, so you can't join now. Ask your teacher for the next one."
+        action={{ label: 'Back to compete', href: '/compete' }}
       />
     );
   }
@@ -308,6 +444,19 @@ export default function HeatLobbyPage() {
     // to resolve participation_id (no need for an extra DB round-trip).
     const myParticipation = participants.find((p) => p.athlete_id === user?.id);
     if (!myParticipation) {
+      // BUG 5: if the participants list has loaded and the student isn't in
+      // it, they joined after the Heat started — surface a clear message
+      // rather than spinning "Syncing your slot…" forever.
+      if (participantsLoaded) {
+        return (
+          <FullScreenMessage
+            icon={<AlertTriangle className="w-10 h-10 text-amber-300" />}
+            title="This Heat has already started"
+            message="You weren't part of this Heat when it began, so you can't join mid-Heat. Ask your teacher for the next one."
+            action={{ label: 'Back to compete', href: '/compete' }}
+          />
+        );
+      }
       return <FullScreenSpinner label="Syncing your slot…" />;
     }
     return (

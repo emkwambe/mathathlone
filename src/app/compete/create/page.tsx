@@ -450,6 +450,13 @@ export default function CreateHeatPage() {
           : null,
       });
 
+      // BUG 0 fix: give Supabase a moment to fully commit the heats row +
+      // heat_questions inserts and propagate to read replicas / refresh RLS
+      // policies before we redirect. Without this short delay the lobby
+      // page sometimes lands before the row is visible and falls into the
+      // retry loop (or, before the retry loop existed, span forever).
+      console.log('[CreateHeat] heat created — waiting 500ms before redirect', { code: heat.code });
+      await new Promise((r) => setTimeout(r, 500));
       router.push(`/compete/${heat.code}`);
     } catch (err: any) {
       console.error('[CreateHeat] failed:', err);

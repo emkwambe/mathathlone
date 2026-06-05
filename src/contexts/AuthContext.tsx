@@ -25,12 +25,13 @@ import {
   createContext,
   useContext,
   useEffect,
+  useRef,
   useState,
   useCallback,
   useMemo,
   type ReactNode,
 } from 'react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import type { Session, User, AuthError } from '@supabase/supabase-js';
 
@@ -145,14 +146,36 @@ function decodeJwtClaims(accessToken: string | undefined): JwtClaims | null {
 // PROVIDER
 // -----------------------------------------------------------------------------
 
+// Routes that should NEVER trigger a session-expiry redirect (because they
+// don't require auth or because they own the login flow themselves).
+const PUBLIC_PATH_PREFIXES = [
+  '/auth/',
+  '/403',
+  '/404',
+];
+
+function isProtectedPath(pathname: string | null | undefined): boolean {
+  if (!pathname) return false;
+  if (pathname === '/') return false;                  // marketing landing
+  return !PUBLIC_PATH_PREFIXES.some((prefix) => pathname.startsWith(prefix));
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
+  const pathname = usePathname();
   const supabase = useMemo(() => createClient(), []);
 
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+
+  // Track whether we ever had an authenticated session in this browser tab.
+  // Only after we've seen a session do we treat a transition-to-null as a
+  // "session expired" event worth redirecting on. This prevents the redirect
+  // from firing on the very first page render before the initial getSession()
+  // resolves.
+  const hadSessionRef = useRef(false);
 
   // Derive claims from current session token (free, no DB calls)
   const claims = useMemo(
@@ -203,6 +226,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .getSession()
       .then(async ({ data: { session: initial } }) => {
         if (!mounted) return;
+        if (initial) hadSessionRef.current = true;
         setSession(initial);
         setUser(initial?.user ?? null);
         if (initial?.user) {
@@ -222,6 +246,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } = supabase.auth.onAuthStateChange(async (event, newSession) => {
       if (!mounted) return;
 
+      const hadSession = hadSessionRef.current;
+      if (newSession) hadSessionRef.current = true;
+
       setSession(newSession);
       setUser(newSession?.user ?? null);
 
@@ -230,6 +257,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (mounted) setProfile(p);
       } else {
         setProfile(null);
+
+        // BUG 4: session expired (or was signed out from another tab) while
+        // the user was on a protected page. SIGNED_OUT is the explicit event
+        // for logout; we also redirect when getSession returns null after we
+        // had a session — covers refresh-token failure. We never redirect
+        // when the user invoked signOut() themselves (signOut handles the
+        // navigation) — those flows reach this branch with event === SIGNED_OUT
+        // too, so we let them through; the destination differs (login vs '/'),
+        // and the explicit router.push('/') in signOut() runs first. The
+        // login redirect below only runs if we're still on a protected route
+        // AFTER signOut's push, which is exactly what we want for stale tabs.
+        if (
+          hadSession &&
+          (event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED' || event === 'INITIAL_SESSION') &&
+          isProtectedPath(pathname)
+        ) {
+          const next = encodeURIComponent(pathname || '/');
+          console.warn('[AuthContext] session lost on protected page — redirecting to login', {
+            pathname,
+            event,
+          });
+          router.push(`/auth/login?next=${next}`);
+        }
       }
       // NB: We do NOT call router.refresh() here. The middleware handles
       // server-side cookie sync; calling refresh() inside the listener
@@ -240,7 +290,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       mounted = false;
       subscription.unsubscribe();
     };
-  }, [supabase, fetchProfile]);
+  }, [supabase, fetchProfile, pathname, router]);
 
   // ---------------- Authorization helpers ----------------
 

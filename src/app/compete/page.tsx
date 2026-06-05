@@ -116,7 +116,7 @@ export default function JoinHeatPage() {
       // on the lobby and seeing a "not found" screen.
       const { data: heat, error: lookupErr } = await supabase
         .from('heats')
-        .select('id, status')
+        .select('id, status, created_at')
         .eq('code', normalized)
         .maybeSingle();
 
@@ -124,15 +124,35 @@ export default function JoinHeatPage() {
         throw new Error(lookupErr.message);
       }
       if (!heat) {
-        setError(`Heat ${normalized} not found. Check the code and try again.`);
+        setError(`Heat ${normalized} doesn't exist. Check the code and try again.`);
         return;
       }
 
       const joinable = ['lobby', 'open', 'scheduled'];
       const inProgress = ['countdown', 'active', 'in_progress'];
+      const complete = ['complete', 'finished', 'calculating'];
+      const LOBBY_EXPIRY_MS = 30 * 60 * 1000;
 
+      if (heat.status === 'cancelled') {
+        setError('This Heat was cancelled by the host. Ask your teacher for a fresh code.');
+        return;
+      }
+      if (complete.includes(heat.status)) {
+        setError('This Heat has already ended. Ask your teacher for the next one.');
+        return;
+      }
       if (inProgress.includes(heat.status)) {
         setError('This Heat is already in progress. Ask your teacher for the next one.');
+        return;
+      }
+      // Lobby that sat for >30 min is functionally dead — match the lobby
+      // page's expiry rule so we don't drop students into a stale room.
+      if (
+        heat.status === 'lobby' &&
+        heat.created_at &&
+        Date.now() - new Date(heat.created_at).getTime() > LOBBY_EXPIRY_MS
+      ) {
+        setError('This Heat expired — it sat in the lobby too long. Ask your teacher for a fresh code.');
         return;
       }
       if (!joinable.includes(heat.status)) {
