@@ -154,10 +154,26 @@ const PUBLIC_PATH_PREFIXES = [
   '/404',
 ];
 
+// BUG 6: live competition pages MUST NEVER be unmounted by an auth redirect.
+// When a backgrounded tab regains focus, Supabase often emits a transient
+// null session right before TOKEN_REFRESHED succeeds. If we redirect on that
+// transient state, the CompetitionView unmounts and the student loses their
+// in-progress Heat. The competition page handles its own auth lifecycle —
+// it surfaces a session_expired UI from inside the lobby loader without
+// blowing away question state.
+const COMPETITION_PATH_PATTERN = /^\/compete\/[^/]+/;
+
 function isProtectedPath(pathname: string | null | undefined): boolean {
   if (!pathname) return false;
   if (pathname === '/') return false;                  // marketing landing
   return !PUBLIC_PATH_PREFIXES.some((prefix) => pathname.startsWith(prefix));
+}
+
+function isLiveCompetitionPath(pathname: string | null | undefined): boolean {
+  if (!pathname) return false;
+  // /compete is the join page — fine to redirect from. Only the per-code
+  // subpaths (which mount CompetitionView during 'active' status) are exempt.
+  return COMPETITION_PATH_PATTERN.test(pathname);
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -258,20 +274,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } else {
         setProfile(null);
 
-        // BUG 4: session expired (or was signed out from another tab) while
-        // the user was on a protected page. SIGNED_OUT is the explicit event
-        // for logout; we also redirect when getSession returns null after we
-        // had a session — covers refresh-token failure. We never redirect
-        // when the user invoked signOut() themselves (signOut handles the
-        // navigation) — those flows reach this branch with event === SIGNED_OUT
-        // too, so we let them through; the destination differs (login vs '/'),
-        // and the explicit router.push('/') in signOut() runs first. The
-        // login redirect below only runs if we're still on a protected route
-        // AFTER signOut's push, which is exactly what we want for stale tabs.
+        // BUG 4: redirect to login when the session is GENUINELY gone on a
+        // protected page (signed out from another tab, refresh-token failure
+        // surfaced as SIGNED_OUT). BUG 6: we deliberately do NOT trigger on
+        // TOKEN_REFRESHED / USER_UPDATED / INITIAL_SESSION — Supabase fires
+        // those with a transient null session when a backgrounded tab regains
+        // focus, before the refresh completes. Treating those as "session
+        // expired" remounts every protected page (including CompetitionView)
+        // and obliterates in-progress Heat state. We also exempt
+        // /compete/[code] entirely — that route handles its own auth lifecycle.
         if (
           hadSession &&
-          (event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED' || event === 'INITIAL_SESSION') &&
-          isProtectedPath(pathname)
+          event === 'SIGNED_OUT' &&
+          isProtectedPath(pathname) &&
+          !isLiveCompetitionPath(pathname)
         ) {
           const next = encodeURIComponent(pathname || '/');
           console.warn('[AuthContext] session lost on protected page — redirecting to login', {
@@ -279,6 +295,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             event,
           });
           router.push(`/auth/login?next=${next}`);
+        } else if (hadSession && event === 'SIGNED_OUT' && isLiveCompetitionPath(pathname)) {
+          // Diagnostic only — never redirect. The lobby/competition view will
+          // surface session_expired on its next Supabase call.
+          console.warn('[AuthContext] session ended on live competition page — letting page handle it', {
+            pathname,
+            event,
+          });
         }
       }
       // NB: We do NOT call router.refresh() here. The middleware handles

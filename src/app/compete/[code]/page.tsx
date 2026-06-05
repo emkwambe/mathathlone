@@ -154,9 +154,25 @@ export default function HeatLobbyPage() {
   // forever. BUG 1/2/5: missing rows, cancelled/complete heats, expired
   // sessions, and stale lobbies each get a specific error message instead
   // of an infinite spinner.
+  //
+  // BUG 6 fix — DO NOT add `user` (or any object Supabase re-emits on
+  // TOKEN_REFRESHED) to the dependency array of this effect. When the tab
+  // regains focus, Supabase fires TOKEN_REFRESHED with a freshly-deserialized
+  // user object; even with the same id, the reference changes. If that
+  // re-fires this effect, we call setLoadState('loading') which renders the
+  // <FullScreenSpinner> branch, unmounting CompetitionView and obliterating
+  // every Heat answer / timer / focus-mode counter the student had built up.
+  // Use `userId` (stable string) and short-circuit when we've already loaded
+  // the same Heat code. The `user` ref is captured locally inside the
+  // closure for ownership detection.
+  const userId = user?.id ?? null;
   useEffect(() => {
     if (!code) return;
     if (authLoading || !isAuthenticated) return;
+    // BUG 6 short-circuit: we've already loaded the Heat for this code and
+    // the page is mounted. Don't ever reset state from inside this effect —
+    // it would blow away CompetitionView mid-Heat on a token refresh.
+    if (heat && heat.code === code && loadState === 'found') return;
     let cancelled = false;
 
     const MAX_ATTEMPTS = 3;
@@ -256,6 +272,10 @@ export default function HeatLobbyPage() {
           setHeat(heatRow);
           setIsTeacher(isOwner);
           setLoadState('found');
+          // NB: do NOT include `user` in the effect deps — see BUG 6 banner
+          // above. The owner check above uses a closure capture of `user`
+          // captured at first load; if the same browser somehow swaps users
+          // (rare in practice), the lobby would need a full reload anyway.
           return;
         }
 
@@ -282,7 +302,13 @@ export default function HeatLobbyPage() {
     return () => {
       cancelled = true;
     };
-  }, [code, supabase, authLoading, isAuthenticated, user]);
+    // BUG 6: depend on userId (string) not user (object). Supabase emits a
+    // new user object on every TOKEN_REFRESHED — keeping `user` in deps
+    // would refire the effect on tab refocus and unmount CompetitionView.
+    // `heat` and `loadState` are deliberately omitted from deps too: this
+    // effect should run exactly once per (code, auth-ready, userId) tuple.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [code, supabase, authLoading, isAuthenticated, userId]);
 
   // ── Auto-join students (idempotent) ────────────────────────────────────
   useEffect(() => {
