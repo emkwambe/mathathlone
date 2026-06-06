@@ -64,3 +64,7 @@ WHERE qg.generator_type LIKE 'g7\_%' ESCAPE '\'
 ORDER BY qg.generator_type;
 
 COMMIT;
+
+-- Post-seed corrections applied directly in Supabase:
+-- UPDATE answer_type = 'integer' for surface_area_3d, volume_3d_objects, composite_area, area_2d_objects
+-- UPDATE answer_type = 'expression' for add_sub_linear_expr, expand_linear_expr
