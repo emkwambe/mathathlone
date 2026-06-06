@@ -7,6 +7,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { hintForAnswerType } from '@/lib/competition/generators';
 
 // -----------------------------------------------------------------------------
 // TYPES (shared with engine)
@@ -393,7 +394,7 @@ export function QuestionDisplay({
       
       {/* Answer Input */}
       <form onSubmit={handleSubmit} className="max-w-md mx-auto">
-        <div className="relative mb-4">
+        <div className="relative mb-2">
           <input
             ref={inputRef}
             type="text"
@@ -412,12 +413,26 @@ export function QuestionDisplay({
             spellCheck="false"
           />
         </div>
-        
+
+        {/* Format hint: shared lookup from ANSWER_TYPE_HINTS in generators.ts.
+            Positioned BELOW the input and ABOVE the submit button so students
+            see the expected format before they start typing. Empty hints
+            (MC / multiple_choice / text / unknown) render nothing. */}
+        {(() => {
+          const hint = hintForAnswerType(question.answer_type);
+          if (!hint) return null;
+          return (
+            <p className="text-xs italic text-white/50 mt-1 mb-3 text-center">
+              📝 Format: {hint}
+            </p>
+          );
+        })()}
+
         <div className="flex gap-3">
           <button
             type="submit"
             disabled={!answer.trim() || disabled || isSubmitting}
-            className="flex-1 py-4 bg-gradient-to-r from-green-400 to-emerald-500 
+            className="flex-1 py-4 bg-gradient-to-r from-green-400 to-emerald-500
                        text-white font-bold text-lg rounded-xl
                        hover:from-green-300 hover:to-emerald-400
                        disabled:opacity-50 disabled:cursor-not-allowed
@@ -426,7 +441,7 @@ export function QuestionDisplay({
           >
             {isSubmitting ? 'Submitting...' : 'Submit ✓'}
           </button>
-          
+
           {onSkip && (
             <button
               type="button"
@@ -441,15 +456,6 @@ export function QuestionDisplay({
           )}
         </div>
       </form>
-      
-      {/* Answer Type Hint */}
-      <p className="text-center text-white/40 text-sm mt-4">
-        {question.answer_type === 'integer' && 'Enter a whole number'}
-        {question.answer_type === 'decimal' && 'Enter a decimal number'}
-        {question.answer_type === 'fraction' && 'Enter as a/b (e.g., 3/4)'}
-        {question.answer_type === 'ordered_pair' && 'Enter as (x, y)'}
-        {question.answer_type === 'integer_pair' && 'Enter as {a, b}'}
-      </p>
     </div>
   );
 }

@@ -13,16 +13,79 @@ export type AnswerType =
   | 'integer'
   | 'decimal'
   | 'fraction'
-  | 'number_or_fraction'  // accepts integer / decimal / fraction equivalently —
-                          // used when the answer COULD be any of those forms,
-                          // so the format hint can't narrow the answer space.
   | 'ordered_pair'
+  | 'integer_pair'
   | 'expression'
   | 'equation'
   | 'inequality'
   | 'interval'
-  | 'integer_pair'
-  | 'text';
+  | 'number_or_fraction'  // accepts integer / decimal / fraction equivalently —
+                          // used when the answer COULD be any of those forms,
+                          // so the format hint can't narrow the answer space.
+  | 'text'
+  | 'MC'
+  | 'multiple_choice'
+  // Multi-shape answer types — used by pools where a single generator may
+  // produce answers in more than one canonical form. Validation accepts any
+  // of the named forms.
+  | 'decimal_or_fraction'
+  | 'decimal_or_integer'
+  | 'integer_or_fraction'
+  | 'integer_or_MC'
+  | 'integer_or_text'
+  | 'text_or_fraction'
+  | 'decimal_or_fraction_or_percent'
+  | 'decimal_or_text'
+  | 'fraction_or_decimal'
+  | 'integer_or_decimal';
+
+// =============================================================================
+// ANSWER FORMAT HINTS
+// =============================================================================
+// Single shared map of answer_type → student-facing format hint. Consumed by
+// the in-game question UI (CompetitionView, index.tsx). Empty string means
+// "no hint" — used for MC-style questions where the student picks a button.
+//
+// Display convention at the call sites: "📝 Format: <hint>" — only render
+// the line when the hint is non-empty.
+// =============================================================================
+
+export const ANSWER_TYPE_HINTS: Record<AnswerType, string> = {
+  integer:                          'Enter a whole number, e.g. 42',
+  decimal:                          'Enter a decimal number, e.g. 3.14',
+  fraction:                         'Enter as a/b, e.g. 3/4',
+  ordered_pair:                     'Enter as (x, y), e.g. (2, -11)',
+  integer_pair:                     'Enter as {a, b}, e.g. {3, 5}',
+  expression:                       'Simplify fully, e.g. 3x + 2',
+  equation:                         'Enter as y = mx + b, e.g. y = 2x + 3',
+  inequality:                       'Enter as x > 3 or x ≤ -1',
+  interval:                         'Enter as interval, e.g. (2, ∞) or [-3, 5)',
+  number_or_fraction:               'Enter a number or fraction, e.g. 5 or 3/4',
+  text:                             '',
+  MC:                               '',
+  multiple_choice:                  '',
+  decimal_or_fraction:              'Enter a decimal or fraction, e.g. 0.75 or 3/4',
+  decimal_or_integer:               'Enter a whole number or decimal, e.g. 4 or 3.5',
+  integer_or_fraction:              'Enter a whole number or fraction, e.g. 6 or 5/3',
+  integer_or_decimal:               'Enter a whole number or decimal, e.g. 4 or 2.5',
+  decimal_or_fraction_or_percent:   'Enter a decimal, fraction, or percent, e.g. 0.5 or 1/2 or 50%',
+  decimal_or_text:                  'Enter a number or short answer',
+  integer_or_text:                  'Enter a number or short answer',
+  text_or_fraction:                 'Enter a short answer or fraction',
+  integer_or_MC:                    'Enter a whole number or select A/B/C/D',
+  // Semantic synonym of decimal_or_fraction — give it the same hint.
+  fraction_or_decimal:              'Enter a decimal or fraction, e.g. 0.75 or 3/4',
+};
+
+/**
+ * Resolve a raw answer_type string (from heat_questions.answer_type) to a
+ * student-facing hint. Returns '' for unknown types so callers can
+ * conditionally render the hint line.
+ */
+export function hintForAnswerType(answerType: string | null | undefined): string {
+  if (!answerType) return '';
+  return ANSWER_TYPE_HINTS[answerType as AnswerType] ?? '';
+}
 
 export type DifficultyLevel = 1 | 2 | 3 | 4;
 

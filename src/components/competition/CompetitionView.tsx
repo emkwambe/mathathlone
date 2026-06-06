@@ -39,7 +39,7 @@ import {
 
 import { createClient } from '@/lib/supabase/client';
 import { validateAnswer } from '@/lib/competition/validation';
-import type { AnswerType } from '@/lib/competition/generators';
+import { hintForAnswerType, type AnswerType } from '@/lib/competition/generators';
 import {
   FocusMode,
   loadIntegrityConfig,
@@ -172,65 +172,41 @@ function renderMath(input: string | unknown): { __html: string } {
  * Format-hint resolver for free-text questions. Returns a short instruction
  * shown beneath the answer input so Mathletes know the expected form.
  *
- * Priority: generator_type substring match wins over raw answer_type because
- * some generators (e.g. `linear_eq_*`) produce numeric answers stored as
- * `integer`/`text` while still benefiting from a structural hint, and others
- * (`point_slope_form`) require a specific equation layout.
+ * Two-stage lookup:
+ *   1. Generator-shape overrides — for generators whose `answer_type` alone
+ *      can't tell the student the required answer FORMAT. Point-slope
+ *      generators tag as `equation` but need a different shape than
+ *      y = mx + b; factor_* generators tag as `expression` but need
+ *      `(x + a)(x + b)`. These override the map below.
+ *   2. ANSWER_TYPE_HINTS map (shared with the second-pass UI in
+ *      `components/competition/index.tsx`) — covers every answer_type
+ *      defined in `generators.ts`. Empty string for MC/text means no hint.
+ *
+ * Hint strings deliberately do NOT carry the "📝 Format:" prefix — the
+ * call site adds that wrapper. Returning '' means "render no hint line".
  */
 function formatHintFor(
   answerType: string | null | undefined,
   generatorType: string | null | undefined
 ): string {
-  const at = (answerType ?? '').toLowerCase();
   const gt = (generatorType ?? '').toLowerCase();
 
-  // Generator-shape rules (apply across text / equation / expression types)
+  // Generator-shape overrides (more specific than answer_type alone)
   if (gt.includes('point_slope')) {
-    return 'Format: y - b = m(x - a) (e.g., y - 2 = 3(x - 4))';
+    return 'Enter as y - b = m(x - a), e.g. y - 2 = 3(x - 4)';
   }
   if (gt.includes('linear_eq') || gt.includes('write_linear_eq') || gt.includes('write_parallel_perp_eq')) {
-    return 'Format: y = mx + b (e.g., y = 2x + 3)';
-  }
-  if (gt.includes('inequality')) {
-    return 'Format: x > 5 or x ≤ -3';
+    return 'Enter as y = mx + b, e.g. y = 2x + 3';
   }
   if (gt.includes('factor')) {
-    return 'Format: (x + a)(x + b) (e.g., (x + 2)(x - 3))';
+    return 'Enter as (x + a)(x + b), e.g. (x + 2)(x - 3)';
   }
   if (gt.includes('system_solution')) {
-    return 'Format: no solution, infinite, or one solution';
+    return "Enter 'no solution', 'infinite', or 'one solution'";
   }
 
-  // Pure answer_type fallbacks
-  switch (at) {
-    case 'integer':
-      return 'Enter a whole number (e.g., 5)';
-    case 'decimal':
-      return 'Enter a number (e.g., 3.5)';
-    case 'fraction':
-      return 'Enter as a fraction (e.g., 3/4 or -1/2)';
-    case 'number_or_fraction':
-      // Deliberately broad — used when the answer could be integer, decimal,
-      // or fraction depending on the random parameters. Narrowing this hint
-      // would tip students off about which form the answer takes.
-      return 'Enter a number or fraction (e.g., -2 or 3/4)';
-    case 'ordered_pair':
-    case 'point':
-      return 'Format: (x, y) (e.g., (2, 3))';
-    case 'integer_pair':
-      return 'Format: {a, b} (order doesn\'t matter)';
-    case 'inequality':
-      return 'Format: x > 5 or x ≤ -3';
-    case 'interval':
-      return 'Format: (a, b), [a, b], (a, b], or [a, b)';
-    case 'equation':
-      return 'Format: y = mx + b (e.g., y = 2x + 3)';
-    case 'expression':
-      return 'Enter the simplified expression';
-    case 'text':
-    default:
-      return 'Enter your answer exactly';
-  }
+  // Pure answer_type fallback via the shared map
+  return hintForAnswerType(answerType);
 }
 
 function formatClock(totalSeconds: number): string {
@@ -984,13 +960,13 @@ export default function CompetitionView({
                   onChange={setAnswer}
                   onSubmit={() => handleSubmit(answer)}
                   disabled={submitting || !!feedback}
-                />
-                <p className="mt-2 text-xs text-gray-500">
-                  {formatHintFor(
+                  hint={formatHintFor(
                     currentQuestion.answer_type,
                     currentQuestion.question_generators?.generator_type ?? null
                   )}
-                </p>
+                />
+                {/* Hint moved BELOW input, ABOVE submit — see FreeTextInput.
+                    Rendered only when non-empty. */}
               </>
             ) : (
               <MCButtons
@@ -1069,11 +1045,14 @@ function FreeTextInput({
   onChange,
   onSubmit,
   disabled,
+  hint,
 }: {
   value: string;
   onChange: (v: string) => void;
   onSubmit: () => void;
   disabled: boolean;
+  /** Format hint to render below the input. Empty string → no hint rendered. */
+  hint?: string;
 }) {
   return (
     <form
@@ -1083,17 +1062,26 @@ function FreeTextInput({
       }}
       className="flex flex-col sm:flex-row gap-3"
     >
-      <input
-        type="text"
-        autoFocus
-        autoComplete="off"
-        spellCheck={false}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        disabled={disabled}
-        placeholder="Type your answer…"
-        className="flex-1 px-4 py-3 rounded-xl border-2 border-gray-200 text-lg font-medium text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 disabled:bg-gray-50 disabled:cursor-not-allowed"
-      />
+      {/* Input + hint share the left column so the hint sits BELOW the input
+          and (on mobile, when this becomes flex-col) ABOVE the submit button. */}
+      <div className="flex-1">
+        <input
+          type="text"
+          autoFocus
+          autoComplete="off"
+          spellCheck={false}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          disabled={disabled}
+          placeholder="Type your answer…"
+          className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 text-lg font-medium text-gray-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200 disabled:bg-gray-50 disabled:cursor-not-allowed"
+        />
+        {hint && (
+          <p className="text-xs italic text-gray-500 mt-2">
+            📝 Format: {hint}
+          </p>
+        )}
+      </div>
       <button
         type="submit"
         disabled={disabled || !value.trim()}
