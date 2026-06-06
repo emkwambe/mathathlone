@@ -528,8 +528,11 @@ export default function StudentResults({
   // ── Share handler (Task 5) ──────────────────────────────────────────────
   const handleShare = useCallback(async () => {
     if (!me || !identity) return;
-    const courseName = heatMeta?.course?.name ?? 'NC Math 1';
+    const courseName = heatMeta?.course?.name ?? '';
     const topicName = heatMeta?.unit_topic?.name ?? 'Mixed';
+    const courseTopicLine = courseName
+      ? `${courseName} · ${topicName}`
+      : topicName;
     const shareText = [
       '🏟️ MathAthlone Result',
       `${identity.compact} — ${meta.emoji} ${meta.label}`,
@@ -537,7 +540,7 @@ export default function StudentResults({
         ? `#${myRank} of ${totalParticipants} Mathletes`
         : `${totalParticipants} Mathletes competed`,
       `CTA: ${Math.round(me.cta_score ?? 0)}/100 · Accuracy: ${Math.round(me.accuracy_score ?? 0)}%`,
-      `${courseName} · ${topicName}`,
+      courseTopicLine,
       'Can you beat my score? mathathlone.com/compete',
     ].join('\n');
 

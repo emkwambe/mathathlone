@@ -99,6 +99,25 @@ const DIVISION_ICONS: Record<string, React.ReactNode> = {
   SV:  <GraduationCap className="w-6 h-6" />,
 };
 
+// Division code → eligible course grade_bands. Replaces the legacy
+// division_curricula JOIN (which only had NCM1 linked). Add new bands here
+// as more courses get seeded.
+const DIVISION_GRADE_BANDS: Record<string, string[]> = {
+  JR:  [],                                  // Grades 3-4 — no courses yet
+  INT: ['6'],                               // Grades 5-6
+  ADV: ['7', '8'],                          // Grades 7-8
+  JV:  ['8-9', '9-10'],                     // Grades 9-10
+  SV:  ['10-11', '11-12'],                  // Grades 11-12
+};
+
+// Foundation is cross-division and keyed by course code rather than
+// grade_band. The DB division code for Foundation may vary; covers the
+// common shorthands.
+const DIVISION_COURSE_CODES: Record<string, string[]> = {
+  FOUND: ['MF'],
+  F:     ['MF'],
+};
+
 const HEAT_TYPE_META: Record<HeatType, { label: string; icon: React.ReactNode; questions: number; minutes: number; desc: string }> = {
   sprint:       { label: 'Sprint',       icon: <Flame className="w-5 h-5" />,  questions: 20, minutes: 15, desc: '15 min · 20 questions · fast-paced' },
   target:       { label: 'Target',       icon: <Target className="w-5 h-5" />, questions: 10, minutes: 20, desc: '20 min · 10 questions · deeper problems' },
@@ -335,12 +354,37 @@ export default function CreateHeatPage() {
     let cancelled = false;
     async function loadCourses() {
       setLoadingCourses(true);
-      // selectedDivision is non-null here per the guard above; assert for TS.
-      const divisionId = selectedDivision!.id;
-      const { data, error: cErr } = await supabase
-        .from('division_curricula')
-        .select('courses:course_id ( id, name, code )')
-        .eq('division_id', divisionId);
+      // Query courses directly by grade_band (and explicit course codes for
+      // cross-division pools like math_fundamentals). Replaces the legacy
+      // division_curricula JOIN which only had NCM1 wired up.
+      const divisionCode = selectedDivision!.code;
+      const gradeBands  = DIVISION_GRADE_BANDS[divisionCode]  ?? [];
+      const courseCodes = DIVISION_COURSE_CODES[divisionCode] ?? [];
+
+      if (gradeBands.length === 0 && courseCodes.length === 0) {
+        setCourses([]);
+        setSelectedCourse(null);
+        setLoadingCourses(false);
+        return;
+      }
+
+      let query = supabase
+        .from('courses')
+        .select('id, name, code')
+        .eq('is_active', true)
+        .order('display_order', { ascending: true });
+
+      if (gradeBands.length > 0 && courseCodes.length > 0) {
+        query = query.or(
+          `grade_band.in.(${gradeBands.join(',')}),code.in.(${courseCodes.join(',')})`
+        );
+      } else if (gradeBands.length > 0) {
+        query = query.in('grade_band', gradeBands);
+      } else {
+        query = query.in('code', courseCodes);
+      }
+
+      const { data, error: cErr } = await query;
 
       if (cancelled) return;
 
@@ -351,9 +395,7 @@ export default function CreateHeatPage() {
         return;
       }
 
-      const rows: CourseRow[] = (data ?? [])
-        .map((r: any) => r.courses)
-        .filter(Boolean) as CourseRow[];
+      const rows = (data ?? []) as CourseRow[];
 
       setCourses(rows);
       // Auto-select if only one course
@@ -577,7 +619,13 @@ export default function CreateHeatPage() {
         <SectionCard
           step={2}
           title="Course"
-          hint={courses.length > 1 ? 'Pick a course for this division.' : 'Auto-selected — MVP supports one course per division.'}
+          hint={
+            courses.length === 0
+              ? 'No courses available for this division yet.'
+              : courses.length === 1
+              ? 'Only one course available — selected for you.'
+              : 'Pick a course for this division.'
+          }
           locked={!selectedDivision}
         >
           {loadingCourses ? (

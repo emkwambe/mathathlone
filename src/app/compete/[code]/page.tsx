@@ -57,7 +57,12 @@ import TeacherResults from '@/components/competition/TeacherResults';
 
 interface HeatWithMeta extends Heat {
   division: { id: string; name: string; code: string } | null;
-  unit_topic: { id: string; name: string; code: string } | null;
+  unit_topic: {
+    id: string;
+    name: string;
+    code: string;
+    course: { id: string; name: string; code: string } | null;
+  } | null;
 }
 
 type LoadState =
@@ -209,7 +214,10 @@ export default function HeatLobbyPage() {
           .select(`
             *,
             division:division_id ( id, name, code ),
-            unit_topic:unit_topic_id ( id, name, code )
+            unit_topic:unit_topic_id (
+              id, name, code,
+              course:course_id ( id, name, code )
+            )
           `)
           .eq('code', code)
           .maybeSingle();
@@ -615,7 +623,7 @@ function LobbyView({
   currentUserId: string | null;
 }) {
   const difficulty = difficultyLabel(heat.depth_min, heat.depth_max);
-  const courseName = 'NC Math 1';                 // MVP — only one course
+  const courseName = heat.unit_topic?.course?.name ?? '';
   const unitTopicName = heat.unit_topic?.name ?? 'Mixed topics';
   const divisionName = heat.division?.name ?? '—';
   const durationMin = Math.round((heat.duration_seconds ?? 0) / 60);
@@ -641,7 +649,7 @@ function LobbyView({
             Heat <span className="font-mono">{heat.code}</span>
           </h1>
           <p className="text-indigo-200 text-sm mt-1">
-            {courseName} · {unitTopicName} · {divisionName}
+            {[courseName, unitTopicName, divisionName].filter(Boolean).join(' · ')}
           </p>
           <p className="text-indigo-300/70 text-xs mt-1">
             {heat.question_count} questions · {durationMin} min · integrity:{' '}
