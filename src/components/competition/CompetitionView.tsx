@@ -204,6 +204,9 @@ function formatHintFor(
   if (gt.includes('system_solution')) {
     return "Enter 'no solution', 'infinite', or 'one solution'";
   }
+  if (gt.includes('solve_square_eq')) {
+    return 'Enter as ±n, e.g. ±5';
+  }
 
   // Pure answer_type fallback via the shared map
   return hintForAnswerType(answerType);
