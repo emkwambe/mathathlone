@@ -192,7 +192,13 @@ async function loadEligibleGenerators(
     .eq('is_active', true);
 
   if (genError) {
-    throw new Error(`Failed to load question_generators: ${genError.message}`);
+    // question_generators table may be empty or not yet seeded —
+    // return empty array so caller falls back to static pool
+    console.warn(
+      `[question-delivery] question_generators query failed — falling back to static pool. ` +
+      `Error: ${genError.message}`
+    );
+    return [];
   }
 
   const codeKnown = new Set(Object.keys(GENERATORS));
@@ -349,10 +355,13 @@ export async function generateAndInsertQuestions(
   // ── Load pools ────────────────────────────────────────────────────────────
   const generators = await loadEligibleGenerators(supabase, unitTopicId);
   if (generators.length === 0 && frTarget > 0) {
-    throw new Error(
-      `No active question_generators found for unit_topic ${unitTopicId ?? '(mixed)'}. ` +
-      'Run Sprint 0 migration 014c (or verify the unit_topic_id) before creating Heats.'
+    // No generators seeded yet — redirect FR slots to static pool
+    console.warn(
+      `[question-delivery] No generators for unit_topic ${unitTopicId ?? '(mixed)'} ` +
+      `— redirecting ${frTarget} FR slot(s) to static pool.`
     );
+    staticTarget += frTarget;
+    frTarget = 0;
   }
 
   // Static pool comes from the static_questions table — finite, often small.
@@ -431,9 +440,9 @@ export async function generateAndInsertQuestions(
   const staticCount = staticTarget;
 
   if (generatorCount > 0 && generators.length === 0) {
-    throw new Error(
-      `Cannot fulfill ${generatorCount} FR slot(s): no active question_generators ` +
-        `for unit_topic ${unitTopicId ?? '(mixed)'}.`
+    console.warn(
+      `[question-delivery] Cannot fulfill ${generatorCount} FR slot(s) — ` +
+      `no generators available. These slots were already redirected to static.`
     );
   }
 
