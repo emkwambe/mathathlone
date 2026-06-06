@@ -1,0 +1,3 @@
+-- Already applied to Supabase on 2026-06-06
+-- G7 Group B concepts patch (17 concepts)
+-- See 019 for full multi-pool patch

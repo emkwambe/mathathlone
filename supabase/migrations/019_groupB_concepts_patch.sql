@@ -1,0 +1,3 @@
+-- Already applied to Supabase on 2026-06-06
+-- Group B atomic_concepts patch for NCM2, G6, G8, MF, NCM3, ALG1 (135 concepts)
+-- Resolves static_questions JOIN gap caused by generator-only seeding
