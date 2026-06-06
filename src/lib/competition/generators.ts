@@ -1720,6 +1720,1048 @@ export function generate_transform_sequence(difficulty: DifficultyLevel): Genera
 }
 
 // =============================================================================
+// =============================================================================
+// NC GRADE 7 — CHALLENGERS DIVISION (pool: nc_grade_7)
+// =============================================================================
+// =============================================================================
+// Every generator below uses the `g7_` prefix on its `generator_type` key
+// so identifiers never collide with other pools. Concept IDs follow the
+// `M7.<UNIT>.<TOPIC>.<CONCEPT>` lesson_number scheme used in the
+// docs/curriculum/grade7/*.json artifacts.
+//
+// Internally each function builds an object matching the user's spec —
+// { question, answer, solution_steps, concept_name, answer_type } — and
+// passes it through g7Wrap() to produce the GeneratedQuestion shape that
+// the existing question-delivery pipeline expects.
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SHARED HELPERS (Grade 7 only — prefixed g7* to avoid collisions)
+// ─────────────────────────────────────────────────────────────────────────────
+
+/** Canonical rational number: simplified, denominator > 0. */
+type G7Rational = { num: number; den: number };
+
+function g7Rat(num: number, den: number = 1): G7Rational {
+  if (den === 0) throw new Error('g7Rat: zero denominator');
+  const [n, d] = simplifyFraction(num, den);
+  return { num: n, den: d };
+}
+
+function g7RatAdd(a: G7Rational, b: G7Rational): G7Rational {
+  return g7Rat(a.num * b.den + b.num * a.den, a.den * b.den);
+}
+function g7RatSub(a: G7Rational, b: G7Rational): G7Rational {
+  return g7Rat(a.num * b.den - b.num * a.den, a.den * b.den);
+}
+function g7RatMul(a: G7Rational, b: G7Rational): G7Rational {
+  return g7Rat(a.num * b.num, a.den * b.den);
+}
+function g7RatDiv(a: G7Rational, b: G7Rational): G7Rational {
+  if (b.num === 0) throw new Error('g7RatDiv: divide by zero');
+  return g7Rat(a.num * b.den, a.den * b.num);
+}
+
+/** Format as the simplest exact form: integer if denominator is 1, else a/b. */
+function g7FmtRat(r: G7Rational): string {
+  return r.den === 1 ? String(r.num) : `${r.num}/${r.den}`;
+}
+
+/** Wrap a negative value in parentheses for inline display in operators. */
+function g7Paren(r: G7Rational): string {
+  const s = g7FmtRat(r);
+  return r.num < 0 ? `(${s})` : s;
+}
+
+/**
+ * Sample a random rational. Returns an integer ~50% of the time and a
+ * simple fraction (denominator 2-6) otherwise, so the resulting problems
+ * mix the operand types the curriculum specifies.
+ */
+function g7RandomRational(
+  range: number = 10,
+  includeFractions: boolean = true,
+  allowNegative: boolean = true
+): G7Rational {
+  const useFrac = includeFractions && Math.random() < 0.5;
+  if (useFrac) {
+    const den = randomInt(2, 6);
+    const min = allowNegative ? -range * den : 1;
+    const max = range * den;
+    let num = randomNonZeroInt(min, max);
+    // Avoid degenerate "fraction that's secretly an integer"
+    if (num % den === 0) num += Math.sign(num) || 1;
+    return g7Rat(num, den);
+  }
+  const min = allowNegative ? -range : 1;
+  return g7Rat(randomNonZeroInt(min, range));
+}
+
+/** Build a GeneratedQuestion for a Grade 7 generator from the user's shape. */
+function g7Wrap(
+  difficulty: DifficultyLevel,
+  generator_type: string,
+  concept_id: string,
+  _concept_name: string,                 // documentation only; concept_id is the live FK
+  q: { question: string; answer: string; solution_steps: string[]; answer_type: AnswerType }
+): GeneratedQuestion {
+  return {
+    question_latex: q.question,
+    question_text: q.question,
+    correct_answer: q.answer,
+    answer_type: q.answer_type,
+    solution_steps: q.solution_steps,
+    difficulty,
+    concept_id,
+    generator_type,
+  };
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BATCH 1: The Number System — rational arithmetic + fraction-to-decimal
+// ─────────────────────────────────────────────────────────────────────────────
+
+// 1. M7.NS.1.2 — Adding Rational Numbers
+export function generate_g7_add_rational(difficulty: DifficultyLevel): GeneratedQuestion {
+  const range = difficulty === 1 ? 6 : difficulty === 2 ? 10 : 15;
+  let a: G7Rational;
+  let b: G7Rational;
+  let sum: G7Rational;
+  // Reject trivial zero sums and identical operands.
+  for (let tries = 0; tries < 10; tries++) {
+    a = g7RandomRational(range, difficulty >= 2);
+    b = g7RandomRational(range, difficulty >= 2);
+    sum = g7RatAdd(a, b);
+    if (sum.num !== 0 && (a.num !== b.num || a.den !== b.den)) break;
+  }
+  a = a!; b = b!; sum = sum!;
+  return g7Wrap(difficulty, 'g7_add_rational', 'M7.NS.1.2', 'Adding Rational Numbers', {
+    question: `Add: ${g7FmtRat(a)} + ${g7Paren(b)}`,
+    answer: g7FmtRat(sum),
+    solution_steps: [
+      `Find a common denominator: ${a.den * b.den}`,
+      `Rewrite: ${a.num * b.den}/${a.den * b.den} + ${b.num * a.den}/${a.den * b.den}`,
+      `Add numerators: ${a.num * b.den + b.num * a.den}/${a.den * b.den}`,
+      `Simplify: ${g7FmtRat(sum)}`,
+    ],
+    answer_type: 'decimal_or_fraction',
+  });
+}
+
+// 2. M7.NS.1.4 — Subtracting Rational Numbers
+export function generate_g7_subtract_rational(difficulty: DifficultyLevel): GeneratedQuestion {
+  const range = difficulty === 1 ? 6 : difficulty === 2 ? 10 : 15;
+  let a: G7Rational;
+  let b: G7Rational;
+  let diff: G7Rational;
+  for (let tries = 0; tries < 10; tries++) {
+    a = g7RandomRational(range, difficulty >= 2);
+    b = g7RandomRational(range, difficulty >= 2);
+    diff = g7RatSub(a, b);
+    if (diff.num !== 0 && (a.num !== b.num || a.den !== b.den)) break;
+  }
+  a = a!; b = b!; diff = diff!;
+  return g7Wrap(difficulty, 'g7_subtract_rational', 'M7.NS.1.4', 'Subtracting Rational Numbers', {
+    question: `Subtract: ${g7FmtRat(a)} − ${g7Paren(b)}`,
+    answer: g7FmtRat(diff),
+    solution_steps: [
+      `Find a common denominator: ${a.den * b.den}`,
+      `Rewrite: ${a.num * b.den}/${a.den * b.den} − ${b.num * a.den}/${a.den * b.den}`,
+      `Subtract numerators: ${a.num * b.den - b.num * a.den}/${a.den * b.den}`,
+      `Simplify: ${g7FmtRat(diff)}`,
+    ],
+    answer_type: 'decimal_or_fraction',
+  });
+}
+
+// 3. M7.NS.2.2 — Multiplying Rational Numbers
+export function generate_g7_multiply_rational(difficulty: DifficultyLevel): GeneratedQuestion {
+  const range = difficulty === 1 ? 6 : 10;
+  let a: G7Rational;
+  let b: G7Rational;
+  let prod: G7Rational;
+  for (let tries = 0; tries < 10; tries++) {
+    a = g7RandomRational(range, true);
+    b = g7RandomRational(range, true);
+    prod = g7RatMul(a, b);
+    // Skip ±1 multipliers (trivial)
+    if (Math.abs(a.num) !== 1 || a.den !== 1) {
+      if (Math.abs(b.num) !== 1 || b.den !== 1) break;
+    }
+  }
+  a = a!; b = b!; prod = prod!;
+  return g7Wrap(difficulty, 'g7_multiply_rational', 'M7.NS.2.2', 'Multiplying Rational Numbers', {
+    question: `Multiply: ${g7Paren(a)} × ${g7Paren(b)}`,
+    answer: g7FmtRat(prod),
+    solution_steps: [
+      `Multiply numerators: ${a.num} × ${b.num} = ${a.num * b.num}`,
+      `Multiply denominators: ${a.den} × ${b.den} = ${a.den * b.den}`,
+      `Simplify ${a.num * b.num}/${a.den * b.den}: ${g7FmtRat(prod)}`,
+    ],
+    answer_type: 'decimal_or_fraction',
+  });
+}
+
+// 4. M7.NS.2.4 — Dividing Rational Numbers
+export function generate_g7_divide_rational(difficulty: DifficultyLevel): GeneratedQuestion {
+  const range = difficulty === 1 ? 6 : 10;
+  let a: G7Rational;
+  let b: G7Rational;
+  let quot: G7Rational;
+  for (let tries = 0; tries < 10; tries++) {
+    a = g7RandomRational(range, true);
+    b = g7RandomRational(range, true);
+    if (b.num === 0) continue;
+    quot = g7RatDiv(a, b);
+    if (Math.abs(b.num) !== 1 || b.den !== 1) break;
+  }
+  a = a!; b = b!; quot = quot!;
+  const bReciprocal = g7Rat(b.den * (b.num < 0 ? -1 : 1), Math.abs(b.num));
+  return g7Wrap(difficulty, 'g7_divide_rational', 'M7.NS.2.4', 'Dividing Rational Numbers', {
+    question: `Divide: ${g7Paren(a)} ÷ ${g7Paren(b)}`,
+    answer: g7FmtRat(quot),
+    solution_steps: [
+      `Multiply by the reciprocal of ${g7Paren(b)}`,
+      `${g7Paren(a)} × ${g7FmtRat(bReciprocal)}`,
+      `Simplify: ${g7FmtRat(quot)}`,
+    ],
+    answer_type: 'decimal_or_fraction',
+  });
+}
+
+// 5. M7.NS.3.1 — Converting Rational Numbers to Decimals (Terminating/Repeating)
+export function generate_g7_rational_to_decimal(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Curated pools so the answer key is exact. Terminating denominators
+  // factor into 2s and 5s only; repeating decimals get a "..." marker so
+  // students aren't fishing for the exact long-form value.
+  const terminating: Array<{ num: number; den: number; dec: string }> = [
+    { num: 1, den: 2,  dec: '0.5'   },
+    { num: 1, den: 4,  dec: '0.25'  },
+    { num: 3, den: 4,  dec: '0.75'  },
+    { num: 1, den: 5,  dec: '0.2'   },
+    { num: 2, den: 5,  dec: '0.4'   },
+    { num: 3, den: 5,  dec: '0.6'   },
+    { num: 4, den: 5,  dec: '0.8'   },
+    { num: 1, den: 8,  dec: '0.125' },
+    { num: 3, den: 8,  dec: '0.375' },
+    { num: 5, den: 8,  dec: '0.625' },
+    { num: 7, den: 8,  dec: '0.875' },
+    { num: 7, den: 10, dec: '0.7'   },
+  ];
+  const repeating: Array<{ num: number; den: number; dec: string; bar: string }> = [
+    { num: 1, den: 3, dec: '0.333...', bar: '3'   },
+    { num: 2, den: 3, dec: '0.666...', bar: '6'   },
+    { num: 1, den: 6, dec: '0.1666...', bar: '6'  },
+    { num: 5, den: 6, dec: '0.8333...', bar: '3'  },
+    { num: 1, den: 9, dec: '0.111...', bar: '1'   },
+    { num: 4, den: 9, dec: '0.444...', bar: '4'   },
+    { num: 1, den: 7, dec: '0.142857...', bar: '142857' },
+  ];
+  const useTerm = difficulty === 1 || Math.random() < 0.6;
+  const pool = useTerm ? terminating : repeating;
+  const pick = pool[randomInt(0, pool.length - 1)]!;
+  const negate = Math.random() < 0.3;
+  const numDisplay = `${negate ? '-' : ''}${pick.num}/${pick.den}`;
+  const answer = `${negate ? '-' : ''}${pick.dec}`;
+  return g7Wrap(difficulty, 'g7_rational_to_decimal', 'M7.NS.3.1', 'Converting Rational Numbers to Decimals', {
+    question: `Convert to a decimal: ${numDisplay}`,
+    answer,
+    solution_steps: [
+      `Divide ${negate ? '-' : ''}${pick.num} by ${pick.den}`,
+      useTerm
+        ? `The decimal terminates: ${answer}`
+        : `The decimal repeats (digit${(pick as any).bar.length > 1 ? 's' : ''} ${(pick as any).bar}): ${answer}`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BATCH 2: Ratios & Proportional Relationships
+// ─────────────────────────────────────────────────────────────────────────────
+
+// 6. M7.RP.1.2 — Identifying the Constant of Proportionality (unit rate)
+export function generate_g7_find_unit_rate(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Pick a clean unit rate so y/x is well-formed. Difficulty controls the
+  // magnitude of k and whether decimal values appear.
+  const contexts = [
+    { item: 'miles', per: 'hour', subject: 'A car' },
+    { item: 'dollars', per: 'pound', subject: 'Apples cost' },
+    { item: 'pages', per: 'minute', subject: 'A printer outputs' },
+    { item: 'words', per: 'minute', subject: 'A typist averages' },
+    { item: 'liters', per: 'minute', subject: 'A pump moves' },
+  ];
+  const ctx = contexts[randomInt(0, contexts.length - 1)]!;
+  // Clean integer unit rates first, then scale x.
+  const k = difficulty === 1 ? randomInt(2, 8) : randomInt(3, 20);
+  const xMultiplier = randomInt(2, difficulty === 1 ? 5 : 12);
+  const x = xMultiplier;
+  const y = k * x;
+  return g7Wrap(difficulty, 'g7_find_unit_rate', 'M7.RP.1.2', 'Identifying the Constant of Proportionality', {
+    question: `${ctx.subject} travels ${y} ${ctx.item} in ${x} ${ctx.per}${x === 1 ? '' : 's'}. What is the unit rate in ${ctx.item} per ${ctx.per}?`,
+    answer: String(k),
+    solution_steps: [
+      `Unit rate = total ÷ number of units`,
+      `${y} ÷ ${x} = ${k}`,
+      `Answer: ${k} ${ctx.item} per ${ctx.per}`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// 7. M7.RP.2.1 — Using Proportional Relationships to Solve Real-World Problems
+export function generate_g7_proportional_solve(difficulty: DifficultyLevel): GeneratedQuestion {
+  const scenarios = [
+    { setup: (a: number, b: number) => `A recipe uses ${a} cups of flour to make ${b} cookies.`,
+      ask: (n: number) => `How many cookies can be made with ${n} cups of flour?`,
+      unit: 'cookies' },
+    { setup: (a: number, b: number) => `A car travels ${a} miles on ${b} gallons of gas.`,
+      ask: (n: number) => `How many miles can it travel on ${n} gallons?`,
+      unit: 'miles' },
+    { setup: (a: number, b: number) => `${a} oranges cost $${b}.`,
+      ask: (n: number) => `How much do ${n} oranges cost in dollars?`,
+      unit: 'dollars' },
+    { setup: (a: number, b: number) => `On a map, ${a} cm represents ${b} miles.`,
+      ask: (n: number) => `How many miles do ${n} cm represent?`,
+      unit: 'miles' },
+  ];
+  const sc = scenarios[randomInt(0, scenarios.length - 1)]!;
+  // Build a clean ratio that scales to an integer answer.
+  const k = randomInt(2, difficulty === 1 ? 6 : 12);
+  const base = randomInt(2, 5);
+  const known1 = base;
+  const known2 = base * k;
+  const newInput = base * randomInt(2, difficulty === 1 ? 4 : 8);
+  const answer = newInput * k;
+  return g7Wrap(difficulty, 'g7_proportional_solve', 'M7.RP.2.1', 'Solving Proportions in Real-World Problems', {
+    question: `${sc.setup(known1, known2)} ${sc.ask(newInput)}`,
+    answer: String(answer),
+    solution_steps: [
+      `Set up the proportion: ${known1}/${known2} = ${newInput}/x`,
+      `Find the unit rate: ${known2} ÷ ${known1} = ${k}`,
+      `Multiply: ${newInput} × ${k} = ${answer}`,
+      `Answer: ${answer} ${sc.unit}`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// 8. M7.RP.3.1 — Multi-Step Percent Problems (Tax, Tip, Discount)
+export function generate_g7_percent_tax_tip_discount(difficulty: DifficultyLevel): GeneratedQuestion {
+  const kinds = ['tax', 'tip', 'discount'] as const;
+  const kind = kinds[randomInt(0, 2)]!;
+  // Round base prices so the final total is a clean two-decimal number.
+  const base = randomInt(difficulty === 1 ? 10 : 20, difficulty === 1 ? 80 : 200);
+  const pct = kind === 'tax' ? randomInt(4, 10)
+            : kind === 'tip' ? randomInt(10, 20)
+            : /* discount */    randomInt(10, 40);
+  const delta = +(base * pct / 100).toFixed(2);
+  const total = kind === 'discount'
+    ? +(base - delta).toFixed(2)
+    : +(base + delta).toFixed(2);
+  const item = kind === 'tip' ? 'meal' : kind === 'discount' ? 'jacket' : 'purchase';
+  const verb = kind === 'discount' ? 'is on sale for' : 'costs';
+  const ask = kind === 'discount'
+    ? `What is the sale price after the ${pct}% discount?`
+    : kind === 'tip'
+    ? `What is the total bill after a ${pct}% tip?`
+    : `What is the total cost after ${pct}% sales tax?`;
+  return g7Wrap(difficulty, 'g7_percent_tax_tip_discount', 'M7.RP.3.1', 'Tax, Tip, and Discount', {
+    question: `A ${item} ${verb} $${base.toFixed(2)}. ${ask}`,
+    answer: total.toFixed(2),
+    solution_steps: [
+      `Compute ${pct}% of $${base.toFixed(2)}: ${base} × ${(pct / 100).toFixed(2)} = $${delta.toFixed(2)}`,
+      kind === 'discount'
+        ? `Subtract: $${base.toFixed(2)} − $${delta.toFixed(2)} = $${total.toFixed(2)}`
+        : `Add: $${base.toFixed(2)} + $${delta.toFixed(2)} = $${total.toFixed(2)}`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// 9. M7.RP.3.2 — Simple Interest (I = Prt)
+export function generate_g7_simple_interest(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Solve for I, A, or P. Keep ranges so answer is a clean two-decimal number.
+  const P = randomInt(2, 20) * 100;                        // $200 … $2000
+  const ratePct = [2, 3, 4, 5, 6, 8, 10][randomInt(0, 6)]!;
+  const r = ratePct / 100;
+  const t = randomInt(1, difficulty === 1 ? 4 : 8);
+  const I = +(P * r * t).toFixed(2);
+  const A = +(P + I).toFixed(2);
+  const ask = difficulty === 1 || Math.random() < 0.5
+    ? { key: 'I', text: 'How much interest is earned?', val: I }
+    : { key: 'A', text: 'What is the total amount in the account?', val: A };
+  return g7Wrap(difficulty, 'g7_simple_interest', 'M7.RP.3.2', 'Simple Interest', {
+    question: `$${P} is deposited at a simple interest rate of ${ratePct}% per year for ${t} year${t === 1 ? '' : 's'}. ${ask.text}`,
+    answer: ask.val.toFixed(2),
+    solution_steps: [
+      `Use I = Prt`,
+      `I = ${P} × ${r} × ${t} = $${I.toFixed(2)}`,
+      ask.key === 'A'
+        ? `A = P + I = $${P} + $${I.toFixed(2)} = $${A.toFixed(2)}`
+        : `Interest earned: $${I.toFixed(2)}`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// 10. M7.RP.3.3 — Percent Increase / Decrease
+export function generate_g7_percent_change(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Build a clean integer percent change by choosing a friendly multiplier.
+  const original = randomInt(2, 10) * 10;                   // 20…100
+  const direction: 'increase' | 'decrease' = Math.random() < 0.5 ? 'increase' : 'decrease';
+  const pct = [10, 15, 20, 25, 30, 40, 50][randomInt(0, 6)]!;
+  const delta = +(original * pct / 100).toFixed(2);
+  const newVal = direction === 'increase'
+    ? +(original + delta).toFixed(2)
+    : +(original - delta).toFixed(2);
+  // Half the time we ask for the percent; the rest we ask for the new value.
+  const askPercent = Math.random() < 0.5 || difficulty === 1;
+  if (askPercent) {
+    return g7Wrap(difficulty, 'g7_percent_change', 'M7.RP.3.3', 'Percent Increase or Decrease', {
+      question: `A value changed from ${original} to ${newVal}. What is the percent ${direction}?`,
+      answer: String(pct),
+      solution_steps: [
+        `Find the change: |${newVal} − ${original}| = ${delta}`,
+        `Divide by the original: ${delta} ÷ ${original} = ${(delta / original).toFixed(4)}`,
+        `Convert to percent: ${pct}%`,
+      ],
+      answer_type: 'decimal',
+    });
+  }
+  return g7Wrap(difficulty, 'g7_percent_change', 'M7.RP.3.3', 'Percent Increase or Decrease', {
+    question: `${original} is ${direction}d by ${pct}%. What is the new value?`,
+    answer: String(newVal),
+    solution_steps: [
+      `Compute ${pct}% of ${original}: ${delta}`,
+      direction === 'increase'
+        ? `Add: ${original} + ${delta} = ${newVal}`
+        : `Subtract: ${original} − ${delta} = ${newVal}`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BATCH 3: Expressions & Equations
+// ─────────────────────────────────────────────────────────────────────────────
+
+/** Format a linear term "cx" with sign-aware leading and middle handling. */
+function g7FmtTerm(coef: number, variable: string, isFirst: boolean): string {
+  if (coef === 0) return '';
+  const abs = Math.abs(coef);
+  const coefPart = abs === 1 ? '' : String(abs);
+  if (isFirst) {
+    return `${coef < 0 ? '-' : ''}${coefPart}${variable}`;
+  }
+  return `${coef < 0 ? '- ' : '+ '}${coefPart}${variable}`;
+}
+
+/** Format a constant with sign-aware middle handling (returns '' when zero). */
+function g7FmtConst(c: number, isFirst: boolean): string {
+  if (c === 0) return '';
+  if (isFirst) return String(c);
+  return c < 0 ? `- ${Math.abs(c)}` : `+ ${c}`;
+}
+
+/** Format a full ax + b expression, omitting zero terms. */
+function g7FmtLinear(a: number, b: number, variable: string = 'x'): string {
+  const aPart = g7FmtTerm(a, variable, true);
+  if (a === 0 && b === 0) return '0';
+  if (a === 0) return String(b);
+  if (b === 0) return aPart;
+  return `${aPart} ${g7FmtConst(b, false)}`;
+}
+
+// 11. M7.EE.1.1 — Adding/Subtracting Linear Expressions
+export function generate_g7_add_sub_linear_expr(difficulty: DifficultyLevel): GeneratedQuestion {
+  const range = difficulty === 1 ? 6 : 10;
+  let a1: number, a2: number, b1: number, b2: number;
+  let op: '+' | '-';
+  // Reject trivial (everything cancels) outcomes.
+  for (let tries = 0; tries < 8; tries++) {
+    a1 = randomNonZeroInt(-range, range);
+    a2 = randomNonZeroInt(-range, range);
+    b1 = randomInt(-range, range);
+    b2 = randomInt(-range, range);
+    op = Math.random() < 0.5 ? '+' : '-';
+    const aSum = op === '+' ? a1 + a2 : a1 - a2;
+    const bSum = op === '+' ? b1 + b2 : b1 - b2;
+    if (aSum !== 0 || bSum !== 0) break;
+  }
+  a1 = a1!; a2 = a2!; b1 = b1!; b2 = b2!; op = op!;
+  const aSum = op === '+' ? a1 + a2 : a1 - a2;
+  const bSum = op === '+' ? b1 + b2 : b1 - b2;
+  const e1 = g7FmtLinear(a1, b1);
+  const e2 = g7FmtLinear(a2, b2);
+  const answer = g7FmtLinear(aSum, bSum).replace(/\+ /g, '+ ').replace(/- /g, '- ');
+  return g7Wrap(difficulty, 'g7_add_sub_linear_expr', 'M7.EE.1.1', 'Adding/Subtracting Linear Expressions', {
+    question: `Simplify: (${e1}) ${op} (${e2})`,
+    answer,
+    solution_steps: [
+      `Distribute the sign: ${op === '-' ? `${e1} - ${e2}` : `${e1} + ${e2}`}`,
+      `Combine x-terms: ${a1}x ${op} ${a2}x = ${aSum}x`,
+      `Combine constants: ${b1} ${op} ${b2} = ${bSum}`,
+      `Result: ${answer}`,
+    ],
+    answer_type: 'text',
+  });
+}
+
+// 12. M7.EE.1.3 — Expanding Linear Expressions (Distributive Property)
+export function generate_g7_expand_linear_expr(difficulty: DifficultyLevel): GeneratedQuestion {
+  const k = randomNonZeroInt(difficulty === 1 ? -5 : -8, difficulty === 1 ? 5 : 8);
+  const a = randomNonZeroInt(-6, 6);
+  const b = randomNonZeroInt(-8, 8);
+  const ka = k * a;
+  const kb = k * b;
+  const innerSign = b < 0 ? '-' : '+';
+  const innerExpr = `${a}x ${innerSign} ${Math.abs(b)}`;
+  const kDisplay = k < 0 ? `(${k})` : String(k);
+  return g7Wrap(difficulty, 'g7_expand_linear_expr', 'M7.EE.1.3', 'Expanding Linear Expressions', {
+    question: `Expand: ${kDisplay}(${innerExpr})`,
+    answer: g7FmtLinear(ka, kb),
+    solution_steps: [
+      `Distribute ${k} across both terms`,
+      `${k} × ${a}x = ${ka}x`,
+      `${k} × ${b} = ${kb}`,
+      `Result: ${g7FmtLinear(ka, kb)}`,
+    ],
+    answer_type: 'text',
+  });
+}
+
+// 13. M7.EE.2.1 — Solving Multi-Step Linear Equations with Rational Coefficients
+export function generate_g7_solve_linear_rational(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Build ax + b = c. Choose integer solutions for difficulty 1 and
+  // rational solutions for difficulty ≥ 2.
+  const a = randomNonZeroInt(2, difficulty === 1 ? 6 : 9);
+  const xRat = difficulty === 1
+    ? g7Rat(randomNonZeroInt(-8, 8))
+    : g7RandomRational(6, true);
+  const b = randomInt(-10, 10);
+  // c = a * x + b
+  const cRat = g7RatAdd(g7RatMul(g7Rat(a), xRat), g7Rat(b));
+  const aDisplay = a === 1 ? '' : String(a);
+  const bSign = b < 0 ? '-' : '+';
+  const bDisplay = b === 0 ? '' : ` ${bSign} ${Math.abs(b)}`;
+  return g7Wrap(difficulty, 'g7_solve_linear_rational', 'M7.EE.2.1', 'Solving Multi-Step Linear Equations with Rational Coefficients', {
+    question: `Solve for x: ${aDisplay}x${bDisplay} = ${g7FmtRat(cRat)}`,
+    answer: g7FmtRat(xRat),
+    solution_steps: [
+      b !== 0
+        ? `Subtract ${b > 0 ? b : `(${b})`} from both sides: ${aDisplay}x = ${g7FmtRat(g7RatSub(cRat, g7Rat(b)))}`
+        : `Equation is ${aDisplay}x = ${g7FmtRat(cRat)}`,
+      a !== 1
+        ? `Divide both sides by ${a}: x = ${g7FmtRat(xRat)}`
+        : `x = ${g7FmtRat(xRat)}`,
+    ],
+    answer_type: 'decimal_or_fraction',
+  });
+}
+
+// 14. M7.EE.2.2 — Solving Linear Equations with Distribution + Like Terms
+export function generate_g7_solve_distrib_like_terms(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Build k(ax + b) + dx = e. Choose integer solution to keep step count manageable.
+  const k = randomNonZeroInt(2, 5);
+  const a = randomNonZeroInt(1, 4);
+  const b = randomInt(-6, 6);
+  const d = randomNonZeroInt(1, 5);
+  const x = randomNonZeroInt(-6, 6);
+  // After distribution: ka·x + kb + dx = e  →  (ka + d)x + kb = e
+  const lhsCoef = k * a + d;
+  if (lhsCoef === 0) return generate_g7_solve_distrib_like_terms(difficulty);
+  const lhsConst = k * b;
+  const e = lhsCoef * x + lhsConst;
+  const innerSign = b < 0 ? '-' : '+';
+  const inner = `${a}x ${innerSign} ${Math.abs(b)}`;
+  const tail = `${d > 0 ? '+ ' : '- '}${Math.abs(d)}x`;
+  return g7Wrap(difficulty, 'g7_solve_distrib_like_terms', 'M7.EE.2.2', 'Solving Linear Equations (Distribute + Like Terms)', {
+    question: `Solve for x: ${k}(${inner}) ${tail} = ${e}`,
+    answer: String(x),
+    solution_steps: [
+      `Distribute ${k}: ${k * a}x ${k * b >= 0 ? '+' : '-'} ${Math.abs(k * b)} ${tail} = ${e}`,
+      `Combine like terms: ${lhsCoef}x ${lhsConst >= 0 ? '+' : '-'} ${Math.abs(lhsConst)} = ${e}`,
+      lhsConst !== 0
+        ? `Move constant: ${lhsCoef}x = ${e - lhsConst}`
+        : `Equation is ${lhsCoef}x = ${e}`,
+      `Divide by ${lhsCoef}: x = ${x}`,
+    ],
+    answer_type: 'decimal_or_fraction',
+  });
+}
+
+// 15. M7.RP.3.4 — Converting Between Fraction, Decimal, and Percent
+export function generate_g7_fraction_decimal_percent(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Curated pool of values that have exact conversions for all three forms.
+  const pool: Array<{ frac: string; dec: string; pct: string }> = [
+    { frac: '1/2',  dec: '0.5',   pct: '50'   },
+    { frac: '1/4',  dec: '0.25',  pct: '25'   },
+    { frac: '3/4',  dec: '0.75',  pct: '75'   },
+    { frac: '1/5',  dec: '0.2',   pct: '20'   },
+    { frac: '2/5',  dec: '0.4',   pct: '40'   },
+    { frac: '3/5',  dec: '0.6',   pct: '60'   },
+    { frac: '4/5',  dec: '0.8',   pct: '80'   },
+    { frac: '1/8',  dec: '0.125', pct: '12.5' },
+    { frac: '3/8',  dec: '0.375', pct: '37.5' },
+    { frac: '5/8',  dec: '0.625', pct: '62.5' },
+    { frac: '1/10', dec: '0.1',   pct: '10'   },
+    { frac: '3/10', dec: '0.3',   pct: '30'   },
+    { frac: '7/10', dec: '0.7',   pct: '70'   },
+    { frac: '9/10', dec: '0.9',   pct: '90'   },
+  ];
+  const pick = pool[randomInt(0, pool.length - 1)]!;
+  const forms: Array<{ key: 'frac' | 'dec' | 'pct'; label: string; suffix: string }> = [
+    { key: 'frac', label: 'fraction',  suffix: '' },
+    { key: 'dec',  label: 'decimal',   suffix: '' },
+    { key: 'pct',  label: 'percent',   suffix: '%' },
+  ];
+  // Pick an input form, then a different output form.
+  const inputForm = forms[randomInt(0, 2)]!;
+  let outputForm = forms[randomInt(0, 2)]!;
+  while (outputForm.key === inputForm.key) outputForm = forms[randomInt(0, 2)]!;
+  const inputValue = inputForm.key === 'pct' ? `${pick[inputForm.key]}%` : pick[inputForm.key];
+  const answerValue = outputForm.key === 'pct' ? `${pick[outputForm.key]}%` : pick[outputForm.key];
+  return g7Wrap(difficulty, 'g7_fraction_decimal_percent', 'M7.RP.3.4', 'Converting Between Fraction, Decimal, and Percent', {
+    question: `Convert ${inputValue} to a ${outputForm.label}.`,
+    answer: answerValue,
+    solution_steps: [
+      `Recognise: ${pick.frac} = ${pick.dec} = ${pick.pct}%`,
+      `${inputValue} as a ${outputForm.label} is ${answerValue}`,
+    ],
+    answer_type: 'decimal_or_fraction_or_percent',
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BATCH 4: Geometry — angle relationships, circles, area
+// ─────────────────────────────────────────────────────────────────────────────
+
+// 16. M7.GEO.1.1 — Angle Relationships (supplementary / complementary / vertical)
+export function generate_g7_angle_relationship_solve(difficulty: DifficultyLevel): GeneratedQuestion {
+  const relationships: Array<{ kind: string; total: number | null; rule: string }> = [
+    { kind: 'supplementary', total: 180,  rule: 'sum to 180°' },
+    { kind: 'complementary', total: 90,   rule: 'sum to 90°'  },
+    { kind: 'vertical',      total: null, rule: 'are equal'   },
+  ];
+  const rel = relationships[randomInt(0, 2)]!;
+  if (rel.kind === 'vertical') {
+    const a = randomInt(15, 165);
+    return g7Wrap(difficulty, 'g7_angle_relationship_solve', 'M7.GEO.1.1', 'Angle Relationships', {
+      question: `Two vertical angles are formed by intersecting lines. One angle measures ${a}°. What is the measure of the other angle?`,
+      answer: String(a),
+      solution_steps: [
+        `Vertical angles ${rel.rule}.`,
+        `The other angle is ${a}°.`,
+      ],
+      answer_type: 'integer',
+    });
+  }
+  // complementary / supplementary: pick one angle, second = total - first
+  const total = rel.total!;
+  const a = randomInt(rel.kind === 'complementary' ? 10 : 20, total - (rel.kind === 'complementary' ? 10 : 20));
+  const b = total - a;
+  return g7Wrap(difficulty, 'g7_angle_relationship_solve', 'M7.GEO.1.1', 'Angle Relationships', {
+    question: `Two angles are ${rel.kind}. One angle measures ${a}°. What is the measure of the other angle?`,
+    answer: String(b),
+    solution_steps: [
+      `${rel.kind[0].toUpperCase() + rel.kind.slice(1)} angles ${rel.rule}.`,
+      `${total} − ${a} = ${b}°`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// 17. M7.GEO.2.3 — Circle Area / Circumference
+export function generate_g7_circle_area_circumference(difficulty: DifficultyLevel): GeneratedQuestion {
+  const PI = Math.PI;
+  const r = randomInt(difficulty === 1 ? 2 : 3, difficulty === 1 ? 10 : 15);
+  const given: 'radius' | 'diameter' = Math.random() < 0.5 ? 'radius' : 'diameter';
+  const givenValue = given === 'radius' ? r : 2 * r;
+  const solveFor: 'area' | 'circumference' = Math.random() < 0.5 ? 'area' : 'circumference';
+  const value = solveFor === 'area' ? PI * r * r : 2 * PI * r;
+  const answer = value.toFixed(2);
+  return g7Wrap(difficulty, 'g7_circle_area_circumference', 'M7.GEO.2.3', 'Area and Circumference of a Circle', {
+    question: `A circle has a ${given} of ${givenValue} cm. Find the ${solveFor}. Use π ≈ 3.14159 and round to 2 decimal places.`,
+    answer,
+    solution_steps: [
+      given === 'diameter'
+        ? `Radius = diameter ÷ 2 = ${givenValue} ÷ 2 = ${r}`
+        : `Radius = ${r}`,
+      solveFor === 'area'
+        ? `Area = π × r² = 3.14159 × ${r}² = 3.14159 × ${r * r} ≈ ${answer} cm²`
+        : `Circumference = 2 × π × r = 2 × 3.14159 × ${r} ≈ ${answer} cm`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// 18. M7.GEO.3.1 — Angle Equations (relationship + algebra)
+export function generate_g7_angle_equation_solve(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Two angles in a relationship: angle1 = ax + b, angle2 = some integer.
+  // Solve for x, then report x (the user's spec uses integer answer_type).
+  const rels: Array<{ kind: 'supplementary' | 'complementary' | 'vertical'; total: number | 'equal' }> = [
+    { kind: 'supplementary', total: 180 },
+    { kind: 'complementary', total: 90  },
+    { kind: 'vertical',      total: 'equal' },
+  ];
+  const rel = rels[randomInt(0, 2)]!;
+  const a = randomInt(2, difficulty === 1 ? 5 : 8);
+  const b = randomInt(5, 30);
+  const x = randomInt(3, difficulty === 1 ? 10 : 20);
+  const angle1 = a * x + b;
+  let angle2: number;
+  let setup: string;
+  if (rel.total === 'equal') {
+    angle2 = angle1;
+    setup = `${a}x + ${b} = ${angle2}`;
+  } else {
+    angle2 = rel.total - angle1;
+    if (angle2 <= 0) return generate_g7_angle_equation_solve(difficulty);
+    setup = `${a}x + ${b} + ${angle2} = ${rel.total}`;
+  }
+  return g7Wrap(difficulty, 'g7_angle_equation_solve', 'M7.GEO.3.1', 'Angle Equations with Algebra', {
+    question: rel.total === 'equal'
+      ? `Two vertical angles measure (${a}x + ${b})° and ${angle2}°. Find x.`
+      : `Two ${rel.kind} angles measure (${a}x + ${b})° and ${angle2}°. Find x.`,
+    answer: String(x),
+    solution_steps: [
+      `Set up the equation: ${setup}`,
+      rel.total === 'equal'
+        ? `Subtract ${b}: ${a}x = ${angle2 - b}`
+        : `Combine: ${a}x + ${b + angle2} = ${rel.total}, then ${a}x = ${rel.total - (b + angle2)}`,
+      `Divide by ${a}: x = ${x}`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// 19. M7.GEO.4.1 — Composite Area (rectangle + cutout / L-shape)
+export function generate_g7_composite_area(difficulty: DifficultyLevel): GeneratedQuestion {
+  // L-shape: large rectangle minus a smaller rectangle cut from one corner.
+  const W = randomInt(8, 20);                  // big-rect width
+  const H = randomInt(6, 16);                  // big-rect height
+  const cw = randomInt(2, Math.max(2, W - 4)); // cutout width
+  const ch = randomInt(2, Math.max(2, H - 4)); // cutout height
+  const totalArea = W * H - cw * ch;
+  return g7Wrap(difficulty, 'g7_composite_area', 'M7.GEO.4.1', 'Composite Area', {
+    question: `An L-shape is formed by removing a ${cw} × ${ch} rectangle from one corner of a ${W} × ${H} rectangle. Find the area of the L-shape in square units.`,
+    answer: String(totalArea),
+    solution_steps: [
+      `Area of the large rectangle: ${W} × ${H} = ${W * H}`,
+      `Area of the cutout: ${cw} × ${ch} = ${cw * ch}`,
+      `Composite area = ${W * H} − ${cw * ch} = ${totalArea}`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// 20. M7.GEO.4.2 — Area of 2D Shapes (triangle, parallelogram, trapezoid)
+export function generate_g7_area_2d_objects(difficulty: DifficultyLevel): GeneratedQuestion {
+  const shape = (['triangle', 'parallelogram', 'trapezoid'] as const)[randomInt(0, 2)]!;
+  if (shape === 'triangle') {
+    // Force even base × height so area is an integer.
+    let base = randomInt(4, 20);
+    const height = randomInt(3, 16);
+    if ((base * height) % 2 !== 0) base += 1;
+    const area = (base * height) / 2;
+    return g7Wrap(difficulty, 'g7_area_2d_objects', 'M7.GEO.4.2', 'Area of 2D Shapes', {
+      question: `Find the area of a triangle with base ${base} cm and height ${height} cm.`,
+      answer: String(area),
+      solution_steps: [
+        `Area of a triangle = ½ × base × height`,
+        `= ½ × ${base} × ${height}`,
+        `= ${area} cm²`,
+      ],
+      answer_type: 'decimal',
+    });
+  }
+  if (shape === 'parallelogram') {
+    const base = randomInt(4, 20);
+    const height = randomInt(3, 15);
+    const area = base * height;
+    return g7Wrap(difficulty, 'g7_area_2d_objects', 'M7.GEO.4.2', 'Area of 2D Shapes', {
+      question: `Find the area of a parallelogram with base ${base} cm and height ${height} cm.`,
+      answer: String(area),
+      solution_steps: [
+        `Area of a parallelogram = base × height`,
+        `= ${base} × ${height}`,
+        `= ${area} cm²`,
+      ],
+      answer_type: 'decimal',
+    });
+  }
+  // trapezoid
+  let b1 = randomInt(4, 14);
+  let b2 = randomInt(6, 20);
+  if (b1 === b2) b2 += 2;
+  const height = randomInt(3, 12);
+  // Force (b1 + b2) * h to be even so area is an integer.
+  if (((b1 + b2) * height) % 2 !== 0) b1 += 1;
+  const area = ((b1 + b2) * height) / 2;
+  return g7Wrap(difficulty, 'g7_area_2d_objects', 'M7.GEO.4.2', 'Area of 2D Shapes', {
+    question: `Find the area of a trapezoid with parallel side lengths ${b1} cm and ${b2} cm, and height ${height} cm.`,
+    answer: String(area),
+    solution_steps: [
+      `Area of a trapezoid = ½ × (b₁ + b₂) × h`,
+      `= ½ × (${b1} + ${b2}) × ${height}`,
+      `= ½ × ${b1 + b2} × ${height}`,
+      `= ${area} cm²`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BATCH 5: 3D Volume / Surface Area + Probability
+// ─────────────────────────────────────────────────────────────────────────────
+
+// 21. M7.GEO.4.3 — Volume of 3D Objects (rect prism, triangular prism, pyramid)
+export function generate_g7_volume_3d_objects(difficulty: DifficultyLevel): GeneratedQuestion {
+  const shape = (['rectangular_prism', 'triangular_prism', 'rectangular_pyramid'] as const)[randomInt(0, 2)]!;
+  if (shape === 'rectangular_prism') {
+    const l = randomInt(3, 12);
+    const w = randomInt(3, 12);
+    const h = randomInt(2, 10);
+    const V = l * w * h;
+    return g7Wrap(difficulty, 'g7_volume_3d_objects', 'M7.GEO.4.3', 'Volume of 3D Objects', {
+      question: `Find the volume of a rectangular prism with length ${l} cm, width ${w} cm, and height ${h} cm.`,
+      answer: String(V),
+      solution_steps: [
+        `Volume = length × width × height`,
+        `= ${l} × ${w} × ${h}`,
+        `= ${V} cm³`,
+      ],
+      answer_type: 'decimal',
+    });
+  }
+  if (shape === 'triangular_prism') {
+    let b = randomInt(4, 14);
+    const trH = randomInt(3, 10);
+    const prismH = randomInt(4, 12);
+    if ((b * trH) % 2 !== 0) b += 1;
+    const baseArea = (b * trH) / 2;
+    const V = baseArea * prismH;
+    return g7Wrap(difficulty, 'g7_volume_3d_objects', 'M7.GEO.4.3', 'Volume of 3D Objects', {
+      question: `A triangular prism has a triangular base with base ${b} cm and height ${trH} cm. The prism is ${prismH} cm long. Find the volume.`,
+      answer: String(V),
+      solution_steps: [
+        `Area of triangular base = ½ × ${b} × ${trH} = ${baseArea} cm²`,
+        `Volume = base area × prism length`,
+        `= ${baseArea} × ${prismH}`,
+        `= ${V} cm³`,
+      ],
+      answer_type: 'decimal',
+    });
+  }
+  // rectangular_pyramid
+  let l = randomInt(3, 12);
+  let w = randomInt(3, 12);
+  const h = randomInt(3, 12);
+  // Force (l * w * h) divisible by 3 for an integer volume.
+  while ((l * w * h) % 3 !== 0) { l += 1; }
+  const V = (l * w * h) / 3;
+  return g7Wrap(difficulty, 'g7_volume_3d_objects', 'M7.GEO.4.3', 'Volume of 3D Objects', {
+    question: `Find the volume of a rectangular pyramid with base ${l} cm by ${w} cm and height ${h} cm.`,
+    answer: String(V),
+    solution_steps: [
+      `Volume of a pyramid = ⅓ × base area × height`,
+      `Base area = ${l} × ${w} = ${l * w} cm²`,
+      `Volume = ⅓ × ${l * w} × ${h} = ${V} cm³`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// 22. M7.GEO.4.4 — Surface Area of 3D Objects (rectangular / triangular prism)
+export function generate_g7_surface_area_3d(difficulty: DifficultyLevel): GeneratedQuestion {
+  const shape = (['rectangular_prism', 'triangular_prism'] as const)[randomInt(0, 1)]!;
+  if (shape === 'rectangular_prism') {
+    const l = randomInt(3, 12);
+    const w = randomInt(3, 12);
+    const h = randomInt(2, 10);
+    const SA = 2 * (l * w + l * h + w * h);
+    return g7Wrap(difficulty, 'g7_surface_area_3d', 'M7.GEO.4.4', 'Surface Area of 3D Objects', {
+      question: `Find the surface area of a rectangular prism with length ${l} cm, width ${w} cm, and height ${h} cm.`,
+      answer: String(SA),
+      solution_steps: [
+        `Surface area = 2(lw + lh + wh)`,
+        `= 2(${l}·${w} + ${l}·${h} + ${w}·${h})`,
+        `= 2(${l * w} + ${l * h} + ${w * h})`,
+        `= 2 × ${l * w + l * h + w * h}`,
+        `= ${SA} cm²`,
+      ],
+      answer_type: 'decimal',
+    });
+  }
+  // triangular prism (3-4-5 or 6-8-10 right-triangle base for clean numbers)
+  const triples: Array<[number, number, number]> = [[3, 4, 5], [6, 8, 10], [5, 12, 13]];
+  const [a, b, c] = triples[randomInt(0, 2)]!;
+  const len = randomInt(5, 15);
+  const baseArea = (a * b) / 2;
+  const perim = a + b + c;
+  const SA = 2 * baseArea + perim * len;
+  return g7Wrap(difficulty, 'g7_surface_area_3d', 'M7.GEO.4.4', 'Surface Area of 3D Objects', {
+    question: `A triangular prism has a right-triangle base with legs ${a} cm and ${b} cm (hypotenuse ${c} cm) and is ${len} cm long. Find the surface area.`,
+    answer: String(SA),
+    solution_steps: [
+      `Two triangular bases: 2 × ½ × ${a} × ${b} = ${2 * baseArea} cm²`,
+      `Three rectangular faces, total: (${a} + ${b} + ${c}) × ${len} = ${perim} × ${len} = ${perim * len} cm²`,
+      `Surface area = ${2 * baseArea} + ${perim * len} = ${SA} cm²`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// 23. M7.SP.3.3 — Theoretical Probability
+export function generate_g7_theoretical_probability(difficulty: DifficultyLevel): GeneratedQuestion {
+  const exp = (['dice', 'coins', 'marbles', 'spinner'] as const)[randomInt(0, 3)]!;
+  if (exp === 'dice') {
+    const targets: Array<{ desc: string; favorable: number; total: number; reduce: [number, number] }> = [
+      { desc: 'rolling a number greater than 4',  favorable: 2, total: 6, reduce: [1, 3] },
+      { desc: 'rolling an even number',           favorable: 3, total: 6, reduce: [1, 2] },
+      { desc: 'rolling a prime number',           favorable: 3, total: 6, reduce: [1, 2] },
+      { desc: 'rolling a multiple of 3',          favorable: 2, total: 6, reduce: [1, 3] },
+      { desc: 'rolling less than 3',              favorable: 2, total: 6, reduce: [1, 3] },
+    ];
+    const t = targets[randomInt(0, targets.length - 1)]!;
+    const [rn, rd] = t.reduce;
+    return g7Wrap(difficulty, 'g7_theoretical_probability', 'M7.SP.3.3', 'Theoretical Probability', {
+      question: `What is the probability of ${t.desc} on a fair six-sided die?`,
+      answer: `${rn}/${rd}`,
+      solution_steps: [
+        `Favorable outcomes: ${t.favorable}`,
+        `Total outcomes: ${t.total}`,
+        `P = ${t.favorable}/${t.total} = ${rn}/${rd}`,
+      ],
+      answer_type: 'fraction',
+    });
+  }
+  if (exp === 'coins') {
+    // Three coin flips — probability of exactly N heads.
+    const target = randomInt(0, 3);
+    // Combinations: C(3,0)=1, C(3,1)=3, C(3,2)=3, C(3,3)=1
+    const combos = [1, 3, 3, 1][target]!;
+    const total = 8;
+    const [rn, rd] = simplifyFraction(combos, total);
+    return g7Wrap(difficulty, 'g7_theoretical_probability', 'M7.SP.3.3', 'Theoretical Probability', {
+      question: `Three fair coins are flipped. What is the probability of getting exactly ${target} head${target === 1 ? '' : 's'}?`,
+      answer: `${rn}/${rd}`,
+      solution_steps: [
+        `Total outcomes: 2³ = 8`,
+        `Favorable: C(3, ${target}) = ${combos}`,
+        `P = ${combos}/8 = ${rn}/${rd}`,
+      ],
+      answer_type: 'fraction',
+    });
+  }
+  if (exp === 'marbles') {
+    const red = randomInt(2, 6);
+    const blue = randomInt(2, 6);
+    const green = randomInt(1, 4);
+    const total = red + blue + green;
+    const colors: Array<['red'|'blue'|'green', number]> = [['red', red], ['blue', blue], ['green', green]];
+    const pick = colors[randomInt(0, 2)]!;
+    const [rn, rd] = simplifyFraction(pick[1], total);
+    return g7Wrap(difficulty, 'g7_theoretical_probability', 'M7.SP.3.3', 'Theoretical Probability', {
+      question: `A bag contains ${red} red, ${blue} blue, and ${green} green marbles. What is the probability of drawing a ${pick[0]} marble?`,
+      answer: `${rn}/${rd}`,
+      solution_steps: [
+        `Total marbles: ${red} + ${blue} + ${green} = ${total}`,
+        `Favorable: ${pick[1]} ${pick[0]} marbles`,
+        `P = ${pick[1]}/${total} = ${rn}/${rd}`,
+      ],
+      answer_type: 'fraction',
+    });
+  }
+  // spinner — equal sectors
+  const sectors = [4, 5, 6, 8][randomInt(0, 3)]!;
+  const favorable = randomInt(1, sectors - 1);
+  const [rn, rd] = simplifyFraction(favorable, sectors);
+  return g7Wrap(difficulty, 'g7_theoretical_probability', 'M7.SP.3.3', 'Theoretical Probability', {
+    question: `A spinner is divided into ${sectors} equal sectors. ${favorable} sector${favorable === 1 ? ' is' : 's are'} shaded. What is the probability of landing on a shaded sector?`,
+    answer: `${rn}/${rd}`,
+    solution_steps: [
+      `Favorable outcomes: ${favorable}`,
+      `Total outcomes: ${sectors}`,
+      `P = ${favorable}/${sectors} = ${rn}/${rd}`,
+    ],
+    answer_type: 'fraction',
+  });
+}
+
+// 24. M7.SP.3.2 — Experimental Probability (frequency table)
+export function generate_g7_experimental_probability(difficulty: DifficultyLevel): GeneratedQuestion {
+  const total = [20, 25, 40, 50][randomInt(0, 3)]!;
+  // Generate 4 outcomes whose counts sum to total.
+  const outcomes = ['A', 'B', 'C', 'D'];
+  const c1 = randomInt(2, Math.floor(total / 3));
+  const c2 = randomInt(2, Math.floor(total / 3));
+  const c3 = randomInt(2, Math.floor(total / 3));
+  const c4 = total - c1 - c2 - c3;
+  if (c4 <= 0) return generate_g7_experimental_probability(difficulty);
+  const counts = [c1, c2, c3, c4];
+  const idx = randomInt(0, 3);
+  const target = outcomes[idx]!;
+  const favorable = counts[idx]!;
+  const [rn, rd] = simplifyFraction(favorable, total);
+  const tableLines = outcomes.map((o, i) => `${o}: ${counts[i]}`).join(', ');
+  return g7Wrap(difficulty, 'g7_experimental_probability', 'M7.SP.3.2', 'Experimental Probability', {
+    question: `A spinner was spun ${total} times with the results — ${tableLines}. Based on the data, what is the experimental probability of landing on ${target}?`,
+    answer: `${rn}/${rd}`,
+    solution_steps: [
+      `Total trials: ${total}`,
+      `Outcomes matching ${target}: ${favorable}`,
+      `P = ${favorable}/${total} = ${rn}/${rd}`,
+    ],
+    answer_type: 'fraction',
+  });
+}
+
+// 25. M7.SP.4.1 — Compound Probability (independent events)
+export function generate_g7_compound_probability(difficulty: DifficultyLevel): GeneratedQuestion {
+  const scenarios: Array<{
+    desc: string;
+    eventA: { desc: string; num: number; den: number };
+    eventB: { desc: string; num: number; den: number };
+  }> = [
+    {
+      desc: 'a fair die and a fair coin',
+      eventA: { desc: 'rolling a 6',         num: 1, den: 6 },
+      eventB: { desc: 'flipping heads',      num: 1, den: 2 },
+    },
+    {
+      desc: 'two fair six-sided dice',
+      eventA: { desc: 'rolling a 4 on the first die', num: 1, den: 6 },
+      eventB: { desc: 'rolling an even number on the second die', num: 1, den: 2 },
+    },
+    {
+      desc: 'two spinners (one 4-sector, one 3-sector)',
+      eventA: { desc: 'landing on red on the 4-sector spinner', num: 1, den: 4 },
+      eventB: { desc: 'landing on blue on the 3-sector spinner', num: 1, den: 3 },
+    },
+    {
+      desc: 'a fair coin and a 5-sector spinner',
+      eventA: { desc: 'flipping tails',      num: 1, den: 2 },
+      eventB: { desc: 'landing on sector 3', num: 1, den: 5 },
+    },
+  ];
+  const sc = scenarios[randomInt(0, scenarios.length - 1)]!;
+  const num = sc.eventA.num * sc.eventB.num;
+  const den = sc.eventA.den * sc.eventB.den;
+  const [rn, rd] = simplifyFraction(num, den);
+  return g7Wrap(difficulty, 'g7_compound_probability', 'M7.SP.4.1', 'Compound Probability', {
+    question: `Using ${sc.desc}, what is the probability of ${sc.eventA.desc} AND ${sc.eventB.desc}?`,
+    answer: `${rn}/${rd}`,
+    solution_steps: [
+      `P(A) = ${sc.eventA.num}/${sc.eventA.den}`,
+      `P(B) = ${sc.eventB.num}/${sc.eventB.den}`,
+      `Independent events: P(A and B) = P(A) × P(B) = ${num}/${den} = ${rn}/${rd}`,
+    ],
+    answer_type: 'fraction',
+  });
+}
+
+// =============================================================================
 // GENERATOR REGISTRY - ALL 54 GENERATORS
 // =============================================================================
 
@@ -1793,6 +2835,38 @@ export const GENERATORS: Record<string, (difficulty: DifficultyLevel) => Generat
   reflect_point: generate_reflect_point,
   rotate_point: generate_rotate_point,
   transform_sequence: generate_transform_sequence,
+
+  // ─── NC GRADE 7 (Challengers division) ─────────────────────────────────────
+  // BATCH 1: Number System (5)
+  g7_add_rational:                generate_g7_add_rational,
+  g7_subtract_rational:           generate_g7_subtract_rational,
+  g7_multiply_rational:           generate_g7_multiply_rational,
+  g7_divide_rational:             generate_g7_divide_rational,
+  g7_rational_to_decimal:         generate_g7_rational_to_decimal,
+  // BATCH 2: Ratios & Proportional Relationships (5)
+  g7_find_unit_rate:              generate_g7_find_unit_rate,
+  g7_proportional_solve:          generate_g7_proportional_solve,
+  g7_percent_tax_tip_discount:    generate_g7_percent_tax_tip_discount,
+  g7_simple_interest:             generate_g7_simple_interest,
+  g7_percent_change:              generate_g7_percent_change,
+  // BATCH 3: Expressions & Equations (5)
+  g7_add_sub_linear_expr:         generate_g7_add_sub_linear_expr,
+  g7_expand_linear_expr:          generate_g7_expand_linear_expr,
+  g7_solve_linear_rational:       generate_g7_solve_linear_rational,
+  g7_solve_distrib_like_terms:    generate_g7_solve_distrib_like_terms,
+  g7_fraction_decimal_percent:    generate_g7_fraction_decimal_percent,
+  // BATCH 4: Geometry — angles, circles, area (5)
+  g7_angle_relationship_solve:    generate_g7_angle_relationship_solve,
+  g7_circle_area_circumference:   generate_g7_circle_area_circumference,
+  g7_angle_equation_solve:        generate_g7_angle_equation_solve,
+  g7_composite_area:              generate_g7_composite_area,
+  g7_area_2d_objects:             generate_g7_area_2d_objects,
+  // BATCH 5: Volume, Surface Area, Probability (5)
+  g7_volume_3d_objects:           generate_g7_volume_3d_objects,
+  g7_surface_area_3d:             generate_g7_surface_area_3d,
+  g7_theoretical_probability:     generate_g7_theoretical_probability,
+  g7_experimental_probability:    generate_g7_experimental_probability,
+  g7_compound_probability:        generate_g7_compound_probability,
 };
 
 // Helper to get all generator types
