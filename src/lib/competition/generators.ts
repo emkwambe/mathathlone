@@ -3588,6 +3588,878 @@ export function generate_g8_pythagorean_3d_context(difficulty: DifficultyLevel):
 }
 
 // =============================================================================
+// =============================================================================
+// ALGEBRA 1 — VARSITY DIVISION (pool: algebra_1)
+// =============================================================================
+// =============================================================================
+// All generators use the `alg1_` prefix on their generator_type. Wrapped via
+// g7Wrap() (helper is pool-agnostic despite the name) so each function plugs
+// into the existing question-delivery pipeline.
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BATCH 1: Foundations of Algebra
+// ─────────────────────────────────────────────────────────────────────────────
+
+// 1. Alg1.FND.1.2 — Evaluate Algebraic Expressions for Given Variable Values
+export function generate_alg1_eval_algebraic_expr(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Forms grow with difficulty: ax + b → ax² + bx → ax² + bx + c
+  const form = difficulty === 1 ? 'linear' : difficulty === 2 ? 'quad_two' : 'quad_three';
+  const x = randomNonZeroInt(-6, 8);
+  const a = randomNonZeroInt(-5, 5);
+  const b = randomNonZeroInt(-10, 10);
+  const c = randomInt(-10, 10);
+
+  if (form === 'linear') {
+    const result = a * x + b;
+    const bSign = b >= 0 ? '+' : '-';
+    return g7Wrap(difficulty, 'alg1_eval_algebraic_expr', 'Alg1.FND.1.2', 'Evaluating Algebraic Expressions', {
+      question: `Evaluate ${a}x ${bSign} ${Math.abs(b)} when x = ${x}.`,
+      answer: String(result),
+      solution_steps: [
+        `Substitute x = ${x}: ${a}(${x}) ${bSign} ${Math.abs(b)}`,
+        `= ${a * x} ${bSign} ${Math.abs(b)}`,
+        `= ${result}`,
+      ],
+      answer_type: 'integer_or_decimal',
+    });
+  }
+  if (form === 'quad_two') {
+    const result = a * x * x + b * x;
+    const bSign = b >= 0 ? '+' : '-';
+    return g7Wrap(difficulty, 'alg1_eval_algebraic_expr', 'Alg1.FND.1.2', 'Evaluating Algebraic Expressions', {
+      question: `Evaluate ${a}x² ${bSign} ${Math.abs(b)}x when x = ${x}.`,
+      answer: String(result),
+      solution_steps: [
+        `Substitute x = ${x}: ${a}(${x})² ${bSign} ${Math.abs(b)}(${x})`,
+        `= ${a * x * x} ${bSign} ${Math.abs(b * x)}`,
+        `= ${result}`,
+      ],
+      answer_type: 'integer_or_decimal',
+    });
+  }
+  // quad_three: ax² + bx + c
+  const result = a * x * x + b * x + c;
+  const bSign = b >= 0 ? '+' : '-';
+  const cSign = c >= 0 ? '+' : '-';
+  return g7Wrap(difficulty, 'alg1_eval_algebraic_expr', 'Alg1.FND.1.2', 'Evaluating Algebraic Expressions', {
+    question: `Evaluate ${a}x² ${bSign} ${Math.abs(b)}x ${cSign} ${Math.abs(c)} when x = ${x}.`,
+    answer: String(result),
+    solution_steps: [
+      `Substitute x = ${x}: ${a}(${x})² ${bSign} ${Math.abs(b)}(${x}) ${cSign} ${Math.abs(c)}`,
+      `= ${a * x * x} ${bSign} ${Math.abs(b * x)} ${cSign} ${Math.abs(c)}`,
+      `= ${result}`,
+    ],
+    answer_type: 'integer_or_decimal',
+  });
+}
+
+// 2. Alg1.FND.1.3 — Simplify Algebraic Expressions (combine + distribute)
+export function generate_alg1_simplify_expression(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Use the existing g7FmtLinear helper for sign-aware formatting.
+  if (difficulty === 1) {
+    // Combine like terms: (ax + b) + (cx + d)
+    const a1 = randomNonZeroInt(-7, 7);
+    const a2 = randomNonZeroInt(-7, 7);
+    const b1 = randomInt(-10, 10);
+    const b2 = randomInt(-10, 10);
+    const aSum = a1 + a2;
+    const bSum = b1 + b2;
+    if (aSum === 0 && bSum === 0) return generate_alg1_simplify_expression(difficulty);
+    const e1 = g7FmtLinear(a1, b1);
+    const e2 = g7FmtLinear(a2, b2);
+    return g7Wrap(difficulty, 'alg1_simplify_expression', 'Alg1.FND.1.3', 'Simplifying Algebraic Expressions', {
+      question: `Simplify: (${e1}) + (${e2})`,
+      answer: g7FmtLinear(aSum, bSum),
+      solution_steps: [
+        `Drop the parentheses: ${e1} + ${e2}`,
+        `Combine x-terms: ${a1}x + ${a2}x = ${aSum}x`,
+        `Combine constants: ${b1} + ${b2} = ${bSum}`,
+        `Result: ${g7FmtLinear(aSum, bSum)}`,
+      ],
+      answer_type: 'expression',
+    });
+  }
+  // Difficulty 2-3: distribute then combine — k(ax + b) + (cx + d)
+  const k = randomNonZeroInt(2, 5);
+  const a = randomNonZeroInt(-5, 5);
+  const b = randomInt(-6, 6);
+  const c = randomNonZeroInt(-5, 5);
+  const d = randomInt(-8, 8);
+  const xCoef = k * a + c;
+  const constSum = k * b + d;
+  if (xCoef === 0 && constSum === 0) return generate_alg1_simplify_expression(difficulty);
+  const e1 = `${k}(${g7FmtLinear(a, b)})`;
+  const e2 = g7FmtLinear(c, d);
+  return g7Wrap(difficulty, 'alg1_simplify_expression', 'Alg1.FND.1.3', 'Simplifying Algebraic Expressions', {
+    question: `Simplify: ${e1} + (${e2})`,
+    answer: g7FmtLinear(xCoef, constSum),
+    solution_steps: [
+      `Distribute ${k}: ${g7FmtLinear(k * a, k * b)} + ${e2}`,
+      `Combine x-terms: ${k * a}x + ${c}x = ${xCoef}x`,
+      `Combine constants: ${k * b} + ${d} = ${constSum}`,
+      `Result: ${g7FmtLinear(xCoef, constSum)}`,
+    ],
+    answer_type: 'expression',
+  });
+}
+
+// 3. Alg1.FND.1.1 — Translate a Verbal Phrase into an Algebraic Expression
+export function generate_alg1_translate_verbal(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Curated phrase templates so the canonical answer is unambiguous.
+  const a = randomInt(2, 9);
+  const b = randomInt(2, 12);
+  const templates: Array<{ phrase: string; answer: string; steps: string[] }> = [
+    {
+      phrase: `${a} more than a number n`,
+      answer: `n + ${a}`,
+      steps: [`"More than" means addition.`, `n + ${a}`],
+    },
+    {
+      phrase: `${a} less than a number x`,
+      answer: `x - ${a}`,
+      steps: [`"Less than" reverses the order: x − ${a}`, `Result: x - ${a}`],
+    },
+    {
+      phrase: `the product of ${a} and a number y`,
+      answer: `${a}y`,
+      steps: [`"Product" means multiplication.`, `${a} × y = ${a}y`],
+    },
+    {
+      phrase: `a number n divided by ${a}`,
+      answer: `n/${a}`,
+      steps: [`"Divided by" means division.`, `n ÷ ${a} = n/${a}`],
+    },
+    {
+      phrase: `${a} times a number n, increased by ${b}`,
+      answer: `${a}n + ${b}`,
+      steps: [`"${a} times n" → ${a}n`, `"Increased by ${b}" → ${a}n + ${b}`],
+    },
+    {
+      phrase: `the quantity of x plus ${a}, multiplied by ${b}`,
+      answer: `${b}(x + ${a})`,
+      steps: [`"x plus ${a}" → x + ${a}`, `"Multiplied by ${b}" → ${b}(x + ${a})`],
+    },
+  ];
+  const pool = difficulty === 1 ? templates.slice(0, 4) : templates;
+  const t = pool[randomInt(0, pool.length - 1)]!;
+  return g7Wrap(difficulty, 'alg1_translate_verbal', 'Alg1.FND.1.1', 'Translating Verbal Phrases', {
+    question: `Translate into an algebraic expression: ${t.phrase}.`,
+    answer: t.answer,
+    solution_steps: t.steps,
+    answer_type: 'expression',
+  });
+}
+
+// 4. Alg1.FND.2.1 — Solve One-Step Equations (Addition / Subtraction)
+export function generate_alg1_solve_one_step_add_sub(difficulty: DifficultyLevel): GeneratedQuestion {
+  const range = difficulty === 1 ? 12 : 25;
+  const x = randomNonZeroInt(-range, range);
+  const a = randomNonZeroInt(-range, range);
+  const useSubtract = Math.random() < 0.5;
+  const c = useSubtract ? x - a : x + a;
+  const opDisplay = useSubtract ? `- ${a >= 0 ? a : `(${a})`}` : `+ ${a >= 0 ? a : `(${a})`}`;
+  const inverseOp = useSubtract ? `Add ${a >= 0 ? a : `(${a})`}` : `Subtract ${a >= 0 ? a : `(${a})`}`;
+  return g7Wrap(difficulty, 'alg1_solve_one_step_add_sub', 'Alg1.FND.2.1', 'One-Step Equations: Add/Subtract', {
+    question: `Solve for x:  x ${opDisplay} = ${c}`,
+    answer: String(x),
+    solution_steps: [
+      `${inverseOp} from both sides to isolate x.`,
+      `x = ${c} ${useSubtract ? '+' : '-'} ${a >= 0 ? a : `(${a})`}`,
+      `x = ${x}`,
+    ],
+    answer_type: 'decimal_or_fraction',
+  });
+}
+
+// 5. Alg1.FND.2.2 — Solve One-Step Equations (Multiplication / Division)
+export function generate_alg1_solve_one_step_mult_div(difficulty: DifficultyLevel): GeneratedQuestion {
+  // ax = c  (clean integer or rational answer)
+  const useDivision = Math.random() < 0.5;
+  if (useDivision) {
+    // x / a = c
+    const a = randomNonZeroInt(2, 8);
+    const x = randomNonZeroInt(-12, 12);
+    const c = g7Rat(x, a);                          // x/a as a rational
+    return g7Wrap(difficulty, 'alg1_solve_one_step_mult_div', 'Alg1.FND.2.2', 'One-Step Equations: Mult/Div', {
+      question: `Solve for x:  x / ${a} = ${g7FmtRat(c)}`,
+      answer: String(x),
+      solution_steps: [
+        `Multiply both sides by ${a}.`,
+        `x = ${g7FmtRat(c)} × ${a}`,
+        `x = ${x}`,
+      ],
+      answer_type: 'decimal_or_fraction',
+    });
+  }
+  const a = randomNonZeroInt(-9, 9);
+  const xRat = difficulty === 1
+    ? g7Rat(randomNonZeroInt(-10, 10))
+    : g7RandomRational(8, true);
+  const c = g7RatMul(g7Rat(a), xRat);
+  return g7Wrap(difficulty, 'alg1_solve_one_step_mult_div', 'Alg1.FND.2.2', 'One-Step Equations: Mult/Div', {
+    question: `Solve for x:  ${a}x = ${g7FmtRat(c)}`,
+    answer: g7FmtRat(xRat),
+    solution_steps: [
+      `Divide both sides by ${a}.`,
+      `x = ${g7FmtRat(c)} / ${a}`,
+      `x = ${g7FmtRat(xRat)}`,
+    ],
+    answer_type: 'decimal_or_fraction',
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BATCH 2: Linear Equations (ALG1)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// 6. Alg1.FND.2.3 — Solve Two-Step Linear Equations (ax + b = c)
+export function generate_alg1_solve_two_step(difficulty: DifficultyLevel): GeneratedQuestion {
+  const a = randomNonZeroInt(2, difficulty === 1 ? 7 : 12);
+  const b = randomInt(-15, 15);
+  const xRat = difficulty === 1
+    ? g7Rat(randomNonZeroInt(-10, 10))
+    : g7RandomRational(8, true);
+  const c = g7RatAdd(g7RatMul(g7Rat(a), xRat), g7Rat(b));
+  const bSign = b >= 0 ? '+' : '-';
+  return g7Wrap(difficulty, 'alg1_solve_two_step', 'Alg1.FND.2.3', 'Two-Step Linear Equations', {
+    question: `Solve for x:  ${a}x ${bSign} ${Math.abs(b)} = ${g7FmtRat(c)}`,
+    answer: g7FmtRat(xRat),
+    solution_steps: [
+      b !== 0
+        ? `Subtract ${b >= 0 ? b : `(${b})`} from both sides: ${a}x = ${g7FmtRat(g7RatSub(c, g7Rat(b)))}`
+        : `${a}x = ${g7FmtRat(c)}`,
+      a !== 1
+        ? `Divide both sides by ${a}: x = ${g7FmtRat(xRat)}`
+        : `x = ${g7FmtRat(xRat)}`,
+    ],
+    answer_type: 'decimal_or_fraction',
+  });
+}
+
+// 7. Alg1.FND.2.4 — Solve Multi-Step Linear Equations (distribute + combine)
+export function generate_alg1_solve_multi_step(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Structure: k(ax + b) + dx = e
+  const k = randomNonZeroInt(2, 5);
+  const a = randomNonZeroInt(1, 4);
+  const b = randomInt(-6, 6);
+  const d = randomNonZeroInt(1, 5);
+  const x = randomNonZeroInt(-8, 8);
+  const lhsCoef = k * a + d;
+  if (lhsCoef === 0) return generate_alg1_solve_multi_step(difficulty);
+  const lhsConst = k * b;
+  const e = lhsCoef * x + lhsConst;
+  const bSign = b >= 0 ? '+' : '-';
+  const tail = `${d > 0 ? '+ ' : '- '}${Math.abs(d)}x`;
+  return g7Wrap(difficulty, 'alg1_solve_multi_step', 'Alg1.FND.2.4', 'Multi-Step Linear Equations', {
+    question: `Solve for x:  ${k}(${a}x ${bSign} ${Math.abs(b)}) ${tail} = ${e}`,
+    answer: String(x),
+    solution_steps: [
+      `Distribute ${k}: ${k * a}x ${k * b >= 0 ? '+' : '-'} ${Math.abs(k * b)} ${tail} = ${e}`,
+      `Combine like terms: ${lhsCoef}x ${lhsConst >= 0 ? '+' : '-'} ${Math.abs(lhsConst)} = ${e}`,
+      lhsConst !== 0
+        ? `Subtract ${lhsConst >= 0 ? lhsConst : `(${lhsConst})`}: ${lhsCoef}x = ${e - lhsConst}`
+        : `${lhsCoef}x = ${e}`,
+      `Divide by ${lhsCoef}: x = ${x}`,
+    ],
+    answer_type: 'decimal_or_fraction',
+  });
+}
+
+// 8. Alg1.FND.2.5 — Solve Equations with Variables on Both Sides
+export function generate_alg1_solve_vars_both_sides(difficulty: DifficultyLevel): GeneratedQuestion {
+  let a: number, c: number;
+  do {
+    a = randomNonZeroInt(-8, 8);
+    c = randomNonZeroInt(-8, 8);
+  } while (a === c);
+  const b = randomInt(-15, 15);
+  const x = randomInt(-8, 8);
+  const d = a * x + b - c * x;
+  const aPart = a === 1 ? 'x' : a === -1 ? '-x' : `${a}x`;
+  const cPart = c === 1 ? 'x' : c === -1 ? '-x' : `${c}x`;
+  const bPart = b === 0 ? '' : b > 0 ? ` + ${b}` : ` - ${Math.abs(b)}`;
+  const dPart = d === 0 ? '' : d > 0 ? ` + ${d}` : ` - ${Math.abs(d)}`;
+  return g7Wrap(difficulty, 'alg1_solve_vars_both_sides', 'Alg1.FND.2.5', 'Variables on Both Sides', {
+    question: `Solve for x:  ${aPart}${bPart} = ${cPart}${dPart}`,
+    answer: String(x),
+    solution_steps: [
+      `Subtract ${cPart} from both sides: ${a - c}x${bPart} = ${d}`,
+      b !== 0
+        ? `Subtract ${b} from both sides: ${a - c}x = ${d - b}`
+        : `${a - c}x = ${d - b}`,
+      `Divide both sides by ${a - c}: x = ${x}`,
+    ],
+    answer_type: 'decimal_or_fraction',
+  });
+}
+
+// 9. Alg1.FND.2.6 — Solve a Literal Equation for a Specified Variable
+export function generate_alg1_solve_literal_equation(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Curated formula pool so the canonical answer is unambiguous.
+  const items: Array<{ formula: string; solveFor: string; answer: string; steps: string[] }> = [
+    {
+      formula: 'A = lw',
+      solveFor: 'l',
+      answer: 'l = A/w',
+      steps: [`Divide both sides by w.`, `A/w = l, so l = A/w.`],
+    },
+    {
+      formula: 'd = rt',
+      solveFor: 'r',
+      answer: 'r = d/t',
+      steps: [`Divide both sides by t.`, `r = d/t.`],
+    },
+    {
+      formula: 'P = 2l + 2w',
+      solveFor: 'w',
+      answer: 'w = (P - 2l)/2',
+      steps: [`Subtract 2l: P − 2l = 2w.`, `Divide by 2: w = (P − 2l)/2.`],
+    },
+    {
+      formula: 'V = lwh',
+      solveFor: 'h',
+      answer: 'h = V/(lw)',
+      steps: [`Divide both sides by lw.`, `h = V/(lw).`],
+    },
+    {
+      formula: 'y = mx + b',
+      solveFor: 'm',
+      answer: 'm = (y - b)/x',
+      steps: [`Subtract b: y − b = mx.`, `Divide by x: m = (y − b)/x.`],
+    },
+    {
+      formula: 'I = Prt',
+      solveFor: 'r',
+      answer: 'r = I/(Pt)',
+      steps: [`Divide both sides by Pt.`, `r = I/(Pt).`],
+    },
+  ];
+  const item = items[randomInt(0, items.length - 1)]!;
+  return g7Wrap(difficulty, 'alg1_solve_literal_equation', 'Alg1.FND.2.6', 'Solving a Literal Equation', {
+    question: `Solve the formula ${item.formula} for ${item.solveFor}.`,
+    answer: item.answer,
+    solution_steps: item.steps,
+    answer_type: 'equation',
+  });
+}
+
+// 10. Alg1.FND.3.2 — Write a Linear Equation from a Word Problem
+export function generate_alg1_write_linear_equation(difficulty: DifficultyLevel): GeneratedQuestion {
+  const m = randomNonZeroInt(2, 12);
+  const b = randomNonZeroInt(5, 60);
+  const slopePart = m === 1 ? 'x' : `${m}x`;
+  const scenarios: Array<{ setup: string; ask: string; steps: string[] }> = [
+    {
+      setup: `A gym charges a $${b} sign-up fee plus $${m} per month.`,
+      ask: `Write a linear equation for the total cost y after x months.`,
+      steps: [`Fixed cost = y-intercept = ${b}.`, `Rate per month = slope = ${m}.`, `y = ${slopePart} + ${b}`],
+    },
+    {
+      setup: `A pool has ${b} gallons in it. A pump adds ${m} gallons per minute.`,
+      ask: `Write a linear equation for the volume y after x minutes.`,
+      steps: [`Initial volume = ${b}.`, `Rate per minute = ${m}.`, `y = ${slopePart} + ${b}`],
+    },
+    {
+      setup: `A book club starts with ${b} members and gains ${m} new members each week.`,
+      ask: `Write a linear equation for the membership y after x weeks.`,
+      steps: [`Initial membership = ${b}.`, `Rate per week = ${m}.`, `y = ${slopePart} + ${b}`],
+    },
+  ];
+  const sc = scenarios[randomInt(0, scenarios.length - 1)]!;
+  return g7Wrap(difficulty, 'alg1_write_linear_equation', 'Alg1.FND.3.2', 'Writing a Linear Equation from a Word Problem', {
+    question: `${sc.setup} ${sc.ask} Use slope-intercept form y = mx + b.`,
+    answer: `y = ${slopePart} + ${b}`,
+    solution_steps: sc.steps,
+    answer_type: 'equation',
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BATCH 3: Linear Functions (ALG1)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// 11. Alg1.FLF.1.1 — Find Slope from Two Points
+export function generate_alg1_slope_from_points(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Pick two points such that (y2 - y1) / (x2 - x1) is a clean rational.
+  const dx = randomNonZeroInt(1, 8);
+  const dyNum = randomNonZeroInt(-9, 9);
+  const x1 = randomInt(-6, 6);
+  const y1 = randomInt(-6, 6);
+  const x2 = x1 + dx;
+  const y2 = y1 + dyNum;
+  const slope = g7Rat(dyNum, dx);
+  return g7Wrap(difficulty, 'alg1_slope_from_points', 'Alg1.FLF.1.1', 'Slope from Two Points', {
+    question: `Find the slope of the line through (${x1}, ${y1}) and (${x2}, ${y2}).`,
+    answer: g7FmtRat(slope),
+    solution_steps: [
+      `m = (y₂ − y₁) / (x₂ − x₁)`,
+      `m = (${y2} − ${y1}) / (${x2} − ${x1})`,
+      `m = ${dyNum} / ${dx}`,
+      `m = ${g7FmtRat(slope)}`,
+    ],
+    answer_type: 'decimal_or_fraction',
+  });
+}
+
+// 12. Alg1.FLF.2.1 — Write y = mx + b given slope and y-intercept
+export function generate_alg1_slope_intercept_form(difficulty: DifficultyLevel): GeneratedQuestion {
+  const m = randomNonZeroInt(-6, 6);
+  const b = randomInt(-10, 10);
+  const slopePart = m === 1 ? 'x' : m === -1 ? '-x' : `${m}x`;
+  const answer = b === 0
+    ? `y = ${slopePart}`
+    : `y = ${slopePart} ${b >= 0 ? '+' : '-'} ${Math.abs(b)}`;
+  const bWord = b === 0 ? '0' : String(b);
+  return g7Wrap(difficulty, 'alg1_slope_intercept_form', 'Alg1.FLF.2.1', 'Write an Equation in Slope-Intercept Form', {
+    question: `Write the equation of the line with slope m = ${m} and y-intercept b = ${bWord}. Use slope-intercept form y = mx + b.`,
+    answer,
+    solution_steps: [
+      `Slope-intercept form: y = mx + b.`,
+      `Substitute m = ${m} and b = ${b}: y = ${m}x + ${b}.`,
+      `Simplify signs: ${answer}.`,
+    ],
+    answer_type: 'equation',
+  });
+}
+
+// 13. Alg1.FLF.2.2 — Identify Slope or y-Intercept from an Equation
+export function generate_alg1_graph_identify_slope(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Ask for ONE of {slope, y-intercept} given y = mx + b.
+  const m = randomNonZeroInt(-7, 7);
+  const b = randomInt(-12, 12);
+  const askSlope = Math.random() < 0.5;
+  const slopePart = m === 1 ? 'x' : m === -1 ? '-x' : `${m}x`;
+  const equation = b === 0 ? `y = ${slopePart}` : `y = ${slopePart} ${b >= 0 ? '+' : '-'} ${Math.abs(b)}`;
+  if (askSlope) {
+    return g7Wrap(difficulty, 'alg1_graph_identify_slope', 'Alg1.FLF.2.2', 'Identify Slope from a Linear Equation', {
+      question: `Identify the slope of the line ${equation}.`,
+      answer: String(m),
+      solution_steps: [
+        `Compare ${equation} to y = mx + b.`,
+        `The coefficient of x is the slope.`,
+        `m = ${m}`,
+      ],
+      answer_type: 'decimal_or_fraction',
+    });
+  }
+  return g7Wrap(difficulty, 'alg1_graph_identify_slope', 'Alg1.FLF.2.2', 'Identify y-Intercept from a Linear Equation', {
+    question: `Identify the y-intercept of the line ${equation}.`,
+    answer: String(b),
+    solution_steps: [
+      `Compare ${equation} to y = mx + b.`,
+      `The constant term is the y-intercept.`,
+      `b = ${b}`,
+    ],
+    answer_type: 'decimal_or_fraction',
+  });
+}
+
+// 14. Alg1.FLF.3.1 — Write Equation from a Table of Values
+export function generate_alg1_write_equation_from_table(difficulty: DifficultyLevel): GeneratedQuestion {
+  const m = randomNonZeroInt(-5, 5);
+  const b = randomInt(-12, 12);
+  const xs = [0, 1, 2, 3];
+  const ys = xs.map((x) => m * x + b);
+  const tableLines = xs.map((x, i) => `  x=${x}, y=${ys[i]}`).join('\n');
+  const slopePart = m === 1 ? 'x' : m === -1 ? '-x' : `${m}x`;
+  const answer = b === 0
+    ? `y = ${slopePart}`
+    : `y = ${slopePart} ${b >= 0 ? '+' : '-'} ${Math.abs(b)}`;
+  return g7Wrap(difficulty, 'alg1_write_equation_from_table', 'Alg1.FLF.3.1', 'Write an Equation from a Table', {
+    question: `Write the linear equation in slope-intercept form y = mx + b that fits this table:\n\n${tableLines}`,
+    answer,
+    solution_steps: [
+      `Slope: (${ys[1]} − ${ys[0]}) / (1 − 0) = ${m}.`,
+      `y-intercept (at x = 0): ${ys[0]}.`,
+      `Equation: ${answer}`,
+    ],
+    answer_type: 'equation',
+  });
+}
+
+// 15. Alg1.FLF.3.2 — Write Equation Given Two Points
+export function generate_alg1_write_equation_two_points(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Pick integer slope and integer y-intercept to keep answer clean.
+  const m = randomNonZeroInt(-5, 5);
+  const b = randomInt(-10, 10);
+  const x1 = randomInt(-6, 6);
+  let x2 = randomInt(-6, 6);
+  while (x2 === x1) x2 = randomInt(-6, 6);
+  const y1 = m * x1 + b;
+  const y2 = m * x2 + b;
+  const slopePart = m === 1 ? 'x' : m === -1 ? '-x' : `${m}x`;
+  const answer = b === 0
+    ? `y = ${slopePart}`
+    : `y = ${slopePart} ${b >= 0 ? '+' : '-'} ${Math.abs(b)}`;
+  return g7Wrap(difficulty, 'alg1_write_equation_two_points', 'Alg1.FLF.3.2', 'Write an Equation from Two Points', {
+    question: `Write the equation of the line through (${x1}, ${y1}) and (${x2}, ${y2}). Use slope-intercept form y = mx + b.`,
+    answer,
+    solution_steps: [
+      `Slope: m = (${y2} − ${y1}) / (${x2} − ${x1}) = ${m}.`,
+      `Substitute (${x1}, ${y1}) into y = mx + b: ${y1} = ${m}(${x1}) + b → b = ${b}.`,
+      `Equation: ${answer}`,
+    ],
+    answer_type: 'equation',
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BATCH 4: Systems & Inequalities (ALG1)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// 16. Alg1.SYS.1.2 — Solve a 2×2 System by Substitution
+export function generate_alg1_solve_system_substitution(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Equations: y = m1·x + b1, y = m2·x + b2  (m1 != m2)
+  let m1: number, m2: number;
+  do {
+    m1 = randomNonZeroInt(-5, 5);
+    m2 = randomNonZeroInt(-5, 5);
+  } while (m1 === m2);
+  const x = randomInt(-6, 6);
+  const b1 = randomInt(-8, 8);
+  const y = m1 * x + b1;
+  const b2 = y - m2 * x;
+  const fmt = (m: number, b: number): string => {
+    const slopePart = m === 1 ? 'x' : m === -1 ? '-x' : `${m}x`;
+    if (b === 0) return `y = ${slopePart}`;
+    return `y = ${slopePart} ${b >= 0 ? '+' : '-'} ${Math.abs(b)}`;
+  };
+  return g7Wrap(difficulty, 'alg1_solve_system_substitution', 'Alg1.SYS.1.2', 'Solving Systems by Substitution', {
+    question: `Solve the system by substitution:\n${fmt(m1, b1)}\n${fmt(m2, b2)}\n\nEnter the solution as (x, y).`,
+    answer: `(${x}, ${y})`,
+    solution_steps: [
+      `Both equations are solved for y. Set right-hand sides equal: ${m1}x ${b1 >= 0 ? '+' : '-'} ${Math.abs(b1)} = ${m2}x ${b2 >= 0 ? '+' : '-'} ${Math.abs(b2)}`,
+      `Combine x-terms: ${m1 - m2}x = ${b2 - b1}`,
+      `x = ${x}`,
+      `Substitute back: y = ${m1}(${x}) ${b1 >= 0 ? '+' : '-'} ${Math.abs(b1)} = ${y}`,
+      `Solution: (${x}, ${y})`,
+    ],
+    answer_type: 'ordered_pair',
+  });
+}
+
+// 17. Alg1.SYS.1.3 — Solve a 2×2 System by Elimination
+export function generate_alg1_solve_system_elimination(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Standard form: a1·x + b1·y = c1,  a2·x + b2·y = c2 with det ≠ 0.
+  let a1: number, b1: number, a2: number, b2: number;
+  let det = 0;
+  for (let tries = 0; tries < 10; tries++) {
+    a1 = randomNonZeroInt(1, 5);
+    b1 = randomNonZeroInt(1, 5);
+    a2 = randomNonZeroInt(-5, 5);
+    b2 = randomNonZeroInt(-5, 5);
+    det = a1 * b2 - a2 * b1;
+    if (det !== 0) break;
+  }
+  a1 = a1!; b1 = b1!; a2 = a2!; b2 = b2!;
+  const x = randomInt(-5, 5);
+  const y = randomInt(-5, 5);
+  const c1 = a1 * x + b1 * y;
+  const c2 = a2 * x + b2 * y;
+  const eq = (a: number, b: number, c: number): string => {
+    const aPart = a === 1 ? 'x' : a === -1 ? '-x' : `${a}x`;
+    const bPart = b === 1 ? 'y' : b === -1 ? '-y' : `${b}y`;
+    const sign = b >= 0 ? '+' : '-';
+    return b === 1 || b === -1
+      ? `${aPart} ${sign} y = ${c}`
+      : `${aPart} ${sign} ${Math.abs(b)}y = ${c}`;
+  };
+  return g7Wrap(difficulty, 'alg1_solve_system_elimination', 'Alg1.SYS.1.3', 'Solving Systems by Elimination', {
+    question: `Solve the system by elimination:\n${eq(a1, b1, c1)}\n${eq(a2, b2, c2)}\n\nEnter the solution as (x, y).`,
+    answer: `(${x}, ${y})`,
+    solution_steps: [
+      `Multiply equation 1 by ${a2} and equation 2 by ${a1} to make x-coefficients match.`,
+      `Subtract the equations to eliminate x.`,
+      `Solve for y: y = ${y}`,
+      `Substitute y = ${y} into either equation to find x = ${x}.`,
+      `Solution: (${x}, ${y})`,
+    ],
+    answer_type: 'ordered_pair',
+  });
+}
+
+// 18. Alg1.FND.4.1 — Solve a One-Step Inequality
+export function generate_alg1_solve_inequality_one_step(difficulty: DifficultyLevel): GeneratedQuestion {
+  const ops = ['<', '>', '≤', '≥'] as const;
+  const op = ops[randomInt(0, 3)]!;
+  // Form: x op c (after one inverse operation)
+  const useDiv = Math.random() < 0.5;
+  if (useDiv) {
+    // ax op c
+    const a = randomNonZeroInt(-7, 7);
+    const x = randomNonZeroInt(-12, 12);
+    const c = a * x;
+    // When we divide by a negative, the inequality flips.
+    const flip = a < 0;
+    const finalOp = flip
+      ? (op === '<' ? '>' : op === '>' ? '<' : op === '≤' ? '≥' : '≤')
+      : op;
+    return g7Wrap(difficulty, 'alg1_solve_inequality_one_step', 'Alg1.FND.4.1', 'One-Step Inequalities', {
+      question: `Solve for x:  ${a}x ${op} ${c}`,
+      answer: `x ${finalOp} ${x}`,
+      solution_steps: [
+        `Divide both sides by ${a}.`,
+        flip ? `Dividing by a negative reverses the inequality.` : `Direction stays the same when dividing by a positive.`,
+        `x ${finalOp} ${x}`,
+      ],
+      answer_type: 'inequality',
+    });
+  }
+  // x + a op c
+  const a = randomNonZeroInt(-15, 15);
+  const x = randomNonZeroInt(-15, 15);
+  const c = x + a;
+  return g7Wrap(difficulty, 'alg1_solve_inequality_one_step', 'Alg1.FND.4.1', 'One-Step Inequalities', {
+    question: `Solve for x:  x ${a >= 0 ? '+' : '-'} ${Math.abs(a)} ${op} ${c}`,
+    answer: `x ${op} ${x}`,
+    solution_steps: [
+      `${a >= 0 ? 'Subtract' : 'Add'} ${Math.abs(a)} on both sides.`,
+      `x ${op} ${x}`,
+    ],
+    answer_type: 'inequality',
+  });
+}
+
+// 19. Alg1.FND.4.2 — Solve a Multi-Step Inequality
+export function generate_alg1_solve_inequality_multi_step(difficulty: DifficultyLevel): GeneratedQuestion {
+  const ops = ['<', '>', '≤', '≥'] as const;
+  const op = ops[randomInt(0, 3)]!;
+  const a = randomNonZeroInt(-7, 7);
+  const b = randomInt(-12, 12);
+  const x = randomNonZeroInt(-10, 10);
+  const c = a * x + b;
+  const flip = a < 0;
+  const finalOp = flip
+    ? (op === '<' ? '>' : op === '>' ? '<' : op === '≤' ? '≥' : '≤')
+    : op;
+  return g7Wrap(difficulty, 'alg1_solve_inequality_multi_step', 'Alg1.FND.4.2', 'Multi-Step Inequalities', {
+    question: `Solve for x:  ${a}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)} ${op} ${c}`,
+    answer: `x ${finalOp} ${x}`,
+    solution_steps: [
+      `${b >= 0 ? 'Subtract' : 'Add'} ${Math.abs(b)} on both sides: ${a}x ${op} ${c - b}`,
+      flip
+        ? `Divide both sides by ${a} (negative → flip the inequality): x ${finalOp} ${x}`
+        : `Divide both sides by ${a}: x ${finalOp} ${x}`,
+    ],
+    answer_type: 'inequality',
+  });
+}
+
+// 20. Alg1.FND.4.3 — Compound Inequality (AND-style → interval)
+export function generate_alg1_compound_inequality(difficulty: DifficultyLevel): GeneratedQuestion {
+  // a < ax + b ≤ c → solve to a closed/half-open interval. Use AND-style
+  // compound so the answer is a single interval (consistent with the user's
+  // 'interval' answer_type spec).
+  const inner = randomNonZeroInt(1, 4);                  // multiplier
+  const b = randomInt(-6, 6);
+  const xLo = randomNonZeroInt(-6, 4);
+  const xHi = xLo + randomInt(2, 6);
+  const lo = inner * xLo + b;
+  const hi = inner * xHi + b;
+  return g7Wrap(difficulty, 'alg1_compound_inequality', 'Alg1.FND.4.3', 'Compound Inequality', {
+    question: `Solve the compound inequality. Express your answer in interval notation.\n\n${lo} < ${inner}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)} ≤ ${hi}`,
+    answer: `(${xLo}, ${xHi}]`,
+    solution_steps: [
+      `${b >= 0 ? 'Subtract' : 'Add'} ${Math.abs(b)} across all three parts: ${lo - b} < ${inner}x ≤ ${hi - b}`,
+      `Divide each part by ${inner}: ${xLo} < x ≤ ${xHi}`,
+      `Interval notation: (${xLo}, ${xHi}]`,
+    ],
+    answer_type: 'interval',
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BATCH 5: Exponents, Polynomials, Quadratics (ALG1)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// 21. Alg1.EXP.1.1 — Simplify Using Integer Exponent Rules
+export function generate_alg1_exponent_rules(difficulty: DifficultyLevel): GeneratedQuestion {
+  const rules = ['product', 'quotient', 'power_of_power'] as const;
+  const rule = difficulty === 1 ? rules[randomInt(0, 1)]! : rules[randomInt(0, 2)]!;
+  if (rule === 'product') {
+    const a = randomInt(2, 7);
+    const b = randomInt(2, 7);
+    return g7Wrap(difficulty, 'alg1_exponent_rules', 'Alg1.EXP.1.1', 'Integer Exponent Rules', {
+      question: `Simplify: x^${a} · x^${b}`,
+      answer: `x^${a + b}`,
+      solution_steps: [
+        `Product rule: x^a · x^b = x^(a+b)`,
+        `${a} + ${b} = ${a + b}`,
+        `Result: x^${a + b}`,
+      ],
+      answer_type: 'expression',
+    });
+  }
+  if (rule === 'quotient') {
+    const a = randomInt(5, 12);
+    const b = randomInt(1, a - 1);
+    return g7Wrap(difficulty, 'alg1_exponent_rules', 'Alg1.EXP.1.1', 'Integer Exponent Rules', {
+      question: `Simplify: x^${a} / x^${b}`,
+      answer: `x^${a - b}`,
+      solution_steps: [
+        `Quotient rule: x^a / x^b = x^(a-b)`,
+        `${a} − ${b} = ${a - b}`,
+        `Result: x^${a - b}`,
+      ],
+      answer_type: 'expression',
+    });
+  }
+  // power_of_power
+  const a = randomInt(2, 5);
+  const b = randomInt(2, 5);
+  return g7Wrap(difficulty, 'alg1_exponent_rules', 'Alg1.EXP.1.1', 'Integer Exponent Rules', {
+    question: `Simplify: (x^${a})^${b}`,
+    answer: `x^${a * b}`,
+    solution_steps: [
+      `Power of a power: (x^a)^b = x^(a·b)`,
+      `${a} × ${b} = ${a * b}`,
+      `Result: x^${a * b}`,
+    ],
+    answer_type: 'expression',
+  });
+}
+
+// 22. Alg1.POLY.1.1 — Add or Subtract Polynomials
+export function generate_alg1_add_subtract_polynomials(difficulty: DifficultyLevel): GeneratedQuestion {
+  // (a1 x² + b1 x + c1) ± (a2 x² + b2 x + c2)
+  const a1 = randomNonZeroInt(-6, 6);
+  const a2 = randomNonZeroInt(-6, 6);
+  const b1 = randomInt(-9, 9);
+  const b2 = randomInt(-9, 9);
+  const c1 = randomInt(-9, 9);
+  const c2 = randomInt(-9, 9);
+  const subtract = Math.random() < 0.5;
+  const sign = subtract ? -1 : 1;
+  const aSum = a1 + sign * a2;
+  const bSum = b1 + sign * b2;
+  const cSum = c1 + sign * c2;
+  if (aSum === 0 && bSum === 0 && cSum === 0) {
+    return generate_alg1_add_subtract_polynomials(difficulty);
+  }
+  const fmtPoly = (a: number, b: number, c: number): string => {
+    const parts: string[] = [];
+    if (a !== 0) parts.push(g7FmtTerm(a, 'x²', true));
+    if (b !== 0) parts.push(g7FmtTerm(b, 'x', parts.length === 0));
+    if (c !== 0) parts.push(g7FmtConst(c, parts.length === 0));
+    return parts.length === 0 ? '0' : parts.join(' ');
+  };
+  const p1 = fmtPoly(a1, b1, c1);
+  const p2 = fmtPoly(a2, b2, c2);
+  const op = subtract ? '-' : '+';
+  return g7Wrap(difficulty, 'alg1_add_subtract_polynomials', 'Alg1.POLY.1.1', 'Adding/Subtracting Polynomials', {
+    question: `Simplify: (${p1}) ${op} (${p2})`,
+    answer: fmtPoly(aSum, bSum, cSum),
+    solution_steps: [
+      subtract
+        ? `Distribute the negative: ${p1} − ${p2}`
+        : `Drop parentheses: ${p1} + ${p2}`,
+      `Combine x² terms: ${a1} ${op} ${a2} = ${aSum}`,
+      `Combine x terms: ${b1} ${op} ${b2} = ${bSum}`,
+      `Combine constants: ${c1} ${op} ${c2} = ${cSum}`,
+      `Result: ${fmtPoly(aSum, bSum, cSum)}`,
+    ],
+    answer_type: 'expression',
+  });
+}
+
+// 23. Alg1.POLY.2.1 — Multiply Polynomials (FOIL / distribute)
+export function generate_alg1_multiply_polynomials(difficulty: DifficultyLevel): GeneratedQuestion {
+  // (x + a)(x + b) = x² + (a+b)x + ab  — keeps the leading coefficient at 1
+  // for difficulty 1, scales up for higher difficulty.
+  const aCoef = difficulty === 1 ? 1 : randomNonZeroInt(1, 3);
+  const cCoef = difficulty === 1 ? 1 : randomNonZeroInt(1, 3);
+  const a = randomNonZeroInt(-7, 7);
+  const b = randomNonZeroInt(-7, 7);
+  const factor1 = `${aCoef === 1 ? '' : aCoef}x ${a >= 0 ? '+' : '-'} ${Math.abs(a)}`;
+  const factor2 = `${cCoef === 1 ? '' : cCoef}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)}`;
+  const x2Coef = aCoef * cCoef;
+  const xCoef = aCoef * b + cCoef * a;
+  const constTerm = a * b;
+  const fmtPoly = (a2: number, a1: number, a0: number): string => {
+    const parts: string[] = [];
+    if (a2 !== 0) parts.push(g7FmtTerm(a2, 'x²', true));
+    if (a1 !== 0) parts.push(g7FmtTerm(a1, 'x', parts.length === 0));
+    if (a0 !== 0) parts.push(g7FmtConst(a0, parts.length === 0));
+    return parts.length === 0 ? '0' : parts.join(' ');
+  };
+  return g7Wrap(difficulty, 'alg1_multiply_polynomials', 'Alg1.POLY.2.1', 'Multiplying Polynomials', {
+    question: `Multiply and simplify: (${factor1})(${factor2})`,
+    answer: fmtPoly(x2Coef, xCoef, constTerm),
+    solution_steps: [
+      `Apply FOIL:`,
+      `  First: ${aCoef}x × ${cCoef}x = ${x2Coef}x²`,
+      `  Outer: ${aCoef}x × ${b} = ${aCoef * b}x`,
+      `  Inner: ${a} × ${cCoef}x = ${cCoef * a}x`,
+      `  Last:  ${a} × ${b} = ${constTerm}`,
+      `Combine x terms: ${aCoef * b} + ${cCoef * a} = ${xCoef}`,
+      `Result: ${fmtPoly(x2Coef, xCoef, constTerm)}`,
+    ],
+    answer_type: 'expression',
+  });
+}
+
+// 24. Alg1.POLY.3.1 — Factor a Trinomial ax² + bx + c
+export function generate_alg1_factor_trinomial(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Build (x + p)(x + q) so factored form has leading coefficient 1.
+  // a = 1, b = p + q, c = p · q.
+  let p: number, q: number;
+  do {
+    p = randomNonZeroInt(-8, 8);
+    q = randomNonZeroInt(-8, 8);
+  } while (p === q && difficulty < 3);             // avoid perfect-square trinomials at low difficulty
+  const b = p + q;
+  const c = p * q;
+  if (b === 0 || c === 0) return generate_alg1_factor_trinomial(difficulty);
+  const trinomial = `x² ${b >= 0 ? '+' : '-'} ${Math.abs(b)}x ${c >= 0 ? '+' : '-'} ${Math.abs(c)}`;
+  // Order the factors so the one with the larger value appears first (deterministic for validation)
+  const [first, second] = p >= q ? [p, q] : [q, p];
+  const answer = `(x ${first >= 0 ? '+' : '-'} ${Math.abs(first)})(x ${second >= 0 ? '+' : '-'} ${Math.abs(second)})`;
+  return g7Wrap(difficulty, 'alg1_factor_trinomial', 'Alg1.POLY.3.1', 'Factoring a Trinomial', {
+    question: `Factor completely: ${trinomial}`,
+    answer,
+    solution_steps: [
+      `Find two integers that multiply to ${c} and add to ${b}: ${p} and ${q}.`,
+      `Trinomial factors as (x ${p >= 0 ? '+' : '-'} ${Math.abs(p)})(x ${q >= 0 ? '+' : '-'} ${Math.abs(q)}).`,
+      `Result: ${answer}`,
+    ],
+    answer_type: 'expression',
+  });
+}
+
+// 25. Alg1.QUAD.2.4 — Solve a Quadratic Using the Quadratic Formula
+export function generate_alg1_quadratic_formula(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Build ax² + bx + c with integer roots r1, r2 so the answer set is clean.
+  // ax² + bx + c = a(x - r1)(x - r2) → b = -a(r1 + r2), c = a·r1·r2.
+  let a = randomNonZeroInt(1, difficulty === 1 ? 2 : 3);
+  if (a < 0) a = -a;                              // keep leading coefficient positive
+  let r1 = randomNonZeroInt(-7, 7);
+  let r2 = randomNonZeroInt(-7, 7);
+  if (r1 === r2) r2 = r2 + 1 === 0 ? r2 + 2 : r2 + 1;
+  const b = -a * (r1 + r2);
+  const c = a * r1 * r2;
+  const aPart = a === 1 ? 'x²' : `${a}x²`;
+  const bPart = b === 0 ? '' : b > 0 ? ` + ${b}x` : ` - ${Math.abs(b)}x`;
+  const cPart = c === 0 ? '' : c > 0 ? ` + ${c}` : ` - ${Math.abs(c)}`;
+  // Order the roots so validation is deterministic
+  const [smaller, larger] = r1 < r2 ? [r1, r2] : [r2, r1];
+  const answer = `x = ${smaller}, x = ${larger}`;
+  const discriminant = b * b - 4 * a * c;
+  return g7Wrap(difficulty, 'alg1_quadratic_formula', 'Alg1.QUAD.2.4', 'Quadratic Formula', {
+    question: `Solve using the quadratic formula:  ${aPart}${bPart}${cPart} = 0\n\nList both solutions in the form "x = p, x = q" with the smaller value first.`,
+    answer,
+    solution_steps: [
+      `Quadratic formula: x = (−b ± √(b² − 4ac)) / (2a)`,
+      `Identify: a = ${a}, b = ${b}, c = ${c}.`,
+      `Discriminant: b² − 4ac = ${b * b} − ${4 * a * c} = ${discriminant}`,
+      `√${discriminant} = ${Math.sqrt(discriminant)}`,
+      `x = (${-b} ± ${Math.sqrt(discriminant)}) / ${2 * a}`,
+      `Solutions: x = ${smaller}, x = ${larger}`,
+    ],
+    answer_type: 'text',
+  });
+}
+
+// =============================================================================
 // GENERATOR REGISTRY - ALL 54 GENERATORS
 // =============================================================================
 
@@ -3725,6 +4597,38 @@ export const GENERATORS: Record<string, (difficulty: DifficultyLevel) => Generat
   g8_volume_3d_word_problem:      generate_g8_volume_3d_word_problem,
   g8_relative_frequency_table:    generate_g8_relative_frequency_table,
   g8_pythagorean_3d_context:      generate_g8_pythagorean_3d_context,
+
+  // ─── ALGEBRA 1 (Varsity division) ──────────────────────────────────────────
+  // BATCH 1: Foundations of Algebra (5)
+  alg1_eval_algebraic_expr:       generate_alg1_eval_algebraic_expr,
+  alg1_simplify_expression:       generate_alg1_simplify_expression,
+  alg1_translate_verbal:          generate_alg1_translate_verbal,
+  alg1_solve_one_step_add_sub:    generate_alg1_solve_one_step_add_sub,
+  alg1_solve_one_step_mult_div:   generate_alg1_solve_one_step_mult_div,
+  // BATCH 2: Linear Equations (5)
+  alg1_solve_two_step:            generate_alg1_solve_two_step,
+  alg1_solve_multi_step:          generate_alg1_solve_multi_step,
+  alg1_solve_vars_both_sides:     generate_alg1_solve_vars_both_sides,
+  alg1_solve_literal_equation:    generate_alg1_solve_literal_equation,
+  alg1_write_linear_equation:     generate_alg1_write_linear_equation,
+  // BATCH 3: Linear Functions (5)
+  alg1_slope_from_points:         generate_alg1_slope_from_points,
+  alg1_slope_intercept_form:      generate_alg1_slope_intercept_form,
+  alg1_graph_identify_slope:      generate_alg1_graph_identify_slope,
+  alg1_write_equation_from_table: generate_alg1_write_equation_from_table,
+  alg1_write_equation_two_points: generate_alg1_write_equation_two_points,
+  // BATCH 4: Systems & Inequalities (5)
+  alg1_solve_system_substitution: generate_alg1_solve_system_substitution,
+  alg1_solve_system_elimination:  generate_alg1_solve_system_elimination,
+  alg1_solve_inequality_one_step: generate_alg1_solve_inequality_one_step,
+  alg1_solve_inequality_multi_step: generate_alg1_solve_inequality_multi_step,
+  alg1_compound_inequality:       generate_alg1_compound_inequality,
+  // BATCH 5: Exponents, Polynomials, Quadratics (5)
+  alg1_exponent_rules:            generate_alg1_exponent_rules,
+  alg1_add_subtract_polynomials:  generate_alg1_add_subtract_polynomials,
+  alg1_multiply_polynomials:      generate_alg1_multiply_polynomials,
+  alg1_factor_trinomial:          generate_alg1_factor_trinomial,
+  alg1_quadratic_formula:         generate_alg1_quadratic_formula,
 };
 
 // Helper to get all generator types
