@@ -98,7 +98,10 @@ type Phase = 'integrity_check' | 'loading' | 'playing' | 'finished' | 'time_up';
 
 interface QuestionShape {
   kind: 'free_text' | 'multiple_choice_text' | 'multiple_choice_svg';
-  options: string[];
+  // Options arrive as either legacy strings ("A) ...") or new-shape objects
+  // ({ key: "A", text: "..." }) depending on which static_questions row
+  // generated them. MCButtons normalizes both.
+  options: Array<string | { key: string; text: string }>;
   svg: string | null;
   prompt: string;                // text to display above input/options
 }
@@ -149,8 +152,12 @@ function shapeOf(q: HeatQuestionRow): QuestionShape {
  * just transform `^N` / `_N` to <sup>/<sub>, simple \frac{a}{b} → (a)/(b),
  * and \sqrt{x} → √(x). Everything else falls through verbatim.
  */
-function renderMath(input: string): { __html: string } {
-  let html = input
+function renderMath(input: string | unknown): { __html: string } {
+  // Defensive coercion: callers can pass non-string values when static_questions
+  // options arrive as JSONB objects (e.g., {key, text}). Convert anything else
+  // to a string so .replace() never throws.
+  const str = typeof input === 'string' ? input : String(input ?? '');
+  let html = str
     .replace(/\\frac\{([^{}]+)\}\{([^{}]+)\}/g, '($1)/($2)')
     .replace(/\\sqrt\{([^{}]+)\}/g, '√($1)')
     .replace(/\^\{([^{}]+)\}/g, '<sup>$1</sup>')
@@ -1108,14 +1115,19 @@ function MCButtons({
   onPick,
   disabled,
 }: {
-  options: string[];
+  options: Array<string | { key: string; text: string }>;
   onPick: (letter: string) => void;
   disabled: boolean;
 }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
       {options.map((opt, idx) => {
-        const letter = MC_LETTERS[idx] ?? `${idx + 1}`;
+        // Normalize both option shapes:
+        //   - legacy string ("A) text") → letter from position, body = string
+        //   - new-shape object ({key, text}) → letter = key, body = text
+        const isObj = typeof opt === 'object' && opt !== null;
+        const letter = isObj ? opt.key : (MC_LETTERS[idx] ?? `${idx + 1}`);
+        const body   = isObj ? opt.text : opt;
         return (
           <button
             key={`${letter}-${idx}`}
@@ -1139,7 +1151,7 @@ function MCButtons({
             </span>
             <span
               className="text-base font-medium"
-              dangerouslySetInnerHTML={renderMath(opt)}
+              dangerouslySetInnerHTML={renderMath(body)}
             />
           </button>
         );
