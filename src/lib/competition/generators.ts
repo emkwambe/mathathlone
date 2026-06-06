@@ -2203,7 +2203,7 @@ export function generate_g7_add_sub_linear_expr(difficulty: DifficultyLevel): Ge
       `Combine constants: ${b1} ${op} ${b2} = ${bSum}`,
       `Result: ${answer}`,
     ],
-    answer_type: 'text',
+    answer_type: 'expression',
   });
 }
 
@@ -2226,7 +2226,7 @@ export function generate_g7_expand_linear_expr(difficulty: DifficultyLevel): Gen
       `${k} × ${b} = ${kb}`,
       `Result: ${g7FmtLinear(ka, kb)}`,
     ],
-    answer_type: 'text',
+    answer_type: 'expression',
   });
 }
 
@@ -2451,7 +2451,7 @@ export function generate_g7_composite_area(difficulty: DifficultyLevel): Generat
       `Area of the cutout: ${cw} × ${ch} = ${cw * ch}`,
       `Composite area = ${W * H} − ${cw * ch} = ${totalArea}`,
     ],
-    answer_type: 'decimal',
+    answer_type: 'integer',
   });
 }
 
@@ -2472,7 +2472,7 @@ export function generate_g7_area_2d_objects(difficulty: DifficultyLevel): Genera
         `= ½ × ${base} × ${height}`,
         `= ${area} cm²`,
       ],
-      answer_type: 'decimal',
+      answer_type: 'integer',
     });
   }
   if (shape === 'parallelogram') {
@@ -2487,7 +2487,7 @@ export function generate_g7_area_2d_objects(difficulty: DifficultyLevel): Genera
         `= ${base} × ${height}`,
         `= ${area} cm²`,
       ],
-      answer_type: 'decimal',
+      answer_type: 'integer',
     });
   }
   // trapezoid
@@ -2507,7 +2507,7 @@ export function generate_g7_area_2d_objects(difficulty: DifficultyLevel): Genera
       `= ½ × ${b1 + b2} × ${height}`,
       `= ${area} cm²`,
     ],
-    answer_type: 'decimal',
+    answer_type: 'integer',
   });
 }
 
@@ -2531,7 +2531,7 @@ export function generate_g7_volume_3d_objects(difficulty: DifficultyLevel): Gene
         `= ${l} × ${w} × ${h}`,
         `= ${V} cm³`,
       ],
-      answer_type: 'decimal',
+      answer_type: 'integer',
     });
   }
   if (shape === 'triangular_prism') {
@@ -2550,7 +2550,7 @@ export function generate_g7_volume_3d_objects(difficulty: DifficultyLevel): Gene
         `= ${baseArea} × ${prismH}`,
         `= ${V} cm³`,
       ],
-      answer_type: 'decimal',
+      answer_type: 'integer',
     });
   }
   // rectangular_pyramid
@@ -2568,7 +2568,7 @@ export function generate_g7_volume_3d_objects(difficulty: DifficultyLevel): Gene
       `Base area = ${l} × ${w} = ${l * w} cm²`,
       `Volume = ⅓ × ${l * w} × ${h} = ${V} cm³`,
     ],
-    answer_type: 'decimal',
+    answer_type: 'integer',
   });
 }
 
@@ -2590,7 +2590,7 @@ export function generate_g7_surface_area_3d(difficulty: DifficultyLevel): Genera
         `= 2 × ${l * w + l * h + w * h}`,
         `= ${SA} cm²`,
       ],
-      answer_type: 'decimal',
+      answer_type: 'integer',
     });
   }
   // triangular prism (3-4-5 or 6-8-10 right-triangle base for clean numbers)
@@ -2608,7 +2608,7 @@ export function generate_g7_surface_area_3d(difficulty: DifficultyLevel): Genera
       `Three rectangular faces, total: (${a} + ${b} + ${c}) × ${len} = ${perim} × ${len} = ${perim * len} cm²`,
       `Surface area = ${2 * baseArea} + ${perim * len} = ${SA} cm²`,
     ],
-    answer_type: 'decimal',
+    answer_type: 'integer',
   });
 }
 
@@ -2762,6 +2762,832 @@ export function generate_g7_compound_probability(difficulty: DifficultyLevel): G
 }
 
 // =============================================================================
+// =============================================================================
+// NC GRADE 8 — CONTENDERS DIVISION (pool: nc_grade_8)
+// =============================================================================
+// =============================================================================
+// Same wrapping pattern as the G7 block — every generator returns a
+// GeneratedQuestion via g7Wrap() so it plugs into the existing pipeline.
+// Pool isolation: every generator_type uses the `g8_` prefix.
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BATCH 1: Real Number System
+// ─────────────────────────────────────────────────────────────────────────────
+
+// 1. M8.NS.2.1 — Evaluate Square Roots and Cube Roots of Perfect Powers
+export function generate_g8_eval_roots(difficulty: DifficultyLevel): GeneratedQuestion {
+  const squareBases = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+  const cubeBases   = [1, 2, 3, 4, 5, 6, 7, 8];
+  const useCube = difficulty >= 2 && Math.random() < 0.5;
+  if (useCube) {
+    const k = cubeBases[randomInt(0, cubeBases.length - 1)]!;
+    const n = k * k * k;
+    return g7Wrap(difficulty, 'g8_eval_roots', 'M8.NS.2.1', 'Evaluate Square and Cube Roots', {
+      question: `Evaluate: ∛${n}`,
+      answer: String(k),
+      solution_steps: [
+        `Find the integer whose cube is ${n}.`,
+        `${k}³ = ${k} × ${k} × ${k} = ${n}`,
+        `Therefore ∛${n} = ${k}.`,
+      ],
+      answer_type: 'integer',
+    });
+  }
+  const k = squareBases[randomInt(0, squareBases.length - 1)]!;
+  const n = k * k;
+  return g7Wrap(difficulty, 'g8_eval_roots', 'M8.NS.2.1', 'Evaluate Square and Cube Roots', {
+    question: `Evaluate: √${n}`,
+    answer: String(k),
+    solution_steps: [
+      `Find the non-negative integer whose square is ${n}.`,
+      `${k} × ${k} = ${n}`,
+      `Therefore √${n} = ${k}.`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// 2. M8.NS.2.2 — Solve x² = p
+export function generate_g8_solve_square_eq(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Use perfect squares so the answer is a clean ±k integer pair.
+  const squareBases = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+  const k = squareBases[randomInt(0, squareBases.length - 1)]!;
+  const p = k * k;
+  const answer = `±${k}`;
+  return g7Wrap(difficulty, 'g8_solve_square_eq', 'M8.NS.2.2', 'Solving x² = p', {
+    question: `Solve for x: x² = ${p}`,
+    answer,
+    solution_steps: [
+      `Take the square root of both sides: x = ±√${p}`,
+      `√${p} = ${k} (since ${k}² = ${p})`,
+      `So x = ±${k}.`,
+    ],
+    answer_type: 'text',
+  });
+}
+
+// 3. M8.NS.2.3 — Solve x³ = p
+export function generate_g8_solve_cube_eq(difficulty: DifficultyLevel): GeneratedQuestion {
+  const cubeBases = [-8, -7, -6, -5, -4, -3, -2, 2, 3, 4, 5, 6, 7, 8];
+  const k = cubeBases[randomInt(0, cubeBases.length - 1)]!;
+  const p = k * k * k;
+  return g7Wrap(difficulty, 'g8_solve_cube_eq', 'M8.NS.2.3', 'Solving x³ = p', {
+    question: `Solve for x: x³ = ${p}`,
+    answer: String(k),
+    solution_steps: [
+      `Take the cube root of both sides: x = ∛${p}`,
+      `Look for the integer whose cube is ${p}: ${k}³ = ${p}.`,
+      `So x = ${k}.`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// 4. M8.NS.3.3 — Compare Two Irrational Numbers
+export function generate_g8_compare_irrationals(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Curated pairs where the answer is well-defined and easy to verify
+  // (decimal approximations only used for the solution_steps, never in the
+  // question itself).
+  const pairs: Array<{ a: string; aVal: number; b: string; bVal: number }> = [
+    { a: '√2',  aVal: Math.SQRT2,        b: '√3',  bVal: Math.sqrt(3) },
+    { a: '√5',  aVal: Math.sqrt(5),       b: 'π/2', bVal: Math.PI / 2  },
+    { a: '√10', aVal: Math.sqrt(10),      b: '3.1', bVal: 3.1          },
+    { a: '√7',  aVal: Math.sqrt(7),       b: '2.6', bVal: 2.6          },
+    { a: '∛8',  aVal: 2,                  b: '√3',  bVal: Math.sqrt(3) },
+    { a: '√50', aVal: Math.sqrt(50),      b: '7',   bVal: 7            },
+    { a: 'π',   aVal: Math.PI,            b: '√10', bVal: Math.sqrt(10) },
+    { a: '∛27', aVal: 3,                  b: '√8',  bVal: Math.sqrt(8) },
+  ];
+  const p = pairs[randomInt(0, pairs.length - 1)]!;
+  const larger = p.aVal > p.bVal ? p.a : p.b;
+  return g7Wrap(difficulty, 'g8_compare_irrationals', 'M8.NS.3.3', 'Comparing Irrational Numbers', {
+    question: `Which is greater: ${p.a} or ${p.b}? (Enter the larger expression exactly as shown.)`,
+    answer: larger,
+    solution_steps: [
+      `Approximate each value:`,
+      `${p.a} ≈ ${p.aVal.toFixed(3)}`,
+      `${p.b} ≈ ${p.bVal.toFixed(3)}`,
+      `Therefore ${larger} is greater.`,
+    ],
+    answer_type: 'text',
+  });
+}
+
+// 5. M8.EE.1.1 — Simplify Integer-Exponent Expressions
+export function generate_g8_simplify_exponents(difficulty: DifficultyLevel): GeneratedQuestion {
+  const rules = ['product', 'quotient', 'power_of_power', 'zero', 'negative'] as const;
+  const rule = rules[randomInt(0, rules.length - 1)]!;
+
+  if (rule === 'product') {
+    const a = randomInt(2, difficulty === 1 ? 4 : 7);
+    const b = randomInt(2, difficulty === 1 ? 4 : 7);
+    return g7Wrap(difficulty, 'g8_simplify_exponents', 'M8.EE.1.1', 'Integer Exponent Rules', {
+      question: `Simplify: x^${a} · x^${b}`,
+      answer: `x^${a + b}`,
+      solution_steps: [
+        `Product rule: x^a · x^b = x^(a+b)`,
+        `${a} + ${b} = ${a + b}`,
+        `= x^${a + b}`,
+      ],
+      answer_type: 'expression',
+    });
+  }
+  if (rule === 'quotient') {
+    const a = randomInt(4, difficulty === 1 ? 8 : 12);
+    const b = randomInt(1, a - 1);
+    return g7Wrap(difficulty, 'g8_simplify_exponents', 'M8.EE.1.1', 'Integer Exponent Rules', {
+      question: `Simplify: x^${a} / x^${b}`,
+      answer: `x^${a - b}`,
+      solution_steps: [
+        `Quotient rule: x^a / x^b = x^(a-b)`,
+        `${a} − ${b} = ${a - b}`,
+        `= x^${a - b}`,
+      ],
+      answer_type: 'expression',
+    });
+  }
+  if (rule === 'power_of_power') {
+    const a = randomInt(2, difficulty === 1 ? 4 : 6);
+    const b = randomInt(2, difficulty === 1 ? 3 : 5);
+    return g7Wrap(difficulty, 'g8_simplify_exponents', 'M8.EE.1.1', 'Integer Exponent Rules', {
+      question: `Simplify: (x^${a})^${b}`,
+      answer: `x^${a * b}`,
+      solution_steps: [
+        `Power of a power: (x^a)^b = x^(a·b)`,
+        `${a} × ${b} = ${a * b}`,
+        `= x^${a * b}`,
+      ],
+      answer_type: 'expression',
+    });
+  }
+  if (rule === 'zero') {
+    const a = randomNonZeroInt(2, 9);
+    return g7Wrap(difficulty, 'g8_simplify_exponents', 'M8.EE.1.1', 'Integer Exponent Rules', {
+      question: `Simplify: ${a}x^0`,
+      answer: String(a),
+      solution_steps: [
+        `Zero-exponent rule: any non-zero base raised to 0 equals 1.`,
+        `x^0 = 1`,
+        `${a} × 1 = ${a}`,
+      ],
+      answer_type: 'expression',
+    });
+  }
+  // negative
+  const n = randomInt(2, difficulty === 1 ? 4 : 6);
+  return g7Wrap(difficulty, 'g8_simplify_exponents', 'M8.EE.1.1', 'Integer Exponent Rules', {
+    question: `Write with a positive exponent: x^-${n}`,
+    answer: `1/x^${n}`,
+    solution_steps: [
+      `Negative-exponent rule: x^-n = 1/x^n`,
+      `So x^-${n} = 1/x^${n}.`,
+    ],
+    answer_type: 'expression',
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BATCH 2: Expressions & Equations (G8)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// 6. M8.EE.2.1 — Solve Multi-Step Linear Equations with Rational Coefficients
+export function generate_g8_solve_linear_multistep(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Structure: a(bx + c) = d  →  expand, then solve.
+  const a = randomNonZeroInt(2, 5);
+  const b = randomNonZeroInt(1, difficulty === 1 ? 4 : 7);
+  const c = randomInt(-8, 8);
+  // Pick a clean rational solution
+  const xRat = difficulty === 1
+    ? g7Rat(randomNonZeroInt(-6, 6))
+    : g7RandomRational(6, true);
+  // d = a * (b * x + c)
+  const innerVal = g7RatAdd(g7RatMul(g7Rat(b), xRat), g7Rat(c));
+  const d = g7RatMul(g7Rat(a), innerVal);
+  const cSign = c >= 0 ? '+' : '-';
+  return g7Wrap(difficulty, 'g8_solve_linear_multistep', 'M8.EE.2.1', 'Multi-Step Linear Equations', {
+    question: `Solve for x: ${a}(${b}x ${cSign} ${Math.abs(c)}) = ${g7FmtRat(d)}`,
+    answer: g7FmtRat(xRat),
+    solution_steps: [
+      `Distribute ${a}: ${a * b}x ${cSign} ${Math.abs(a * c)} = ${g7FmtRat(d)}`,
+      c !== 0
+        ? `Subtract ${a * c >= 0 ? a * c : `(${a * c})`} from both sides: ${a * b}x = ${g7FmtRat(g7RatSub(d, g7Rat(a * c)))}`
+        : `Equation is ${a * b}x = ${g7FmtRat(d)}`,
+      a * b !== 1
+        ? `Divide by ${a * b}: x = ${g7FmtRat(xRat)}`
+        : `x = ${g7FmtRat(xRat)}`,
+    ],
+    answer_type: 'decimal_or_fraction',
+  });
+}
+
+// 7. M8.EE.2.2 — Solve Equations with Variables on Both Sides
+export function generate_g8_solve_vars_both_sides(difficulty: DifficultyLevel): GeneratedQuestion {
+  // ax + b = cx + d, with a != c so the equation has a unique solution.
+  let a: number, c: number;
+  do {
+    a = randomNonZeroInt(-6, 6);
+    c = randomNonZeroInt(-6, 6);
+  } while (a === c);
+  const b = randomInt(-12, 12);
+  const x = randomInt(-6, 6);
+  const d = a * x + b - c * x;
+  const aPart = a === 1 ? 'x' : a === -1 ? '-x' : `${a}x`;
+  const cPart = c === 1 ? 'x' : c === -1 ? '-x' : `${c}x`;
+  const bPart = b === 0 ? '' : b > 0 ? ` + ${b}` : ` - ${Math.abs(b)}`;
+  const dPart = d === 0 ? '' : d > 0 ? ` + ${d}` : ` - ${Math.abs(d)}`;
+  return g7Wrap(difficulty, 'g8_solve_vars_both_sides', 'M8.EE.2.2', 'Variables on Both Sides', {
+    question: `Solve for x: ${aPart}${bPart} = ${cPart}${dPart}`,
+    answer: String(x),
+    solution_steps: [
+      `Subtract ${cPart} from both sides: ${a - c}x${bPart} = ${d}`,
+      b !== 0
+        ? `Subtract ${b} from both sides: ${a - c}x = ${d - b}`
+        : `Equation is ${a - c}x = ${d - b}`,
+      `Divide both sides by ${a - c}: x = ${x}`,
+    ],
+    answer_type: 'decimal_or_fraction',
+  });
+}
+
+// 8. M8.F.1.4 — Evaluate Function Notation
+export function generate_g8_evaluate_function_notation(difficulty: DifficultyLevel): GeneratedQuestion {
+  const useQuadratic = difficulty >= 2 && Math.random() < 0.4;
+  const input = randomNonZeroInt(-5, 8);
+  if (useQuadratic) {
+    const a = randomNonZeroInt(1, 3);
+    const b = randomInt(-6, 6);
+    const c = randomInt(-8, 8);
+    const result = a * input * input + b * input + c;
+    const bSign = b >= 0 ? '+' : '-';
+    const cSign = c >= 0 ? '+' : '-';
+    const fStr = `${a === 1 ? '' : a}x² ${bSign} ${Math.abs(b)}x ${cSign} ${Math.abs(c)}`;
+    return g7Wrap(difficulty, 'g8_evaluate_function_notation', 'M8.F.1.4', 'Evaluating Function Notation', {
+      question: `If f(x) = ${fStr}, find f(${input}).`,
+      answer: String(result),
+      solution_steps: [
+        `Substitute x = ${input}: ${a}(${input})² ${bSign} ${Math.abs(b)}(${input}) ${cSign} ${Math.abs(c)}`,
+        `= ${a * input * input} ${bSign} ${Math.abs(b * input)} ${cSign} ${Math.abs(c)}`,
+        `= ${result}`,
+      ],
+      answer_type: 'integer_or_decimal',
+    });
+  }
+  const a = randomNonZeroInt(-5, 5);
+  const b = randomInt(-10, 10);
+  const result = a * input + b;
+  const bSign = b >= 0 ? '+' : '-';
+  const aPart = a === 1 ? 'x' : a === -1 ? '-x' : `${a}x`;
+  return g7Wrap(difficulty, 'g8_evaluate_function_notation', 'M8.F.1.4', 'Evaluating Function Notation', {
+    question: `If f(x) = ${aPart} ${bSign} ${Math.abs(b)}, find f(${input}).`,
+    answer: String(result),
+    solution_steps: [
+      `Substitute x = ${input}: ${a}(${input}) ${bSign} ${Math.abs(b)}`,
+      `= ${a * input} ${bSign} ${Math.abs(b)}`,
+      `= ${result}`,
+    ],
+    answer_type: 'integer_or_decimal',
+  });
+}
+
+// 9. M8.F.2.3 — Classify Equation as Linear or Nonlinear
+export function generate_g8_classify_equation_type(difficulty: DifficultyLevel): GeneratedQuestion {
+  const linearExamples = [
+    'y = 3x - 2',
+    'y = -x + 5',
+    '2x + y = 7',
+    'y = (1/2)x + 4',
+    'y = 0.5x',
+    '3x - 4y = 12',
+  ];
+  const nonlinearExamples = [
+    'y = x²',
+    'y = 1/x',
+    'y = √x',
+    'y = 2^x',
+    'y = x² + 3x - 1',
+    'y = x³ - 2',
+    'xy = 6',
+  ];
+  const isLinear = Math.random() < 0.5;
+  const pool = isLinear ? linearExamples : nonlinearExamples;
+  const eqn = pool[randomInt(0, pool.length - 1)]!;
+  const answer = isLinear ? 'linear' : 'nonlinear';
+  return g7Wrap(difficulty, 'g8_classify_equation_type', 'M8.F.2.3', 'Classifying Linear vs Nonlinear', {
+    question: `Classify the equation as linear or nonlinear: ${eqn}\n\nEnter exactly "linear" or "nonlinear".`,
+    answer,
+    solution_steps: [
+      isLinear
+        ? `The equation only contains x and y raised to the first power, so it is linear.`
+        : `The equation contains x or y raised to a power other than 1 (or has variables in a denominator / exponent / root), so it is nonlinear.`,
+      `Answer: ${answer}`,
+    ],
+    answer_type: 'text',
+  });
+}
+
+// 10. M8.EE.3.3 — Solve 2x2 System by Substitution
+export function generate_g8_solve_system_substitution(difficulty: DifficultyLevel): GeneratedQuestion {
+  // System:  y = mx + b
+  //          y = nx + c    (n ≠ m so the system has a unique solution)
+  let m: number, n: number;
+  do {
+    m = randomNonZeroInt(-4, 4);
+    n = randomNonZeroInt(-4, 4);
+  } while (n === m);
+  // Choose integer solution
+  const x = randomInt(-5, 5);
+  const yIntercept1 = randomInt(-8, 8);
+  const y = m * x + yIntercept1;
+  // Back-solve b for equation 2 so it passes through (x, y)
+  const yIntercept2 = y - n * x;
+  const fmt = (slope: number, intercept: number): string => {
+    const slopePart = slope === 1 ? 'x' : slope === -1 ? '-x' : `${slope}x`;
+    if (intercept === 0) return `y = ${slopePart}`;
+    return `y = ${slopePart} ${intercept >= 0 ? '+' : '-'} ${Math.abs(intercept)}`;
+  };
+  return g7Wrap(difficulty, 'g8_solve_system_substitution', 'M8.EE.3.3', 'Solving Systems by Substitution', {
+    question: `Solve the system by substitution:\n${fmt(m, yIntercept1)}\n${fmt(n, yIntercept2)}\n\nEnter the solution as an ordered pair (x, y).`,
+    answer: `(${x}, ${y})`,
+    solution_steps: [
+      `Both equations are solved for y. Set them equal: ${m}x ${yIntercept1 >= 0 ? '+' : '-'} ${Math.abs(yIntercept1)} = ${n}x ${yIntercept2 >= 0 ? '+' : '-'} ${Math.abs(yIntercept2)}`,
+      `Combine x-terms: ${m - n}x = ${yIntercept2 - yIntercept1}`,
+      `Divide: x = ${x}`,
+      `Substitute back: y = ${m}(${x}) ${yIntercept1 >= 0 ? '+' : '-'} ${Math.abs(yIntercept1)} = ${y}`,
+      `Solution: (${x}, ${y})`,
+    ],
+    answer_type: 'ordered_pair',
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BATCH 3: Functions & Geometry (G8)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// 11. M8.EE.3.4 — Solve 2x2 System by Elimination
+export function generate_g8_solve_system_elimination(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Standard form: a1·x + b1·y = c1, a2·x + b2·y = c2
+  // Force unique solution: determinant a1*b2 - a2*b1 ≠ 0.
+  let a1: number, b1: number, a2: number, b2: number;
+  let det = 0;
+  for (let tries = 0; tries < 10; tries++) {
+    a1 = randomNonZeroInt(1, 5);
+    b1 = randomNonZeroInt(1, 5);
+    a2 = randomNonZeroInt(-5, 5);
+    b2 = randomNonZeroInt(-5, 5);
+    det = a1 * b2 - a2 * b1;
+    if (det !== 0) break;
+  }
+  a1 = a1!; b1 = b1!; a2 = a2!; b2 = b2!;
+  // Integer solution for cleanliness
+  const x = randomInt(-5, 5);
+  const y = randomInt(-5, 5);
+  const c1 = a1 * x + b1 * y;
+  const c2 = a2 * x + b2 * y;
+  // Multiplier to eliminate x: scale eq2 by a1, scale eq1 by a2, subtract.
+  const eq = (a: number, b: number, c: number): string => {
+    const aPart = a === 1 ? 'x' : a === -1 ? '-x' : `${a}x`;
+    const bPart = b === 1 ? 'y' : b === -1 ? '-y' : `${b}y`;
+    const sign = b >= 0 ? '+' : '-';
+    return `${aPart} ${sign} ${Math.abs(b)}y = ${c}`.replace(`${Math.abs(b)}y`, b === 1 || b === -1 ? 'y' : `${Math.abs(b)}y`);
+  };
+  return g7Wrap(difficulty, 'g8_solve_system_elimination', 'M8.EE.3.4', 'Solving Systems by Elimination', {
+    question: `Solve the system by elimination:\n${eq(a1, b1, c1)}\n${eq(a2, b2, c2)}\n\nEnter the solution as an ordered pair (x, y).`,
+    answer: `(${x}, ${y})`,
+    solution_steps: [
+      `Multiply equation 1 by ${a2} and equation 2 by ${a1} so the x-coefficients match.`,
+      `Subtract to eliminate x and solve for y: y = ${y}`,
+      `Substitute y = ${y} into either equation to find x = ${x}`,
+      `Solution: (${x}, ${y})`,
+    ],
+    answer_type: 'ordered_pair',
+  });
+}
+
+// 12. M8.F.3.2 — Construct Linear Function from a Table
+export function generate_g8_construct_linear_function(difficulty: DifficultyLevel): GeneratedQuestion {
+  const m = randomNonZeroInt(-5, 5);
+  const b = randomInt(-10, 10);
+  const xs = [0, 1, 2, 3];
+  const ys = xs.map((x) => m * x + b);
+  const tableLines = xs.map((x, i) => `  x=${x}, y=${ys[i]}`).join('\n');
+  const slopePart = m === 1 ? 'x' : m === -1 ? '-x' : `${m}x`;
+  const answer = b === 0
+    ? `y = ${slopePart}`
+    : `y = ${slopePart} ${b >= 0 ? '+' : '-'} ${Math.abs(b)}`;
+  return g7Wrap(difficulty, 'g8_construct_linear_function', 'M8.F.3.2', 'Constructing a Linear Function from a Table', {
+    question: `The table below shows a linear relationship. Write the equation in slope-intercept form y = mx + b.\n\n${tableLines}`,
+    answer,
+    solution_steps: [
+      `Slope: (${ys[1]} − ${ys[0]}) / (1 − 0) = ${m}`,
+      `y-intercept (at x = 0): ${ys[0]}`,
+      `Equation: ${answer}`,
+    ],
+    answer_type: 'equation',
+  });
+}
+
+// 13. M8.GEO.TRANS.3.2 — Apply Dilation to a Point
+export function generate_g8_coordinate_dilation(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Choose a scale factor that keeps integer coordinates: integers 2,3,4 or
+  // 1/2 with even original coords.
+  const useFraction = difficulty >= 2 && Math.random() < 0.4;
+  let k: number;
+  let x: number, y: number;
+  if (useFraction) {
+    k = 0.5;
+    x = randomNonZeroInt(-5, 5) * 2;
+    y = randomNonZeroInt(-5, 5) * 2;
+  } else {
+    k = [2, 3, 4][randomInt(0, 2)]!;
+    x = randomNonZeroInt(-6, 6);
+    y = randomNonZeroInt(-6, 6);
+  }
+  const newX = k * x;
+  const newY = k * y;
+  const kDisplay = k === 0.5 ? '1/2' : String(k);
+  return g7Wrap(difficulty, 'g8_coordinate_dilation', 'M8.GEO.TRANS.3.2', 'Dilation about the Origin', {
+    question: `The point (${x}, ${y}) is dilated about the origin with scale factor ${kDisplay}. What are the coordinates of its image? Enter as (x, y).`,
+    answer: `(${newX}, ${newY})`,
+    solution_steps: [
+      `Dilation about the origin maps (x, y) → (kx, ky).`,
+      `New x = ${kDisplay} × ${x} = ${newX}`,
+      `New y = ${kDisplay} × ${y} = ${newY}`,
+      `Image: (${newX}, ${newY})`,
+    ],
+    answer_type: 'ordered_pair',
+  });
+}
+
+// 14. M8.GEO.TRANS.5.2 — Similar Figures: Find a Missing Side
+export function generate_g8_similar_figures_solve(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Two similar triangles; given 3 sides plus 1 side on the bigger, find the
+  // fourth. Use a clean scale factor.
+  const scaleFactors = [2, 3, 1.5, 2.5, 4];
+  const k = scaleFactors[randomInt(0, scaleFactors.length - 1)]!;
+  const smallA = randomInt(3, 8);
+  const smallB = randomInt(4, 10);
+  const smallC = randomInt(5, 12);
+  const bigA = +(smallA * k).toFixed(2);
+  const bigBKnown = +(smallB * k).toFixed(2);
+  // missing side: bigC
+  const bigC = +(smallC * k).toFixed(2);
+  return g7Wrap(difficulty, 'g8_similar_figures_solve', 'M8.GEO.TRANS.5.2', 'Similar Figures — Missing Side', {
+    question: `Triangle ABC is similar to triangle DEF. AB = ${smallA}, BC = ${smallB}, AC = ${smallC}. DE = ${bigA} and EF = ${bigBKnown}. Find DF.`,
+    answer: String(bigC),
+    solution_steps: [
+      `Set up the ratio of corresponding sides: DE/AB = ${bigA}/${smallA} = ${k}`,
+      `Verify: EF/BC = ${bigBKnown}/${smallB} = ${k} ✓`,
+      `DF/AC = ${k}, so DF = ${k} × ${smallC} = ${bigC}`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// 15. M8.GEO.TRANS.6.2 — Triangle Angle Sum
+export function generate_g8_triangle_angle_sum(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Two angles given as integers; find the third.
+  const a = randomInt(20, 100);
+  const b = randomInt(20, Math.min(140, 175 - a));
+  const c = 180 - a - b;
+  if (c < 5) return generate_g8_triangle_angle_sum(difficulty);
+  return g7Wrap(difficulty, 'g8_triangle_angle_sum', 'M8.GEO.TRANS.6.2', 'Triangle Angle Sum', {
+    question: `Two angles of a triangle measure ${a}° and ${b}°. What is the measure of the third angle?`,
+    answer: String(c),
+    solution_steps: [
+      `The angles of a triangle sum to 180°.`,
+      `Third angle = 180° − ${a}° − ${b}° = ${c}°`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BATCH 4: Pythagorean Theorem (G8)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// 16. M8.GEO.PV.1.2 — Pythagorean: Find Missing Side
+export function generate_g8_pythagorean_missing_side(difficulty: DifficultyLevel): GeneratedQuestion {
+  const triples: Array<[number, number, number]> = [
+    [3, 4, 5], [5, 12, 13], [6, 8, 10], [8, 15, 17], [7, 24, 25], [9, 12, 15], [9, 40, 41],
+  ];
+  const [a, b, c] = triples[randomInt(0, triples.length - 1)]!;
+  const findHypotenuse = Math.random() < 0.5;
+  if (findHypotenuse) {
+    return g7Wrap(difficulty, 'g8_pythagorean_missing_side', 'M8.GEO.PV.1.2', 'Pythagorean Theorem — Find Missing Side', {
+      question: `A right triangle has legs of length ${a} and ${b}. Find the length of the hypotenuse.`,
+      answer: String(c),
+      solution_steps: [
+        `Pythagorean theorem: a² + b² = c²`,
+        `${a}² + ${b}² = ${a * a} + ${b * b} = ${a * a + b * b}`,
+        `c = √${a * a + b * b} = ${c}`,
+      ],
+      answer_type: 'decimal',
+    });
+  }
+  // find a leg given the other leg and hypotenuse
+  const missingIsA = Math.random() < 0.5;
+  const knownLeg = missingIsA ? b : a;
+  const missing = missingIsA ? a : b;
+  return g7Wrap(difficulty, 'g8_pythagorean_missing_side', 'M8.GEO.PV.1.2', 'Pythagorean Theorem — Find Missing Side', {
+    question: `A right triangle has a hypotenuse of ${c} and one leg of ${knownLeg}. Find the length of the other leg.`,
+    answer: String(missing),
+    solution_steps: [
+      `Pythagorean theorem: leg² + ${knownLeg}² = ${c}²`,
+      `leg² = ${c * c} − ${knownLeg * knownLeg} = ${c * c - knownLeg * knownLeg}`,
+      `leg = √${c * c - knownLeg * knownLeg} = ${missing}`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// 17. M8.GEO.PV.1.3 — Pythagorean 2D Word Problem
+export function generate_g8_pythagorean_2d_context(difficulty: DifficultyLevel): GeneratedQuestion {
+  const triples: Array<[number, number, number]> = [[3, 4, 5], [5, 12, 13], [6, 8, 10], [8, 15, 17]];
+  const [a, b, c] = triples[randomInt(0, triples.length - 1)]!;
+  const scenarios = [
+    {
+      build: () => ({
+        question: `A ${c}-foot ladder leans against a wall. The base of the ladder is ${a} feet from the wall. How high up the wall does the ladder reach?`,
+        answer: String(b),
+        steps: [
+          `Treat the ladder as the hypotenuse, the distance from the wall as one leg, the height as the other.`,
+          `height² + ${a}² = ${c}²`,
+          `height² = ${c * c} − ${a * a} = ${b * b}`,
+          `height = ${b} feet`,
+        ],
+      }),
+    },
+    {
+      build: () => ({
+        question: `A rectangular field is ${a} meters wide and ${b} meters long. How long is the diagonal walking path across the field?`,
+        answer: String(c),
+        steps: [
+          `The diagonal is the hypotenuse of a right triangle with legs equal to the sides.`,
+          `${a}² + ${b}² = ${a * a + b * b}`,
+          `diagonal = √${a * a + b * b} = ${c} meters`,
+        ],
+      }),
+    },
+    {
+      build: () => ({
+        question: `On a baseball diamond, the bases form a square. From home plate to first base is ${a * 10} feet, and from first base to second base is ${b * 10} feet (treat them as legs of a right triangle). What is the straight-line distance from home plate to second base?`,
+        answer: String(c * 10),
+        steps: [
+          `Diagonal = √((${a * 10})² + (${b * 10})²) = √${(a * 10) ** 2 + (b * 10) ** 2} = ${c * 10} feet`,
+        ],
+      }),
+    },
+  ];
+  const sc = scenarios[randomInt(0, scenarios.length - 1)]!.build();
+  return g7Wrap(difficulty, 'g8_pythagorean_2d_context', 'M8.GEO.PV.1.3', 'Pythagorean Theorem — 2D Real-World', {
+    question: sc.question,
+    answer: sc.answer,
+    solution_steps: sc.steps,
+    answer_type: 'decimal',
+  });
+}
+
+// 18. M8.GEO.PV.1.5 — Pythagorean Converse: Is it a Right Triangle?
+export function generate_g8_pythagorean_converse(difficulty: DifficultyLevel): GeneratedQuestion {
+  const rightTriples: Array<[number, number, number]> = [[3, 4, 5], [5, 12, 13], [8, 15, 17], [6, 8, 10]];
+  const nonRightTriples: Array<[number, number, number]> = [[3, 4, 6], [5, 7, 9], [2, 3, 4], [4, 5, 7]];
+  const isRight = Math.random() < 0.5;
+  const pool = isRight ? rightTriples : nonRightTriples;
+  const [a, b, c] = pool[randomInt(0, pool.length - 1)]!;
+  const answer = isRight ? 'yes' : 'no';
+  return g7Wrap(difficulty, 'g8_pythagorean_converse', 'M8.GEO.PV.1.5', 'Pythagorean Converse', {
+    question: `Do side lengths ${a}, ${b}, and ${c} form a right triangle? Enter "yes" or "no".`,
+    answer,
+    solution_steps: [
+      `Test the largest side as the hypotenuse: does ${a}² + ${b}² = ${c}²?`,
+      `${a * a} + ${b * b} = ${a * a + b * b}, and ${c}² = ${c * c}`,
+      isRight
+        ? `${a * a + b * b} = ${c * c}, so the sides DO form a right triangle.`
+        : `${a * a + b * b} ≠ ${c * c}, so the sides do NOT form a right triangle.`,
+      `Answer: ${answer}`,
+    ],
+    answer_type: 'text',
+  });
+}
+
+// 19. M8.GEO.PV.2.1 — Distance Between Two Points on the Coordinate Plane
+export function generate_g8_coordinate_distance(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Choose points so the distance is a clean integer (use Pythagorean triples for leg deltas)
+  const triples: Array<[number, number, number]> = [[3, 4, 5], [5, 12, 13], [6, 8, 10], [8, 15, 17]];
+  const [dx, dy, d] = triples[randomInt(0, triples.length - 1)]!;
+  const x1 = randomInt(-6, 6);
+  const y1 = randomInt(-6, 6);
+  // Apply random sign to the deltas
+  const sx = Math.random() < 0.5 ? 1 : -1;
+  const sy = Math.random() < 0.5 ? 1 : -1;
+  const x2 = x1 + sx * dx;
+  const y2 = y1 + sy * dy;
+  return g7Wrap(difficulty, 'g8_coordinate_distance', 'M8.GEO.PV.2.1', 'Distance Between Two Points', {
+    question: `Find the distance between (${x1}, ${y1}) and (${x2}, ${y2}).`,
+    answer: String(d),
+    solution_steps: [
+      `Distance formula: d = √((x₂ − x₁)² + (y₂ − y₁)²)`,
+      `Δx = ${x2} − ${x1} = ${sx * dx},  Δy = ${y2} − ${y1} = ${sy * dy}`,
+      `d = √(${dx * dx} + ${dy * dy}) = √${dx * dx + dy * dy} = ${d}`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// 20. M8.GEO.PV.3.2 — Volume of a Cylinder
+export function generate_g8_volume_cylinder(difficulty: DifficultyLevel): GeneratedQuestion {
+  const PI = 3.14159;
+  const r = randomInt(2, difficulty === 1 ? 8 : 12);
+  const h = randomInt(3, difficulty === 1 ? 12 : 20);
+  const V = +(PI * r * r * h).toFixed(2);
+  return g7Wrap(difficulty, 'g8_volume_cylinder', 'M8.GEO.PV.3.2', 'Volume of a Cylinder', {
+    question: `Find the volume of a cylinder with radius ${r} cm and height ${h} cm. Use π ≈ 3.14159 and round to 2 decimal places.`,
+    answer: V.toFixed(2),
+    solution_steps: [
+      `V = π × r² × h`,
+      `V = 3.14159 × ${r}² × ${h}`,
+      `V = 3.14159 × ${r * r} × ${h}`,
+      `V ≈ ${V.toFixed(2)} cm³`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BATCH 5: Volume & Statistics (G8)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// 21. M8.GEO.PV.3.4 — Volume of a Cone
+export function generate_g8_volume_cone(difficulty: DifficultyLevel): GeneratedQuestion {
+  const PI = 3.14159;
+  const r = randomInt(2, difficulty === 1 ? 7 : 10);
+  const h = randomInt(3, difficulty === 1 ? 10 : 15);
+  const V = +(PI * r * r * h / 3).toFixed(2);
+  return g7Wrap(difficulty, 'g8_volume_cone', 'M8.GEO.PV.3.4', 'Volume of a Cone', {
+    question: `Find the volume of a cone with radius ${r} cm and height ${h} cm. Use π ≈ 3.14159 and round to 2 decimal places.`,
+    answer: V.toFixed(2),
+    solution_steps: [
+      `V = (1/3) × π × r² × h`,
+      `V = (1/3) × 3.14159 × ${r}² × ${h}`,
+      `V = (1/3) × 3.14159 × ${r * r} × ${h}`,
+      `V ≈ ${V.toFixed(2)} cm³`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// 22. M8.GEO.PV.3.6 — Volume of a Sphere
+export function generate_g8_volume_sphere(difficulty: DifficultyLevel): GeneratedQuestion {
+  const PI = 3.14159;
+  const r = randomInt(2, difficulty === 1 ? 7 : 10);
+  const V = +((4 / 3) * PI * r * r * r).toFixed(2);
+  return g7Wrap(difficulty, 'g8_volume_sphere', 'M8.GEO.PV.3.6', 'Volume of a Sphere', {
+    question: `Find the volume of a sphere with radius ${r} cm. Use π ≈ 3.14159 and round to 2 decimal places.`,
+    answer: V.toFixed(2),
+    solution_steps: [
+      `V = (4/3) × π × r³`,
+      `V = (4/3) × 3.14159 × ${r}³`,
+      `V = (4/3) × 3.14159 × ${r * r * r}`,
+      `V ≈ ${V.toFixed(2)} cm³`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// 23. M8.GEO.PV.4.1 — Real-World Volume Problem
+export function generate_g8_volume_3d_word_problem(difficulty: DifficultyLevel): GeneratedQuestion {
+  const PI = 3.14159;
+  const shape = (['cylinder', 'cone', 'sphere'] as const)[randomInt(0, 2)]!;
+  if (shape === 'cylinder') {
+    const r = randomInt(2, 6);
+    const h = randomInt(5, 15);
+    const V = +(PI * r * r * h).toFixed(2);
+    return g7Wrap(difficulty, 'g8_volume_3d_word_problem', 'M8.GEO.PV.4.1', '3D Volume — Real-World', {
+      question: `A water tank is shaped like a cylinder with radius ${r} m and height ${h} m. How many cubic meters of water can it hold? Use π ≈ 3.14159 and round to 2 decimal places.`,
+      answer: V.toFixed(2),
+      solution_steps: [
+        `Cylinder volume: V = πr²h`,
+        `V = 3.14159 × ${r * r} × ${h}`,
+        `V ≈ ${V.toFixed(2)} m³`,
+      ],
+      answer_type: 'decimal',
+    });
+  }
+  if (shape === 'cone') {
+    const r = randomInt(2, 5);
+    const h = randomInt(4, 12);
+    const V = +(PI * r * r * h / 3).toFixed(2);
+    return g7Wrap(difficulty, 'g8_volume_3d_word_problem', 'M8.GEO.PV.4.1', '3D Volume — Real-World', {
+      question: `An ice-cream cone has radius ${r} cm and height ${h} cm. How much ice cream (in cm³) can it hold when filled level to the top? Use π ≈ 3.14159 and round to 2 decimal places.`,
+      answer: V.toFixed(2),
+      solution_steps: [
+        `Cone volume: V = (1/3)πr²h`,
+        `V = (1/3) × 3.14159 × ${r * r} × ${h}`,
+        `V ≈ ${V.toFixed(2)} cm³`,
+      ],
+      answer_type: 'decimal',
+    });
+  }
+  // sphere — basketball
+  const r = randomInt(10, 16);
+  const V = +((4 / 3) * PI * r * r * r).toFixed(2);
+  return g7Wrap(difficulty, 'g8_volume_3d_word_problem', 'M8.GEO.PV.4.1', '3D Volume — Real-World', {
+    question: `A basketball is approximately spherical with radius ${r} cm. What is its volume (in cm³)? Use π ≈ 3.14159 and round to 2 decimal places.`,
+    answer: V.toFixed(2),
+    solution_steps: [
+      `Sphere volume: V = (4/3)πr³`,
+      `V = (4/3) × 3.14159 × ${r * r * r}`,
+      `V ≈ ${V.toFixed(2)} cm³`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// 24. M8.SP.3.2 — Relative Frequency from a Two-Way Table
+export function generate_g8_relative_frequency_table(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Build a 2×2 table: e.g., rows = {plays sport, doesn't}, cols = {grade 7, 8}
+  const a = randomInt(8, 30);
+  const b = randomInt(8, 30);
+  const c = randomInt(8, 30);
+  const d = randomInt(8, 30);
+  const total = a + b + c + d;
+  const variants: Array<{
+    desc: string;
+    favorable: number;
+    denominator: number;
+    descNum: string;
+    descDen: string;
+  }> = [
+    { desc: 'a student is in Grade 7',
+      favorable: a + c,                 // column 1 total
+      denominator: total,
+      descNum: 'Grade 7 students',
+      descDen: 'total students',
+    },
+    { desc: 'a student plays a sport',
+      favorable: a + b,                 // row 1 total
+      denominator: total,
+      descNum: 'sport-playing students',
+      descDen: 'total students',
+    },
+    { desc: 'a Grade 7 student plays a sport',
+      favorable: a,
+      denominator: a + c,
+      descNum: 'Grade 7 students who play a sport',
+      descDen: 'Grade 7 students',
+    },
+    { desc: 'a sport-playing student is in Grade 8',
+      favorable: b,
+      denominator: a + b,
+      descNum: 'sport-playing Grade 8 students',
+      descDen: 'sport-playing students',
+    },
+  ];
+  const v = variants[randomInt(0, variants.length - 1)]!;
+  const value = +(v.favorable / v.denominator).toFixed(2);
+  const table =
+    `                Grade 7  Grade 8\n` +
+    `Plays sport     ${String(a).padStart(7)}  ${String(b).padStart(7)}\n` +
+    `No sport        ${String(c).padStart(7)}  ${String(d).padStart(7)}`;
+  return g7Wrap(difficulty, 'g8_relative_frequency_table', 'M8.SP.3.2', 'Relative Frequency from Two-Way Table', {
+    question: `Use the two-way table to find the relative frequency that ${v.desc}. Round your decimal answer to 2 decimal places.\n\n${table}`,
+    answer: value.toFixed(2),
+    solution_steps: [
+      `Identify the numerator (${v.descNum}): ${v.favorable}`,
+      `Identify the denominator (${v.descDen}): ${v.denominator}`,
+      `Relative frequency = ${v.favorable} / ${v.denominator} ≈ ${value.toFixed(2)}`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// 25. M8.GEO.PV.1.4 — Pythagorean 3D (space diagonal of a box)
+export function generate_g8_pythagorean_3d_context(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Pick dimensions so the space diagonal is an integer.
+  // 3D space diagonal: d = √(l² + w² + h²).
+  // Examples with integer d: (1,2,2) → 3, (2,3,6) → 7, (4,4,7) → 9, (3,4,12) → 13, (2,3,6) → 7
+  const triples: Array<[number, number, number, number]> = [
+    [1, 2, 2, 3],
+    [2, 3, 6, 7],
+    [4, 4, 7, 9],
+    [3, 4, 12, 13],
+    [6, 6, 7, 11],
+    [4, 5, 20, 21],
+  ];
+  const [l, w, h, d] = triples[randomInt(0, triples.length - 1)]!;
+  return g7Wrap(difficulty, 'g8_pythagorean_3d_context', 'M8.GEO.PV.1.4', 'Pythagorean Theorem in 3D', {
+    question: `A rectangular box has length ${l} cm, width ${w} cm, and height ${h} cm. Find the length of the space diagonal of the box (corner to opposite corner).`,
+    answer: String(d),
+    solution_steps: [
+      `Apply the 3D Pythagorean theorem: d² = l² + w² + h²`,
+      `d² = ${l * l} + ${w * w} + ${h * h} = ${l * l + w * w + h * h}`,
+      `d = √${l * l + w * w + h * h} = ${d} cm`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// =============================================================================
 // GENERATOR REGISTRY - ALL 54 GENERATORS
 // =============================================================================
 
@@ -2867,6 +3693,38 @@ export const GENERATORS: Record<string, (difficulty: DifficultyLevel) => Generat
   g7_theoretical_probability:     generate_g7_theoretical_probability,
   g7_experimental_probability:    generate_g7_experimental_probability,
   g7_compound_probability:        generate_g7_compound_probability,
+
+  // ─── NC GRADE 8 (Contenders division) ──────────────────────────────────────
+  // BATCH 1: Real Number System (5)
+  g8_eval_roots:                  generate_g8_eval_roots,
+  g8_solve_square_eq:             generate_g8_solve_square_eq,
+  g8_solve_cube_eq:               generate_g8_solve_cube_eq,
+  g8_compare_irrationals:         generate_g8_compare_irrationals,
+  g8_simplify_exponents:          generate_g8_simplify_exponents,
+  // BATCH 2: Expressions & Equations (5)
+  g8_solve_linear_multistep:      generate_g8_solve_linear_multistep,
+  g8_solve_vars_both_sides:       generate_g8_solve_vars_both_sides,
+  g8_evaluate_function_notation:  generate_g8_evaluate_function_notation,
+  g8_classify_equation_type:      generate_g8_classify_equation_type,
+  g8_solve_system_substitution:   generate_g8_solve_system_substitution,
+  // BATCH 3: Functions & Geometry (5)
+  g8_solve_system_elimination:    generate_g8_solve_system_elimination,
+  g8_construct_linear_function:   generate_g8_construct_linear_function,
+  g8_coordinate_dilation:         generate_g8_coordinate_dilation,
+  g8_similar_figures_solve:       generate_g8_similar_figures_solve,
+  g8_triangle_angle_sum:          generate_g8_triangle_angle_sum,
+  // BATCH 4: Pythagorean Theorem (5)
+  g8_pythagorean_missing_side:    generate_g8_pythagorean_missing_side,
+  g8_pythagorean_2d_context:      generate_g8_pythagorean_2d_context,
+  g8_pythagorean_converse:        generate_g8_pythagorean_converse,
+  g8_coordinate_distance:         generate_g8_coordinate_distance,
+  g8_volume_cylinder:             generate_g8_volume_cylinder,
+  // BATCH 5: Volume & Statistics (5)
+  g8_volume_cone:                 generate_g8_volume_cone,
+  g8_volume_sphere:               generate_g8_volume_sphere,
+  g8_volume_3d_word_problem:      generate_g8_volume_3d_word_problem,
+  g8_relative_frequency_table:    generate_g8_relative_frequency_table,
+  g8_pythagorean_3d_context:      generate_g8_pythagorean_3d_context,
 };
 
 // Helper to get all generator types
