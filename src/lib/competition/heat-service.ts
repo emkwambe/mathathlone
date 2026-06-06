@@ -485,6 +485,25 @@ export async function startHeat(
  * The scoring service updates heat_participations and heat_awards.
  */
 export async function endHeat(supabase: SupabaseClient, heatId: string): Promise<void> {
+  // Pre-flight: any participant still in 'queued' (joined but never started
+  // a question) gets advanced to 'finished' with zero scores. Without this,
+  // the scoring service leaves them in 'queued' forever and the leaderboard
+  // shows phantom participants who can't progress.
+  await supabase
+    .from('heat_participations')
+    .update({
+      status: 'finished',
+      finished_at: new Date().toISOString(),
+      questions_attempted: 0,
+      questions_correct: 0,
+      cta_score: 0,
+      content_score: 0,
+      time_score: 0,
+      accuracy_score: 0,
+    })
+    .eq('heat_id', heatId)
+    .eq('status', 'queued');
+
   // Phase 1: calculating
   const { error: calcError } = await supabase
     .from('heats')

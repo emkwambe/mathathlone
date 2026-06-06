@@ -295,6 +295,11 @@ export function useHeatParticipants(heatId: string | null | undefined): {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const channelRef = useRef<RealtimeChannel | null>(null);
+  // FIX 2 guard: ensure THIS hook instance only attempts auto-end once. The
+  // DB-side endHeat() is idempotent enough for MVP — its first call flips
+  // heats.status to 'calculating' so any other client's subsequent
+  // pre-check below will short-circuit.
+  const autoEndTriggeredRef = useRef<boolean>(false);
 
   useEffect(() => {
     if (!heatId) {
@@ -304,10 +309,41 @@ export function useHeatParticipants(heatId: string | null | undefined): {
     let cancelled = false;
     const supabase = createClient();
 
+    const maybeAutoEndHeat = async (list: HeatParticipationWithDisplay[]): Promise<void> => {
+      // FIX 2 — auto-end heat when all participants finish early.
+      // Only run if (a) we haven't already fired in this hook instance,
+      // (b) there's at least one participant, (c) every participation is
+      // in 'finished' status, and (d) the heat itself is still 'active'.
+      if (autoEndTriggeredRef.current) return;
+      if (list.length === 0) return;
+      if (!list.every((p) => p.status === 'finished')) return;
+
+      const { data: heatRow } = await supabase
+        .from('heats')
+        .select('status')
+        .eq('id', heatId)
+        .maybeSingle();
+      if (!heatRow || (heatRow as { status: string }).status !== 'active') return;
+
+      autoEndTriggeredRef.current = true;
+      try {
+        // Lazy import avoids a static circular dependency between
+        // heat-service ↔ heat-realtime (heat-service already imports
+        // scoring-service which imports realtime helpers).
+        const { endHeat } = await import('./heat-service');
+        await endHeat(supabase, heatId);
+      } catch (err) {
+        console.warn('[useHeatParticipants] auto endHeat failed:', err);
+        autoEndTriggeredRef.current = false;       // allow retry on next event
+      }
+    };
+
     const refetch = async () => {
       try {
         const list = await listHeatParticipants(supabase, heatId);
-        if (!cancelled) setParticipants(list);
+        if (cancelled) return;
+        setParticipants(list);
+        void maybeAutoEndHeat(list);
       } catch (err: any) {
         if (!cancelled) setError(err?.message ?? String(err));
       }

@@ -273,6 +273,28 @@ export default function HeatLobbyPage() {
             return;
           }
 
+          // FIX 3 — calculating-timeout recovery. If a Heat got stuck in
+          // 'calculating' (scoring-service crashed, network blip, etc.) and
+          // hasn't been touched in 5+ minutes, force it to 'complete' so
+          // the results page can render. Five minutes is well past any
+          // legitimate calculation window — calculateHeatResults usually
+          // finishes in <10s for normal heats.
+          if (heatRow.status === 'calculating') {
+            const updatedAtRaw = (heatRow as { updated_at?: string | null }).updated_at;
+            const updatedAt = updatedAtRaw ? new Date(updatedAtRaw).getTime() : Date.now();
+            if (Date.now() - updatedAt > 5 * 60 * 1000) {
+              console.warn('[HeatLobby] calculating timeout — forcing to complete', {
+                code,
+                updated_at: updatedAtRaw,
+              });
+              await supabase
+                .from('heats')
+                .update({ status: 'complete' })
+                .eq('id', heatRow.id);
+              heatRow.status = 'complete';
+            }
+          }
+
           // BUG 5: prevent students from auto-joining an active/calculating/
           // complete Heat they weren't already part of. We don't have the
           // participants list yet at this point, so the dedicated lock-out
