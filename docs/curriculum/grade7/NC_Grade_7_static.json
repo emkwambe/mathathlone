@@ -1,0 +1,344 @@
+{
+  "course": "NC 7th Grade Math",
+  "division": "Challengers",
+  "static_pool_id": "nc_grade_7_static",
+  "isolation_rule": "No static questions from this pool shared with other course pools.",
+  "total_static_items": 52,
+  "questions": [
+    {
+      "id": "g7_s_ns_1_1_a",
+      "concept_id": "M7.NS.1.1",
+      "stem": "On a number line, adding a negative number to a positive number always results in a movement to the ___ from the starting position.",
+      "options": ["A. right", "B. left", "C. origin", "D. same position"],
+      "correct": "B",
+      "explanation": "Adding a negative number moves left on the number line (toward lesser values).",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "g7_s_ns_1_1_b",
+      "concept_id": "M7.NS.1.1",
+      "stem": "Which expression is best modeled by starting at −3 on a number line and moving 5 units to the right?",
+      "options": ["A. −3 − 5", "B. −3 + (−5)", "C. −3 + 5", "D. 3 + 5"],
+      "correct": "C",
+      "explanation": "Moving right on a number line means adding a positive number.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "g7_s_ns_1_1_c",
+      "concept_id": "M7.NS.1.1",
+      "stem": "Which statement about p + q is ALWAYS true when p > 0 and q < 0?",
+      "options": [
+        "A. p + q > 0",
+        "B. p + q < 0",
+        "C. p + q = 0",
+        "D. The sign of p + q depends on the absolute values of p and q"
+      ],
+      "correct": "D",
+      "explanation": "The sign depends on which value has a larger absolute value.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "g7_s_ns_1_3_a",
+      "concept_id": "M7.NS.1.3",
+      "stem": "Which expression is equivalent to p − q?",
+      "options": ["A. p + q", "B. p + (−q)", "C. −p + q", "D. −p − q"],
+      "correct": "B",
+      "explanation": "Subtraction is defined as adding the additive inverse: p − q = p + (−q).",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "g7_s_ns_1_3_b",
+      "concept_id": "M7.NS.1.3",
+      "stem": "A diver is at −12 feet. She ascends to −5 feet. Which expression represents the change in her depth?",
+      "options": ["A. −12 − (−5)", "B. −5 − (−12)", "C. −5 + (−12)", "D. −12 + 5"],
+      "correct": "B",
+      "explanation": "Change = final − initial = −5 − (−12) = −5 + 12 = 7 feet upward.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "real_world"},
+      "dok": 2
+    },
+    {
+      "id": "g7_s_ns_2_1_a",
+      "concept_id": "M7.NS.2.1",
+      "stem": "Which rule correctly describes the sign of a product?",
+      "options": [
+        "A. positive × negative = positive",
+        "B. negative × negative = negative",
+        "C. negative × negative = positive",
+        "D. positive × positive = negative"
+      ],
+      "correct": "C",
+      "explanation": "Two negatives multiplied yield a positive product.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "g7_s_ns_2_3_a",
+      "concept_id": "M7.NS.2.3",
+      "stem": "Which of the following expressions is UNDEFINED?",
+      "options": ["A. −8 ÷ 4", "B. 0 ÷ (−5)", "C. −3 ÷ 0", "D. −1 ÷ (−1)"],
+      "correct": "C",
+      "explanation": "Division by zero is undefined.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "g7_s_ns_2_3_b",
+      "concept_id": "M7.NS.2.3",
+      "stem": "Which statement explains why −15 ÷ 3 = −5?",
+      "options": [
+        "A. Because −5 × (−3) = 15",
+        "B. Because −5 × 3 = −15",
+        "C. Because 5 × 3 = 15",
+        "D. Because −15 + 3 = −12"
+      ],
+      "correct": "B",
+      "explanation": "Division is the inverse of multiplication; −5 × 3 = −15 confirms the quotient.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "g7_s_rp_1_1_a",
+      "concept_id": "M7.RP.1.1",
+      "stem": "Which table represents a proportional relationship?",
+      "options": [
+        "A. x: 1,2,3,4 | y: 3,5,7,9 (y = 2x+1)",
+        "B. x: 2,4,6,8 | y: 6,12,18,24 (y = 3x)",
+        "C. x: 1,2,3,4 | y: 1,3,6,10 (triangular numbers)",
+        "D. x: 0,1,2,3 | y: 2,4,6,8 (y = 2x+2)"
+      ],
+      "correct": "B",
+      "explanation": "Table B has a constant ratio y/x = 3 and passes through the origin when extended.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "g7_s_rp_1_1_b",
+      "concept_id": "M7.RP.1.1",
+      "stem": "A graph of a proportional relationship MUST pass through which point?",
+      "options": ["A. (1, 1)", "B. (0, 0)", "C. (1, 0)", "D. (0, 1)"],
+      "correct": "B",
+      "explanation": "Proportional relationships have the form y = kx and always pass through the origin.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "g7_s_rp_1_4_a",
+      "concept_id": "M7.RP.1.4",
+      "stem": "In a proportional relationship between hours worked (x) and dollars earned (y), the point (1, 12.50) is on the graph. What does this point mean?",
+      "options": [
+        "A. You earn $1 per hour",
+        "B. You earn $12.50 per hour",
+        "C. You work 12.50 hours total",
+        "D. You earned $12.50 in total over 1 week"
+      ],
+      "correct": "B",
+      "explanation": "The point (1, r) represents the unit rate — the value of y when x = 1.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "real_world"},
+      "dok": 2
+    },
+    {
+      "id": "g7_s_rp_1_4_b",
+      "concept_id": "M7.RP.1.4",
+      "stem": "On a proportional graph for cups of flour (y) per batch of cookies (x), what does the point (0, 0) tell you?",
+      "options": [
+        "A. You start with 0 cups and it doesn't change",
+        "B. If you make 0 batches, you need 0 cups",
+        "C. The recipe uses equal cups and batches",
+        "D. The graph has a y-intercept at the origin"
+      ],
+      "correct": "B",
+      "explanation": "(0,0) means that when x = 0 (no batches), y = 0 (no flour needed) — a property of proportional relationships.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "real_world"},
+      "dok": 2
+    },
+    {
+      "id": "g7_s_rp_4_1_a",
+      "concept_id": "M7.RP.4.1",
+      "stem": "A map uses a scale of 1 inch : 50 miles. If two cities are 3.5 inches apart on the map, what is their actual distance?",
+      "options": ["A. 53.5 miles", "B. 46.5 miles", "C. 175 miles", "D. 150 miles"],
+      "correct": "C",
+      "explanation": "3.5 × 50 = 175 miles.",
+      "three_axis": {"cognitive_demand": "application", "complexity": "high", "context": "real_world"},
+      "dok": 2
+    },
+    {
+      "id": "g7_s_rp_4_1_b",
+      "concept_id": "M7.RP.4.1",
+      "stem": "A blueprint has a scale of 1 cm : 4 m. A room on the blueprint is 3 cm × 5 cm. What is the AREA of the actual room?",
+      "options": ["A. 15 m²", "B. 60 m²", "C. 240 m²", "D. 120 m²"],
+      "correct": "C",
+      "explanation": "Actual dimensions: 12 m × 20 m = 240 m². Scale factor for area = 4² = 16; 15 × 16 = 240.",
+      "three_axis": {"cognitive_demand": "application", "complexity": "high", "context": "real_world"},
+      "dok": 3
+    },
+    {
+      "id": "g7_s_ee_2_3_a",
+      "concept_id": "M7.EE.2.3",
+      "stem": "Jamie has $120 and spends $15 per week on lunch. Which equation models how many weeks (w) until Jamie has $30 left?",
+      "options": [
+        "A. 120 + 15w = 30",
+        "B. 120 − 15w = 30",
+        "C. 15w − 120 = 30",
+        "D. 15(w − 120) = 30"
+      ],
+      "correct": "B",
+      "explanation": "Start with $120, subtract $15 each week, set equal to $30.",
+      "three_axis": {"cognitive_demand": "application", "complexity": "high", "context": "real_world"},
+      "dok": 2
+    },
+    {
+      "id": "g7_s_geo_1_2_a",
+      "concept_id": "M7.GEO.1.2",
+      "stem": "Which conditions are sufficient to draw exactly ONE unique triangle?",
+      "options": [
+        "A. Three angle measures that sum to 180°",
+        "B. Side lengths 3, 4, and 5",
+        "C. Two angles measuring 60° each",
+        "D. Three angles each measuring 45°"
+      ],
+      "correct": "B",
+      "explanation": "Three specific side lengths (SSS) determine a unique triangle. Angle conditions alone determine shape but not size.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "g7_s_geo_1_2_b",
+      "concept_id": "M7.GEO.1.2",
+      "stem": "Which condition would make it IMPOSSIBLE to draw a triangle?",
+      "options": [
+        "A. Sides 5, 7, 9",
+        "B. Angles 90°, 45°, 45°",
+        "C. Sides 2, 3, 10",
+        "D. Angles 30°, 60°, 90°"
+      ],
+      "correct": "C",
+      "explanation": "Triangle inequality: 2 + 3 = 5 < 10, so these sides cannot form a triangle.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "g7_s_geo_1_3_a",
+      "concept_id": "M7.GEO.1.3",
+      "stem": "A right rectangular prism is sliced horizontally (parallel to the base). What 2-D shape is the cross-section?",
+      "options": ["A. Triangle", "B. Circle", "C. Rectangle", "D. Trapezoid"],
+      "correct": "C",
+      "explanation": "A horizontal slice of a right rectangular prism parallel to its base produces a rectangle.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "g7_s_geo_1_3_b",
+      "concept_id": "M7.GEO.1.3",
+      "stem": "A right rectangular pyramid is sliced vertically through its apex. What 2-D shape is the cross-section?",
+      "options": ["A. Square", "B. Triangle", "C. Pentagon", "D. Trapezoid"],
+      "correct": "B",
+      "explanation": "A vertical slice through the apex of a rectangular pyramid produces a triangular cross-section.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "g7_s_geo_2_1_a",
+      "concept_id": "M7.GEO.2.1",
+      "stem": "Which formula correctly gives the area of a circle with radius r?",
+      "options": ["A. A = πd", "B. A = 2πr", "C. A = πr²", "D. A = 4πr"],
+      "correct": "C",
+      "explanation": "Area of a circle = πr².",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "g7_s_geo_2_2_a",
+      "concept_id": "M7.GEO.2.2",
+      "stem": "Which expression gives the circumference of a circle with diameter d?",
+      "options": ["A. C = πd²", "B. C = 2πr²", "C. C = πd", "D. C = πr²"],
+      "correct": "C",
+      "explanation": "Circumference = πd = 2πr.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "g7_s_sp_1_1_a",
+      "concept_id": "M7.SP.1.1",
+      "stem": "Which of the following is a STATISTICAL question?",
+      "options": [
+        "A. How tall is the Empire State Building?",
+        "B. What is 7 × 8?",
+        "C. How many hours do 7th graders sleep on school nights?",
+        "D. What is the capital of North Carolina?"
+      ],
+      "correct": "C",
+      "explanation": "A statistical question anticipates variability — different students will have different sleep amounts.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "real_world"},
+      "dok": 1
+    },
+    {
+      "id": "g7_s_sp_1_1_b",
+      "concept_id": "M7.SP.1.1",
+      "stem": "Why is 'How much does a gallon of milk cost at one specific store today?' NOT a statistical question?",
+      "options": [
+        "A. It involves money",
+        "B. It has one definite answer with no variability",
+        "C. It is too difficult to answer",
+        "D. It uses units of measurement"
+      ],
+      "correct": "B",
+      "explanation": "Statistical questions anticipate variability. A question with a single fixed answer is not statistical.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "real_world"},
+      "dok": 2
+    },
+    {
+      "id": "g7_s_sp_3_1_a",
+      "concept_id": "M7.SP.3.1",
+      "stem": "A bag has 5 red marbles and 5 blue marbles. Which word best describes the probability of drawing a red marble?",
+      "options": ["A. Impossible", "B. Unlikely", "C. Equally likely", "D. Certain"],
+      "correct": "C",
+      "explanation": "P(red) = 5/10 = 0.5, which is at the midpoint of 0 to 1 — equally likely.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "g7_s_sp_3_4_a",
+      "concept_id": "M7.SP.3.4",
+      "stem": "A coin is flipped 40 times. Heads appears 26 times. Which statement best explains the difference from the expected 20 heads?",
+      "options": [
+        "A. The coin is definitely unfair",
+        "B. The coin is definitely fair — results always vary",
+        "C. Natural variability in trials can cause results to differ from theoretical probability",
+        "D. The experiment was done incorrectly"
+      ],
+      "correct": "C",
+      "explanation": "Experimental results vary due to chance; more trials bring results closer to the theoretical probability.",
+      "three_axis": {"cognitive_demand": "reasoning", "complexity": "medium", "context": "real_world"},
+      "dok": 2
+    },
+    {
+      "id": "g7_s_sp_4_2_a",
+      "concept_id": "M7.SP.4.2",
+      "stem": "Which tool is BEST for systematically listing all outcomes when flipping a coin AND rolling a die?",
+      "options": ["A. Bar graph", "B. Circle graph", "C. Tree diagram", "D. Number line"],
+      "correct": "C",
+      "explanation": "Tree diagrams systematically show all combinations in multi-stage experiments.",
+      "three_axis": {"cognitive_demand": "reasoning", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "g7_s_sp_4_3_a",
+      "concept_id": "M7.SP.4.3",
+      "stem": "You want to simulate randomly selecting a day of the week. Which tool is BEST suited for this simulation?",
+      "options": [
+        "A. Flipping a coin",
+        "B. Rolling a standard 6-sided die",
+        "C. Using a random number generator from 1–7",
+        "D. Drawing a card from a standard 52-card deck"
+      ],
+      "correct": "C",
+      "explanation": "There are 7 days; a random number generator from 1–7 gives each day an equal probability.",
+      "three_axis": {"cognitive_demand": "reasoning", "complexity": "high", "context": "real_world"},
+      "dok": 3
+    }
+  ]
+}

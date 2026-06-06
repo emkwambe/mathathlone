@@ -1,0 +1,252 @@
+{
+  "course": "NC 8th Grade Math",
+  "division": "Contenders",
+  "visual_pool_id": "nc_grade_8_visual",
+  "total_visual_generators": 18,
+  "rendering_standard": "SVG inline, viewBox 500x400 minimum, aria-label required, answer never encoded in visual",
+  "visual_generators": [
+    {
+      "id": "g8_vis_number_line_irrational",
+      "concept_id": "M8.NS.3.1",
+      "category": "C",
+      "description": "Number line from 0 to 5 with tick marks at 0.1 intervals; target irrational shown as unlabeled point — Mathlete approximates value",
+      "svg_params": {
+        "range": [0, 5],
+        "tick_interval": 0.25,
+        "labeled_integers": true,
+        "target_point_style": "open_circle",
+        "show_value_on_line": false
+      },
+      "format_hint_rule": "Target point has NO decimal label — Mathlete enters the approximation"
+    },
+    {
+      "id": "g8_vis_number_line_compare_irrationals",
+      "concept_id": "M8.NS.3.3",
+      "category": "C",
+      "description": "Number line showing two irrational values as approximate points for visual comparison; question asks which is greater",
+      "svg_params": {
+        "range": [0, 5],
+        "point_a": "computed irrational 1",
+        "point_b": "computed irrational 2",
+        "label_style": "named (e.g., √5 and √7)",
+        "show_decimal_value": false
+      },
+      "format_hint_rule": "Labels show the radical form, not decimal — prevents answer leak"
+    },
+    {
+      "id": "g8_vis_coordinate_plane_system",
+      "concept_id": "M8.EE.3.1",
+      "category": "B",
+      "description": "Coordinate plane with two lines graphed; intersection is either a labeled point, no intersection, or coincident lines",
+      "svg_params": {
+        "grid": true,
+        "x_range": [-8, 8],
+        "y_range": [-8, 8],
+        "line_count": 2,
+        "system_type": ["one_solution", "no_solution", "infinitely_many"],
+        "intersection_dot": true,
+        "intersection_label": false
+      },
+      "format_hint_rule": "Intersection point coordinates NOT labeled — MC asks student to identify"
+    },
+    {
+      "id": "g8_vis_function_table",
+      "concept_id": "M8.F.1.2",
+      "category": "B",
+      "description": "HTML table with x and y columns (4–5 rows); may or may not represent a function",
+      "svg_params": {
+        "rows": 4,
+        "function_or_not": "randomized",
+        "repeated_x": "present when not a function"
+      },
+      "format_hint_rule": "Table shows raw values; no hint text about whether it's a function"
+    },
+    {
+      "id": "g8_vis_function_graph",
+      "concept_id": "M8.F.1.2",
+      "category": "B",
+      "description": "Coordinate plane graph showing a relation — may fail vertical line test; Mathlete classifies as function or not",
+      "svg_params": {
+        "graph_type": ["linear", "circle", "parabola", "V_shape"],
+        "vertical_line_test_fails": "sometimes",
+        "axes_labeled": true
+      },
+      "format_hint_rule": "No vertical line indicator drawn on the visual"
+    },
+    {
+      "id": "g8_vis_linear_nonlinear_graph",
+      "concept_id": "M8.F.2.1",
+      "category": "B",
+      "description": "Graph showing either a straight line or a curve; Mathlete identifies as linear or nonlinear",
+      "svg_params": {
+        "graph_types": ["straight_line", "parabola", "exponential_curve", "absolute_value"],
+        "axes_labeled": true,
+        "grid": true
+      },
+      "format_hint_rule": "No text annotation on graph identifying its type"
+    },
+    {
+      "id": "g8_vis_construct_function_table",
+      "concept_id": "M8.F.3.2",
+      "category": "B",
+      "description": "Table of (x, y) pairs from which Mathlete writes the linear equation; displayed as clean HTML table",
+      "svg_params": {
+        "rows": 4,
+        "include_zero": true,
+        "slope_type": ["positive_integer", "negative_integer", "unit_fraction"]
+      },
+      "format_hint_rule": "Answer column in table NOT labeled with slope or intercept values"
+    },
+    {
+      "id": "g8_vis_translation_plane",
+      "concept_id": "M8.GEO.TRANS.1.2",
+      "category": "A",
+      "description": "Coordinate plane showing pre-image triangle; Mathlete applies translation (a, b) and identifies new vertices",
+      "svg_params": {
+        "pre_image_vertices": "randomized_integer_coords",
+        "translation_vector": "randomized (a, b) where a,b ∈ [-6, 6]",
+        "show_pre_image": true,
+        "show_image": false,
+        "grid": true,
+        "quadrant": "all_four"
+      },
+      "format_hint_rule": "Image NOT drawn — Mathlete computes and enters coordinates"
+    },
+    {
+      "id": "g8_vis_reflection_plane",
+      "concept_id": "M8.GEO.TRANS.1.3",
+      "category": "A",
+      "description": "Coordinate plane showing pre-image with a labeled line of reflection (x-axis, y-axis, or y=x); Mathlete finds reflected image",
+      "svg_params": {
+        "pre_image": "triangle_random_coords",
+        "line_of_reflection": ["x_axis", "y_axis", "y=x"],
+        "show_image": false,
+        "dashed_line_of_reflection": true
+      },
+      "format_hint_rule": "Dashed line labeled by equation; image NOT shown"
+    },
+    {
+      "id": "g8_vis_rotation_plane",
+      "concept_id": "M8.GEO.TRANS.1.4",
+      "category": "A",
+      "description": "Coordinate plane showing pre-image triangle; rotation angle and direction labeled; Mathlete computes new coordinates",
+      "svg_params": {
+        "rotation_origin": "origin",
+        "degrees": [90, 180, 270],
+        "direction": ["clockwise", "counterclockwise"],
+        "show_image": false,
+        "rotation_indicator_arc": true
+      },
+      "format_hint_rule": "Arc/indicator shows rotation direction; image NOT drawn"
+    },
+    {
+      "id": "g8_vis_dilation_plane",
+      "concept_id": "M8.GEO.TRANS.3.2",
+      "category": "A",
+      "description": "Coordinate plane with pre-image triangle and center at origin; scale factor labeled; Mathlete finds image coordinates",
+      "svg_params": {
+        "center": "origin",
+        "scale_factor": [0.5, 2, 3, 0.25],
+        "show_image": false,
+        "center_marker": "filled_dot_at_origin"
+      },
+      "format_hint_rule": "Scale factor labeled on diagram; image NOT drawn"
+    },
+    {
+      "id": "g8_vis_similar_figures",
+      "concept_id": "M8.GEO.TRANS.5.2",
+      "category": "A",
+      "description": "Two similar triangles or quadrilaterals side-by-side; some sides labeled, one side as '?'; Mathlete sets up proportion",
+      "svg_params": {
+        "shape_type": ["triangle", "rectangle"],
+        "known_sides_count": 3,
+        "missing_side": 1,
+        "scale_factor_labels": false
+      },
+      "format_hint_rule": "Missing side shown as '?' — no proportion hint visible"
+    },
+    {
+      "id": "g8_vis_triangle_angle_labeled",
+      "concept_id": "M8.GEO.TRANS.6.2",
+      "category": "A",
+      "description": "Labeled triangle with two angle values (numeric or algebraic expression) and one angle as '?'; may include exterior angle",
+      "svg_params": {
+        "angle1": "numeric or expression ax+b",
+        "angle2": "numeric or expression cx+d",
+        "angle3": "?",
+        "include_exterior_angle": "sometimes",
+        "arc_indicators": true
+      },
+      "format_hint_rule": "Total 180° not labeled; Mathlete applies theorem"
+    },
+    {
+      "id": "g8_vis_right_triangle_labeled",
+      "concept_id": "M8.GEO.PV.1.2",
+      "category": "A",
+      "description": "Right triangle with legs and hypotenuse labeled; one side as '?'; right angle marked with square symbol",
+      "svg_params": {
+        "right_angle_marker": true,
+        "leg_a": "numeric",
+        "leg_b": "numeric or ?",
+        "hypotenuse": "numeric or ?",
+        "orientation": "randomized"
+      },
+      "format_hint_rule": "Only ONE side is '?'; formula NOT shown on diagram"
+    },
+    {
+      "id": "g8_vis_right_triangle_2d_context",
+      "concept_id": "M8.GEO.PV.1.3",
+      "category": "A",
+      "description": "Contextual diagram — e.g., a ladder leaning against a wall with ground, wall, and ladder labeled; right angle at base",
+      "svg_params": {
+        "scenarios": ["ladder_wall", "diagonal_field", "baseball_diamond"],
+        "labeled_known_sides": 2,
+        "unknown_side": "?",
+        "context_illustration": true
+      },
+      "format_hint_rule": "Scenario labels are descriptive (e.g., 'wall height'); no formula shown"
+    },
+    {
+      "id": "g8_vis_cylinder_labeled",
+      "concept_id": "M8.GEO.PV.3.2",
+      "category": "A",
+      "description": "3D cylinder with radius and height arrows labeled; Mathlete applies V = πr²h",
+      "svg_params": {
+        "view": "isometric",
+        "radius_label": "r = [value]",
+        "height_label": "h = [value]",
+        "formula_on_diagram": false
+      },
+      "format_hint_rule": "Dimension values shown; formula NOT on diagram"
+    },
+    {
+      "id": "g8_vis_cone_labeled",
+      "concept_id": "M8.GEO.PV.3.4",
+      "category": "A",
+      "description": "3D cone with radius and height labeled; Mathlete applies V = (1/3)πr²h",
+      "svg_params": {
+        "view": "cross_section_outline",
+        "radius_label": true,
+        "height_label": true,
+        "slant_height": "unlabeled unless asked"
+      },
+      "format_hint_rule": "Values shown; fraction coefficient NOT indicated on diagram"
+    },
+    {
+      "id": "g8_vis_scatter_plot",
+      "concept_id": "M8.SP.1.1",
+      "category": "B",
+      "description": "Scatter plot on labeled coordinate axes with 8–12 data points; may include a drawn line of best fit",
+      "svg_params": {
+        "x_axis_label": "context-specific (e.g., Hours Studied)",
+        "y_axis_label": "context-specific (e.g., Test Score)",
+        "num_points": [8, 10, 12],
+        "association_type": ["positive_linear", "negative_linear", "no_association"],
+        "line_of_best_fit": "present for M8.SP.2.x variants",
+        "outliers": "optional"
+      },
+      "usage": "Shared across M8.SP.1.1, M8.SP.1.2, M8.SP.2.1, M8.SP.2.2, M8.SP.2.3 with varying overlays",
+      "format_hint_rule": "Equation of line NOT shown on graph for M8.SP.2.3 questions — prevents answer leak"
+    }
+  ]
+}

@@ -1,0 +1,2722 @@
+{
+  "pool_id": "ap_precalc",
+  "division": "Senior Varsity (SV)",
+  "version": "1.0.0",
+  "generator_count": 65,
+  "ap_exam_coverage": "Units 1-3 on AP Exam; Unit 4 not assessed",
+  "note": "All IDs are pool-isolated. No shared IDs with any other pool. AP skill codes reference College Board CED Fall 2023.",
+  "generators": [
+    {
+      "id": "APPC-GEN-001",
+      "concept_id": "Pre.1.2",
+      "name": "Average Rate of Change",
+      "ap_skill": "1.A",
+      "standard": "1.2.A",
+      "type": "avg_roc_generator",
+      "tags": {
+        "cognitive_demand": "skill",
+        "complexity": "medium",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "Find the average rate of change of f(x) = {f} on the interval [{a}, {b}].",
+        "function_types": [
+          "polynomial",
+          "rational",
+          "exponential",
+          "square_root"
+        ],
+        "a_range": [
+          -4,
+          4
+        ],
+        "b_range": [
+          1,
+          8
+        ],
+        "answer_type": "numeric",
+        "precision": 3
+      },
+      "difficulty_variants": {
+        "easy": {
+          "function_type": "linear_or_quadratic",
+          "integer_answers": true
+        },
+        "medium": {
+          "function_type": "polynomial_deg3",
+          "decimal_answers": true
+        },
+        "hard": {
+          "function_type": "rational_or_root",
+          "interpret_units": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-002",
+      "concept_id": "Pre.1.4",
+      "name": "Polynomial Zeros and Multiplicities",
+      "ap_skill": "2.B",
+      "standard": "1.4.A",
+      "type": "poly_zeros_generator",
+      "tags": {
+        "cognitive_demand": "skill",
+        "complexity": "medium",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "A polynomial has zeros at x = {z1} (mult {m1}), x = {z2} (mult {m2}), x = {z3} (mult {m3}). Which graph could represent this polynomial?",
+        "zero_pool": [
+          -4,
+          -3,
+          -2,
+          -1,
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "multiplicity_pool": [
+          1,
+          2,
+          3
+        ],
+        "degree_constraint": "m1+m2+m3 <= 5",
+        "answer_type": "multiple_choice",
+        "note": "Multiplicity 1 = crosses, 2 = touches/bounces, 3 = inflects"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "multiplicities": [
+            1,
+            1,
+            1
+          ],
+          "positive_leading": true
+        },
+        "medium": {
+          "multiplicities": [
+            1,
+            2,
+            1
+          ]
+        },
+        "hard": {
+          "multiplicities": [
+            2,
+            2,
+            1
+          ],
+          "find_degree_and_sign": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-003",
+      "concept_id": "Pre.1.5",
+      "name": "Complex Zeros \u2014 Fundamental Theorem",
+      "ap_skill": "1.B",
+      "standard": "1.5.A",
+      "type": "complex_zeros_generator",
+      "tags": {
+        "cognitive_demand": "strategic",
+        "complexity": "high",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "A degree-{n} polynomial with real coefficients has zeros {given_zeros}. List all remaining zeros.",
+        "degree_pool": [
+          3,
+          4,
+          5
+        ],
+        "given_zeros_types": [
+          "one_complex",
+          "one_real_one_complex",
+          "two_real"
+        ],
+        "answer_type": "expression",
+        "note": "Complex zeros come in conjugate pairs for real-coefficient polynomials"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "degree": 3,
+          "given": "one real zero"
+        },
+        "medium": {
+          "degree": 4,
+          "given": "one complex zero"
+        },
+        "hard": {
+          "degree": 5,
+          "given": "two real + one complex",
+          "find_factored_form": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-004",
+      "concept_id": "Pre.1.6",
+      "name": "Polynomial End Behavior",
+      "ap_skill": "3.B",
+      "standard": "1.6.A",
+      "type": "end_behavior_generator",
+      "tags": {
+        "cognitive_demand": "skill",
+        "complexity": "medium",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "Describe the end behavior of f(x) = {a}x^{n} + ... using limit notation.",
+        "degree_pool": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "leading_coeff": [
+          "positive",
+          "negative"
+        ],
+        "answer_type": "multiple_choice",
+        "notation": "as x\u2192\u221e f(x)\u2192? and as x\u2192-\u221e f(x)\u2192?"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "degree_pool": [
+            2,
+            3
+          ],
+          "from_equation": true
+        },
+        "medium": {
+          "degree_pool": [
+            4,
+            5,
+            6
+          ],
+          "from_graph": true
+        },
+        "hard": {
+          "from_factored_form": true,
+          "must_determine_degree_and_sign": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-005",
+      "concept_id": "Pre.1.7",
+      "name": "Rational Function Horizontal Asymptote",
+      "ap_skill": "2.B",
+      "standard": "1.7.A",
+      "type": "rational_ha_generator",
+      "tags": {
+        "cognitive_demand": "skill",
+        "complexity": "medium",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "Find the horizontal asymptote (or slant asymptote) of f(x) = ({num}) / ({den}).",
+        "cases": [
+          {
+            "deg_num": "<deg_den",
+            "result": "y=0"
+          },
+          {
+            "deg_num": "=deg_den",
+            "result": "y=leading_ratio"
+          },
+          {
+            "deg_num": "=deg_den+1",
+            "result": "slant_asymptote"
+          }
+        ],
+        "coeff_range": [
+          1,
+          8
+        ],
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "case": "deg_num < deg_den"
+        },
+        "medium": {
+          "case": "deg_num = deg_den"
+        },
+        "hard": {
+          "case": "slant_asymptote",
+          "perform_long_division": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-006",
+      "concept_id": "Pre.1.8",
+      "name": "Rational Function Zeros",
+      "ap_skill": "1.A",
+      "standard": "1.8.A",
+      "type": "rational_zeros_generator",
+      "tags": {
+        "cognitive_demand": "skill",
+        "complexity": "medium",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "Find all zeros of f(x) = ({num}) / ({den}). Note any values excluded from domain.",
+        "num_types": [
+          "factorable_quadratic",
+          "linear",
+          "cubic"
+        ],
+        "den_types": [
+          "factorable_quadratic",
+          "linear"
+        ],
+        "answer_type": "expression",
+        "note": "Zero only if numerator = 0 AND denominator \u2260 0"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "num_type": "linear",
+          "no_shared_factors": true
+        },
+        "medium": {
+          "num_type": "factorable_quadratic"
+        },
+        "hard": {
+          "shared_factor_creates_hole": true,
+          "must_distinguish_zero_vs_hole": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-007",
+      "concept_id": "Pre.1.9",
+      "name": "Vertical Asymptotes of Rational Functions",
+      "ap_skill": "2.A",
+      "standard": "1.9.A",
+      "type": "vertical_asymptote_generator",
+      "tags": {
+        "cognitive_demand": "skill",
+        "complexity": "medium",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "Identify all vertical asymptotes of f(x) = ({num}) / ({den}).",
+        "den_types": [
+          "linear",
+          "factorable_quadratic",
+          "unfactorable_quadratic"
+        ],
+        "num_does_not_cancel": true,
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "den_type": "linear"
+        },
+        "medium": {
+          "den_type": "factorable_quadratic",
+          "no_holes": true
+        },
+        "hard": {
+          "mixed_holes_and_VAs": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-008",
+      "concept_id": "Pre.1.10",
+      "name": "Holes in Rational Functions",
+      "ap_skill": "1.B",
+      "standard": "1.10.A",
+      "type": "hole_generator",
+      "tags": {
+        "cognitive_demand": "skill",
+        "complexity": "high",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "Find the location of the hole in f(x) = ({num}) / ({den}).",
+        "shared_factor_types": [
+          "(x-a)",
+          "(x+a)"
+        ],
+        "answer_type": "expression",
+        "answer_form": "(x_value, y_value) coordinate of hole"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "shared_factor": "(x-a)",
+          "remaining_simplified": "linear"
+        },
+        "medium": {
+          "remaining_simplified": "linear_over_linear"
+        },
+        "hard": {
+          "multiple_holes": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-009",
+      "concept_id": "Pre.1.11",
+      "name": "Equivalent Expressions via Long Division",
+      "ap_skill": "1.B",
+      "standard": "1.11.A",
+      "type": "poly_long_div_ap_generator",
+      "tags": {
+        "cognitive_demand": "skill",
+        "complexity": "high",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "Rewrite {num}/{den} in the form q(x) + r(x)/{den}.",
+        "num_deg_range": [
+          2,
+          4
+        ],
+        "den_deg_range": [
+          1,
+          2
+        ],
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "den_type": "linear_monic",
+          "num_deg": 2
+        },
+        "medium": {
+          "den_type": "linear",
+          "num_deg": 3
+        },
+        "hard": {
+          "den_type": "quadratic",
+          "num_deg": 4
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-010",
+      "concept_id": "Pre.1.12",
+      "name": "Function Transformations",
+      "ap_skill": "2.B",
+      "standard": "1.12.A",
+      "type": "transformation_generator",
+      "tags": {
+        "cognitive_demand": "skill",
+        "complexity": "medium",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "Describe the transformations from parent function {f}(x) to g(x) = {a}f({b}(x - {h})) + {k}.",
+        "parent_functions": [
+          "x\u00b2",
+          "x\u00b3",
+          "\u221ax",
+          "1/x",
+          "|x|",
+          "2^x",
+          "log(x)"
+        ],
+        "a_pool": [
+          -3,
+          -2,
+          -1,
+          0.5,
+          1,
+          2,
+          3
+        ],
+        "b_pool": [
+          -2,
+          -1,
+          0.5,
+          1,
+          2
+        ],
+        "h_range": [
+          -4,
+          4
+        ],
+        "k_range": [
+          -4,
+          4
+        ],
+        "answer_type": "multiple_choice"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "single_transformation": true
+        },
+        "medium": {
+          "two_transformations": true
+        },
+        "hard": {
+          "all_parameters_nonstandard": true,
+          "write_equation_from_graph": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-011",
+      "concept_id": "Pre.2.1",
+      "name": "Arithmetic vs Geometric Sequences",
+      "ap_skill": "2.B",
+      "standard": "2.1.A",
+      "type": "sequence_type_generator",
+      "tags": {
+        "cognitive_demand": "skill",
+        "complexity": "medium",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "Is the sequence {seq} arithmetic, geometric, or neither? If arithmetic, find d. If geometric, find r.",
+        "seq_types": [
+          "arithmetic",
+          "geometric",
+          "neither"
+        ],
+        "term_count": 5,
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "seq_type": "arithmetic_or_geometric",
+          "obvious_pattern": true
+        },
+        "medium": {
+          "include_fractions": true
+        },
+        "hard": {
+          "given_two_terms_find_nth": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-012",
+      "concept_id": "Pre.2.3",
+      "name": "Exponential Function Parameters",
+      "ap_skill": "2.A",
+      "standard": "2.3.A",
+      "type": "exp_function_generator",
+      "tags": {
+        "cognitive_demand": "skill",
+        "complexity": "medium",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "Identify a and b in f(x) = a\u00b7b^x given {representation}.",
+        "representations": [
+          "table",
+          "graph",
+          "two_points",
+          "verbal_description"
+        ],
+        "a_pool": [
+          0.5,
+          1,
+          2,
+          3,
+          5,
+          10,
+          100
+        ],
+        "b_pool": [
+          0.5,
+          0.75,
+          0.9,
+          1.1,
+          1.5,
+          2,
+          3,
+          10
+        ],
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "rep": "two_points_integer_answers"
+        },
+        "medium": {
+          "rep": "table_or_graph"
+        },
+        "hard": {
+          "rep": "verbal",
+          "convert_to_equivalent_form": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-013",
+      "concept_id": "Pre.2.4",
+      "name": "Exponential Expression Manipulation",
+      "ap_skill": "1.B",
+      "standard": "2.4.A",
+      "type": "exp_manipulation_generator",
+      "tags": {
+        "cognitive_demand": "skill",
+        "complexity": "high",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "Rewrite {exp_expr} in the form a\u00b7b^(cx).",
+        "transformations": [
+          "change_base",
+          "factor_exponent",
+          "combine_powers",
+          "rewrite_root_as_exp"
+        ],
+        "answer_type": "expression",
+        "note": "e.g. 4^(2x) = (4\u00b2)^x = 16^x = (2^4)^x = 2^(4x)"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "single_rule": "product_of_powers"
+        },
+        "medium": {
+          "two_rules_combined": true
+        },
+        "hard": {
+          "continuous_growth_form": true,
+          "e_and_ln": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-014",
+      "concept_id": "Pre.2.7",
+      "name": "Composition of Functions",
+      "ap_skill": "1.B",
+      "standard": "2.7.A",
+      "type": "composition_ap_generator",
+      "tags": {
+        "cognitive_demand": "skill",
+        "complexity": "medium",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "Given f(x) = {f} and g(x) = {g}, find {ask}.",
+        "ask_pool": [
+          "f(g(x))",
+          "g(f(x))",
+          "f(g(a))",
+          "f(f(x))"
+        ],
+        "f_types": [
+          "linear",
+          "quadratic",
+          "sqrt",
+          "rational",
+          "exponential"
+        ],
+        "g_types": [
+          "linear",
+          "quadratic",
+          "sqrt"
+        ],
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "f_type": "linear",
+          "g_type": "linear",
+          "evaluate_at_point": true
+        },
+        "medium": {
+          "f_type": "quadratic_or_sqrt",
+          "express_symbolically": true
+        },
+        "hard": {
+          "f_type": "rational_or_exp",
+          "find_domain_of_composition": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-015",
+      "concept_id": "Pre.2.8",
+      "name": "Inverse Functions",
+      "ap_skill": "1.B",
+      "standard": "2.8.A",
+      "type": "inverse_func_ap_generator",
+      "tags": {
+        "cognitive_demand": "skill",
+        "complexity": "high",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "Find f\u207b\u00b9(x) for f(x) = {f}. State the domain of f\u207b\u00b9.",
+        "function_types": [
+          "linear",
+          "quadratic_restricted",
+          "rational",
+          "exponential",
+          "sqrt"
+        ],
+        "answer_type": "expression",
+        "verify_with_composition": true
+      },
+      "difficulty_variants": {
+        "easy": {
+          "type": "linear"
+        },
+        "medium": {
+          "type": "rational_or_sqrt"
+        },
+        "hard": {
+          "type": "exponential_and_log_connection",
+          "verify_f_finv": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-016",
+      "concept_id": "Pre.2.9",
+      "name": "Logarithmic Expressions",
+      "ap_skill": "1.A",
+      "standard": "2.9.A",
+      "type": "log_expression_generator",
+      "tags": {
+        "cognitive_demand": "skill",
+        "complexity": "medium",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "Evaluate or simplify: {log_expr}",
+        "expression_types": [
+          "log_b(b^n)",
+          "log_b(1)",
+          "log properties: expand/condense",
+          "change of base",
+          "log_b(x*y)",
+          "log_b(x/y)",
+          "log_b(x^n)"
+        ],
+        "base_pool": [
+          2,
+          3,
+          5,
+          10,
+          "e"
+        ],
+        "answer_type": "numeric"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "type": "basic_evaluate",
+          "integer_answer": true
+        },
+        "medium": {
+          "type": "expand_or_condense",
+          "log_properties": true
+        },
+        "hard": {
+          "type": "change_of_base_non_standard"
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-017",
+      "concept_id": "Pre.2.11",
+      "name": "Logarithmic Function \u2014 Key Features",
+      "ap_skill": "2.A",
+      "standard": "2.11.A",
+      "type": "log_function_generator",
+      "tags": {
+        "cognitive_demand": "skill",
+        "complexity": "medium",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "Identify the domain, range, asymptote, and key feature of f(x) = {a}log_b({cx + d}) + {k}.",
+        "a_pool": [
+          -2,
+          -1,
+          1,
+          2,
+          3
+        ],
+        "b_pool": [
+          2,
+          3,
+          10,
+          "e"
+        ],
+        "c_pool": [
+          1,
+          2,
+          3
+        ],
+        "d_range": [
+          -4,
+          4
+        ],
+        "k_range": [
+          -4,
+          4
+        ],
+        "ask_pool": [
+          "domain",
+          "range",
+          "vertical_asymptote",
+          "x_intercept"
+        ],
+        "answer_type": "multiple_choice"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "c": 1,
+          "d": 0,
+          "k": 0,
+          "base_form": true
+        },
+        "medium": {
+          "with_transformation": true
+        },
+        "hard": {
+          "given_graph_write_equation": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-018",
+      "concept_id": "Pre.2.13",
+      "name": "Solve Exponential Equations",
+      "ap_skill": "1.A",
+      "standard": "2.13.A",
+      "type": "exp_eq_generator",
+      "tags": {
+        "cognitive_demand": "strategic",
+        "complexity": "high",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "Solve: {exp_equation}",
+        "equation_types": [
+          "{a}^(f(x)) = {b}",
+          "{a}^x = {b}^(cx+d) common_base",
+          "exponential_growth_context",
+          "doubling_half_life"
+        ],
+        "answer_type": "numeric",
+        "precision": 3,
+        "use_ln_or_log": true
+      },
+      "difficulty_variants": {
+        "easy": {
+          "type": "common_base",
+          "integer_solution": true
+        },
+        "medium": {
+          "type": "use_logarithm",
+          "decimal_answer": true
+        },
+        "hard": {
+          "type": "doubling_time_context",
+          "interpret_answer": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-019",
+      "concept_id": "Pre.2.13",
+      "name": "Solve Logarithmic Equations",
+      "ap_skill": "1.A",
+      "standard": "2.13.A",
+      "type": "log_eq_generator",
+      "tags": {
+        "cognitive_demand": "strategic",
+        "complexity": "high",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "Solve for x: {log_equation}",
+        "equation_types": [
+          "log_b(f(x)) = c",
+          "log_b(x) + log_b(y) = c",
+          "log_b(x) - log_b(y) = c",
+          "log(x) = log(f(x))"
+        ],
+        "answer_type": "numeric",
+        "check_domain": true
+      },
+      "difficulty_variants": {
+        "easy": {
+          "type": "single_log_equals_constant"
+        },
+        "medium": {
+          "type": "combine_logs_first"
+        },
+        "hard": {
+          "extraneous_solutions": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-020",
+      "concept_id": "Pre.3.2",
+      "name": "Unit Circle \u2014 Exact Values",
+      "ap_skill": "1.B",
+      "standard": "3.2.A",
+      "type": "unit_circle_generator",
+      "tags": {
+        "cognitive_demand": "skill",
+        "complexity": "medium",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "Find the exact value of {trig_func}({angle}).",
+        "angles_radians": [
+          "\u03c0/6",
+          "\u03c0/4",
+          "\u03c0/3",
+          "\u03c0/2",
+          "2\u03c0/3",
+          "3\u03c0/4",
+          "5\u03c0/6",
+          "\u03c0",
+          "7\u03c0/6",
+          "5\u03c0/4",
+          "4\u03c0/3",
+          "3\u03c0/2",
+          "5\u03c0/3",
+          "7\u03c0/4",
+          "11\u03c0/6",
+          "2\u03c0"
+        ],
+        "trig_functions": [
+          "sin",
+          "cos",
+          "tan",
+          "csc",
+          "sec",
+          "cot"
+        ],
+        "answer_type": "numeric",
+        "require_exact_radical_form": true
+      },
+      "difficulty_variants": {
+        "easy": {
+          "angles": [
+            "\u03c0/6",
+            "\u03c0/4",
+            "\u03c0/3",
+            "\u03c0/2",
+            "\u03c0"
+          ],
+          "functions": [
+            "sin",
+            "cos"
+          ]
+        },
+        "medium": {
+          "all_quadrants": true,
+          "functions": [
+            "sin",
+            "cos",
+            "tan"
+          ]
+        },
+        "hard": {
+          "reciprocal_functions": true,
+          "quadrant_III_IV": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-021",
+      "concept_id": "Pre.3.4",
+      "name": "Sine & Cosine Graph Features",
+      "ap_skill": "2.B",
+      "standard": "3.4.A",
+      "type": "sinusoidal_graph_generator",
+      "tags": {
+        "cognitive_demand": "skill",
+        "complexity": "medium",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "Identify the amplitude, period, and midline of f(x) = {A}sin({B}x) + {D}.",
+        "A_pool": [
+          0.5,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "B_pool": [
+          0.5,
+          1,
+          2,
+          3,
+          4,
+          "\u03c0",
+          "\u03c0/2"
+        ],
+        "D_range": [
+          -4,
+          4
+        ],
+        "ask_pool": [
+          "amplitude",
+          "period",
+          "midline",
+          "range",
+          "max_value",
+          "min_value"
+        ],
+        "answer_type": "multiple_choice"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "A": 1,
+          "B": 1,
+          "D": 0,
+          "ask": "period_and_amplitude"
+        },
+        "medium": {
+          "non_standard_A_B_D": true
+        },
+        "hard": {
+          "from_graph_write_equation": true,
+          "multiple_possible_forms": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-022",
+      "concept_id": "Pre.3.6",
+      "name": "Sinusoidal Function Transformations",
+      "ap_skill": "2.B",
+      "standard": "3.6.A",
+      "type": "sinusoidal_transform_generator",
+      "tags": {
+        "cognitive_demand": "strategic",
+        "complexity": "high",
+        "context": "real_world"
+      },
+      "params": {
+        "template": "A periodic context: {context}. Write a sinusoidal model f(x) = Asin(Bx + C) + D or Acos(Bx + C) + D.",
+        "contexts": [
+          "Tides: high {max}ft at t={t1}hr, low {min}ft at t={t2}hr",
+          "Temperature: max {max}\u00b0 at hour {t1}, min {min}\u00b0 at hour {t2}",
+          "Ferris wheel: height {max}m at top, {min}m at bottom, period {p} seconds"
+        ],
+        "answer_type": "expression",
+        "parameters": [
+          "A_amplitude",
+          "B_from_period",
+          "C_phase_shift",
+          "D_vertical_shift"
+        ]
+      },
+      "difficulty_variants": {
+        "easy": {
+          "no_phase_shift": true,
+          "C": 0
+        },
+        "medium": {
+          "phase_shift_included": true
+        },
+        "hard": {
+          "find_specific_output": true,
+          "interpret_in_context": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-023",
+      "concept_id": "Pre.3.9",
+      "name": "Inverse Trig Functions",
+      "ap_skill": "1.B",
+      "standard": "3.9.A",
+      "type": "inv_trig_ap_generator",
+      "tags": {
+        "cognitive_demand": "skill",
+        "complexity": "high",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "Evaluate: {inv_trig_expr}",
+        "expressions": [
+          "arcsin({val})",
+          "arccos({val})",
+          "arctan({val})",
+          "sin(arccos({val}))",
+          "cos(arctan({val}))"
+        ],
+        "val_pool_arcsin_arccos": [
+          -1,
+          -0.5,
+          0,
+          0.5,
+          1,
+          "\u221a2/2",
+          "\u221a3/2"
+        ],
+        "val_pool_arctan": [
+          -1,
+          0,
+          1,
+          "\u221a3",
+          "1/\u221a3"
+        ],
+        "answer_type": "numeric",
+        "answer_in_radians": true,
+        "restrict_domain": "standard: arcsin [-\u03c0/2,\u03c0/2], arccos [0,\u03c0], arctan (-\u03c0/2,\u03c0/2)"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "direct_inverse_value": true
+        },
+        "medium": {
+          "composition": "sin(arccos(x))"
+        },
+        "hard": {
+          "solve_equation": "arcsin(2x-1) = \u03c0/6"
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-024",
+      "concept_id": "Pre.3.12",
+      "name": "Trig Identities \u2014 Verify and Apply",
+      "ap_skill": "1.B",
+      "standard": "3.12.A",
+      "type": "trig_identity_generator",
+      "tags": {
+        "cognitive_demand": "strategic",
+        "complexity": "high",
+        "context": "abstract"
+      },
+      "params": {
+        "identity_types": [
+          "pythagorean: sin\u00b2x + cos\u00b2x = 1",
+          "pythagorean: 1 + tan\u00b2x = sec\u00b2x",
+          "pythagorean: 1 + cot\u00b2x = csc\u00b2x",
+          "co-function: sin(\u03c0/2-x) = cos(x)",
+          "double_angle: sin(2x) = 2sinx\u00b7cosx",
+          "double_angle: cos(2x) = cos\u00b2x - sin\u00b2x"
+        ],
+        "tasks": [
+          "simplify_expression",
+          "verify_identity",
+          "find_exact_value_given_trig_value"
+        ],
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "task": "apply_pythagorean",
+          "direct_substitution": true
+        },
+        "medium": {
+          "task": "simplify_using_identity"
+        },
+        "hard": {
+          "task": "multi_step_verification",
+          "double_angle_required": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-025",
+      "concept_id": "Pre.3.13",
+      "name": "Polar Coordinates \u2014 Convert",
+      "ap_skill": "2.A",
+      "standard": "3.13.A",
+      "type": "polar_convert_generator",
+      "tags": {
+        "cognitive_demand": "skill",
+        "complexity": "medium",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "Convert {point_or_equation} between rectangular and polar form.",
+        "task_types": [
+          "rect_to_polar_point",
+          "polar_to_rect_point",
+          "rect_eq_to_polar",
+          "polar_eq_to_rect"
+        ],
+        "r_range": [
+          1,
+          10
+        ],
+        "theta_pool": [
+          "\u03c0/6",
+          "\u03c0/4",
+          "\u03c0/3",
+          "\u03c0/2",
+          "2\u03c0/3",
+          "3\u03c0/4",
+          "\u03c0"
+        ],
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "task": "convert_point_given_standard_angle"
+        },
+        "medium": {
+          "task": "convert_point_any_angle"
+        },
+        "hard": {
+          "task": "convert_equation",
+          "r\u00b2=x\u00b2+y\u00b2_substitution": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-026",
+      "concept_id": "Pre.4.1",
+      "name": "Parametric Functions \u2014 Eliminate Parameter",
+      "ap_skill": "2.B",
+      "standard": "4.1.A",
+      "type": "parametric_generator",
+      "tags": {
+        "cognitive_demand": "skill",
+        "complexity": "medium",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "Eliminate the parameter t from x={x_t} and y={y_t} to write y as a function of x.",
+        "param_types": [
+          {
+            "x": "t+a",
+            "y": "bt+c",
+            "result": "linear"
+          },
+          {
+            "x": "t\u00b2",
+            "y": "t+a",
+            "result": "parabola"
+          },
+          {
+            "x": "cos(t)",
+            "y": "sin(t)",
+            "result": "unit_circle"
+          },
+          {
+            "x": "a\u00b7cos(t)",
+            "y": "b\u00b7sin(t)",
+            "result": "ellipse"
+          }
+        ],
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "type": "linear_parametric"
+        },
+        "medium": {
+          "type": "parabola_parametric"
+        },
+        "hard": {
+          "type": "trig_parametric",
+          "conic_result": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-027",
+      "concept_id": "Pre.4.6",
+      "name": "Conic Sections \u2014 Standard Form",
+      "ap_skill": "1.B",
+      "standard": "4.6.A",
+      "type": "conic_section_generator",
+      "tags": {
+        "cognitive_demand": "skill",
+        "complexity": "high",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "Identify the conic section and write {eq} in standard form.",
+        "conic_types": [
+          "circle",
+          "ellipse",
+          "hyperbola",
+          "parabola"
+        ],
+        "given_forms": [
+          "general_form_complete_square",
+          "standard_form_identify"
+        ],
+        "answer_type": "expression",
+        "extract": [
+          "center",
+          "vertices",
+          "foci",
+          "asymptotes_if_hyperbola"
+        ]
+      },
+      "difficulty_variants": {
+        "easy": {
+          "type": "circle",
+          "already_standard": true
+        },
+        "medium": {
+          "type": "ellipse_or_hyperbola",
+          "complete_square_needed": true
+        },
+        "hard": {
+          "type": "identify_from_general_form",
+          "all_conics": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-028",
+      "concept_id": "Pre.4.8",
+      "name": "Vectors \u2014 Operations",
+      "ap_skill": "1.B",
+      "standard": "4.8.A",
+      "type": "vector_generator",
+      "tags": {
+        "cognitive_demand": "skill",
+        "complexity": "medium",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "Given vectors u = <{a},{b}> and v = <{c},{d}>, compute {operation}.",
+        "operations": [
+          "u+v",
+          "u-v",
+          "scalar_mult",
+          "|u|",
+          "u\u00b7v (dot product)",
+          "angle_between"
+        ],
+        "component_range": [
+          -8,
+          8
+        ],
+        "answer_type": "numeric"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "op": "add_or_subtract"
+        },
+        "medium": {
+          "op": "magnitude_or_dot_product"
+        },
+        "hard": {
+          "op": "angle_between_with_context"
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-029",
+      "concept_id": "Pre.4.10",
+      "name": "Matrix Operations",
+      "ap_skill": "1.A",
+      "standard": "4.10.A",
+      "type": "matrix_generator",
+      "tags": {
+        "cognitive_demand": "skill",
+        "complexity": "medium",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "Compute {operation} for matrices A = {A} and B = {B}.",
+        "operations": [
+          "A+B",
+          "A-B",
+          "scalar*A",
+          "A*B",
+          "det(A)",
+          "A_inverse"
+        ],
+        "size_pool": [
+          "2x2",
+          "2x3",
+          "3x2",
+          "3x3"
+        ],
+        "entry_range": [
+          -5,
+          5
+        ],
+        "answer_type": "numeric"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "op": "add_subtract_2x2"
+        },
+        "medium": {
+          "op": "multiply_2x2_or_det"
+        },
+        "hard": {
+          "op": "inverse_3x3_or_solve_system"
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-030",
+      "concept_id": "Pre.1.3",
+      "name": "Rate of Change: Linear vs Quadratic",
+      "ap_skill": "3.A",
+      "standard": "1.3.A",
+      "type": "roc_comparison_generator",
+      "tags": {
+        "cognitive_demand": "conceptual",
+        "complexity": "medium",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "Using the table of values for f, determine if the function is linear, quadratic, or neither. Justify using rates of change.",
+        "table_types": [
+          "constant_1st_diff",
+          "constant_2nd_diff",
+          "neither"
+        ],
+        "answer_type": "multiple_choice",
+        "note": "1st differences constant \u2192 linear; 2nd differences constant \u2192 quadratic"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "obvious_constant_diff": true
+        },
+        "medium": {
+          "2nd_differences_required": true
+        },
+        "hard": {
+          "mixed_representations_compare": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-031",
+      "concept_id": "Pre.2.2",
+      "name": "Linear vs Exponential Change",
+      "ap_skill": "3.A",
+      "standard": "2.2.A",
+      "type": "lin_vs_exp_generator",
+      "tags": {
+        "cognitive_demand": "conceptual",
+        "complexity": "medium",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "A quantity {description}. Is this linear or exponential growth? Write the function.",
+        "contexts": [
+          "increases by {d} each year",
+          "increases by {r}% each year",
+          "doubles every {t} years"
+        ],
+        "answer_type": "expression",
+        "note": "Linear: adds constant; Exponential: multiplies by constant"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "from_table_classify": true
+        },
+        "medium": {
+          "write_explicit_function": true
+        },
+        "hard": {
+          "compare_two_models_crossover": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-032",
+      "concept_id": "Pre.3.1",
+      "name": "Periodic Phenomena \u2014 Features from Context",
+      "ap_skill": "2.A",
+      "standard": "3.1.A",
+      "type": "periodic_context_generator",
+      "tags": {
+        "cognitive_demand": "conceptual",
+        "complexity": "medium",
+        "context": "real_world"
+      },
+      "params": {
+        "contexts": [
+          "Tide height over 12 hours",
+          "Temperature over a 24-hour day",
+          "Ferris wheel height over time",
+          "Sound wave amplitude"
+        ],
+        "ask_pool": [
+          "period",
+          "amplitude",
+          "midline",
+          "max_value",
+          "min_value"
+        ],
+        "given_format": [
+          "graph",
+          "table",
+          "verbal_description"
+        ],
+        "answer_type": "numeric"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "read_from_graph_directly": true
+        },
+        "medium": {
+          "compute_from_max_min": true
+        },
+        "hard": {
+          "interpret_change_in_context": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-033",
+      "concept_id": "Pre.1.1",
+      "name": "Covariation \u2014 Function Behavior",
+      "ap_skill": "2.A",
+      "standard": "1.1.A",
+      "type": "covariation_generator",
+      "tags": {
+        "cognitive_demand": "conceptual",
+        "complexity": "medium",
+        "context": "applied"
+      },
+      "params": {
+        "template": "As x increases over {interval}, describe how f(x) behaves.",
+        "description_types": [
+          "increasing",
+          "decreasing",
+          "constant",
+          "rate_of_change_sign"
+        ],
+        "representations": [
+          "graph",
+          "table",
+          "equation"
+        ],
+        "answer_type": "multiple_choice"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "read_directly_from_graph": true
+        },
+        "medium": {
+          "from_equation": true
+        },
+        "hard": {
+          "rate_of_change_of_rate_of_change": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-034",
+      "concept_id": "Pre.1.5",
+      "name": "Polynomial from Zeros (Build It)",
+      "ap_skill": "1.B",
+      "standard": "1.5.A",
+      "type": "poly_from_zeros_generator",
+      "tags": {
+        "cognitive_demand": "strategic",
+        "complexity": "high",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "Write a polynomial with real coefficients, degree {n}, and the given zeros: {zeros}.",
+        "degree_pool": [
+          3,
+          4,
+          5
+        ],
+        "zeros_types": [
+          "all_real",
+          "two_real_one_complex",
+          "one_real_two_complex"
+        ],
+        "answer_type": "expression",
+        "form": "expanded_standard_form"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "all_real_zeros": true,
+          "degree": 3
+        },
+        "medium": {
+          "one_complex_pair": true,
+          "degree": 4
+        },
+        "hard": {
+          "given_one_zero_find_polynomial": true,
+          "leading_coeff_given": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-035",
+      "concept_id": "Pre.2.9",
+      "name": "Condense Logarithmic Expressions",
+      "ap_skill": "1.A",
+      "standard": "2.9.A",
+      "type": "log_condense_generator",
+      "tags": {
+        "cognitive_demand": "skill",
+        "complexity": "high",
+        "context": "abstract"
+      },
+      "frq_alignment": "FRQ 4: Symbolic Manipulations",
+      "params": {
+        "template": "Write as a single logarithm: {log_sum_diff}",
+        "expression_types": [
+          "a\u00b7log(x) + b\u00b7log(y)",
+          "log(x) - log(y) + log(z)",
+          "\u00bdlog(x) + 3log(y) - log(z)"
+        ],
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "two_log_terms": true
+        },
+        "medium": {
+          "three_log_terms_with_coefficients": true
+        },
+        "hard": {
+          "mixed_bases": true,
+          "simplify_to_numeric": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-036",
+      "concept_id": "Pre.2.13",
+      "name": "Exponential/Log Equations \u2014 FRQ Style",
+      "ap_skill": "1.A",
+      "standard": "2.13.A",
+      "type": "exp_log_frq_generator",
+      "tags": {
+        "cognitive_demand": "strategic",
+        "complexity": "high",
+        "context": "abstract"
+      },
+      "frq_alignment": "FRQ 4: Symbolic Manipulations",
+      "params": {
+        "template": "Solve algebraically, showing all steps: {equation}",
+        "equations": [
+          "e^(2x-1) = 7",
+          "ln(x+3) + ln(x-1) = ln(8)",
+          "2^(3x) = 5^(x+2)",
+          "log\u2082(x\u00b2-4) = 3"
+        ],
+        "answer_type": "numeric",
+        "show_work_required": true
+      },
+      "difficulty_variants": {
+        "easy": {
+          "single_step_isolation": true
+        },
+        "medium": {
+          "combine_logs_first": true
+        },
+        "hard": {
+          "different_bases_change_of_base": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-037",
+      "concept_id": "Pre.3.12",
+      "name": "Trig Equations \u2014 Solve Analytically",
+      "ap_skill": "1.B",
+      "standard": "3.12.A",
+      "type": "trig_eq_generator",
+      "tags": {
+        "cognitive_demand": "strategic",
+        "complexity": "high",
+        "context": "abstract"
+      },
+      "frq_alignment": "FRQ 4: Symbolic Manipulations",
+      "params": {
+        "template": "Solve on [0, 2\u03c0]: {trig_equation}",
+        "equations": [
+          "2sin(x) - \u221a3 = 0",
+          "cos\u00b2(x) - cos(x) = 0",
+          "2cos\u00b2(x) - 1 = 0",
+          "tan(x) = sin(x)",
+          "sin(2x) = cos(x)"
+        ],
+        "answer_type": "expression",
+        "exact_values_required": true
+      },
+      "difficulty_variants": {
+        "easy": {
+          "linear_trig_equation": true
+        },
+        "medium": {
+          "quadratic_in_trig_function": true
+        },
+        "hard": {
+          "double_angle_identity_required": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-038",
+      "concept_id": "Pre.3.9",
+      "name": "Solve Equations with Inverse Trig \u2014 FRQ Style",
+      "ap_skill": "1.B",
+      "standard": "3.9.A",
+      "type": "inv_trig_eq_generator",
+      "tags": {
+        "cognitive_demand": "strategic",
+        "complexity": "high",
+        "context": "abstract"
+      },
+      "frq_alignment": "FRQ 4: Symbolic Manipulations",
+      "params": {
+        "template": "Find the exact value of {expression} without a calculator.",
+        "expressions": [
+          "sin(arctan(3/4))",
+          "cos(arcsin(-1/2))",
+          "tan(arccos(\u221a3/2))",
+          "arcsin(sin(7\u03c0/6))",
+          "arccos(cos(5\u03c0/3))"
+        ],
+        "answer_type": "numeric",
+        "exact_form": true,
+        "note": "Watch restricted domain of inverse trig functions"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "direct_unit_circle": true
+        },
+        "medium": {
+          "composition_requires_triangle": true
+        },
+        "hard": {
+          "outside_principal_range": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-039",
+      "concept_id": "Pre.1.2",
+      "name": "ARC \u2014 Applied Context (FRQ 2 Style)",
+      "ap_skill": "1.A",
+      "standard": "1.2.A",
+      "type": "arc_context_generator",
+      "tags": {
+        "cognitive_demand": "strategic",
+        "complexity": "high",
+        "context": "real_world"
+      },
+      "frq_alignment": "FRQ 2: Modeling Non-Periodic",
+      "params": {
+        "contexts": [
+          "Population grows from {v1} to {v2} thousand between years {t1} and {t2}.",
+          "Revenue changes from ${v1}M to ${v2}M between quarters {t1} and {t2}.",
+          "Temperature drops from {v1}\u00b0 to {v2}\u00b0 between hours {t1} and {t2}."
+        ],
+        "ask": [
+          "average_rate_of_change_with_units",
+          "interpret_in_context"
+        ],
+        "answer_type": "numeric"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "compute_only": true
+        },
+        "medium": {
+          "interpret_units_and_meaning": true
+        },
+        "hard": {
+          "compare_two_intervals": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-040",
+      "concept_id": "Pre.1.12",
+      "name": "Piecewise Function Transformations",
+      "ap_skill": "2.B",
+      "standard": "1.12.A",
+      "type": "piecewise_transform_generator",
+      "tags": {
+        "cognitive_demand": "skill",
+        "complexity": "high",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "The function h(x) is defined below. Sketch or identify key features after applying transformation {T}.",
+        "piecewise_types": [
+          "2_piece_linear",
+          "linear_and_quadratic",
+          "absolute_value"
+        ],
+        "transformations": [
+          "vertical_shift",
+          "horizontal_shift",
+          "vertical_scale",
+          "reflect"
+        ],
+        "answer_type": "graph_match"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "single_transformation": true
+        },
+        "medium": {
+          "two_transformations": true
+        },
+        "hard": {
+          "all_transformations_combined": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-041",
+      "concept_id": "Pre.2.4",
+      "name": "Rewrite Exponential in Equivalent Base",
+      "ap_skill": "1.B",
+      "standard": "2.4.A",
+      "type": "exp_base_rewrite_generator",
+      "tags": {
+        "cognitive_demand": "skill",
+        "complexity": "high",
+        "context": "abstract"
+      },
+      "frq_alignment": "FRQ 4: Symbolic Manipulations",
+      "params": {
+        "template": "Rewrite {expr} in the form a\u00b7e^(kx).",
+        "expressions": [
+          "3^x",
+          "2\u00b7(1.05)^x",
+          "500\u00b7(0.8)^t",
+          "(1/4)^(x/2)"
+        ],
+        "answer_type": "expression",
+        "use_ln_for_k": true
+      },
+      "difficulty_variants": {
+        "easy": {
+          "base_e_already": true
+        },
+        "medium": {
+          "convert_growth_rate": true
+        },
+        "hard": {
+          "decay_rate_interpretation": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-042",
+      "concept_id": "Pre.2.7",
+      "name": "Composition Domain Restriction",
+      "ap_skill": "1.B",
+      "standard": "2.7.A",
+      "type": "composition_domain_generator",
+      "tags": {
+        "cognitive_demand": "strategic",
+        "complexity": "high",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "f(x) = {f}, g(x) = {g}. Find the domain of f(g(x)).",
+        "function_pairs": [
+          {
+            "f": "\u221ax",
+            "g": "x-4"
+          },
+          {
+            "f": "1/x",
+            "g": "x\u00b2-1"
+          },
+          {
+            "f": "ln(x)",
+            "g": "x\u00b2"
+          },
+          {
+            "f": "\u221a(1-x\u00b2)",
+            "g": "2x+1"
+          }
+        ],
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "no_restriction_from_outer": true
+        },
+        "medium": {
+          "outer_function_restricts": true
+        },
+        "hard": {
+          "inner_and_outer_both_restrict": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-043",
+      "concept_id": "Pre.3.6",
+      "name": "Sinusoidal Model Parameters from Data",
+      "ap_skill": "2.B",
+      "standard": "3.6.A",
+      "type": "sinusoidal_param_generator",
+      "tags": {
+        "cognitive_demand": "strategic",
+        "complexity": "high",
+        "context": "real_world"
+      },
+      "frq_alignment": "FRQ 3: Modeling Periodic Context",
+      "params": {
+        "template": "A sinusoidal model has max value {max} at t={t_max} and min value {min} at t={t_min}. Find A, B, C, D for f(t) = Asin(Bt+C)+D.",
+        "max_range": [
+          10,
+          100
+        ],
+        "min_range": [
+          1,
+          50
+        ],
+        "period_derived": true,
+        "answer_type": "expression",
+        "note": "A = (max-min)/2, D = (max+min)/2, B = 2\u03c0/period"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "phase_shift_zero": true
+        },
+        "medium": {
+          "phase_shift_from_max_location": true
+        },
+        "hard": {
+          "write_both_sin_and_cos_forms": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-044",
+      "concept_id": "Pre.3.4",
+      "name": "Concavity of Sinusoidal Intervals",
+      "ap_skill": "2.B",
+      "standard": "3.4.A",
+      "type": "sinusoidal_concavity_generator",
+      "tags": {
+        "cognitive_demand": "strategic",
+        "complexity": "high",
+        "context": "applied"
+      },
+      "frq_alignment": "FRQ 3: Modeling Periodic Context Part C",
+      "params": {
+        "template": "For f(x) = {A}sin({B}x) + {D}, on what intervals is the function concave up? Concave down?",
+        "ask": [
+          "concavity_intervals",
+          "roc_increasing_or_decreasing"
+        ],
+        "answer_type": "expression",
+        "note": "Concave up = sin-like on (\u03c0, 2\u03c0); concave down = sin-like on (0, \u03c0)"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "basic_sin_x": true
+        },
+        "medium": {
+          "transformed_sinusoidal": true
+        },
+        "hard": {
+          "in_context": true,
+          "interpret_physically": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-045",
+      "concept_id": "Pre.2.8",
+      "name": "FRQ 1 \u2014 Function Concepts Multi-Step",
+      "ap_skill": "1.B",
+      "standard": "2.8.A",
+      "type": "frq1_style_generator",
+      "tags": {
+        "cognitive_demand": "strategic",
+        "complexity": "high",
+        "context": "abstract"
+      },
+      "frq_alignment": "FRQ 1: Function Concepts",
+      "params": {
+        "template": "Three functions are shown: f (graph), g (table), h (equation). Answer Parts (A)\u2013(C).",
+        "parts": [
+          {
+            "part": "A",
+            "task": "evaluate_composition f(g(2)) or g(f(-1))",
+            "ap_skill": "2.A"
+          },
+          {
+            "part": "B",
+            "task": "find inverse or zero",
+            "ap_skill": "1.C"
+          },
+          {
+            "part": "C",
+            "task": "identify appropriate function type for a model",
+            "ap_skill": "3.A"
+          }
+        ],
+        "answer_type": "multi_part"
+      },
+      "difficulty_variants": {
+        "medium": {
+          "two_representations": true
+        },
+        "hard": {
+          "three_representations": true,
+          "frq_point_allocation": "6_points"
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-046",
+      "concept_id": "Pre.1.13",
+      "name": "Model Selection \u2014 Justify",
+      "ap_skill": "4.A",
+      "standard": "1.13.A",
+      "type": "model_select_generator",
+      "tags": {
+        "cognitive_demand": "strategic",
+        "complexity": "high",
+        "context": "real_world"
+      },
+      "frq_alignment": "FRQ 2: Modeling Non-Periodic",
+      "params": {
+        "contexts": [
+          "Scatter plot shows rapid initial growth that levels off",
+          "Data shows consistent percent increase per year",
+          "Data has a clear maximum and symmetric decline",
+          "Rate of change increases then decreases"
+        ],
+        "model_choices": [
+          "linear",
+          "quadratic",
+          "exponential",
+          "logarithmic",
+          "polynomial"
+        ],
+        "ask": [
+          "select_model_type",
+          "justify_with_data_features",
+          "state_limitations"
+        ],
+        "answer_type": "multiple_choice"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "obvious_exponential_vs_linear": true
+        },
+        "medium": {
+          "two_plausible_models": true
+        },
+        "hard": {
+          "state_assumptions_and_limitations": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-047",
+      "concept_id": "Pre.1.14",
+      "name": "Model Construction \u2014 Build System of Equations",
+      "ap_skill": "4.B",
+      "standard": "1.14.A",
+      "type": "model_construct_generator",
+      "tags": {
+        "cognitive_demand": "strategic",
+        "complexity": "high",
+        "context": "real_world"
+      },
+      "frq_alignment": "FRQ 2: Modeling Non-Periodic Part A",
+      "params": {
+        "template": "A data set has known values at t={t1} and t={t2}: f({t1})={v1}, f({t2})={v2}. Construct an exponential (or polynomial) model.",
+        "model_types": [
+          "exponential",
+          "quadratic",
+          "cubic"
+        ],
+        "method": "system_of_equations_to_find_parameters",
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "two_unknowns_two_equations": true
+        },
+        "medium": {
+          "three_unknowns_quadratic": true
+        },
+        "hard": {
+          "piecewise_model": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-048",
+      "concept_id": "Pre.2.15",
+      "name": "Semi-log Plot \u2014 Linearization",
+      "ap_skill": "2.B",
+      "standard": "2.15.A",
+      "type": "semilog_generator",
+      "tags": {
+        "cognitive_demand": "strategic",
+        "complexity": "high",
+        "context": "applied"
+      },
+      "params": {
+        "template": "Data is plotted on a semi-log plot. The linear regression is log(y) = {m}x + {b}. Write the exponential function y = f(x).",
+        "m_range": [
+          0.1,
+          2.0
+        ],
+        "b_range": [
+          -2,
+          4
+        ],
+        "answer_type": "expression",
+        "note": "y = 10^(mx+b) = 10^b \u00b7 (10^m)^x = a\u00b7b^x"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "identify_linear_on_semilog": true
+        },
+        "medium": {
+          "convert_log_regression_to_exponential": true
+        },
+        "hard": {
+          "ln_vs_log10_distinction": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-049",
+      "concept_id": "Pre.3.14",
+      "name": "Polar Graph Identification",
+      "ap_skill": "2.B",
+      "standard": "3.14.A",
+      "type": "polar_graph_generator",
+      "tags": {
+        "cognitive_demand": "strategic",
+        "complexity": "high",
+        "context": "abstract"
+      },
+      "params": {
+        "polar_curve_types": {
+          "rose": "r = a\u00b7cos(n\u03b8) or r = a\u00b7sin(n\u03b8)",
+          "lima\u00e7on": "r = a \u00b1 b\u00b7cos(\u03b8)",
+          "cardioid": "r = a(1 + cos(\u03b8)) \u2014 special lima\u00e7on",
+          "circle": "r = a\u00b7cos(\u03b8)",
+          "lemniscate": "r\u00b2 = a\u00b2\u00b7cos(2\u03b8)"
+        },
+        "ask": [
+          "match_equation_to_graph",
+          "count_petals",
+          "identify_curve_type"
+        ],
+        "answer_type": "multiple_choice"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "identify_cardioid_vs_circle": true
+        },
+        "medium": {
+          "match_rose_petal_count": true
+        },
+        "hard": {
+          "lima\u00e7on_inner_loop_vs_dimple": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-050",
+      "concept_id": "Pre.4.12",
+      "name": "Matrix as Linear Transformation",
+      "ap_skill": "2.B",
+      "standard": "4.12.A",
+      "type": "linear_transform_matrix_generator",
+      "tags": {
+        "cognitive_demand": "strategic",
+        "complexity": "high",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "Matrix T = {T} represents a transformation. Apply T to vector/polygon and describe geometric effect.",
+        "transformation_matrices": {
+          "rotation_90": "[[0,-1],[1,0]]",
+          "reflection_x": "[[1,0],[0,-1]]",
+          "dilation_k": "[[k,0],[0,k]]",
+          "shear": "[[1,a],[0,1]]"
+        },
+        "answer_type": "multiple_choice"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "identify_type_from_matrix": true
+        },
+        "medium": {
+          "apply_and_find_image": true
+        },
+        "hard": {
+          "compose_two_transformations": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-051",
+      "concept_id": "Pre.1.7",
+      "name": "Rational Function \u2014 Full Analysis",
+      "ap_skill": "2.B",
+      "standard": "1.7.A",
+      "type": "rational_full_analysis_generator",
+      "tags": {
+        "cognitive_demand": "strategic",
+        "complexity": "high",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "For f(x) = {rational_function}, identify: zeros, vertical asymptotes, horizontal asymptote, holes, end behavior.",
+        "function_pool": [
+          "(x\u00b2-4)/(x\u00b2-1)",
+          "(x\u00b3-8)/(x\u00b2+x-6)",
+          "(2x\u00b2+x-1)/(x\u00b2-4)"
+        ],
+        "answer_type": "multi_part"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "simple_holes_and_VAs": true
+        },
+        "medium": {
+          "degree_comparison_for_HA": true
+        },
+        "hard": {
+          "slant_asymptote_present": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-052",
+      "concept_id": "Pre.2.3",
+      "name": "Exponential Growth/Decay Context",
+      "ap_skill": "2.A",
+      "standard": "2.3.A",
+      "type": "exp_context_generator",
+      "tags": {
+        "cognitive_demand": "strategic",
+        "complexity": "high",
+        "context": "real_world"
+      },
+      "frq_alignment": "FRQ 2: Modeling Non-Periodic",
+      "params": {
+        "contexts": [
+          "Population P(t) = {a}\u00b7{b}^t. Find P at t={t}, interpret rate.",
+          "Investment A(t) = 1000\u00b7(1.06)^t. When does it double?",
+          "Radioactive decay: Q(t) = 200\u00b7(0.5)^(t/30). Half-life interpretation."
+        ],
+        "ask": [
+          "evaluate",
+          "find_doubling_time",
+          "compare_growth_rates"
+        ],
+        "answer_type": "numeric"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "evaluate_at_given_time": true
+        },
+        "medium": {
+          "find_when_value_reached": true
+        },
+        "hard": {
+          "compare_two_models_justify": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-053",
+      "concept_id": "Pre.3.2",
+      "name": "Reference Angles and Signs",
+      "ap_skill": "1.B",
+      "standard": "3.2.A",
+      "type": "reference_angle_generator",
+      "tags": {
+        "cognitive_demand": "skill",
+        "complexity": "medium",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "Find the reference angle for {theta} radians. Then find the exact value of {trig_fn}({theta}).",
+        "theta_pool_non_standard": [
+          "5\u03c0/6",
+          "7\u03c0/4",
+          "5\u03c0/3",
+          "4\u03c0/3",
+          "11\u03c0/6",
+          "7\u03c0/6"
+        ],
+        "trig_functions": [
+          "sin",
+          "cos",
+          "tan"
+        ],
+        "answer_type": "numeric",
+        "require_exact": true
+      },
+      "difficulty_variants": {
+        "easy": {
+          "standard_quadrant_II": true
+        },
+        "medium": {
+          "quadrant_III_or_IV": true
+        },
+        "hard": {
+          "greater_than_2pi_or_negative": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-054",
+      "concept_id": "Pre.3.12",
+      "name": "Pythagorean Identity \u2014 Find Other Values",
+      "ap_skill": "1.B",
+      "standard": "3.12.A",
+      "type": "pythagorean_id_generator",
+      "tags": {
+        "cognitive_demand": "strategic",
+        "complexity": "high",
+        "context": "abstract"
+      },
+      "frq_alignment": "FRQ 4: Symbolic Manipulations",
+      "params": {
+        "template": "Given sin(\u03b8) = {val} and \u03b8 is in Quadrant {Q}, find cos(\u03b8) and tan(\u03b8) without a calculator.",
+        "sin_pool": [
+          "1/2",
+          "\u221a2/2",
+          "\u221a3/2",
+          "-1/2",
+          "-\u221a2/2",
+          "-\u221a3/2",
+          "3/5",
+          "5/13"
+        ],
+        "quadrant_pool": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "sin_is_unit_circle_value": true
+        },
+        "medium": {
+          "sin_is_fraction_not_unit_circle": true
+        },
+        "hard": {
+          "find_all_six_trig_functions": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-055",
+      "concept_id": "Pre.1.11",
+      "name": "Rational Expression Rewrite (FRQ 4 Style)",
+      "ap_skill": "1.B",
+      "standard": "1.11.A",
+      "type": "rational_rewrite_generator",
+      "tags": {
+        "cognitive_demand": "strategic",
+        "complexity": "high",
+        "context": "abstract"
+      },
+      "frq_alignment": "FRQ 4: Symbolic Manipulations",
+      "params": {
+        "template": "Rewrite {expr} in an equivalent form useful for identifying {feature}.",
+        "expressions": [
+          "(2x\u00b3+x\u00b2-5x+2)/(x-1) \u2192 quotient form for asymptote",
+          "(x\u00b2+6x+9)/(x+3) \u2192 simplified form",
+          "(x\u00b2-9)/(x\u00b2+2x-3) \u2192 identify hole and asymptote"
+        ],
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "factor_and_cancel": true
+        },
+        "medium": {
+          "long_division": true
+        },
+        "hard": {
+          "full_analysis_after_rewrite": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-056",
+      "concept_id": "Pre.2.11",
+      "name": "Log Function Transformation \u2014 Write Equation from Graph",
+      "ap_skill": "2.A",
+      "standard": "2.11.A",
+      "type": "log_from_graph_generator",
+      "tags": {
+        "cognitive_demand": "strategic",
+        "complexity": "high",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "A logarithmic function passes through {points} and has vertical asymptote x = {h}. Write the equation.",
+        "given_points": 2,
+        "base_pool": [
+          2,
+          10,
+          "e"
+        ],
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "base_given": true
+        },
+        "medium": {
+          "find_base_from_two_points": true
+        },
+        "hard": {
+          "reflection_and_shift": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-057",
+      "concept_id": "Pre.3.6",
+      "name": "Sinusoidal Rate of Change \u2014 FRQ 3 Part C",
+      "ap_skill": "2.B",
+      "standard": "3.6.A",
+      "type": "sinusoidal_roc_generator",
+      "tags": {
+        "cognitive_demand": "strategic",
+        "complexity": "high",
+        "context": "real_world"
+      },
+      "frq_alignment": "FRQ 3: Modeling Periodic Context Part C",
+      "params": {
+        "template": "For the sinusoidal model f(t) = {A}sin({B}t + {C}) + {D}: On the interval ({t1}, {t2}), is the rate of change of f positive or negative? Is the rate of change increasing or decreasing?",
+        "interpretation_required": true,
+        "answer_type": "multiple_choice"
+      },
+      "difficulty_variants": {
+        "medium": {
+          "read_from_graph": true
+        },
+        "hard": {
+          "determine_analytically": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-058",
+      "concept_id": "Pre.1.4",
+      "name": "Turning Points and Degree",
+      "ap_skill": "2.B",
+      "standard": "1.4.A",
+      "type": "turning_point_generator",
+      "tags": {
+        "cognitive_demand": "skill",
+        "complexity": "medium",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "A polynomial has {n} turning points. What is the minimum possible degree?",
+        "n_range": [
+          1,
+          5
+        ],
+        "answer_type": "numeric",
+        "rule": "max_turning_points = degree - 1"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "from_graph_count_turning_points": true
+        },
+        "medium": {
+          "infer_minimum_degree": true
+        },
+        "hard": {
+          "given_zeros_and_turning_points_write_polynomial": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-059",
+      "concept_id": "Pre.2.1",
+      "name": "Geometric Sequence nth Term",
+      "ap_skill": "2.B",
+      "standard": "2.1.A",
+      "type": "geo_seq_generator",
+      "tags": {
+        "cognitive_demand": "skill",
+        "complexity": "medium",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "A geometric sequence has first term {a1} and common ratio {r}. Find the {n}th term.",
+        "a1_range": [
+          1,
+          20
+        ],
+        "r_pool": [
+          0.5,
+          2,
+          3,
+          0.1,
+          1.5,
+          -2
+        ],
+        "n_range": [
+          5,
+          15
+        ],
+        "answer_type": "numeric",
+        "formula": "a\u2099 = a\u2081\u00b7r^(n-1)"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "integer_answer": true
+        },
+        "medium": {
+          "find_n_given_term": true
+        },
+        "hard": {
+          "connect_to_exponential_function": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-060",
+      "concept_id": "Pre.3.13",
+      "name": "Polar to Rectangular Equation",
+      "ap_skill": "2.A",
+      "standard": "3.13.A",
+      "type": "polar_rect_eq_generator",
+      "tags": {
+        "cognitive_demand": "skill",
+        "complexity": "high",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "Convert the polar equation {r_eq} to rectangular form.",
+        "polar_equations": [
+          "r = 4",
+          "\u03b8 = \u03c0/3",
+          "r = 2sin(\u03b8)",
+          "r = 3cos(\u03b8)",
+          "r\u00b2 = 4cos(2\u03b8)"
+        ],
+        "answer_type": "expression",
+        "identities": [
+          "r\u00b2=x\u00b2+y\u00b2",
+          "x=r\u00b7cos(\u03b8)",
+          "y=r\u00b7sin(\u03b8)"
+        ]
+      },
+      "difficulty_variants": {
+        "easy": {
+          "simple_circle_or_line": true
+        },
+        "medium": {
+          "multiply_both_sides_by_r": true
+        },
+        "hard": {
+          "lemniscate_or_complex": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-061",
+      "concept_id": "Pre.1.1",
+      "name": "Rate of Change Sign and Concavity Interpretation",
+      "ap_skill": "2.A",
+      "standard": "1.1.A",
+      "type": "roc_sign_generator",
+      "tags": {
+        "cognitive_demand": "conceptual",
+        "complexity": "medium",
+        "context": "applied"
+      },
+      "frq_alignment": "FRQ 2: Modeling Non-Periodic Part B",
+      "params": {
+        "template": "The ARC of f on [{a},{b}] is {val}. What does this tell you about f on this interval?",
+        "ask": [
+          "increasing_or_decreasing",
+          "units_interpretation",
+          "what_if_arc_were_zero"
+        ],
+        "answer_type": "multiple_choice"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "positive_arc_increasing": true
+        },
+        "medium": {
+          "negative_arc_decreasing": true
+        },
+        "hard": {
+          "arc_zero_does_not_mean_constant": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-062",
+      "concept_id": "Pre.2.8",
+      "name": "Verify Inverse via Composition",
+      "ap_skill": "1.B",
+      "standard": "2.8.A",
+      "type": "verify_inverse_generator",
+      "tags": {
+        "cognitive_demand": "skill",
+        "complexity": "medium",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "Verify that f and g are inverses by showing f(g(x)) = x AND g(f(x)) = x.",
+        "function_pairs": [
+          {
+            "f": "2x+3",
+            "g": "(x-3)/2"
+          },
+          {
+            "f": "x\u00b3-1",
+            "g": "(x+1)^(1/3)"
+          },
+          {
+            "f": "e^x",
+            "g": "ln(x)"
+          },
+          {
+            "f": "\u221a(x-2)",
+            "g": "x\u00b2+2 (x\u22650)"
+          }
+        ],
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "linear_pair": true
+        },
+        "medium": {
+          "log_exp_pair": true
+        },
+        "hard": {
+          "find_error_in_proposed_inverse": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-063",
+      "concept_id": "Pre.3.4",
+      "name": "Write Sinusoidal Equation from Graph",
+      "ap_skill": "2.B",
+      "standard": "3.4.A",
+      "type": "sin_from_graph_generator",
+      "tags": {
+        "cognitive_demand": "strategic",
+        "complexity": "high",
+        "context": "abstract"
+      },
+      "frq_alignment": "FRQ 3: Modeling Periodic Context Part B",
+      "params": {
+        "template": "A graph shows a sinusoidal function with max {max} at x = {x_max}, min {min}, and period {T}. Write f(x) = Asin(Bx+C)+D.",
+        "derive_params": {
+          "A": "(max-min)/2",
+          "D": "(max+min)/2",
+          "B": "2\u03c0/T",
+          "C": "phase_shift_from_x_max"
+        },
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "no_phase_shift": true
+        },
+        "medium": {
+          "phase_shift_required": true
+        },
+        "hard": {
+          "write_both_sin_and_cos_versions": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-064",
+      "concept_id": "Pre.1.6",
+      "name": "End Behavior with Limit Notation",
+      "ap_skill": "3.B",
+      "standard": "1.6.A",
+      "type": "limit_notation_generator",
+      "tags": {
+        "cognitive_demand": "skill",
+        "complexity": "medium",
+        "context": "abstract"
+      },
+      "params": {
+        "template": "Complete: As x\u2192\u221e, f(x) = {poly} \u2192 ___. As x\u2192\u2212\u221e, f(x) \u2192 ___.",
+        "poly_types": [
+          "odd_degree_pos",
+          "odd_degree_neg",
+          "even_degree_pos",
+          "even_degree_neg"
+        ],
+        "answer_type": "multiple_choice",
+        "notation": "\u221e or -\u221e"
+      },
+      "difficulty_variants": {
+        "easy": {
+          "from_expanded_form": true
+        },
+        "medium": {
+          "from_factored_form": true
+        },
+        "hard": {
+          "rational_function_end_behavior": true
+        }
+      }
+    },
+    {
+      "id": "APPC-GEN-065",
+      "concept_id": "Pre.3.9",
+      "name": "Inverse Trig Composition (FRQ 4 Style)",
+      "ap_skill": "1.B",
+      "standard": "3.9.A",
+      "type": "inv_trig_comp_frq_generator",
+      "tags": {
+        "cognitive_demand": "strategic",
+        "complexity": "high",
+        "context": "abstract"
+      },
+      "frq_alignment": "FRQ 4: Symbolic Manipulations Part C",
+      "params": {
+        "template": "Rewrite {expression} in an equivalent form without trig or inverse trig functions, given {constraint}.",
+        "expressions": [
+          "sin(arctan(x/3))",
+          "cos(arcsin(2x))",
+          "tan(arccos(x))"
+        ],
+        "method": "right_triangle_construction",
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "medium": {
+          "draw_triangle": true
+        },
+        "hard": {
+          "domain_restriction_stated": true
+        }
+      }
+    }
+  ]
+}

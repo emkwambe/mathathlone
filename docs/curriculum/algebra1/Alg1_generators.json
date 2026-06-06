@@ -1,0 +1,935 @@
+{
+  "course": "Algebra 1",
+  "division": "Varsity",
+  "generator_pool_id": "algebra_1",
+  "isolation_rule": "No generator IDs shared with nc_math_1, math_fundamentals, or any grade-level pool.",
+  "mf_prereq_note": "Diagnostic heats should verify math_fundamentals Tier 1 completion before this pool activates.",
+  "total_generators": 82,
+
+  "generators": [
+
+    // ===== UNIT 1: FOUNDATIONS =====
+
+    {
+      "id": "alg1_fnd_eval_algebraic",
+      "concept_id": "Alg1.FND.1.2",
+      "generator_type": "evaluate_algebraic_expression_alg1",
+      "description": "Substitute given rational values (integers, fractions, negatives) for variables and evaluate multi-term expressions",
+      "answer_type": "integer_or_decimal",
+      "visual_category": null,
+      "mf_prereq": ["MF.ANT.3.2", "MF.FDP.4.x"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "expression_forms": ["ax + b", "ax² + bx + c", "ax + by", "a/x + b", "(ax + b)²"],
+        "substitution_type": ["positive_integer", "negative_integer", "fraction", "decimal"],
+        "variable_count": [1, 2],
+        "difficulty_variants": [
+          {"label": "easy", "form": "ax + b", "values": "positive_integers"},
+          {"label": "standard", "form": "ax² + bx", "values": "signed_integers"},
+          {"label": "hard", "form": "ax² + bx + c", "values": "fractions_or_negatives"}
+        ]
+      }
+    },
+    {
+      "id": "alg1_fnd_simplify_expression",
+      "concept_id": "Alg1.FND.1.3",
+      "generator_type": "simplify_algebraic_expression_alg1",
+      "description": "Combine like terms and/or distribute; answer is a simplified polynomial expression",
+      "answer_type": "text",
+      "answer_type_note": "Simplified expression e.g. '5x - 3y + 2'",
+      "visual_category": null,
+      "mf_prereq": ["MF.AP.3.1", "MF.AP.3.2"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "operations": ["combine_like_terms", "distribute_then_combine", "nested_distribution"],
+        "variable_count": [1, 2],
+        "term_count": [3, 4, 5],
+        "coefficient_type": ["integer", "fraction", "negative"],
+        "difficulty_variants": [
+          {"label": "easy", "ops": "combine_like_terms", "terms": 3},
+          {"label": "standard", "ops": "distribute_then_combine", "terms": 4},
+          {"label": "hard", "ops": "nested_distribution", "coefficients": "rational"}
+        ]
+      }
+    },
+    {
+      "id": "alg1_fnd_solve_one_step_add_sub",
+      "concept_id": "Alg1.FND.2.2",
+      "generator_type": "solve_one_step_add_sub_alg1",
+      "description": "Solve x + a = b or x − a = b with rational coefficients; solution may be negative or fractional",
+      "answer_type": "decimal_or_fraction",
+      "visual_category": null,
+      "mf_prereq": ["MF.RPBA.3.2"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "a_type": ["integer", "fraction", "decimal"],
+        "b_type": ["integer", "fraction", "decimal"],
+        "solution_sign": ["positive", "negative"],
+        "value_range": [-50, 50]
+      }
+    },
+    {
+      "id": "alg1_fnd_solve_one_step_mul_div",
+      "concept_id": "Alg1.FND.2.3",
+      "generator_type": "solve_one_step_mul_div_alg1",
+      "description": "Solve ax = b or x/a = b with rational a; solution may be a fraction",
+      "answer_type": "decimal_or_fraction",
+      "visual_category": null,
+      "mf_prereq": ["MF.RPBA.3.3"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "a_type": ["integer", "fraction", "negative_integer"],
+        "b_range": [-50, 50],
+        "solution_type": ["integer", "fraction", "decimal"]
+      }
+    },
+    {
+      "id": "alg1_fnd_solve_two_step",
+      "concept_id": "Alg1.FND.2.4",
+      "generator_type": "solve_two_step_linear_alg1",
+      "description": "Solve ax + b = c with rational coefficients; undo addition/subtraction then multiply/divide",
+      "answer_type": "decimal_or_fraction",
+      "visual_category": null,
+      "mf_prereq": ["MF.RPBA.3.2", "MF.RPBA.3.3"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "structure": ["ax + b = c", "x/a + b = c", "ax − b = c"],
+        "a_range": [-10, 10],
+        "b_range": [-20, 20],
+        "c_range": [-50, 50],
+        "solution_type": ["integer", "fraction", "decimal"]
+      }
+    },
+    {
+      "id": "alg1_fnd_solve_multistep",
+      "concept_id": "Alg1.FND.2.5",
+      "generator_type": "solve_multistep_linear_alg1",
+      "description": "Solve equations requiring distribution and combining like terms before isolating the variable",
+      "answer_type": "decimal_or_fraction",
+      "visual_category": null,
+      "mf_prereq": ["MF.AP.3.1", "MF.AP.3.2"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "structure": [
+          "a(bx + c) = d",
+          "ax + b(cx + d) = e",
+          "a(bx + c) + dx = e",
+          "a(bx − c) = dx + e"
+        ],
+        "coefficient_type": ["integer", "fraction"],
+        "difficulty_variants": [
+          {"label": "easy", "structure": "a(bx + c) = d", "coefficients": "small_integers"},
+          {"label": "standard", "structure": "ax + b(cx + d) = e"},
+          {"label": "hard", "structure": "a(bx − c) = dx + e", "coefficients": "rational"}
+        ]
+      }
+    },
+    {
+      "id": "alg1_fnd_solve_vars_both_sides",
+      "concept_id": "Alg1.FND.2.6",
+      "generator_type": "solve_vars_both_sides_alg1",
+      "description": "Solve equations with variable terms on both sides; may require distribution first",
+      "answer_type": "decimal_or_fraction",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "structure": [
+          "ax + b = cx + d",
+          "a(x + b) = cx + d",
+          "ax + b(x + c) = dx + e"
+        ],
+        "coefficient_range": [-8, 8],
+        "solution_type": ["integer", "fraction", "decimal"]
+      }
+    },
+    {
+      "id": "alg1_fnd_solve_abs_value_eq",
+      "concept_id": "Alg1.FND.3.1",
+      "generator_type": "solve_absolute_value_equation",
+      "description": "Solve |ax + b| = c by splitting into two equations; check for extraneous solutions when c < 0",
+      "answer_type": "decimal_or_fraction",
+      "answer_type_note": "Two solutions — delivered as ordered pair or MC of solution sets",
+      "visual_category": "C",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "structure": ["|ax + b| = c", "|ax + b| + c = d", "a|x + b| = c"],
+        "c_sign": ["positive", "zero", "negative_no_solution"],
+        "solution_count": [0, 1, 2],
+        "check_extraneous": true,
+        "difficulty_variants": [
+          {"label": "easy", "structure": "|x + b| = c"},
+          {"label": "standard", "structure": "|ax + b| = c"},
+          {"label": "hard", "structure": "a|x + b| = c or two-step isolation"}
+        ]
+      }
+    },
+    {
+      "id": "alg1_fnd_rewrite_literal_eq",
+      "concept_id": "Alg1.FND.4.1",
+      "generator_type": "rewrite_literal_equation",
+      "description": "Solve a multi-variable formula for a specified variable (e.g., solve A = lw for l)",
+      "answer_type": "text",
+      "answer_type_note": "Isolated variable expression e.g. 'l = A/w'",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "real_world"},
+      "params": {
+        "formula_pool": [
+          {"formula": "A = lw", "solve_for": ["l", "w"]},
+          {"formula": "d = rt", "solve_for": ["r", "t"]},
+          {"formula": "P = 2l + 2w", "solve_for": ["l", "w"]},
+          {"formula": "V = lwh", "solve_for": ["l", "w", "h"]},
+          {"formula": "C = 2πr", "solve_for": ["r"]},
+          {"formula": "y = mx + b", "solve_for": ["m", "x", "b"]},
+          {"formula": "I = Prt", "solve_for": ["P", "r", "t"]},
+          {"formula": "F = (9/5)C + 32", "solve_for": ["C"]},
+          {"formula": "ax + by = c", "solve_for": ["x", "y", "a", "b"]}
+        ]
+      }
+    },
+    {
+      "id": "alg1_fnd_solve_inequality_add_sub",
+      "concept_id": "Alg1.FND.5.2",
+      "generator_type": "solve_inequality_add_sub_alg1",
+      "description": "Solve x + a < b or x − a ≥ b; solution is a number line description",
+      "answer_type": "MC",
+      "visual_category": "C",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "structure": ["x + a op b", "x − a op b"],
+        "operators": ["<", ">", "≤", "≥"],
+        "a_range": [1, 20],
+        "b_range": [-20, 30]
+      }
+    },
+    {
+      "id": "alg1_fnd_solve_inequality_neg_mul_div",
+      "concept_id": "Alg1.FND.5.3",
+      "generator_type": "solve_inequality_negative_multiply_divide",
+      "description": "Solve −ax op b where a > 0; tests if Mathlete flips the inequality sign",
+      "answer_type": "MC",
+      "visual_category": "C",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "structure": ["-ax op b", "x/(-a) op b"],
+        "operators": ["<", ">", "≤", "≥"],
+        "a_range": [2, 10],
+        "b_range": [-20, 20],
+        "always_requires_flip": true
+      }
+    },
+    {
+      "id": "alg1_fnd_solve_multistep_inequality",
+      "concept_id": "Alg1.FND.5.4",
+      "generator_type": "solve_multistep_inequality_alg1",
+      "description": "Solve multi-step inequalities including distribution and like-term combining; solution as interval notation or number line MC",
+      "answer_type": "MC",
+      "visual_category": "C",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "structure": [
+          "ax + b op c",
+          "a(x + b) op c",
+          "ax + b op cx + d"
+        ],
+        "include_negative_lead_coefficient": true,
+        "operators": ["<", ">", "≤", "≥"]
+      }
+    },
+    {
+      "id": "alg1_fnd_solve_compound_inequality",
+      "concept_id": "Alg1.FND.5.5",
+      "generator_type": "solve_compound_inequality_alg1",
+      "description": "Solve AND/OR compound inequalities; AND produces an interval, OR produces a union",
+      "answer_type": "MC",
+      "visual_category": "C",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "type": ["AND", "OR"],
+        "structure": [
+          "a < bx + c < d",
+          "ax + b < c AND dx + e > f",
+          "ax + b < c OR dx + e > f"
+        ],
+        "solution_types": ["bounded_interval", "unbounded_union", "empty_set", "all_reals"]
+      }
+    },
+    {
+      "id": "alg1_fnd_solve_abs_value_inequality",
+      "concept_id": "Alg1.FND.5.6",
+      "generator_type": "solve_absolute_value_inequality",
+      "description": "Solve |ax + b| < c (AND compound) or |ax + b| > c (OR compound)",
+      "answer_type": "MC",
+      "visual_category": "C",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "structure": ["|ax + b| op c"],
+        "operators": ["<", ">", "≤", "≥"],
+        "split_type": {"<": "AND_interval", ">": "OR_union"},
+        "c_values": "positive_only",
+        "difficulty_variants": [
+          {"label": "standard", "structure": "|x + b| op c"},
+          {"label": "hard", "structure": "|ax + b| op c or |ax + b| + c op d"}
+        ]
+      }
+    },
+
+    // ===== UNIT 2: FUNCTIONS & LINEAR FUNCTIONS =====
+
+    {
+      "id": "alg1_flf_eval_function_notation",
+      "concept_id": "Alg1.FLF.1.3",
+      "generator_type": "evaluate_function_notation_alg1",
+      "description": "Evaluate f(a) for linear, quadratic, or piecewise functions; includes f(x+1), f(2x), etc.",
+      "answer_type": "integer_or_decimal",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "function_types": ["linear", "quadratic", "absolute_value"],
+        "input_types": ["integer", "negative", "expression_like_x+1"],
+        "difficulty_variants": [
+          {"label": "easy", "type": "linear", "input": "integer"},
+          {"label": "standard", "type": "quadratic", "input": "integer"},
+          {"label": "hard", "type": "any", "input": "expression"}
+        ]
+      }
+    },
+    {
+      "id": "alg1_flf_calculate_slope",
+      "concept_id": "Alg1.FLF.2.1",
+      "generator_type": "calculate_slope_alg1",
+      "description": "Find slope from two points, a table, or a graph; includes zero slope, undefined slope, and fractional slopes",
+      "answer_type": "decimal_or_fraction",
+      "visual_category": "B",
+      "visual_flag": true,
+      "mf_prereq": ["MF.RPBA.1.1 (ratio foundation)"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "real_world"},
+      "params": {
+        "input_representation": ["two_points", "table", "graph_read"],
+        "slope_types": ["positive_integer", "negative_integer", "fraction", "zero", "undefined"],
+        "coordinate_range": [-10, 10],
+        "context_variants": ["abstract", "real_world_rate"]
+      }
+    },
+    {
+      "id": "alg1_flf_write_linear_slope_intercept",
+      "concept_id": "Alg1.FLF.3.1",
+      "generator_type": "write_linear_slope_intercept",
+      "description": "Write the equation of a line in slope-intercept form given slope + y-intercept, or from a graph",
+      "answer_type": "text",
+      "answer_type_note": "y = mx + b form",
+      "visual_category": "B",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "given": ["slope_and_intercept", "graph_read_two_points", "table"],
+        "slope_type": ["integer", "fraction", "negative"],
+        "intercept_range": [-10, 10]
+      }
+    },
+    {
+      "id": "alg1_flf_write_linear_two_points",
+      "concept_id": "Alg1.FLF.3.2",
+      "generator_type": "write_linear_equation_from_two_points",
+      "description": "Given two coordinate points, compute slope then write the equation in slope-intercept form",
+      "answer_type": "text",
+      "visual_category": "B",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "point_range": [-8, 8],
+        "slope_types": ["integer", "fraction", "negative"],
+        "output_form": ["slope_intercept", "standard_form"],
+        "difficulty_variants": [
+          {"label": "easy", "slope_type": "integer"},
+          {"label": "standard", "slope_type": "fraction"},
+          {"label": "hard", "output": "standard_form"}
+        ]
+      }
+    },
+    {
+      "id": "alg1_flf_write_linear_point_slope",
+      "concept_id": "Alg1.FLF.3.3",
+      "generator_type": "write_linear_point_slope_form",
+      "description": "Given a point and slope, write the equation in point-slope form: y − y₁ = m(x − x₁)",
+      "answer_type": "text",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "slope_type": ["integer", "fraction", "negative"],
+        "point_range": [-8, 8],
+        "task": ["write_point_slope", "convert_to_slope_intercept"]
+      }
+    },
+    {
+      "id": "alg1_flf_convert_linear_forms",
+      "concept_id": "Alg1.FLF.3.4",
+      "generator_type": "convert_between_linear_forms",
+      "description": "Convert a linear equation between slope-intercept, point-slope, and standard form (Ax+By=C, A≥0)",
+      "answer_type": "text",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "conversion_direction": [
+          "slope_intercept_to_standard",
+          "standard_to_slope_intercept",
+          "point_slope_to_slope_intercept",
+          "point_slope_to_standard"
+        ],
+        "coefficient_type": ["integer", "fraction"]
+      }
+    },
+    {
+      "id": "alg1_flf_find_perpendicular_slope",
+      "concept_id": "Alg1.FLF.4.2",
+      "generator_type": "find_perpendicular_slope",
+      "description": "Given slope m, compute −1/m (negative reciprocal); includes fractions and integers",
+      "answer_type": "fraction",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "slope_pool": [2, -3, "1/2", "-3/4", "5", "-2/5", "4/3"],
+        "task": ["find_perpendicular_slope", "is_perpendicular_MC"]
+      }
+    },
+    {
+      "id": "alg1_flf_write_parallel_perp_line",
+      "concept_id": "Alg1.FLF.4.3",
+      "generator_type": "write_equation_parallel_or_perpendicular",
+      "description": "Write the equation of a line through a given point and parallel/perpendicular to a given line",
+      "answer_type": "text",
+      "visual_category": "B",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "relationship": ["parallel", "perpendicular"],
+        "given_line_form": ["slope_intercept", "standard_form"],
+        "given_point_range": [-6, 6],
+        "output_form": ["slope_intercept", "standard_form"]
+      }
+    },
+
+    // ===== UNIT 3: SYSTEMS =====
+
+    {
+      "id": "alg1_sys_substitution",
+      "concept_id": "Alg1.SYS.2.1",
+      "generator_type": "solve_system_substitution_alg1",
+      "description": "Solve 2×2 system using substitution; one equation is already solved for a variable or easily rearranged",
+      "answer_type": "ordered_pair",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "setup": ["one_eq_solved_for_x", "one_eq_solved_for_y", "requires_rearrangement"],
+        "coefficient_range": [-5, 5],
+        "solution_type": "unique",
+        "difficulty_variants": [
+          {"label": "easy", "setup": "one_eq_solved_for_y"},
+          {"label": "standard", "setup": "requires_rearrangement"},
+          {"label": "hard", "setup": "requires_rearrangement", "coefficients": "rational"}
+        ]
+      }
+    },
+    {
+      "id": "alg1_sys_elimination_direct",
+      "concept_id": "Alg1.SYS.2.2",
+      "generator_type": "solve_system_elimination_direct",
+      "description": "Solve 2×2 system by elimination where one variable cancels directly by adding/subtracting equations",
+      "answer_type": "ordered_pair",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "elimination_variable": ["x", "y"],
+        "coefficient_range": [-8, 8],
+        "structure": "standard_form_ax+by=c"
+      }
+    },
+    {
+      "id": "alg1_sys_elimination_multiply",
+      "concept_id": "Alg1.SYS.2.3",
+      "generator_type": "solve_system_elimination_multiply_first",
+      "description": "Solve 2×2 system by multiplying one or both equations to create opposite coefficients, then eliminate",
+      "answer_type": "ordered_pair",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "multiply_type": ["multiply_one_equation", "multiply_both_equations"],
+        "lcm_strategy": true,
+        "coefficient_range": [-6, 6],
+        "difficulty_variants": [
+          {"label": "standard", "type": "multiply_one"},
+          {"label": "hard", "type": "multiply_both"}
+        ]
+      }
+    },
+    {
+      "id": "alg1_sys_word_problem",
+      "concept_id": "Alg1.SYS.4.2",
+      "generator_type": "solve_system_word_problem_alg1",
+      "description": "Real-world two-variable system problem; Mathlete sets up and solves",
+      "answer_type": "ordered_pair",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "application", "complexity": "high", "context": "real_world"},
+      "params": {
+        "scenario_pool": [
+          "ticket_pricing",
+          "mixture_problem",
+          "break_even_analysis",
+          "age_problem",
+          "coin_problem",
+          "distance_rate_time",
+          "investment_split"
+        ]
+      }
+    },
+
+    // ===== UNIT 4: EXPONENTS & EXPONENTIAL FUNCTIONS =====
+
+    {
+      "id": "alg1_exp_integer_exponents",
+      "concept_id": "Alg1.EXP.1.1",
+      "generator_type": "evaluate_integer_exponents_alg1",
+      "description": "Evaluate expressions with integer exponents involving numeric and variable bases; escalated from MF.ER",
+      "answer_type": "integer_or_text",
+      "visual_category": null,
+      "mf_prereq": ["MF.ER.1.1"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "base_type": ["integer", "variable", "negative_integer"],
+        "exponent_range": [-3, 6],
+        "include_fractions_as_base": true
+      }
+    },
+    {
+      "id": "alg1_exp_product_quotient",
+      "concept_id": "Alg1.EXP.1.2",
+      "generator_type": "exp_product_quotient_alg1",
+      "description": "Simplify product/quotient of powers with variable bases and multi-term expressions",
+      "answer_type": "text",
+      "visual_category": null,
+      "mf_prereq": ["MF.ER.1.2"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "bases": ["single_variable", "two_variables", "numeric_and_variable"],
+        "exponent_range": [-3, 6],
+        "expression_complexity": ["monomial", "two_term_product"]
+      }
+    },
+    {
+      "id": "alg1_exp_power_rules",
+      "concept_id": "Alg1.EXP.1.3",
+      "generator_type": "exp_power_rules_alg1",
+      "description": "Apply power-of-power and power-of-product/quotient rules to multi-variable expressions",
+      "answer_type": "text",
+      "visual_category": null,
+      "mf_prereq": ["MF.ER.1.3", "MF.ER.1.4"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "rule": ["power_of_power", "power_of_product", "power_of_quotient"],
+        "variable_count": [1, 2],
+        "exponent_range": [2, 5]
+      }
+    },
+    {
+      "id": "alg1_exp_zero_negative",
+      "concept_id": "Alg1.EXP.1.4",
+      "generator_type": "exp_zero_negative_alg1",
+      "description": "Simplify expressions with zero and negative exponents involving variables; rewrite with positive exponents",
+      "answer_type": "text_or_fraction",
+      "visual_category": null,
+      "mf_prereq": ["MF.ER.1.5", "MF.ER.1.6"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "base_type": ["variable", "numeric_and_variable"],
+        "exponent_types": ["zero", "negative", "mixed_zero_negative"],
+        "output_format": "positive_exponents_only"
+      }
+    },
+    {
+      "id": "alg1_exp_all_laws",
+      "concept_id": "Alg1.EXP.1.5",
+      "generator_type": "simplify_all_exp_laws_alg1",
+      "description": "Apply multiple exponent rules in sequence; multi-variable, includes negative and zero exponents",
+      "answer_type": "text",
+      "visual_category": null,
+      "mf_prereq": ["MF.ER.1.7"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "expression_templates": [
+          "(x²y³)⁴",
+          "x³y⁻² / (x⁻¹y²)",
+          "(2x²)³ × x⁻⁴",
+          "(3x²y)(2x⁻¹y³)²",
+          "(x/y)⁻² × (y/x)³"
+        ],
+        "simplify_to_positive_exponents": true
+      }
+    },
+    {
+      "id": "alg1_exp_write_from_table",
+      "concept_id": "Alg1.EXP.3.1",
+      "generator_type": "write_exponential_function_from_table",
+      "description": "Given a table with a constant ratio between y-values, identify a and b to write y = a·bˣ",
+      "answer_type": "text",
+      "answer_type_note": "e.g., 'y = 3 · 2^x'",
+      "visual_category": "B",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "initial_value_range": [1, 10],
+        "base_pool": [2, 3, 0.5, 0.25, 1.5, 4, 5],
+        "table_rows": 4,
+        "include_non_integer_x": false
+      }
+    },
+    {
+      "id": "alg1_exp_exponential_word_problem",
+      "concept_id": "Alg1.EXP.4.1",
+      "generator_type": "exponential_growth_decay_word_problem",
+      "description": "Evaluate or write an exponential growth/decay model for a real-world scenario",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "application", "complexity": "high", "context": "real_world"},
+      "params": {
+        "scenario_pool": [
+          "population_growth",
+          "bacteria_doubling",
+          "radioactive_decay",
+          "compound_interest",
+          "car_depreciation",
+          "medication_half_life"
+        ],
+        "task": ["evaluate_at_t", "write_equation", "find_initial_value"]
+      }
+    },
+
+    // ===== UNIT 5: POLYNOMIALS & FACTORING =====
+
+    {
+      "id": "alg1_poly_add",
+      "concept_id": "Alg1.POLY.2.1",
+      "generator_type": "add_polynomials",
+      "description": "Add two polynomials by combining like terms; degree ≤ 3",
+      "answer_type": "text",
+      "visual_category": null,
+      "mf_prereq": ["MF.AP.3.1"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "max_degree": [2, 3],
+        "term_count": [2, 3, 4],
+        "coefficient_type": ["integer", "negative", "rational"],
+        "variable_count": [1, 2]
+      }
+    },
+    {
+      "id": "alg1_poly_subtract",
+      "concept_id": "Alg1.POLY.2.2",
+      "generator_type": "subtract_polynomials",
+      "description": "Subtract polynomials by distributing the negative then combining like terms; tests sign distribution",
+      "answer_type": "text",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "max_degree": [2, 3],
+        "term_count": [2, 3, 4],
+        "coefficient_type": ["integer", "negative"],
+        "misconception_trap": "negative_sign_distribution"
+      }
+    },
+    {
+      "id": "alg1_poly_mono_times_poly",
+      "concept_id": "Alg1.POLY.2.3",
+      "generator_type": "multiply_monomial_by_polynomial",
+      "description": "Multiply a monomial by a binomial or trinomial using the distributive property",
+      "answer_type": "text",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "monomial_degree": [0, 1, 2],
+        "polynomial_terms": [2, 3],
+        "coefficient_type": ["integer", "negative"],
+        "variable_count": [1, 2]
+      }
+    },
+    {
+      "id": "alg1_poly_foil",
+      "concept_id": "Alg1.POLY.2.4",
+      "generator_type": "multiply_binomials_foil",
+      "description": "Multiply two binomials using FOIL; simplify all like terms; includes special products",
+      "answer_type": "text",
+      "visual_category": null,
+      "mf_prereq": ["MF.RAD.3.3 (FOIL foundation)"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "binomial_types": [
+          "(ax + b)(cx + d)",
+          "(x + a)(x − a)",
+          "(x + a)²",
+          "(ax + b)²"
+        ],
+        "coefficient_type": ["integer", "negative"],
+        "difficulty_variants": [
+          {"label": "easy", "type": "(x + a)(x + b)"},
+          {"label": "standard", "type": "(ax + b)(cx + d)"},
+          {"label": "hard", "type": "special_products"}
+        ]
+      }
+    },
+    {
+      "id": "alg1_poly_factor_gcf",
+      "concept_id": "Alg1.POLY.3.1",
+      "generator_type": "factor_gcf_from_polynomial",
+      "description": "Factor the GCF from a polynomial; GCF may include a variable with an exponent",
+      "answer_type": "text",
+      "answer_type_note": "e.g., '3x(2x² + 5x − 1)'",
+      "visual_category": null,
+      "mf_prereq": ["MF.ANT.2.3"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "gcf_types": ["numeric_only", "variable_only", "numeric_and_variable"],
+        "polynomial_terms": [2, 3],
+        "max_degree": 3
+      }
+    },
+    {
+      "id": "alg1_poly_factor_trinomial_a1",
+      "concept_id": "Alg1.POLY.4.1",
+      "generator_type": "factor_trinomial_a_equals_1",
+      "description": "Factor x² + bx + c by finding two numbers that multiply to c and add to b",
+      "answer_type": "text",
+      "answer_type_note": "(x + p)(x + q) form",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "b_range": [-15, 15],
+        "c_range": [-36, 36],
+        "sign_patterns": ["both_pos", "one_neg_one_pos", "both_neg"],
+        "exclude_prime_discriminants": false,
+        "difficulty_variants": [
+          {"label": "easy", "signs": "both_positive"},
+          {"label": "standard", "signs": "mixed"},
+          {"label": "hard", "signs": "all_patterns", "c_range": [-50, 50]}
+        ]
+      }
+    },
+    {
+      "id": "alg1_poly_factor_trinomial_a_not1",
+      "concept_id": "Alg1.POLY.4.2",
+      "generator_type": "factor_trinomial_a_not_1",
+      "description": "Factor ax² + bx + c where a ≠ 1 using grouping, trial-and-error, or AC method",
+      "answer_type": "text",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "a_range": [2, 6],
+        "b_range": [-15, 15],
+        "c_range": [-12, 12],
+        "method_hint": "none",
+        "always_factorable": true,
+        "difficulty_variants": [
+          {"label": "standard", "a": 2},
+          {"label": "hard", "a_range": [3, 6]}
+        ]
+      }
+    },
+    {
+      "id": "alg1_poly_factor_diff_squares",
+      "concept_id": "Alg1.POLY.5.1",
+      "generator_type": "factor_difference_of_squares",
+      "description": "Factor a² − b² = (a + b)(a − b); includes numeric and variable perfect squares",
+      "answer_type": "text",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "a_pool": ["x", "2x", "3x", "x²", "5", "4"],
+        "b_pool": ["3", "5", "7", "2y", "4"],
+        "include_gcf_first": true
+      }
+    },
+    {
+      "id": "alg1_poly_factor_perfect_sq_trinomial",
+      "concept_id": "Alg1.POLY.5.2",
+      "generator_type": "factor_perfect_square_trinomial",
+      "description": "Recognize and factor a² ± 2ab + b² = (a ± b)²",
+      "answer_type": "text",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "a_pool": ["x", "2x", "3x", "x + 1"],
+        "b_pool": ["1", "2", "3", "5"],
+        "sign": ["plus", "minus"]
+      }
+    },
+
+    // ===== UNIT 6: QUADRATIC FUNCTIONS & EQUATIONS =====
+
+    {
+      "id": "alg1_quad_solve_by_factoring",
+      "concept_id": "Alg1.QUAD.2.2",
+      "generator_type": "solve_quadratic_by_factoring",
+      "description": "Solve ax² + bx + c = 0 by factoring; apply zero product property; solutions may be integers or fractions",
+      "answer_type": "decimal_or_fraction",
+      "answer_type_note": "Two values — delivered as set {r₁, r₂}",
+      "visual_category": null,
+      "mf_prereq": ["POLY.4.1", "POLY.4.2"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "factoring_type": ["a_equals_1", "a_not_1", "diff_of_squares", "perfect_square"],
+        "solutions_type": ["two_integer", "one_repeated", "integer_and_fraction"],
+        "requires_rearrangement": true
+      }
+    },
+    {
+      "id": "alg1_quad_solve_by_sqrt",
+      "concept_id": "Alg1.QUAD.2.3",
+      "generator_type": "solve_quadratic_by_square_roots",
+      "description": "Solve ax² + c = 0 or (x + b)² = c by taking square roots; simplify radical solutions",
+      "answer_type": "decimal_or_text",
+      "answer_type_note": "Exact form e.g. '±2√3' or decimal approximation",
+      "visual_category": null,
+      "mf_prereq": ["MF.ER.2.1", "MF.RAD.1.1"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "structure": ["ax² = c", "x² + b = c", "(x + b)² = c"],
+        "c_type": ["perfect_square", "non_perfect_square"],
+        "output_format": ["exact_radical", "decimal_approx"],
+        "difficulty_variants": [
+          {"label": "easy", "c_type": "perfect_square"},
+          {"label": "standard", "c_type": "non_perfect_square", "format": "exact"},
+          {"label": "hard", "structure": "(x + b)² = c", "c_type": "non_perfect_square"}
+        ]
+      }
+    },
+    {
+      "id": "alg1_quad_quadratic_formula",
+      "concept_id": "Alg1.QUAD.2.4",
+      "generator_type": "solve_quadratic_formula_real",
+      "description": "Apply quadratic formula to ax² + bx + c = 0; identify a, b, c; compute discriminant; simplify real solutions",
+      "answer_type": "decimal_or_text",
+      "answer_type_note": "Exact simplified form or decimal; complex solutions not included (Algebra 1 scope)",
+      "visual_category": null,
+      "mf_prereq": ["MF.RAD.1.1 (simplify radical)", "MF.ER.2.1 (square root)"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "a_range": [1, 4],
+        "b_range": [-10, 10],
+        "c_range": [-12, 12],
+        "discriminant_types": ["positive_perfect_square", "positive_non_perfect_square"],
+        "exclude_negative_discriminant": true,
+        "difficulty_variants": [
+          {"label": "easy", "discriminant": "perfect_square"},
+          {"label": "standard", "discriminant": "non_perfect_square"},
+          {"label": "hard", "a": ">1", "discriminant": "non_perfect_square"}
+        ]
+      }
+    },
+    {
+      "id": "alg1_quad_compare_function_types",
+      "concept_id": "Alg1.QUAD.4.1",
+      "generator_type": "compare_function_types_from_table",
+      "description": "Given a table of values, identify whether the function is linear (constant 1st difference), quadratic (constant 2nd difference), or exponential (constant ratio)",
+      "answer_type": "MC",
+      "visual_category": "B",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "reasoning", "complexity": "high", "context": "abstract"},
+      "params": {
+        "function_types": ["linear", "quadratic", "exponential"],
+        "x_values": "consecutive_integers",
+        "table_rows": 5,
+        "task": ["identify_type", "find_next_value", "identify_difference_pattern"]
+      }
+    },
+
+    // ===== UNIT 7: DATA ANALYSIS & STATISTICS =====
+
+    {
+      "id": "alg1_das_compute_center",
+      "concept_id": "Alg1.DAS.2.1",
+      "generator_type": "compute_center_statistics_alg1",
+      "description": "Compute mean, median, and mode for real data sets at Algebra 1 level; includes weighted mean",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "mf_prereq": ["MF.S.1.2", "MF.S.1.3"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "real_world"},
+      "params": {
+        "dataset_size": [7, 9, 11],
+        "value_range": [10, 200],
+        "measure": ["mean", "median", "mode", "weighted_mean"],
+        "context_pool": ["test_scores", "temperatures", "earnings", "sports_stats"]
+      }
+    },
+    {
+      "id": "alg1_das_compute_variability",
+      "concept_id": "Alg1.DAS.2.2",
+      "generator_type": "compute_variability_alg1",
+      "description": "Compute range and IQR from a data set or box plot; includes outlier identification",
+      "answer_type": "decimal",
+      "visual_category": "D",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "real_world"},
+      "params": {
+        "dataset_size": [7, 9, 11],
+        "ask_for": ["range", "IQR", "outlier_identification"],
+        "input_type": ["raw_data", "box_plot_read"]
+      }
+    },
+    {
+      "id": "alg1_das_read_box_plot",
+      "concept_id": "Alg1.DAS.1.3",
+      "generator_type": "read_box_plot_alg1",
+      "description": "Read Q1, Q3, median, min, max from a box plot; compute IQR; identify distribution skew",
+      "answer_type": "decimal",
+      "visual_category": "D",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "real_world"},
+      "params": {
+        "axis_range": [0, 100],
+        "ask_for": ["median", "Q1", "Q3", "IQR", "skew_direction"]
+      }
+    },
+    {
+      "id": "alg1_das_predict_from_regression",
+      "concept_id": "Alg1.DAS.4.2",
+      "generator_type": "predict_from_regression_line",
+      "description": "Given y = mx + b regression equation, predict y for a given x; interpret slope and intercept in context",
+      "answer_type": "decimal",
+      "visual_category": "B",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "application", "complexity": "high", "context": "real_world"},
+      "params": {
+        "slope_range": [0.5, 15],
+        "intercept_range": [-50, 200],
+        "x_prediction_range": [1, 50],
+        "context_pool": [
+          "study_hours_vs_grade",
+          "age_vs_salary",
+          "temperature_vs_ice_cream",
+          "height_vs_shoe_size",
+          "training_vs_performance"
+        ],
+        "task": ["predict_y", "interpret_slope", "interpret_intercept"]
+      }
+    },
+    {
+      "id": "alg1_das_compute_residual",
+      "concept_id": "Alg1.DAS.4.3",
+      "generator_type": "compute_residual_alg1",
+      "description": "Calculate residual = actual y − predicted y; interpret whether the model overestimates or underestimates",
+      "answer_type": "decimal",
+      "visual_category": "B",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "real_world"},
+      "params": {
+        "actual_range": [20, 200],
+        "regression_equation": "y = mx + b",
+        "task": ["compute_residual", "interpret_sign_MC", "identify_overunder_estimate"]
+      }
+    }
+
+  ]
+}

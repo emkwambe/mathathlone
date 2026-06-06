@@ -1,0 +1,1755 @@
+{
+  "pool_id": "nc_math_2",
+  "division": "Junior Varsity (JV)",
+  "version": "1.0.0",
+  "generator_count": 83,
+  "note": "All generator IDs are pool-isolated. No shared IDs with other pools.",
+  "generators": [
+
+    {
+      "id": "NCM2-GEN-001",
+      "concept_id": "M2.RNS.1.3",
+      "name": "Classify Real Number",
+      "type": "classify_generator",
+      "standard": "NC.M2.N-RN.2",
+      "tags": { "cognitive_demand": "recall", "complexity": "low", "context": "abstract" },
+      "params": {
+        "number_pool": ["√2", "√9", "π", "0.333...", "5/7", "-√5", "√16", "√3", "2.71828...", "√25", "-4/3", "√100"],
+        "question": "Classify {number} as rational or irrational.",
+        "answer_type": "multiple_choice",
+        "choices": ["Rational", "Irrational"]
+      },
+      "difficulty_variants": {
+        "easy": { "number_pool": ["√9", "√16", "√25", "√100"] },
+        "medium": { "number_pool": ["√2", "π", "0.333...", "5/7"] },
+        "hard": { "number_pool": ["-√5", "√3", "2.71828...", "-4/3"] }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-002",
+      "concept_id": "M2.RNS.2.1",
+      "name": "Rational Exponent Definition",
+      "type": "rational_exp_generator",
+      "standard": "NC.M2.N-RN.1",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "template": "Rewrite {base}^({num}/{den}) using radical notation.",
+        "base_range": [2, 10],
+        "num_range": [1, 4],
+        "den_range": [2, 4],
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "easy": { "num_range": [1, 1], "den_range": [2, 3] },
+        "medium": { "num_range": [1, 3], "den_range": [2, 4] },
+        "hard": { "num_range": [2, 5], "den_range": [2, 6] }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-003",
+      "concept_id": "M2.RNS.2.2",
+      "name": "Simplify Rational Exponent Expression",
+      "type": "rational_exp_simplify",
+      "standard": "NC.M2.N-RN.1",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "template": "Simplify: {coeff} * {base}^({p}/{q}) * {base}^({r}/{s})",
+        "base_range": [2, 8],
+        "coeff_range": [1, 5],
+        "exponent_pairs": [[1,2,1,3],[2,3,1,6],[3,4,1,4],[1,3,2,3]],
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "easy": { "exponent_pairs": [[1,2,1,2],[1,3,1,3]] },
+        "medium": { "exponent_pairs": [[1,2,1,3],[2,3,1,6]] },
+        "hard": { "exponent_pairs": [[3,4,5,8],[2,5,3,10]] }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-004",
+      "concept_id": "M2.RNS.3.1",
+      "name": "Simplify Radical Expression",
+      "type": "radical_simplify_generator",
+      "standard": "NC.M2.N-RN.2",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "template": "Simplify: √({a})",
+        "radicand_pool": [12, 18, 20, 24, 28, 32, 45, 48, 50, 72, 75, 80, 98, 108, 147, 200],
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "easy": { "radicand_pool": [12, 18, 20, 24, 45] },
+        "medium": { "radicand_pool": [48, 50, 72, 75, 98] },
+        "hard": { "radicand_pool": [108, 147, 200, 180, 288] }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-005",
+      "concept_id": "M2.RNS.3.2",
+      "name": "Add/Subtract Radical Expressions",
+      "type": "radical_add_sub_generator",
+      "standard": "NC.M2.N-RN.2",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "template": "Simplify: {a}√({r1}) {op} {b}√({r2})",
+        "coeff_range": [1, 6],
+        "radicand_pairs": [[2,8],[3,12],[5,20],[2,18],[3,75]],
+        "ops": ["+", "-"],
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "easy": { "radicand_pairs": [[2,8],[3,12]] },
+        "medium": { "radicand_pairs": [[5,20],[2,18]] },
+        "hard": { "radicand_pairs": [[3,75],[2,50],[5,45]] }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-006",
+      "concept_id": "M2.RNS.3.3",
+      "name": "Multiply Radical Expressions",
+      "type": "radical_multiply_generator",
+      "standard": "NC.M2.N-RN.2",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "template": "Multiply and simplify: {a}√({r1}) * {b}√({r2})",
+        "coeff_range": [1, 5],
+        "radicand_range": [2, 15],
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "easy": { "template": "√({r1}) * √({r2})" },
+        "medium": { "template": "{a}√({r1}) * {b}√({r2})" },
+        "hard": { "template": "({a} + √({r1}))(√({r1}) - {b})", "foil_required": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-007",
+      "concept_id": "M2.RNS.3.4",
+      "name": "Rationalize Denominator (Monomial)",
+      "type": "rationalize_mono_generator",
+      "standard": "NC.M2.N-RN.2",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "template": "Rationalize the denominator: {a} / √({r})",
+        "numerator_range": [1, 10],
+        "radicand_pool": [2, 3, 5, 6, 7, 10, 11, 13],
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "easy": { "numerator_range": [1, 5], "radicand_pool": [2, 3, 5] },
+        "medium": { "numerator_range": [1, 10], "radicand_pool": [2, 3, 5, 6, 7] },
+        "hard": { "template": "{a}√({r1}) / (√({r2}))", "radicand_pool": [6, 10, 15] }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-008",
+      "concept_id": "M2.RNS.3.5",
+      "name": "Rationalize Denominator (Conjugates)",
+      "type": "rationalize_conj_generator",
+      "standard": "NC.M2.N-RN.2",
+      "tags": { "cognitive_demand": "strategic", "complexity": "high", "context": "abstract" },
+      "params": {
+        "template": "Rationalize: {a} / ({b} + √({r}))",
+        "a_range": [1, 8],
+        "b_range": [1, 5],
+        "radicand_pool": [2, 3, 5, 7],
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "medium": { "template": "{a} / (1 + √({r}))" },
+        "hard": { "template": "({a} + √({r1})) / ({b} - √({r2}))" }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-009",
+      "concept_id": "M2.RNS.4.1",
+      "name": "Solve Equation with Rational Exponent",
+      "type": "rational_exp_eq_generator",
+      "standard": "NC.M2.A-REI.2",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "template": "Solve: x^({p}/{q}) = {rhs}",
+        "exponent_pairs": [[1,2],[1,3],[2,3],[3,2]],
+        "rhs_range": [1, 20],
+        "answer_type": "numeric"
+      },
+      "difficulty_variants": {
+        "easy": { "exponent_pairs": [[1,2]], "rhs_pool": [4, 9, 16, 25] },
+        "medium": { "exponent_pairs": [[1,3],[2,3]] },
+        "hard": { "exponent_pairs": [[3,2],[5,3]] }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-010",
+      "concept_id": "M2.RNS.4.2",
+      "name": "Solve Radical Equation (One Radical)",
+      "type": "radical_eq_one_generator",
+      "standard": "NC.M2.A-REI.2",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "applied" },
+      "params": {
+        "template": "Solve: √({a}x + {b}) = {c}",
+        "a_range": [1, 5],
+        "b_range": [0, 10],
+        "c_range": [1, 8],
+        "answer_type": "numeric",
+        "check_extraneous": true
+      },
+      "difficulty_variants": {
+        "easy": { "b_range": [0, 0], "a_range": [1, 3] },
+        "medium": { "template": "√({a}x + {b}) = {c}" },
+        "hard": { "template": "√({a}x + {b}) - {d} = {c}" }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-011",
+      "concept_id": "M2.RNS.4.3",
+      "name": "Solve Radical Equation (Multiple Radicals)",
+      "type": "radical_eq_multi_generator",
+      "standard": "NC.M2.A-REI.2",
+      "tags": { "cognitive_demand": "strategic", "complexity": "high", "context": "applied" },
+      "params": {
+        "template": "Solve: √({a}x + {b}) = √({c}x + {d})",
+        "a_range": [1, 4],
+        "b_range": [1, 12],
+        "c_range": [1, 4],
+        "d_range": [1, 12],
+        "answer_type": "numeric",
+        "check_extraneous": true
+      },
+      "difficulty_variants": {
+        "medium": { "template": "√({a}x + {b}) = √({c}x + {d})" },
+        "hard": { "template": "√({a}x + {b}) + {e} = √({c}x + {d})" }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-012",
+      "concept_id": "M2.CN.1.1",
+      "name": "Simplify Powers of i",
+      "type": "imaginary_unit_generator",
+      "standard": "NC.M2.N-CN.1",
+      "tags": { "cognitive_demand": "recall", "complexity": "low", "context": "abstract" },
+      "params": {
+        "template": "Simplify: i^{n}",
+        "n_range": [1, 20],
+        "answer_type": "expression",
+        "answers_pool": ["i", "-1", "-i", "1"]
+      },
+      "difficulty_variants": {
+        "easy": { "n_range": [1, 4] },
+        "medium": { "n_range": [5, 12] },
+        "hard": { "n_range": [13, 50] }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-013",
+      "concept_id": "M2.CN.1.2",
+      "name": "Square Root of Negative Numbers",
+      "type": "sqrt_neg_generator",
+      "standard": "NC.M2.N-CN.1",
+      "tags": { "cognitive_demand": "recall", "complexity": "low", "context": "abstract" },
+      "params": {
+        "template": "Simplify: √(-{n})",
+        "n_pool": [1, 4, 9, 16, 25, 2, 3, 5, 8, 12, 18, 20],
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "easy": { "n_pool": [1, 4, 9, 16, 25] },
+        "medium": { "n_pool": [2, 3, 5, 12] },
+        "hard": { "n_pool": [18, 20, 50, 75] }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-014",
+      "concept_id": "M2.CN.2.1",
+      "name": "Add/Subtract Complex Numbers",
+      "type": "complex_add_sub_generator",
+      "standard": "NC.M2.N-CN.2",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "template": "Simplify: ({a} + {b}i) {op} ({c} + {d}i)",
+        "coeff_range": [-6, 6],
+        "ops": ["+", "-"],
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "easy": { "coeff_range": [1, 5], "ops": ["+"] },
+        "medium": { "coeff_range": [-6, 6], "ops": ["+", "-"] },
+        "hard": { "template": "({a} + {b}i) - ({c} - {d}i) + ({e} + {f}i)" }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-015",
+      "concept_id": "M2.CN.2.2",
+      "name": "Multiply Complex Numbers",
+      "type": "complex_mult_generator",
+      "standard": "NC.M2.N-CN.2",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "template": "Multiply: ({a} + {b}i)({c} + {d}i)",
+        "coeff_range": [-5, 5],
+        "answer_type": "expression",
+        "note": "Answer must use i² = -1"
+      },
+      "difficulty_variants": {
+        "easy": { "coeff_range": [1, 4], "template": "({a}i)({b}i)" },
+        "medium": { "template": "({a} + {b}i)({c} + {d}i)" },
+        "hard": { "template": "({a} - {b}i)^2" }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-016",
+      "concept_id": "M2.CN.2.4",
+      "name": "Divide Complex Numbers",
+      "type": "complex_div_generator",
+      "standard": "NC.M2.N-CN.3",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "template": "Simplify: ({a} + {b}i) / ({c} + {d}i)",
+        "coeff_range": [-5, 5],
+        "answer_type": "expression",
+        "note": "Multiply by conjugate"
+      },
+      "difficulty_variants": {
+        "easy": { "template": "({a} + {b}i) / ({c}i)" },
+        "medium": { "template": "({a} + {b}i) / ({c} + {d}i)", "coeff_range": [1, 4] },
+        "hard": { "coeff_range": [-5, 5] }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-017",
+      "concept_id": "M2.CN.3.1",
+      "name": "Quadratic with Complex Solutions (Square Root Method)",
+      "type": "complex_quad_sqrt_generator",
+      "standard": "NC.M2.N-CN.7",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "template": "Solve: x² = -{n}",
+        "n_pool": [1, 4, 9, 16, 2, 3, 5, 7],
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "easy": { "n_pool": [1, 4, 9], "template": "x² = -{n}" },
+        "medium": { "template": "x² + {n} = 0" },
+        "hard": { "template": "{a}x² + {b} = 0" }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-018",
+      "concept_id": "M2.CN.3.2",
+      "name": "Quadratic with Complex Solutions (Quadratic Formula)",
+      "type": "complex_quad_formula_generator",
+      "standard": "NC.M2.N-CN.7",
+      "tags": { "cognitive_demand": "strategic", "complexity": "high", "context": "abstract" },
+      "params": {
+        "template": "Solve using the quadratic formula: {a}x² + {b}x + {c} = 0",
+        "discriminant_constraint": "negative",
+        "a_range": [1, 3],
+        "b_range": [1, 6],
+        "c_range": [2, 10],
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "medium": { "a_range": [1, 1], "b_range": [2, 4] },
+        "hard": { "a_range": [1, 3], "b_range": [1, 8] }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-019",
+      "concept_id": "M2.SSE.2.1",
+      "name": "Factor Quadratic Expression",
+      "type": "factor_quad_generator",
+      "standard": "NC.M2.A-SSE.3a",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "template": "Factor completely: x² + {b}x + {c}",
+        "root_range": [-8, 8],
+        "answer_type": "expression",
+        "note": "Generate from roots r1, r2 so c=r1*r2, b=r1+r2"
+      },
+      "difficulty_variants": {
+        "easy": { "root_range": [1, 8], "template": "x² + {b}x + {c}" },
+        "medium": { "root_range": [-8, 8] },
+        "hard": { "template": "{a}x² + {b}x + {c}", "a_range": [2, 5] }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-020",
+      "concept_id": "M2.SSE.2.2",
+      "name": "Complete the Square — Vertex Form",
+      "type": "complete_square_generator",
+      "standard": "NC.M2.A-SSE.3b",
+      "tags": { "cognitive_demand": "skill", "complexity": "high", "context": "abstract" },
+      "params": {
+        "template": "Rewrite in vertex form: x² + {b}x + {c}",
+        "b_range": [-12, 12],
+        "c_range": [-20, 20],
+        "answer_type": "expression",
+        "answer_form": "(x + {h})² + {k}"
+      },
+      "difficulty_variants": {
+        "easy": { "b_range": [2, 10], "c_pool": "perfect_square_offsets" },
+        "medium": { "b_range": [-12, 12] },
+        "hard": { "template": "{a}x² + {b}x + {c}", "a_range": [2, 4] }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-021",
+      "concept_id": "M2.APR.1.1",
+      "name": "Add/Subtract Polynomials",
+      "type": "poly_add_sub_generator",
+      "standard": "NC.M2.A-APR.1",
+      "tags": { "cognitive_demand": "recall", "complexity": "low", "context": "abstract" },
+      "params": {
+        "template": "Simplify: ({a}x² + {b}x + {c}) {op} ({d}x² + {e}x + {f})",
+        "coeff_range": [-8, 8],
+        "ops": ["+", "-"],
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "easy": { "coeff_range": [1, 5], "ops": ["+"] },
+        "medium": { "coeff_range": [-8, 8] },
+        "hard": { "template": "{a}x³ + {b}x² + {c}x + {d} ops cubic" }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-022",
+      "concept_id": "M2.APR.1.2",
+      "name": "Multiply Polynomials",
+      "type": "poly_mult_generator",
+      "standard": "NC.M2.A-APR.1",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "template": "Multiply: ({a}x + {b})({c}x + {d})",
+        "coeff_range": [-6, 6],
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "easy": { "coeff_range": [1, 5], "template": "(x + {b})(x + {d})" },
+        "medium": { "template": "({a}x + {b})({c}x + {d})" },
+        "hard": { "template": "({a}x + {b})(x² + {c}x + {d})" }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-023",
+      "concept_id": "M2.APR.2.1",
+      "name": "Polynomial Long Division",
+      "type": "poly_long_div_generator",
+      "standard": "NC.M2.A-APR.6",
+      "tags": { "cognitive_demand": "skill", "complexity": "high", "context": "abstract" },
+      "params": {
+        "template": "Divide: ({a}x² + {b}x + {c}) ÷ (x + {d})",
+        "a_range": [1, 3],
+        "b_range": [-10, 10],
+        "c_range": [-15, 15],
+        "d_range": [-5, 5],
+        "answer_type": "expression",
+        "answer_form": "quotient + remainder/(divisor)"
+      },
+      "difficulty_variants": {
+        "medium": { "a_range": [1, 1] },
+        "hard": { "template": "({a}x³ + {b}x² + {c}x + {d}) ÷ (x + {e})" }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-024",
+      "concept_id": "M2.APR.2.2",
+      "name": "Synthetic Division",
+      "type": "synthetic_div_generator",
+      "standard": "NC.M2.A-APR.6",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "template": "Use synthetic division: ({a}x³ + {b}x² + {c}x + {d}) ÷ (x - {k})",
+        "coeff_range": [-6, 6],
+        "k_range": [-4, 4],
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "easy": { "template": "(x³ + {b}x² + {c}x + {d}) ÷ (x - {k})", "a": 1 },
+        "medium": { "a_range": [1, 2] },
+        "hard": { "a_range": [1, 4] }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-025",
+      "concept_id": "M2.APR.3.1",
+      "name": "Simplify Rational Expression",
+      "type": "rational_simplify_generator",
+      "standard": "NC.M2.A-APR.7",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "template": "Simplify: (x² + {b}x + {c}) / (x + {d})",
+        "root_pairs": [[-2,-3],[-1,-4],[2,3],[1,5],[-3,2]],
+        "answer_type": "expression",
+        "note": "Factor numerator and cancel"
+      },
+      "difficulty_variants": {
+        "easy": { "template": "(x² + {b}x) / x" },
+        "medium": { "template": "(x² + {b}x + {c}) / (x + {d})" },
+        "hard": { "template": "({a}x² + {b}x + {c}) / ({d}x² + {e}x + {f})" }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-026",
+      "concept_id": "M2.APR.3.2",
+      "name": "Multiply Rational Expressions",
+      "type": "rational_mult_generator",
+      "standard": "NC.M2.A-APR.7",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "template": "Multiply and simplify: [(x+{a})/(x+{b})] * [(x+{c})/(x+{d})]",
+        "root_range": [-5, 5],
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "easy": { "allow_cancellation": "one_factor" },
+        "medium": { "allow_cancellation": "cross_cancel" },
+        "hard": { "template": "[({a}x²+{b}x+{c})/({d}x+{e})] * [({f}x+{g})/({h}x+{i})]" }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-027",
+      "concept_id": "M2.APR.3.3",
+      "name": "Divide Rational Expressions",
+      "type": "rational_div_generator",
+      "standard": "NC.M2.A-APR.7",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "template": "Divide and simplify: [(x+{a})/(x+{b})] ÷ [(x+{c})/(x+{d})]",
+        "root_range": [-5, 5],
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "easy": { "simple_fractions": true },
+        "medium": { "root_range": [-5, 5] },
+        "hard": { "quadratic_numerators": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-028",
+      "concept_id": "M2.APR.4.3",
+      "name": "Add/Subtract Rational Expressions (Unlike Denominators)",
+      "type": "rational_add_unlike_generator",
+      "standard": "NC.M2.A-APR.7",
+      "tags": { "cognitive_demand": "strategic", "complexity": "high", "context": "abstract" },
+      "params": {
+        "template": "{a}/(x+{b}) + {c}/(x+{d})",
+        "coeff_range": [1, 6],
+        "denom_range": [-4, 4],
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "easy": { "template": "{a}/x + {b}/x" },
+        "medium": { "template": "{a}/(x+{b}) + {c}/(x+{d})" },
+        "hard": { "template": "{a}/(x²+{b}x+{c}) + {d}/(x+{e})" }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-029",
+      "concept_id": "M2.CE.1.1",
+      "name": "Create Equation/Inequality from Context",
+      "type": "create_eq_1var_generator",
+      "standard": "NC.M2.A-CED.1",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "real_world" },
+      "params": {
+        "contexts": [
+          "A rectangle has width w. Its length is {a} more than twice its width. The area is {b} sq ft. Write an equation for w.",
+          "A ball is thrown upward. Its height is h = -{a}t² + {b}t + {c}. When does it reach height {d}?",
+          "The sum of a number and {a} times its square is {b}. Write the equation."
+        ],
+        "a_range": [1, 5],
+        "b_range": [10, 100],
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "easy": { "context_type": "direct_translation" },
+        "medium": { "context_type": "multi_step_setup" },
+        "hard": { "context_type": "optimization" }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-030",
+      "concept_id": "M2.CE.3.1",
+      "name": "Rearrange Formula (Literal Equation)",
+      "type": "literal_eq_generator",
+      "standard": "NC.M2.A-CED.4",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "applied" },
+      "params": {
+        "formulas": [
+          { "formula": "A = πr²", "solve_for": "r" },
+          { "formula": "E = mc²", "solve_for": "m" },
+          { "formula": "h = -½gt² + v₀t", "solve_for": "v₀" },
+          { "formula": "A = P(1 + r/n)^(nt)", "solve_for": "P" },
+          { "formula": "d = √(x² + y²)", "solve_for": "x" }
+        ],
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "easy": { "formulas": ["A = πr²", "V = lwh"] },
+        "medium": { "formulas": ["E = mc²", "d = √(x² + y²)"] },
+        "hard": { "formulas": ["h = -½gt² + v₀t", "A = P(1+r/n)^(nt)"] }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-031",
+      "concept_id": "M2.REI.2.1",
+      "name": "Solve Quadratic (Multiple Methods)",
+      "type": "solve_quad_method_generator",
+      "standard": "NC.M2.A-REI.4a",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "ncfe_difficulty": "hard_30pct",
+      "params": {
+        "methods": ["factoring", "square_root", "completing_the_square"],
+        "template": "Solve: {a}x² + {b}x + {c} = 0",
+        "a_range": [1, 3],
+        "b_range": [-10, 10],
+        "c_range": [-15, 15],
+        "answer_type": "numeric",
+        "real_solutions_only": true
+      },
+      "difficulty_variants": {
+        "easy": { "method": "factoring", "a": 1, "integer_roots": true },
+        "medium": { "method": "completing_the_square", "a": 1 },
+        "hard": { "method": "completing_the_square", "a_range": [2, 4] }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-032",
+      "concept_id": "M2.REI.2.2",
+      "name": "Quadratic Formula",
+      "type": "quadratic_formula_generator",
+      "standard": "NC.M2.A-REI.4b",
+      "tags": { "cognitive_demand": "skill", "complexity": "high", "context": "abstract" },
+      "params": {
+        "template": "Solve using the quadratic formula: {a}x² + {b}x + {c} = 0",
+        "a_range": [1, 4],
+        "b_range": [-10, 10],
+        "c_range": [-15, 15],
+        "answer_type": "expression",
+        "include_irrational": true,
+        "include_complex": true
+      },
+      "difficulty_variants": {
+        "easy": { "discriminant": "perfect_square", "a": 1 },
+        "medium": { "discriminant": "positive", "irrational_answers": true },
+        "hard": { "discriminant": "negative", "complex_answers": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-033",
+      "concept_id": "M2.REI.3.1",
+      "name": "Radical Equation with Extraneous Check",
+      "type": "radical_extraneous_generator",
+      "standard": "NC.M2.A-REI.2",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "template": "Solve and check for extraneous solutions: √({a}x + {b}) = x + {c}",
+        "a_range": [1, 4],
+        "b_range": [0, 12],
+        "c_range": [-3, 3],
+        "answer_type": "numeric",
+        "extraneous_rate": 0.4
+      },
+      "difficulty_variants": {
+        "easy": { "extraneous_rate": 0, "template": "√(x + {b}) = {c}" },
+        "medium": { "template": "√({a}x + {b}) = x + {c}" },
+        "hard": { "template": "√({a}x + {b}) + √({c}x + {d}) = {e}" }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-034",
+      "concept_id": "M2.REI.4.1",
+      "name": "Rational Equation (Extraneous Solutions)",
+      "type": "rational_eq_generator",
+      "standard": "NC.M2.A-REI.2",
+      "tags": { "cognitive_demand": "strategic", "complexity": "high", "context": "abstract" },
+      "params": {
+        "template": "{a}/(x + {b}) = {c}/(x + {d})",
+        "coeff_range": [1, 8],
+        "denom_range": [-5, 5],
+        "answer_type": "numeric",
+        "check_domain": true
+      },
+      "difficulty_variants": {
+        "easy": { "template": "{a}/x = {b}" },
+        "medium": { "template": "{a}/(x+{b}) + {c} = {d}/(x+{b})" },
+        "hard": { "template": "{a}/(x²+{b}x+{c}) = {d}/(x+{e})" }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-035",
+      "concept_id": "M2.REI.5.1",
+      "name": "Solve Exponential Equation (Common Base)",
+      "type": "exp_common_base_generator",
+      "standard": "NC.M2.A-REI.1",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "template": "{base}^({a}x + {b}) = {base}^{c}",
+        "base_pool": [2, 3, 4, 5, 10],
+        "a_range": [1, 3],
+        "b_range": [-4, 4],
+        "c_range": [1, 8],
+        "answer_type": "numeric"
+      },
+      "difficulty_variants": {
+        "easy": { "template": "{base}^x = {base}^{c}" },
+        "medium": { "template": "{base}^({a}x + {b}) = {base}^{c}" },
+        "hard": { "template": "{base1}^({a}x) = {base2}^({b}x+{c})", "rewrite_required": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-036",
+      "concept_id": "M2.REI.6.1",
+      "name": "System: Linear & Quadratic (Algebraic)",
+      "type": "sys_lin_quad_alg_generator",
+      "standard": "NC.M2.A-REI.7",
+      "tags": { "cognitive_demand": "skill", "complexity": "high", "context": "abstract" },
+      "ncfe_difficulty": "hard_33pct",
+      "params": {
+        "template": "y = x² + {b}x + {c}\ny = {m}x + {k}",
+        "b_range": [-4, 4],
+        "c_range": [-8, 8],
+        "m_range": [-4, 4],
+        "k_range": [-8, 8],
+        "answer_type": "numeric",
+        "solutions": "intersection_points"
+      },
+      "difficulty_variants": {
+        "easy": { "m": 0, "template": "y = x²+{b}x+{c}\ny = {k}" },
+        "medium": { "template": "y = x²+{b}x+{c}\ny = {m}x+{k}" },
+        "hard": { "template": "y = {a}x²+{b}x+{c}\ny = {m}x+{k}", "a_range": [1,3] }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-037",
+      "concept_id": "M2.REI.7.2",
+      "name": "Quadratic Inequality (Algebraic)",
+      "type": "quad_ineq_alg_generator",
+      "standard": "NC.M2.A-REI.11",
+      "tags": { "cognitive_demand": "strategic", "complexity": "high", "context": "abstract" },
+      "params": {
+        "template": "Solve: x² + {b}x + {c} {ineq} 0",
+        "b_range": [-8, 8],
+        "c_range": [-15, 15],
+        "inequalities": [">", "<", ">=", "<="],
+        "answer_type": "interval",
+        "real_roots_required": true
+      },
+      "difficulty_variants": {
+        "easy": { "factored_roots": "integers", "ineq_pool": [">", "<"] },
+        "medium": { "ineq_pool": [">", "<", ">=", "<="] },
+        "hard": { "template": "{a}x² + {b}x + {c} {ineq} 0", "a_range": [1, 3] }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-038",
+      "concept_id": "M2.IF.1.1",
+      "name": "Evaluate Function Notation",
+      "type": "function_eval_generator",
+      "standard": "NC.M2.F-IF.2",
+      "tags": { "cognitive_demand": "recall", "complexity": "low", "context": "abstract" },
+      "params": {
+        "template": "If f(x) = {a}x² + {b}x + {c}, find f({val})",
+        "a_range": [1, 3],
+        "b_range": [-4, 4],
+        "c_range": [-5, 5],
+        "val_range": [-4, 4],
+        "answer_type": "numeric"
+      },
+      "difficulty_variants": {
+        "easy": { "template": "f(x) = {a}x + {b}, find f({val})" },
+        "medium": { "template": "f(x) = {a}x² + {b}x + {c}, find f({val})" },
+        "hard": { "template": "f(x) = {a}/x + √(x+{c}), find f({val})", "val_range": [1, 16] }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-039",
+      "concept_id": "M2.IF.1.2",
+      "name": "Domain and Range",
+      "type": "domain_range_generator",
+      "standard": "NC.M2.F-IF.1",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "function_types": ["quadratic", "square_root", "rational", "absolute_value"],
+        "ask": ["domain", "range"],
+        "answer_type": "set_notation"
+      },
+      "difficulty_variants": {
+        "easy": { "function_types": ["quadratic", "absolute_value"], "ask": ["domain"] },
+        "medium": { "function_types": ["square_root", "rational"], "ask": ["domain", "range"] },
+        "hard": { "function_types": ["rational"], "ask": ["domain"], "note": "Must find excluded values" }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-040",
+      "concept_id": "M2.IF.2.1",
+      "name": "Average Rate of Change",
+      "type": "avg_rate_change_generator",
+      "standard": "NC.M2.F-IF.6",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "template": "Find the average rate of change of f(x) = {a}x² + {b}x + {c} from x = {x1} to x = {x2}",
+        "a_range": [1, 3],
+        "b_range": [-4, 4],
+        "c_range": [-8, 8],
+        "x_range": [-4, 4],
+        "answer_type": "numeric"
+      },
+      "difficulty_variants": {
+        "easy": { "template": "from table", "table_provided": true },
+        "medium": { "template": "from equation" },
+        "hard": { "context": "interpret in real-world context" }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-041",
+      "concept_id": "M2.BF.2.2",
+      "name": "Find Inverse Function (Algebraic)",
+      "type": "inverse_func_alg_generator",
+      "standard": "NC.M2.F-BF.4",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "function_types": [
+          {"template": "f(x) = {a}x + {b}", "type": "linear"},
+          {"template": "f(x) = {a}x² + {b}, x≥0", "type": "quadratic_restricted"},
+          {"template": "f(x) = {a}/x", "type": "rational"},
+          {"template": "f(x) = √(x + {b})", "type": "sqrt"}
+        ],
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "easy": { "type": "linear" },
+        "medium": { "type": "sqrt" },
+        "hard": { "type": "quadratic_restricted" }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-042",
+      "concept_id": "M2.GEO.CON.1.2",
+      "name": "Perform Translation",
+      "type": "translation_generator",
+      "standard": "NC.M2.G-CO.2",
+      "tags": { "cognitive_demand": "recall", "complexity": "low", "context": "abstract" },
+      "params": {
+        "template": "Translate point ({x}, {y}) by vector <{dx}, {dy}>. What are the new coordinates?",
+        "coord_range": [-6, 6],
+        "translation_range": [-5, 5],
+        "answer_type": "coordinate"
+      },
+      "difficulty_variants": {
+        "easy": { "single_point": true },
+        "medium": { "polygon_vertices": 3 },
+        "hard": { "polygon_vertices": 4, "express_as_rule": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-043",
+      "concept_id": "M2.GEO.CON.2.1",
+      "name": "Perform Reflection",
+      "type": "reflection_generator",
+      "standard": "NC.M2.G-CO.2",
+      "tags": { "cognitive_demand": "recall", "complexity": "low", "context": "abstract" },
+      "params": {
+        "template": "Reflect point ({x}, {y}) across the {line}. What are the new coordinates?",
+        "coord_range": [-6, 6],
+        "lines": ["x-axis", "y-axis", "y=x", "y=-x"],
+        "answer_type": "coordinate"
+      },
+      "difficulty_variants": {
+        "easy": { "lines": ["x-axis", "y-axis"] },
+        "medium": { "lines": ["y=x", "y=-x"] },
+        "hard": { "lines": ["y=2", "x=-3"], "non_standard_lines": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-044",
+      "concept_id": "M2.GEO.CON.3.1",
+      "name": "Perform Rotation",
+      "type": "rotation_generator",
+      "standard": "NC.M2.G-CO.2",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "ncfe_difficulty": "very_hard_23pct",
+      "params": {
+        "template": "Rotate point ({x}, {y}) by {angle}° counterclockwise about the origin.",
+        "coord_range": [-5, 5],
+        "angles": [90, 180, 270],
+        "answer_type": "coordinate",
+        "rules": {
+          "90": "(-y, x)",
+          "180": "(-x, -y)",
+          "270": "(y, -x)"
+        }
+      },
+      "difficulty_variants": {
+        "easy": { "angles": [180] },
+        "medium": { "angles": [90, 180, 270] },
+        "hard": { "multi_step": true, "composition": "rotation + reflection" }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-045",
+      "concept_id": "M2.GEO.CON.4.1",
+      "name": "Composition of Rigid Motions",
+      "type": "composition_transform_generator",
+      "standard": "NC.M2.G-CO.5",
+      "tags": { "cognitive_demand": "skill", "complexity": "high", "context": "abstract" },
+      "ncfe_difficulty": "very_hard_23pct",
+      "params": {
+        "template": "Point P({x},{y}) is first reflected across {line1}, then rotated {angle}° about origin. Find P''.",
+        "coord_range": [-5, 5],
+        "lines": ["x-axis", "y-axis"],
+        "angles": [90, 180, 270],
+        "answer_type": "coordinate"
+      },
+      "difficulty_variants": {
+        "medium": { "steps": 2 },
+        "hard": { "steps": 3, "reverse": "find pre-image" }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-046",
+      "concept_id": "M2.SRT.1.1",
+      "name": "Apply Dilation",
+      "type": "dilation_generator",
+      "standard": "NC.M2.G-SRT.1",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "template": "Dilate point ({x},{y}) by scale factor {k} about the origin.",
+        "coord_range": [-6, 6],
+        "k_pool": [0.5, 2, 3, 0.25, 1.5, 4],
+        "answer_type": "coordinate"
+      },
+      "difficulty_variants": {
+        "easy": { "k_pool": [2, 3, 4], "single_point": true },
+        "medium": { "k_pool": [0.5, 2, 3] },
+        "hard": { "center_not_origin": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-047",
+      "concept_id": "M2.SRT.3.1",
+      "name": "Find Missing Side via Similar Triangles",
+      "type": "similar_sides_generator",
+      "standard": "NC.M2.G-SRT.2",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "template": "Triangles ABC ~ DEF. AB={a}, BC={b}, DE={c}. Find EF.",
+        "side_range": [3, 20],
+        "scale_factors": [1.5, 2, 2.5, 3, 0.5, 0.75],
+        "answer_type": "numeric"
+      },
+      "difficulty_variants": {
+        "easy": { "scale_factors": [2, 3] },
+        "medium": { "scale_factors": [1.5, 2.5] },
+        "hard": { "three_unknowns": true, "perimeter_given": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-048",
+      "concept_id": "M2.SRT.4.1",
+      "name": "Geometric Mean in Right Triangle",
+      "type": "geo_mean_generator",
+      "standard": "NC.M2.G-SRT.4",
+      "tags": { "cognitive_demand": "skill", "complexity": "high", "context": "abstract" },
+      "params": {
+        "template": "In right △, altitude to hypotenuse creates segments {p} and {q}. Find the altitude.",
+        "segment_pairs": [[4,9],[1,16],[4,16],[9,16],[1,4],[3,12]],
+        "answer_type": "numeric"
+      },
+      "difficulty_variants": {
+        "easy": { "segment_pairs": [[4,9],[1,4]] },
+        "medium": { "segment_pairs": [[1,16],[9,16]] },
+        "hard": { "find_leg": true, "segment_pairs": [[3,12],[2,8]] }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-049",
+      "concept_id": "M2.SRT.5.1",
+      "name": "Special Right Triangle 45-45-90",
+      "type": "special_rt_45_generator",
+      "standard": "NC.M2.G-SRT.8",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "ncfe_difficulty": "medium_easy_61pct",
+      "params": {
+        "template": "In a 45-45-90 triangle, if {given_side} = {val}, find {find_side}.",
+        "val_pool": [1, 2, 3, 4, 5, 6, 8, 10],
+        "given_options": ["leg", "hypotenuse"],
+        "find_options": ["hypotenuse", "leg"],
+        "answer_type": "numeric",
+        "ratios": "1:1:√2"
+      },
+      "difficulty_variants": {
+        "easy": { "given": "leg", "find": "hypotenuse" },
+        "medium": { "given": "hypotenuse", "find": "leg" },
+        "hard": { "given_in_radical_form": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-050",
+      "concept_id": "M2.SRT.5.2",
+      "name": "Special Right Triangle 30-60-90",
+      "type": "special_rt_30_generator",
+      "standard": "NC.M2.G-SRT.8",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "ncfe_difficulty": "medium_easy_61pct",
+      "params": {
+        "template": "In a 30-60-90 triangle, if {given_side} = {val}, find {find_side}.",
+        "val_pool": [1, 2, 3, 4, 5, 6, 8, 10],
+        "given_options": ["short_leg", "long_leg", "hypotenuse"],
+        "answer_type": "numeric",
+        "ratios": "1:√3:2"
+      },
+      "difficulty_variants": {
+        "easy": { "given": "short_leg" },
+        "medium": { "given": "long_leg" },
+        "hard": { "given": "hypotenuse", "radical_form": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-051",
+      "concept_id": "M2.SRT.6.1",
+      "name": "Trig Ratios (sin, cos, tan)",
+      "type": "trig_ratio_generator",
+      "standard": "NC.M2.G-SRT.6",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "template": "In right △ABC with right angle at C, if the legs are {a} and {b}, find sin(A), cos(A), tan(A).",
+        "pythagorean_triples": [[3,4,5],[5,12,13],[8,15,17],[7,24,25],[6,8,10],[9,12,15]],
+        "ask": ["sin", "cos", "tan"],
+        "answer_type": "numeric"
+      },
+      "difficulty_variants": {
+        "easy": { "triples": [[3,4,5],[6,8,10]], "ask_one": true },
+        "medium": { "triples": [[5,12,13],[8,15,17]], "ask_all": true },
+        "hard": { "given_trig_find_others": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-052",
+      "concept_id": "M2.SRT.7.1",
+      "name": "Trig to Find Missing Sides",
+      "type": "trig_sides_generator",
+      "standard": "NC.M2.G-SRT.8",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "applied" },
+      "ncfe_difficulty": "medium_easy_61pct",
+      "params": {
+        "template": "In a right triangle, angle A = {angle}°, hypotenuse = {hyp}. Find the opposite side.",
+        "angles": [30, 45, 60, 37, 53, 40, 50, 35, 55],
+        "hyp_range": [5, 30],
+        "answer_type": "numeric",
+        "precision": 2
+      },
+      "difficulty_variants": {
+        "easy": { "angles": [30, 45, 60] },
+        "medium": { "angles": [37, 53, 40, 50] },
+        "hard": { "given_side": "adjacent", "find": "hypotenuse", "multi_step": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-053",
+      "concept_id": "M2.SRT.7.2",
+      "name": "Inverse Trig to Find Angles",
+      "type": "inv_trig_angles_generator",
+      "standard": "NC.M2.G-SRT.8",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "applied" },
+      "params": {
+        "template": "In right △, opposite = {opp}, hypotenuse = {hyp}. Find angle A (nearest degree).",
+        "pythagorean_triples": [[3,4,5],[5,12,13],[8,15,17]],
+        "answer_type": "numeric",
+        "precision": 0
+      },
+      "difficulty_variants": {
+        "easy": { "use_special_angles": true },
+        "medium": { "decimal_ratios": true },
+        "hard": { "two_angles_find_third": true, "multi_step": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-054",
+      "concept_id": "M2.SRT.8.1",
+      "name": "Solve Right Triangle",
+      "type": "solve_right_triangle_generator",
+      "standard": "NC.M2.G-SRT.8",
+      "tags": { "cognitive_demand": "strategic", "complexity": "high", "context": "applied" },
+      "params": {
+        "template": "Find all missing sides and angles in right △ABC (right angle at C). Given: {given}.",
+        "given_combinations": [
+          {"given": "angle A=37°, a=12", "find": ["b","c","B"]},
+          {"given": "a=8, b=15", "find": ["c","A","B"]},
+          {"given": "angle B=52°, c=20", "find": ["a","b","A"]}
+        ],
+        "answer_type": "numeric"
+      },
+      "difficulty_variants": {
+        "easy": { "given_two_sides": true },
+        "medium": { "given_angle_and_side": true },
+        "hard": { "with_context": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-055",
+      "concept_id": "M2.CIR.2.1",
+      "name": "Central Angle and Arc Measure",
+      "type": "central_angle_generator",
+      "standard": "NC.M2.G-C.2",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "template": "Central angle AOB = {angle}°. Find arc AB.",
+        "angle_range": [20, 350],
+        "answer_type": "numeric",
+        "note": "Arc measure = central angle measure"
+      },
+      "difficulty_variants": {
+        "easy": { "given": "central_angle", "find": "arc" },
+        "medium": { "given": "arc", "find": "central_angle" },
+        "hard": { "multi_arc_setup": true, "find_missing_arc": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-056",
+      "concept_id": "M2.CIR.2.2",
+      "name": "Inscribed Angle",
+      "type": "inscribed_angle_generator",
+      "standard": "NC.M2.G-C.2",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "template": "Inscribed angle = {angle}°. Find the intercepted arc.",
+        "angle_range": [15, 85],
+        "answer_type": "numeric",
+        "rule": "inscribed_angle = arc/2"
+      },
+      "difficulty_variants": {
+        "easy": { "given": "inscribed_angle", "find": "arc" },
+        "medium": { "given": "arc", "find": "inscribed_angle" },
+        "hard": { "cyclic_quadrilateral": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-057",
+      "concept_id": "M2.CIR.4.1",
+      "name": "Arc Length",
+      "type": "arc_length_generator",
+      "standard": "NC.M2.G-C.5",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "template": "Find the arc length for a circle with radius {r} and central angle {theta}°.",
+        "r_range": [2, 15],
+        "theta_pool": [30, 45, 60, 90, 120, 135, 150, 180, 270],
+        "answer_type": "numeric",
+        "formula": "L = (theta/360) * 2πr"
+      },
+      "difficulty_variants": {
+        "easy": { "theta_pool": [90, 180, 360] },
+        "medium": { "theta_pool": [30, 45, 60, 120, 150] },
+        "hard": { "given_arc_length_find_radius": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-058",
+      "concept_id": "M2.CIR.4.2",
+      "name": "Sector Area",
+      "type": "sector_area_generator",
+      "standard": "NC.M2.G-C.5",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "template": "Find the area of a sector with radius {r} and central angle {theta}°.",
+        "r_range": [2, 12],
+        "theta_pool": [30, 45, 60, 90, 120, 180, 270],
+        "answer_type": "numeric",
+        "formula": "A = (theta/360) * πr²"
+      },
+      "difficulty_variants": {
+        "easy": { "theta_pool": [90, 180] },
+        "medium": { "theta_pool": [30, 60, 120] },
+        "hard": { "given_area_find_theta": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-059",
+      "concept_id": "M2.CIR.5.1",
+      "name": "Equation of Circle (Standard Form)",
+      "type": "circle_eq_standard_generator",
+      "standard": "NC.M2.G-GPE.1",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "template": "Write the equation of a circle with center ({h},{k}) and radius {r}.",
+        "h_range": [-5, 5],
+        "k_range": [-5, 5],
+        "r_range": [1, 8],
+        "answer_type": "expression",
+        "form": "(x-h)² + (y-k)² = r²"
+      },
+      "difficulty_variants": {
+        "easy": { "center": "origin", "h": 0, "k": 0 },
+        "medium": { "h_range": [-5, 5], "k_range": [-5, 5] },
+        "hard": { "given_center_and_point_on_circle": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-060",
+      "concept_id": "M2.CIR.5.3",
+      "name": "Complete Square for Circle Equation",
+      "type": "circle_complete_sq_generator",
+      "standard": "NC.M2.G-GPE.1",
+      "tags": { "cognitive_demand": "strategic", "complexity": "high", "context": "abstract" },
+      "params": {
+        "template": "Find center and radius: x² + y² + {a}x + {b}y + {c} = 0",
+        "a_range": [-8, 8],
+        "b_range": [-8, 8],
+        "c_range": [-20, 5],
+        "answer_type": "expression",
+        "note": "Must complete the square for both x and y"
+      },
+      "difficulty_variants": {
+        "easy": { "b": 0, "template": "x² + y² + {a}x + {c} = 0" },
+        "medium": { "a_range": [-6, 6], "b_range": [-6, 6] },
+        "hard": { "a_range": [-8, 8], "b_range": [-8, 8], "c_range": [-20, 0] }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-061",
+      "concept_id": "M2.STATS.3.1",
+      "name": "Two-Way Frequency Table",
+      "type": "two_way_table_generator",
+      "standard": "NC.M2.S-ID.5",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "real_world" },
+      "params": {
+        "contexts": ["survey_music_gender", "survey_sports_grade", "survey_transport_school"],
+        "question_types": ["joint_frequency", "marginal_frequency", "relative_frequency"],
+        "answer_type": "numeric"
+      },
+      "difficulty_variants": {
+        "easy": { "question_type": "joint_frequency" },
+        "medium": { "question_type": "marginal_frequency" },
+        "hard": { "question_type": "relative_frequency" }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-062",
+      "concept_id": "M2.STATS.3.2",
+      "name": "Conditional Probability from Two-Way Table",
+      "type": "cond_prob_table_generator",
+      "standard": "NC.M2.S-ID.5",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "real_world" },
+      "params": {
+        "contexts": ["survey_music_gender", "survey_sports_grade"],
+        "template": "Given the table, find P({event_a} | {event_b})",
+        "answer_type": "numeric",
+        "precision": 3
+      },
+      "difficulty_variants": {
+        "easy": { "P_given_row": true },
+        "medium": { "P_given_col": true },
+        "hard": { "independence_test": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-063",
+      "concept_id": "M2.PROB.1.1",
+      "name": "Basic Probability",
+      "type": "basic_prob_generator",
+      "standard": "NC.M2.S-CP.1",
+      "tags": { "cognitive_demand": "recall", "complexity": "low", "context": "abstract" },
+      "params": {
+        "contexts": ["standard_deck", "bag_of_marbles", "spinner", "dice", "numbered_tiles"],
+        "template": "From {context}, find P({event}).",
+        "answer_type": "fraction"
+      },
+      "difficulty_variants": {
+        "easy": { "single_outcome": true },
+        "medium": { "compound_event": true },
+        "hard": { "complementary_event": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-064",
+      "concept_id": "M2.PROB.2.1",
+      "name": "Conditional Probability",
+      "type": "cond_prob_generator",
+      "standard": "NC.M2.S-CP.3",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "ncfe_difficulty": "very_hard_20pct",
+      "params": {
+        "template": "P(A) = {pa}, P(B) = {pb}, P(A∩B) = {pab}. Find P(A|B).",
+        "pa_pool": [0.2, 0.3, 0.4, 0.5, 0.6],
+        "pb_pool": [0.3, 0.4, 0.5, 0.6, 0.7],
+        "answer_type": "fraction",
+        "formula": "P(A|B) = P(A∩B)/P(B)"
+      },
+      "difficulty_variants": {
+        "easy": { "from_tree_diagram": true },
+        "medium": { "from_given_probabilities": true },
+        "hard": { "bayes_theorem_context": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-065",
+      "concept_id": "M2.PROB.2.2",
+      "name": "Conditional Probability from Tables",
+      "type": "cond_prob_table2_generator",
+      "standard": "NC.M2.S-CP.4",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "real_world" },
+      "params": {
+        "contexts": ["survey_bus_late", "medical_test", "survey_product_preference"],
+        "template": "Use the table to find P({event_a} | {event_b})",
+        "answer_type": "fraction"
+      },
+      "difficulty_variants": {
+        "easy": { "table_values_given": true },
+        "medium": { "calculate_from_frequencies": true },
+        "hard": { "verify_independence": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-066",
+      "concept_id": "M2.PROB.3.1",
+      "name": "Multiplication Rule (Independent Events)",
+      "type": "mult_rule_indep_generator",
+      "standard": "NC.M2.S-CP.2",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "template": "P(A) = {pa}, P(B) = {pb}. If A and B are independent, find P(A and B).",
+        "prob_pool": [0.1, 0.2, 0.25, 0.3, 0.4, 0.5, 0.6, 0.75, 0.8],
+        "answer_type": "fraction"
+      },
+      "difficulty_variants": {
+        "easy": { "simple_fractions": true },
+        "medium": { "three_events": false },
+        "hard": { "three_independent_events": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-067",
+      "concept_id": "M2.PROB.3.2",
+      "name": "Multiplication Rule (Dependent Events)",
+      "type": "mult_rule_dep_generator",
+      "standard": "NC.M2.S-CP.2",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "template": "A bag has {r} red and {b} blue marbles. Draw 2 without replacement. Find P(red, red).",
+        "r_range": [2, 8],
+        "b_range": [2, 8],
+        "answer_type": "fraction"
+      },
+      "difficulty_variants": {
+        "easy": { "r": 3, "b": 2 },
+        "medium": { "r_range": [3, 6], "b_range": [2, 5] },
+        "hard": { "three_draws": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-068",
+      "concept_id": "M2.PROB.4.1",
+      "name": "Addition Rule (Mutually Exclusive)",
+      "type": "addition_rule_excl_generator",
+      "standard": "NC.M2.S-CP.7",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "template": "P(A) = {pa}, P(B) = {pb}. A and B are mutually exclusive. Find P(A or B).",
+        "prob_pool": [0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4],
+        "constraint": "pa + pb <= 1",
+        "answer_type": "fraction"
+      },
+      "difficulty_variants": {
+        "easy": { "simple_fractions": true },
+        "medium": { "context": "dice or cards" },
+        "hard": { "complement_strategy": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-069",
+      "concept_id": "M2.PROB.4.2",
+      "name": "Addition Rule (Inclusive Events)",
+      "type": "addition_rule_incl_generator",
+      "standard": "NC.M2.S-CP.7",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "template": "P(A) = {pa}, P(B) = {pb}, P(A∩B) = {pab}. Find P(A∪B).",
+        "prob_pool": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6],
+        "answer_type": "fraction",
+        "formula": "P(A∪B) = P(A) + P(B) - P(A∩B)"
+      },
+      "difficulty_variants": {
+        "easy": { "context": "simple overlap" },
+        "medium": { "find_intersection": true },
+        "hard": { "three_events": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-070",
+      "concept_id": "M2.PROB.5.1",
+      "name": "Fundamental Counting Principle",
+      "type": "counting_principle_generator",
+      "standard": "NC.M2.S-CP.9",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "contexts": [
+          "A restaurant has {a} entrees, {b} sides, and {c} drinks. How many different meals?",
+          "A PIN has {n} digits (0-9). How many different PINs?",
+          "You have {a} shirts, {b} pants, {c} shoes. How many outfits?"
+        ],
+        "a_range": [2, 8],
+        "b_range": [2, 6],
+        "c_range": [2, 5],
+        "answer_type": "numeric"
+      },
+      "difficulty_variants": {
+        "easy": { "two_choices": true },
+        "medium": { "three_choices": true },
+        "hard": { "with_restriction": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-071",
+      "concept_id": "M2.PROB.5.2",
+      "name": "Permutations",
+      "type": "permutation_generator",
+      "standard": "NC.M2.S-CP.9",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "template": "How many ways can {r} items be arranged from {n} distinct items?",
+        "n_range": [4, 10],
+        "r_range": [2, 5],
+        "answer_type": "numeric",
+        "formula": "P(n,r) = n!/(n-r)!"
+      },
+      "difficulty_variants": {
+        "easy": { "n_range": [4, 6], "r_range": [2, 3] },
+        "medium": { "n_range": [6, 9], "r_range": [2, 4] },
+        "hard": { "with_restriction": true, "repeated_items": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-072",
+      "concept_id": "M2.PROB.5.3",
+      "name": "Combinations",
+      "type": "combination_generator",
+      "standard": "NC.M2.S-CP.9",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "template": "In how many ways can you choose {r} items from {n} distinct items?",
+        "n_range": [4, 12],
+        "r_range": [2, 5],
+        "answer_type": "numeric",
+        "formula": "C(n,r) = n!/(r!(n-r)!)"
+      },
+      "difficulty_variants": {
+        "easy": { "n_range": [4, 7], "r_range": [2, 3] },
+        "medium": { "n_range": [7, 10] },
+        "hard": { "probability_application": true, "perm_vs_comb_distinction": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-073",
+      "concept_id": "M2.PROB.5.4",
+      "name": "Counting Principles in Probability",
+      "type": "counting_prob_generator",
+      "standard": "NC.M2.S-CP.9",
+      "tags": { "cognitive_demand": "strategic", "complexity": "high", "context": "real_world" },
+      "params": {
+        "contexts": [
+          "A committee of {r} is chosen from {n} people. Find P(specific person is included).",
+          "A lottery picks {r} numbers from 1–{n}. Find P(picking {r} specific numbers)."
+        ],
+        "n_range": [6, 15],
+        "r_range": [2, 5],
+        "answer_type": "fraction"
+      },
+      "difficulty_variants": {
+        "medium": { "committee": true },
+        "hard": { "lottery": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-074",
+      "concept_id": "M2.APR.4.1",
+      "name": "LCM of Polynomials",
+      "type": "poly_lcm_generator",
+      "standard": "NC.M2.A-APR.7",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "template": "Find the LCM of {p1} and {p2}.",
+        "poly_pairs": [
+          ["x²-4", "x-2"],
+          ["x²+5x+6", "x²+3x+2"],
+          ["3x(x+2)", "x²+2x"],
+          ["x²-9", "x²+3x"]
+        ],
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "easy": { "monomial_lcm": true },
+        "medium": { "linear_factors": true },
+        "hard": { "quadratic_factors": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-075",
+      "concept_id": "M2.APR.4.2",
+      "name": "Add/Subtract Rational Expressions (Like Denominators)",
+      "type": "rational_add_like_generator",
+      "standard": "NC.M2.A-APR.7",
+      "tags": { "cognitive_demand": "skill", "complexity": "low", "context": "abstract" },
+      "params": {
+        "template": "({a}x + {b}) / ({denom}) {op} ({c}x + {d}) / ({denom})",
+        "coeff_range": [1, 6],
+        "denom_pool": ["x+1", "x-2", "x+3", "2x", "x²+1"],
+        "ops": ["+", "-"],
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "easy": { "denom": "x" },
+        "medium": { "denom_pool": ["x+1", "x-2"] },
+        "hard": { "simplify_after_combine": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-076",
+      "concept_id": "M2.IF.3.1",
+      "name": "Key Features of Quadratic Functions",
+      "type": "quad_key_features_generator",
+      "standard": "NC.M2.F-IF.4",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "ncfe_difficulty": "medium_47pct",
+      "params": {
+        "template": "f(x) = {a}(x-{h})² + {k}. Identify vertex, axis, min/max, and zeros.",
+        "a_range": [-3, 3],
+        "h_range": [-5, 5],
+        "k_range": [-10, 10],
+        "ask": ["vertex", "axis_of_symmetry", "min_max_value", "zeros"],
+        "answer_type": "multiple_choice"
+      },
+      "difficulty_variants": {
+        "easy": { "form": "vertex", "ask": ["vertex"] },
+        "medium": { "form": "standard", "ask": ["vertex", "axis"] },
+        "hard": { "form": "standard", "ask_all": true, "find_zeros": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-077",
+      "concept_id": "M2.REI.6.2",
+      "name": "System Linear & Quadratic (Graphical)",
+      "type": "sys_lin_quad_graph_generator",
+      "standard": "NC.M2.A-REI.7",
+      "tags": { "cognitive_demand": "skill", "complexity": "high", "context": "abstract" },
+      "params": {
+        "template": "Solve graphically: y = x² + {b}x + {c} and y = {m}x + {k}",
+        "b_range": [-4, 4],
+        "c_range": [-8, 8],
+        "m_range": [-3, 3],
+        "k_range": [-6, 6],
+        "answer_type": "numeric",
+        "solutions_display": "intersection_coordinates"
+      },
+      "difficulty_variants": {
+        "easy": { "one_solution": true },
+        "medium": { "two_solutions": true },
+        "hard": { "no_solution_case": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-078",
+      "concept_id": "M2.CE.5.1",
+      "name": "Solve Equations Graphically",
+      "type": "graph_intersect_generator",
+      "standard": "NC.M2.A-REI.11",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "template": "Find the x-value(s) where f(x) = g(x). f(x) = {f}, g(x) = {g}",
+        "function_pairs": [
+          ["x²+2x-1", "x+1"],
+          ["x²", "4"],
+          ["√x", "x-2"],
+          ["2x²-3", "5x"]
+        ],
+        "answer_type": "numeric"
+      },
+      "difficulty_variants": {
+        "easy": { "linear_quadratic": true, "integer_solutions": true },
+        "medium": { "decimal_solutions": true },
+        "hard": { "three_function_types": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-079",
+      "concept_id": "M2.BF.1.1",
+      "name": "Combine Functions (Add/Subtract)",
+      "type": "combine_func_add_generator",
+      "standard": "NC.M2.F-BF.1",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "ncfe_difficulty": "hard_35pct",
+      "params": {
+        "template": "f(x) = {f}, g(x) = {g}. Find (f+g)(x).",
+        "function_types": ["linear+linear", "linear+quadratic", "quadratic+quadratic"],
+        "coeff_range": [-5, 5],
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "easy": { "types": ["linear+linear"] },
+        "medium": { "types": ["linear+quadratic"] },
+        "hard": { "types": ["quadratic+quadratic"], "evaluate_at_point": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-080",
+      "concept_id": "M2.BF.1.2",
+      "name": "Combine Functions (Multiply/Divide)",
+      "type": "combine_func_mult_generator",
+      "standard": "NC.M2.F-BF.1",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "template": "f(x) = {f}, g(x) = {g}. Find (f*g)(x).",
+        "function_types": ["linear*linear", "constant*quadratic"],
+        "coeff_range": [-4, 4],
+        "answer_type": "expression"
+      },
+      "difficulty_variants": {
+        "easy": { "types": ["constant*quadratic"] },
+        "medium": { "types": ["linear*linear"] },
+        "hard": { "types": ["linear*quadratic"], "expand": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-081",
+      "concept_id": "M2.CIR.2.4",
+      "name": "Intersecting Chords Angle",
+      "type": "intersect_chord_angle_generator",
+      "standard": "NC.M2.G-C.2",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "template": "Two chords intersect inside a circle, creating arcs {arc1}° and {arc2}°. Find the angle.",
+        "arc_range": [30, 150],
+        "answer_type": "numeric",
+        "formula": "angle = (arc1 + arc2)/2"
+      },
+      "difficulty_variants": {
+        "easy": { "find_angle_from_arcs": true },
+        "medium": { "find_arc_from_angle_and_one_arc": true },
+        "hard": { "multi_chord_system": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-082",
+      "concept_id": "M2.CIR.3.1",
+      "name": "Chord Segment Lengths",
+      "type": "chord_segment_generator",
+      "standard": "NC.M2.G-C.2",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "abstract" },
+      "params": {
+        "template": "Two chords intersect at P. AX={a}, XB={b}, CX={c}. Find XD.",
+        "segment_pairs": [[3,4,2],[2,6,3],[4,9,6],[1,8,2]],
+        "answer_type": "numeric",
+        "formula": "AX * XB = CX * XD"
+      },
+      "difficulty_variants": {
+        "easy": { "all_integer_answers": true },
+        "medium": { "radical_answers": false },
+        "hard": { "secant_tangent": true }
+      }
+    },
+
+    {
+      "id": "NCM2-GEN-083",
+      "concept_id": "M2.PROB.5.2",
+      "name": "Permutation Word Problem",
+      "type": "permutation_generator",
+      "standard": "NC.M2.S-CP.9",
+      "tags": { "cognitive_demand": "skill", "complexity": "medium", "context": "real_world" },
+      "params": {
+        "contexts": [
+          "In how many ways can {n} people be arranged in a row?",
+          "How many 3-digit numbers can be formed from digits {set} with no repetition?",
+          "How many ways can {n} books be arranged on a shelf?"
+        ],
+        "n_range": [3, 8],
+        "answer_type": "numeric"
+      },
+      "difficulty_variants": {
+        "easy": { "all_arranged": true },
+        "medium": { "select_r_from_n": true },
+        "hard": { "with_restrictions": true }
+      }
+    }
+
+  ]
+}

@@ -1,0 +1,512 @@
+{
+  "course": "Algebra 1",
+  "division": "Varsity",
+  "static_pool_id": "algebra_1_static",
+  "philosophy": "Every static question targets a known Algebra 1 misconception. DOK 2–3 emphasis — conceptual understanding, not just computation.",
+  "total_static_items": 72,
+  "questions": [
+
+    // === FND: FOUNDATIONS ===
+
+    {
+      "id": "alg1_s_fnd_1_1_a",
+      "concept_id": "Alg1.FND.1.1",
+      "misconception_targeted": "Students call everything in an expression a 'variable'",
+      "stem": "In the expression 7x² − 3x + 5, which part is the constant term?",
+      "options": ["A. 7", "B. x", "C. 3", "D. 5"],
+      "correct": "D",
+      "explanation": "A constant term has no variable. The constant here is 5. The coefficients are 7 and −3; x is the variable.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "alg1_s_fnd_1_4_a",
+      "concept_id": "Alg1.FND.1.4",
+      "misconception_targeted": "Students apply commutativity to subtraction",
+      "stem": "Which property justifies rewriting 3(x + 5) as 3x + 15?",
+      "options": [
+        "A. Commutative Property of Multiplication",
+        "B. Associative Property of Addition",
+        "C. Distributive Property",
+        "D. Additive Identity Property"
+      ],
+      "correct": "C",
+      "explanation": "The Distributive Property states a(b + c) = ab + ac. Here, 3 distributes over (x + 5).",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "alg1_s_fnd_2_7_a",
+      "concept_id": "Alg1.FND.2.7",
+      "misconception_targeted": "Students don't recognize when an identity or contradiction has been reached",
+      "stem": "Solve: 4(x + 2) = 4x + 9",
+      "options": [
+        "A. x = 1",
+        "B. x = 0",
+        "C. No solution — the equation is a contradiction",
+        "D. All real numbers — the equation is always true"
+      ],
+      "correct": "C",
+      "explanation": "Expanding: 4x + 8 = 4x + 9 → 8 = 9. This is always false — no solution.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "alg1_s_fnd_2_7_b",
+      "concept_id": "Alg1.FND.2.7",
+      "misconception_targeted": "Students don't recognize an identity (infinite solutions) vs. one solution",
+      "stem": "Solve: 3(x − 2) = 3x − 6",
+      "options": [
+        "A. x = 0",
+        "B. x = 6",
+        "C. No solution",
+        "D. Infinitely many solutions — true for all real x"
+      ],
+      "correct": "D",
+      "explanation": "Expanding: 3x − 6 = 3x − 6 → −6 = −6. This is always true — infinite solutions.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "alg1_s_fnd_3_1_a",
+      "concept_id": "Alg1.FND.3.1",
+      "misconception_targeted": "Students set up only one equation for absolute value, missing the negative case",
+      "stem": "Which correctly sets up the solution to |2x − 3| = 7?",
+      "options": [
+        "A. 2x − 3 = 7 only",
+        "B. 2x − 3 = 7 AND 2x − 3 = −7",
+        "C. |2x| = 10",
+        "D. 2x − 3 = 7 OR −(2x − 3) = −7"
+      ],
+      "correct": "B",
+      "explanation": "Absolute value equations split into two cases: the expression equals the positive value AND the expression equals the negative value.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "high", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "alg1_s_fnd_3_1_b",
+      "concept_id": "Alg1.FND.3.1",
+      "misconception_targeted": "Students don't check for extraneous solutions",
+      "stem": "Solve |x + 4| = −2.",
+      "options": [
+        "A. x = −6 and x = −2",
+        "B. x = 6 and x = −2",
+        "C. No solution",
+        "D. x = 2 and x = −6"
+      ],
+      "correct": "C",
+      "explanation": "Absolute value is always non-negative. No expression inside an absolute value can equal −2. There is no solution.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "alg1_s_fnd_5_3_a",
+      "concept_id": "Alg1.FND.5.3",
+      "misconception_targeted": "Students forget to flip the inequality sign when multiplying/dividing by a negative",
+      "stem": "Solve: −3x > 12",
+      "options": ["A. x > −4", "B. x < −4", "C. x > 4", "D. x < 4"],
+      "correct": "B",
+      "explanation": "Dividing both sides by −3 REVERSES the inequality: x < −4. Failure to flip is the most common error in inequality solving.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "alg1_s_fnd_5_5_a",
+      "concept_id": "Alg1.FND.5.5",
+      "misconception_targeted": "Students confuse AND (intersection) with OR (union) solution sets",
+      "stem": "What is the solution to: x + 1 < 4 AND x − 2 > −1?",
+      "options": [
+        "A. x < 3 or x > 1 (all real numbers > 1)",
+        "B. 1 < x < 3 (values between 1 and 3)",
+        "C. x < 3 only",
+        "D. x > 1 only"
+      ],
+      "correct": "B",
+      "explanation": "x < 3 AND x > 1 — AND means intersection: both must be true simultaneously. Solution: 1 < x < 3.",
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "dok": 2
+    },
+
+    // === FLF: FUNCTIONS & LINEAR FUNCTIONS ===
+
+    {
+      "id": "alg1_s_flf_1_1_a",
+      "concept_id": "Alg1.FLF.1.1",
+      "misconception_targeted": "Students think the same output for multiple inputs disqualifies a function",
+      "stem": "Which set of ordered pairs represents a function?",
+      "options": [
+        "A. {(1,2), (2,3), (1,4)} — x=1 maps to both 2 and 4",
+        "B. {(3,5), (4,5), (5,5)} — all map to 5",
+        "C. {(−1,1), (0,0), (−1,−1)} — x=−1 maps to both 1 and −1",
+        "D. {(2,3), (2,4), (2,5)} — x=2 maps to three values"
+      ],
+      "correct": "B",
+      "explanation": "A function requires each input to map to EXACTLY ONE output. In B, different inputs (3, 4, 5) each map to one output (5). Multiple inputs sharing an output is allowed.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "alg1_s_flf_2_1_a",
+      "concept_id": "Alg1.FLF.2.1",
+      "misconception_targeted": "Students compute Δx/Δy instead of Δy/Δx",
+      "stem": "Find the slope of the line through (2, 5) and (6, 13).",
+      "options": ["A. 1/2", "B. 2", "C. 8", "D. −2"],
+      "correct": "B",
+      "explanation": "slope = (y₂ − y₁)/(x₂ − x₁) = (13 − 5)/(6 − 2) = 8/4 = 2. Reversing the fraction (Δx/Δy) gives 1/2 — the common error.",
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "alg1_s_flf_2_4_a",
+      "concept_id": "Alg1.FLF.2.4",
+      "misconception_targeted": "Students confuse y = 3 (horizontal) with x = 3 (vertical)",
+      "stem": "Which equation represents a vertical line passing through (3, 7)?",
+      "options": ["A. y = 7", "B. y = 3", "C. x = 3", "D. x = 7"],
+      "correct": "C",
+      "explanation": "A vertical line has an undefined slope; its equation is x = constant. The point (3, 7) has x = 3, so x = 3 is the vertical line.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "alg1_s_flf_4_1_a",
+      "concept_id": "Alg1.FLF.4.1",
+      "misconception_targeted": "Students think parallel lines must have the same y-intercept",
+      "stem": "Are the lines y = 3x + 5 and y = 3x − 2 parallel?",
+      "options": [
+        "A. No — they have different y-intercepts",
+        "B. Yes — they have equal slopes and different y-intercepts",
+        "C. No — parallel lines must have the same y-intercept",
+        "D. Yes — they are the same line"
+      ],
+      "correct": "B",
+      "explanation": "Parallel lines have equal slopes (both m = 3 here) and DIFFERENT y-intercepts. Same y-intercept would make them the same line.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "alg1_s_flf_4_2_a",
+      "concept_id": "Alg1.FLF.4.2",
+      "misconception_targeted": "Students negate instead of taking negative reciprocal",
+      "stem": "A line has slope 2/3. What is the slope of a line perpendicular to it?",
+      "options": ["A. −2/3", "B. 3/2", "C. −3/2", "D. 2/3"],
+      "correct": "C",
+      "explanation": "Perpendicular slope = negative reciprocal. Reciprocal of 2/3 is 3/2; negate to get −3/2. Just negating (−2/3) is wrong — that's the additive inverse, not perpendicular.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "alg1_s_flf_6_1_a",
+      "concept_id": "Alg1.FLF.6.1",
+      "misconception_targeted": "Students confuse slope and y-intercept in real-world context",
+      "stem": "A plumber charges $80 per hour plus a $50 service fee. In C = 80h + 50, what does the value 50 represent?",
+      "options": [
+        "A. The cost per hour",
+        "B. The flat service fee charged regardless of hours",
+        "C. The total cost",
+        "D. The number of hours worked"
+      ],
+      "correct": "B",
+      "explanation": "The y-intercept (50) is the value of C when h = 0 — the cost before any hours are worked, i.e., the flat service fee.",
+      "three_axis": {"cognitive_demand": "reasoning", "complexity": "high", "context": "real_world"},
+      "dok": 3
+    },
+
+    // === SYS: SYSTEMS ===
+
+    {
+      "id": "alg1_s_sys_1_1_a",
+      "concept_id": "Alg1.SYS.1.1",
+      "misconception_targeted": "Students think any point on either line is the solution",
+      "stem": "When solving a system of two linear equations graphically, the solution is:",
+      "options": [
+        "A. Any point on the first line",
+        "B. Any point on the second line",
+        "C. The point(s) where both lines intersect — satisfying BOTH equations simultaneously",
+        "D. The y-intercept of both lines"
+      ],
+      "correct": "C",
+      "explanation": "The solution to a system must satisfy ALL equations simultaneously — it is the intersection point.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "alg1_s_sys_3_1_a",
+      "concept_id": "Alg1.SYS.3.1",
+      "misconception_targeted": "Students think parallel lines always have no solution but equal slopes always means same line",
+      "stem": "A system has equations y = 2x + 3 and y = 2x + 3. How many solutions does it have?",
+      "options": [
+        "A. No solution — they are parallel",
+        "B. One solution — at (0, 3)",
+        "C. Infinitely many solutions — they are the same line",
+        "D. Two solutions — one for each equation"
+      ],
+      "correct": "C",
+      "explanation": "Identical equations represent the SAME line — every point is a solution (infinitely many). Parallel lines have the SAME slope but DIFFERENT intercepts.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+
+    // === EXP: EXPONENTS & EXPONENTIAL ===
+
+    {
+      "id": "alg1_s_exp_1_2_a",
+      "concept_id": "Alg1.EXP.1.2",
+      "misconception_targeted": "Students multiply exponents when multiplying like bases (instead of adding)",
+      "stem": "Simplify x⁴ · x³.",
+      "options": ["A. x¹²", "B. x⁷", "C. x¹", "D. 2x⁷"],
+      "correct": "B",
+      "explanation": "Product rule: same base, ADD exponents. x⁴ · x³ = x^(4+3) = x⁷. Multiplying (x¹²) applies the power-of-a-power rule wrongly.",
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "alg1_s_exp_2_3_a",
+      "concept_id": "Alg1.EXP.2.3",
+      "misconception_targeted": "Students think b < 0 means decay, confusing sign of base with decay condition",
+      "stem": "Which condition on b determines whether y = a · bˣ represents exponential DECAY?",
+      "options": [
+        "A. b < 0",
+        "B. a < 0",
+        "C. 0 < b < 1",
+        "D. b > 1"
+      ],
+      "correct": "C",
+      "explanation": "Exponential decay requires the base b to be between 0 and 1 (exclusive). b > 1 gives growth. The value of a determines vertical stretch, not growth/decay.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "alg1_s_exp_2_1_a",
+      "concept_id": "Alg1.EXP.2.1",
+      "misconception_targeted": "Students classify linear functions as exponential because they grow",
+      "stem": "Which table represents an EXPONENTIAL function?",
+      "options": [
+        "A. x: 0,1,2,3 | y: 2,5,8,11 (constant +3 difference)",
+        "B. x: 0,1,2,3 | y: 1,2,4,8 (ratio = 2 each time)",
+        "C. x: 0,1,2,3 | y: 0,1,4,9 (squared pattern)",
+        "D. x: 0,1,2,3 | y: 10,8,6,4 (constant −2 difference)"
+      ],
+      "correct": "B",
+      "explanation": "Exponential functions have a CONSTANT RATIO between consecutive y-values. In B, each y value is multiplied by 2. A and D have constant differences (linear); C has constant second differences (quadratic).",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+
+    // === POLY: POLYNOMIALS & FACTORING ===
+
+    {
+      "id": "alg1_s_poly_2_2_a",
+      "concept_id": "Alg1.POLY.2.2",
+      "misconception_targeted": "Students don't distribute the negative sign to ALL terms when subtracting",
+      "stem": "Simplify: (5x² + 3x − 2) − (2x² − 4x + 1)",
+      "options": [
+        "A. 3x² − x − 3",
+        "B. 3x² + 7x − 3",
+        "C. 3x² − x − 1",
+        "D. 7x² − x − 1"
+      ],
+      "correct": "B",
+      "explanation": "Distribute the minus: −(2x² − 4x + 1) = −2x² + 4x − 1. Then: (5x² + 3x − 2) + (−2x² + 4x − 1) = 3x² + 7x − 3. The most common error is not flipping the sign of −4x to +4x.",
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "alg1_s_poly_4_1_a",
+      "concept_id": "Alg1.POLY.4.1",
+      "misconception_targeted": "Students find factors that ADD to c and MULTIPLY to b (reversed)",
+      "stem": "Factor x² − 7x + 12.",
+      "options": [
+        "A. (x + 3)(x + 4)",
+        "B. (x − 3)(x − 4)",
+        "C. (x − 6)(x − 2)",
+        "D. (x + 12)(x − 1)"
+      ],
+      "correct": "B",
+      "explanation": "Find two numbers that MULTIPLY to 12 and ADD to −7: that's −3 and −4. So (x − 3)(x − 4). The reversed error (add to 12, multiply to −7) would give different numbers.",
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "alg1_s_poly_5_1_a",
+      "concept_id": "Alg1.POLY.5.1",
+      "misconception_targeted": "Students try to factor a sum of squares (which is not factorable over the reals)",
+      "stem": "Which expression is a difference of two squares and can be factored?",
+      "options": [
+        "A. x² + 9",
+        "B. x² − 9",
+        "C. x² + 6x + 9",
+        "D. x² − 6x + 9"
+      ],
+      "correct": "B",
+      "explanation": "A difference of two squares: a² − b² = (a+b)(a−b). x² − 9 = x² − 3² = (x+3)(x−3). Note: x² + 9 is a SUM of squares — not factorable over the reals.",
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "alg1_s_poly_6_1_a",
+      "concept_id": "Alg1.POLY.6.1",
+      "misconception_targeted": "Students apply wrong factoring method; jump to trinomial factoring without checking for GCF first",
+      "stem": "What is the BEST first step to factor 6x² − 24?",
+      "options": [
+        "A. Look for two numbers that multiply to −24 and add to 0",
+        "B. Factor out the GCF: 6(x² − 4)",
+        "C. Use the quadratic formula",
+        "D. Apply the difference of squares immediately to 6x² − 24"
+      ],
+      "correct": "B",
+      "explanation": "Always check for a GCF first. GCF = 6: 6(x² − 4). Then x² − 4 is a difference of squares: 6(x+2)(x−2). Skipping the GCF step makes the remaining factoring harder.",
+      "three_axis": {"cognitive_demand": "reasoning", "complexity": "high", "context": "abstract"},
+      "dok": 3
+    },
+
+    // === QUAD: QUADRATIC ===
+
+    {
+      "id": "alg1_s_quad_1_1_a",
+      "concept_id": "Alg1.QUAD.1.1",
+      "misconception_targeted": "Students think any equation with x² is always in standard form",
+      "stem": "Which is a quadratic function in STANDARD FORM?",
+      "options": [
+        "A. y = (x − 3)²",
+        "B. y = 2x² − 5x + 3",
+        "C. y = (x + 1)(x − 4)",
+        "D. y = x² (this is also standard form) — wait, what about vertex form?"
+      ],
+      "correct": "B",
+      "explanation": "Standard form is y = ax² + bx + c. Only B is written in this form. A is vertex form, C is factored form. y = x² is technically standard form with b = c = 0.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "alg1_s_quad_2_1_a",
+      "concept_id": "Alg1.QUAD.2.1",
+      "misconception_targeted": "Students confuse 'zeros' (x-intercepts) with y-intercept",
+      "stem": "A quadratic has zeros at x = 2 and x = −5. What do these zeros represent graphically?",
+      "options": [
+        "A. The y-intercept of the parabola",
+        "B. The vertex coordinates",
+        "C. The x-coordinates where the parabola crosses the x-axis",
+        "D. The value of a, b, or c in standard form"
+      ],
+      "correct": "C",
+      "explanation": "Zeros are x-values where f(x) = 0 — meaning the graph crosses (or touches) the x-axis. They are NOT the y-intercept.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "alg1_s_quad_2_4_a",
+      "concept_id": "Alg1.QUAD.2.4",
+      "misconception_targeted": "Students substitute incorrectly into the quadratic formula — especially signs",
+      "stem": "For 2x² − 3x − 5 = 0, which correctly identifies a, b, and c for the quadratic formula?",
+      "options": [
+        "A. a = 2, b = 3, c = 5",
+        "B. a = 2, b = −3, c = −5",
+        "C. a = 2, b = −3, c = 5",
+        "D. a = 2, b = 3, c = −5"
+      ],
+      "correct": "B",
+      "explanation": "Standard form ax² + bx + c: here a = 2, b = −3 (the coefficient of x including its sign), c = −5 (the constant including its sign). Sign errors in b or c cause wrong discriminant and wrong solutions.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "high", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "alg1_s_quad_4_1_a",
+      "concept_id": "Alg1.QUAD.4.1",
+      "misconception_targeted": "Students misidentify function type from pattern in table",
+      "stem": "A table shows x: 0,1,2,3,4 and y: 1,2,4,8,16. The first differences are 1,2,4,8. What type of function is this?",
+      "options": [
+        "A. Linear — the values increase",
+        "B. Quadratic — the second differences might be constant",
+        "C. Exponential — the y-values have a constant ratio of 2",
+        "D. Cubic — it grows faster than linear"
+      ],
+      "correct": "C",
+      "explanation": "Check consecutive ratios: 2/1=2, 4/2=2, 8/4=2, 16/8=2. Constant multiplicative ratio → exponential. The second differences (1,2,4,8) are NOT constant (that's quadratic).",
+      "three_axis": {"cognitive_demand": "reasoning", "complexity": "high", "context": "abstract"},
+      "dok": 3
+    },
+
+    // === DAS: DATA ANALYSIS & STATISTICS ===
+
+    {
+      "id": "alg1_s_das_2_3_a",
+      "concept_id": "Alg1.DAS.2.3",
+      "misconception_targeted": "Students think standard deviation = range, or that it measures the maximum spread",
+      "stem": "Data Set A: {5, 5, 5, 5, 5} and Data Set B: {1, 3, 5, 7, 9} both have a mean of 5. Which has a larger standard deviation?",
+      "options": [
+        "A. Data Set A — it has more values equal to the mean",
+        "B. Data Set B — its values are more spread out from the mean",
+        "C. They have equal standard deviation — same mean",
+        "D. Standard deviation cannot be compared across sets"
+      ],
+      "correct": "B",
+      "explanation": "Standard deviation measures the average distance from the mean. All values in A equal the mean (SD = 0). Values in B vary from 4 units below to 4 units above the mean. B has a larger standard deviation.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "alg1_s_das_5_2_a",
+      "concept_id": "Alg1.DAS.5.2",
+      "misconception_targeted": "Students conclude causation from a strong correlation",
+      "stem": "A study finds a strong positive correlation (r = 0.95) between ice cream sales and drowning incidents. Which conclusion is valid?",
+      "options": [
+        "A. Eating ice cream causes drowning",
+        "B. Drowning causes people to buy ice cream",
+        "C. Both are likely associated with a third variable (hot weather), but one does not cause the other",
+        "D. The data is invalid because the correlation is too high"
+      ],
+      "correct": "C",
+      "explanation": "Correlation measures the strength of association — NOT causation. Both variables are likely driven by temperature (a lurking variable). This is a classic example of correlation ≠ causation.",
+      "three_axis": {"cognitive_demand": "reasoning", "complexity": "high", "context": "real_world"},
+      "dok": 3
+    },
+    {
+      "id": "alg1_s_das_4_2_a",
+      "concept_id": "Alg1.DAS.4.2",
+      "misconception_targeted": "Students confuse slope and y-intercept meaning in regression context",
+      "stem": "A regression model predicts final exam score: y = 7.5x + 40, where x is hours studied. What does 40 represent?",
+      "options": [
+        "A. The score improves by 40 points per hour of study",
+        "B. The predicted score for a student who studies 7.5 hours",
+        "C. The predicted score if a student studies 0 hours",
+        "D. The maximum possible score"
+      ],
+      "correct": "C",
+      "explanation": "The y-intercept (40) is the predicted y when x = 0 — the model's predicted score with zero study hours. The slope (7.5) tells us how much the score increases per additional hour.",
+      "three_axis": {"cognitive_demand": "reasoning", "complexity": "high", "context": "real_world"},
+      "dok": 3
+    },
+    {
+      "id": "alg1_s_das_4_3_a",
+      "concept_id": "Alg1.DAS.4.3",
+      "misconception_targeted": "Students don't know how to interpret a negative residual",
+      "stem": "A student studied 4 hours. The model predicts y = 70 but their actual score was 65. What is the residual and what does it mean?",
+      "options": [
+        "A. Residual = +5; the model underestimated the score",
+        "B. Residual = −5; the model overestimated — actual score was below prediction",
+        "C. Residual = −5; the model underestimated",
+        "D. Residual = 70; the predicted score"
+      ],
+      "correct": "B",
+      "explanation": "Residual = actual − predicted = 65 − 70 = −5. A NEGATIVE residual means the actual value fell BELOW the prediction — the model overestimated.",
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "real_world"},
+      "dok": 2
+    },
+    {
+      "id": "alg1_s_das_5_1_a",
+      "concept_id": "Alg1.DAS.5.1",
+      "misconception_targeted": "Students think r = 0 means no data trend rather than no LINEAR relationship",
+      "stem": "An r-value of 0 indicates:",
+      "options": [
+        "A. A perfect positive linear relationship",
+        "B. A perfect negative linear relationship",
+        "C. No linear relationship (though a non-linear pattern may still exist)",
+        "D. The data has no pattern at all"
+      ],
+      "correct": "C",
+      "explanation": "r = 0 means no LINEAR correlation. A perfect parabola has r ≈ 0 because it has no linear trend, yet it clearly follows a pattern.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "real_world"},
+      "dok": 2
+    }
+  ]
+}

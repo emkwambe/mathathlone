@@ -1,0 +1,313 @@
+{
+  "course": "Math Fundamentals",
+  "division": "Foundation",
+  "visual_pool_id": "math_fundamentals_visual",
+  "total_visual_generators": 18,
+  "rendering_standard": "SVG inline, viewBox 500x350 minimum, aria-label required, answer NEVER encoded in visual, all labeled diagrams include alt text",
+
+  "visual_generators": [
+
+    {
+      "id": "mf_vis_real_number_hierarchy",
+      "concept_id": "MF.FB.3.5",
+      "category": "C",
+      "description": "Nested set diagram showing Real Numbers ⊃ Rational ⊃ Integer ⊃ Whole ⊃ Natural; Irrational as separate region inside Real. A given number is highlighted — Mathlete identifies which rings it belongs to.",
+      "svg_params": {
+        "layout": "nested_ovals",
+        "rings": ["Real", "Rational", "Integer", "Whole", "Natural"],
+        "irrational_region": "separate oval inside Real, outside Rational",
+        "example_numbers_shown": false,
+        "highlight_target": "one_number_placed_in_correct_ring",
+        "target_label": "shown with '?'"
+      },
+      "downstream_usage": "Classification questions for MF.FB.3.1–3.5 and Grade 8 NS",
+      "format_hint_rule": "Target number is shown but its ring membership is NOT annotated"
+    },
+
+    {
+      "id": "mf_vis_integer_number_line",
+      "concept_id": "MF.ANT.1.1",
+      "category": "C",
+      "description": "Horizontal number line from −20 to 20 with integer tick marks; target point marked as filled circle; distance arrow from 0 to point shown as double-headed arrow",
+      "svg_params": {
+        "range": [-20, 20],
+        "tick_interval": 1,
+        "major_label_interval": 5,
+        "point_style": "filled_circle",
+        "distance_arrow": "bidirectional from 0 to point",
+        "distance_label": false,
+        "negative_region_shade": "light_red",
+        "positive_region_shade": "light_blue"
+      },
+      "downstream_usage": "MF.ANT.1.1 absolute value; MF.ANT.1.2–1.3 addition/subtraction of integers; MF.AP.5.1 additive inverse",
+      "format_hint_rule": "Distance label NOT shown — Mathlete computes |n|"
+    },
+
+    {
+      "id": "mf_vis_integer_addition_number_line",
+      "concept_id": "MF.ANT.1.2",
+      "category": "C",
+      "description": "Number line showing addition of integers as sequential arrows: first arrow from 0 to first operand, second arrow from that point the length of the second operand",
+      "svg_params": {
+        "range": [-25, 25],
+        "arrow1": {"from": 0, "to": "operand_1", "color": "blue", "label": "start"},
+        "arrow2": {"from": "operand_1", "to": "sum", "color": "green", "label": "+operand_2"},
+        "endpoint_marker": "open_circle",
+        "endpoint_label": false
+      },
+      "downstream_usage": "MF.ANT.1.2 conceptual model only — NOT used for computation questions",
+      "format_hint_rule": "Endpoint (sum) shown as open circle with '?' label — Mathlete determines the value"
+    },
+
+    {
+      "id": "mf_vis_fraction_number_line",
+      "concept_id": "MF.FDP.1.1",
+      "category": "C",
+      "description": "Number line from 0 to 2 divided into equal segments matching denominator; target fraction marked with open circle — Mathlete identifies the fraction",
+      "svg_params": {
+        "range": [0, 2],
+        "denominator": "randomized (2, 3, 4, 6, 8)",
+        "tick_labels": "0 and 1 only; fraction ticks unlabeled",
+        "target_point": "open circle at one tick",
+        "target_label": "?"
+      },
+      "downstream_usage": "MF.FDP.1.1 fraction identification; MF.FDP.2.x conceptual support",
+      "format_hint_rule": "Fraction tick points NOT labeled — Mathlete reads position"
+    },
+
+    {
+      "id": "mf_vis_equivalent_fraction_area_model",
+      "concept_id": "MF.FDP.1.1",
+      "category": "C",
+      "description": "Two side-by-side rectangles of equal size; one partitioned into n parts with k shaded, the other into more parts with corresponding shading to show equivalence",
+      "svg_params": {
+        "model_type": "area_bar",
+        "rect1_parts": "base_denominator",
+        "rect1_shaded": "base_numerator",
+        "rect2_parts": "scaled_denominator",
+        "rect2_shaded": "scaled_numerator_or_question_mark",
+        "color_shaded": "teal"
+      },
+      "downstream_usage": "MF.FDP.1.1 equivalent fractions conceptual",
+      "format_hint_rule": "One rectangle has '?' shading — Mathlete finds equivalent fraction"
+    },
+
+    {
+      "id": "mf_vis_approx_sqrt_number_line",
+      "concept_id": "MF.ER.2.4",
+      "category": "C",
+      "description": "Number line showing two consecutive perfect squares with their roots labeled; a point for the target irrational is marked between them",
+      "svg_params": {
+        "range_shown": "n² to (n+1)²",
+        "labeled_integers": ["n", "n+1"],
+        "labeled_perfect_squares": "n² and (n+1)² on a sub-line",
+        "target_sqrt": "marked between n and n+1, label = √radicand",
+        "position_not_labeled": true
+      },
+      "downstream_usage": "MF.ER.2.4, Grade 8 NS.3.1–3.2",
+      "format_hint_rule": "Decimal approximation NOT shown — Mathlete estimates"
+    },
+
+    {
+      "id": "mf_vis_labeled_triangle_area",
+      "concept_id": "MF.GEO.1.3",
+      "category": "A",
+      "description": "Three triangle types (acute, right, obtuse) with base and perpendicular height labeled. For obtuse: height drawn outside the triangle with dashed extension.",
+      "svg_params": {
+        "triangle_types": ["right", "acute", "obtuse"],
+        "base_label": "b = [value]",
+        "height_label": "h = [value] (dashed perpendicular)",
+        "slant_label": "included as distractor for acute/obtuse",
+        "right_angle_marker": "on right triangle only",
+        "height_indicator": "small square at foot of altitude"
+      },
+      "downstream_usage": "MF.GEO.1.3; Grade 6 GEO.1.1",
+      "format_hint_rule": "CRITICAL: height is always dashed perpendicular, NOT the slant side. Formula NOT shown."
+    },
+
+    {
+      "id": "mf_vis_complementary_angle_diagram",
+      "concept_id": "MF.GEO.2.2",
+      "category": "A",
+      "description": "Two adjacent angles inside a right angle corner (90° box marker); one labeled numerically, one labeled '?'",
+      "svg_params": {
+        "right_angle_marker": true,
+        "angle1_label": "numeric value",
+        "angle2_label": "?",
+        "arc_indicator": true
+      },
+      "downstream_usage": "MF.GEO.2.2; Grade 7 GEO.1.1, Grade 7 GEO.3.1",
+      "format_hint_rule": "Total (90°) NOT labeled on diagram"
+    },
+
+    {
+      "id": "mf_vis_supplementary_angle_diagram",
+      "concept_id": "MF.GEO.2.3",
+      "category": "A",
+      "description": "Two angles on a straight line (180°); one labeled, one labeled '?'; straight line indicator shown",
+      "svg_params": {
+        "straight_line": true,
+        "angle1_label": "numeric",
+        "angle2_label": "?",
+        "arc_indicator": true
+      },
+      "downstream_usage": "MF.GEO.2.3; Grade 7 GEO.3.1",
+      "format_hint_rule": "180° total NOT labeled"
+    },
+
+    {
+      "id": "mf_vis_vertical_adjacent_angles",
+      "concept_id": "MF.GEO.2.4",
+      "category": "A",
+      "description": "Two intersecting lines forming 4 angles; one angle labeled numerically, three others labeled 1, 2, 3 — Mathlete identifies value of named angle",
+      "svg_params": {
+        "intersection_style": "X_pattern",
+        "given_angle_position": "top_right",
+        "ask_for_position": "randomized (one of the other three)",
+        "arc_indicators": true,
+        "angle_labels": ["given", "1", "2", "3"]
+      },
+      "downstream_usage": "MF.GEO.2.4; Grade 7 GEO.3.1; Grade 8 GEO.TRANS.6",
+      "format_hint_rule": "Relationship type (vertical/adjacent) NOT labeled — Mathlete identifies"
+    },
+
+    {
+      "id": "mf_vis_right_triangle_pythagorean",
+      "concept_id": "MF.GEO.3.2",
+      "category": "A",
+      "description": "Right triangle with right angle marked; legs labeled a, b with numeric values; hypotenuse labeled c = ?",
+      "svg_params": {
+        "right_angle_marker": true,
+        "leg_a_label": "a = [value]",
+        "leg_b_label": "b = [value or ?]",
+        "hypotenuse_label": "c = [? or value]",
+        "missing_position": "randomized (leg or hypotenuse)"
+      },
+      "downstream_usage": "MF.GEO.3.2; Grade 8 GEO.PV.1.2",
+      "format_hint_rule": "Formula (a² + b² = c²) NOT shown on diagram. One side labeled '?'"
+    },
+
+    {
+      "id": "mf_vis_pythagorean_context",
+      "concept_id": "MF.GEO.3.3",
+      "category": "A",
+      "description": "Contextual right triangle illustration — e.g. ladder against a wall with 'wall height', 'ground distance', 'ladder length = ?' labels",
+      "svg_params": {
+        "scenarios": [
+          {"name": "ladder_wall", "labels": ["wall height", "ground distance", "ladder = ?"]},
+          {"name": "diagonal_field", "labels": ["length", "width", "diagonal = ?"]},
+          {"name": "tv_screen", "labels": ["height", "width", "diagonal = ?"]}
+        ],
+        "context_illustration": true,
+        "right_angle_marker": true
+      },
+      "downstream_usage": "MF.GEO.3.3; Grade 8 GEO.PV.1.3",
+      "format_hint_rule": "Context labels are descriptive nouns — not variable names"
+    },
+
+    {
+      "id": "mf_vis_venn_diagram_two_sets",
+      "concept_id": "MF.SETS.2.1",
+      "category": "E",
+      "description": "Two overlapping circles labeled A and B inside a universal set rectangle; elements placed in correct regions (A only, B only, intersection, outside both)",
+      "svg_params": {
+        "circle_count": 2,
+        "universal_set_box": true,
+        "element_display": "letters or numbers in correct regions",
+        "region_labels": ["A only", "A ∩ B", "B only", "neither"],
+        "task_variants": [
+          "elements_given_find_union",
+          "elements_given_find_intersection",
+          "elements_given_find_complement",
+          "shade_region_MC"
+        ]
+      },
+      "downstream_usage": "MF.SETS.2.1–2.3, MF.SETS.4.2; Grade 7 SP compound events",
+      "format_hint_rule": "For operation questions, regions are shown with elements but operation result NOT highlighted — Mathlete identifies"
+    },
+
+    {
+      "id": "mf_vis_venn_diagram_shading",
+      "concept_id": "MF.SETS.3.1",
+      "category": "E",
+      "description": "Two-set or three-set Venn diagram with no elements; shows region shading to represent a named operation — Mathlete identifies which operation is represented",
+      "svg_params": {
+        "diagram_type": ["two_set", "three_set"],
+        "shaded_region": "randomized (union / intersection / complement / A only / etc.)",
+        "shading_color": "medium_blue",
+        "element_list": false,
+        "label_rings": "A, B (and C for three-set)"
+      },
+      "downstream_usage": "MF.SETS.3.1; Math 1 domain-range visualization",
+      "format_hint_rule": "Operation name NOT labeled on diagram — Mathlete writes which operation produces the shading"
+    },
+
+    {
+      "id": "mf_vis_cardinality_venn",
+      "concept_id": "MF.SETS.4.2",
+      "category": "E",
+      "description": "Two-set Venn diagram with numeric counts in each region (not element lists); one region labeled '?'",
+      "svg_params": {
+        "regions": {
+          "a_only": "numeric",
+          "intersection": "numeric",
+          "b_only": "numeric",
+          "outside": "shown as total"
+        },
+        "missing_region": "randomized",
+        "context_label": "e.g., 'Students in survey'"
+      },
+      "downstream_usage": "MF.SETS.4.2 inclusion-exclusion; Math 1 probability",
+      "format_hint_rule": "Formula NOT shown. One region is '?' — Mathlete uses n(A ∪ B) = n(A) + n(B) − n(A ∩ B)"
+    },
+
+    {
+      "id": "mf_vis_iqr_box_plot",
+      "concept_id": "MF.S.2.2",
+      "category": "D",
+      "description": "Horizontal box-and-whisker plot on a number line; Q1 and Q3 walls unlabeled — Mathlete reads position to find IQR",
+      "svg_params": {
+        "orientation": "horizontal",
+        "range": [0, 100],
+        "stats": ["min", "Q1", "median", "Q3", "max"],
+        "label_policy": "only min and max labeled; Q1 and Q3 positions shown by box edges",
+        "median_line": true
+      },
+      "downstream_usage": "MF.S.2.2; Grade 6 SP.2.2; Grade 7 SP.2.1",
+      "format_hint_rule": "IQR value NOT shown. Box edges are visual — Mathlete reads axis and computes"
+    },
+
+    {
+      "id": "mf_vis_pemdas_expression_tree",
+      "concept_id": "MF.ANT.3.2",
+      "category": "C",
+      "description": "Expression tree diagram showing operator precedence visually — the expression is broken into a tree with evaluation order shown as numbered nodes (1 = evaluate first)",
+      "svg_params": {
+        "expression_display": "rendered math expression at top",
+        "tree_nodes": "operators as nodes; operands as leaves",
+        "evaluation_order": "numbered 1–n showing which operation first",
+        "wrong_order_distractor": false
+      },
+      "usage": "Conceptual aid for MF.ANT.3.1 static questions only — NOT a generator visual",
+      "format_hint_rule": "Evaluation numbers shown — this is a TEACHING visual only, paired with B-group static questions"
+    },
+
+    {
+      "id": "mf_vis_distributive_property_area_model",
+      "concept_id": "MF.AP.3.1",
+      "category": "A",
+      "description": "Rectangle partitioned into two sub-rectangles; total width = (b + c), height = a; each sub-rectangle labeled with its area",
+      "svg_params": {
+        "outer_rectangle": "a × (b + c)",
+        "left_subrect": "a × b",
+        "right_subrect": "a × c",
+        "labels": {"height": "a", "left_width": "b", "right_width": "c"},
+        "sub_areas_labeled": "ab and ac",
+        "total_area_label": false
+      },
+      "usage": "Conceptual model for MF.AP.3.1 — illustrates why a(b+c) = ab + ac geometrically",
+      "format_hint_rule": "Total expression a(b+c) NOT written on diagram. Mathlete writes the expanded form"
+    }
+
+  ]
+}

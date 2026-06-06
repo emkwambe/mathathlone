@@ -1,0 +1,398 @@
+{
+  "course": "NC 6th Grade Math",
+  "division": "Rising Stars",
+  "static_pool_id": "nc_grade_6_static",
+  "total_static_items": 55,
+  "questions": [
+    {
+      "id": "g6_s_ns_2_1_a",
+      "concept_id": "M6.NS.2.1",
+      "stem": "Which expression represents the question: 'How many 1/3-cup servings are in 2 cups?'",
+      "options": ["A. 2 × 1/3", "B. 2 ÷ 1/3", "C. 1/3 ÷ 2", "D. 2 − 1/3"],
+      "correct": "B",
+      "explanation": "Dividing the total by the serving size gives the number of servings: 2 ÷ 1/3 = 6.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "real_world"},
+      "dok": 2
+    },
+    {
+      "id": "g6_s_ns_2_1_b",
+      "concept_id": "M6.NS.2.1",
+      "stem": "On a number line, which model shows 3/4 ÷ 1/4?",
+      "options": [
+        "A. Starting at 0, jumping 1/4 three times",
+        "B. Starting at 3/4, going back 1/4 once",
+        "C. Starting at 0 and jumping 3/4 four times",
+        "D. Dividing the segment from 0 to 3/4 into equal parts of 1/4 and counting them"
+      ],
+      "correct": "D",
+      "explanation": "Fraction division 3/4 ÷ 1/4 asks: how many 1/4-size pieces fit in 3/4? Answer: 3.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "g6_s_ns_2_1_c",
+      "concept_id": "M6.NS.2.1",
+      "stem": "A recipe calls for 1/2 cup of oil. Marcos only has a 1/8 cup measuring cup. Which expression gives the number of times he must fill it?",
+      "options": ["A. 1/2 × 1/8", "B. 1/8 ÷ 1/2", "C. 1/2 ÷ 1/8", "D. 1/2 + 1/8"],
+      "correct": "C",
+      "explanation": "1/2 ÷ 1/8 = 1/2 × 8 = 4. He fills the 1/8-cup measure 4 times.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "real_world"},
+      "dok": 2
+    },
+    {
+      "id": "g6_s_ns_4_1_a",
+      "concept_id": "M6.NS.4.1",
+      "stem": "A city's elevation is −48 feet. Which statement correctly interprets this value?",
+      "options": [
+        "A. The city is 48 feet above sea level",
+        "B. The city is 48 feet below sea level",
+        "C. The city is at sea level",
+        "D. The city is 48 miles from the coast"
+      ],
+      "correct": "B",
+      "explanation": "Negative elevation means below sea level; −48 feet means 48 feet below sea level.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "real_world"},
+      "dok": 1
+    },
+    {
+      "id": "g6_s_ns_4_1_b",
+      "concept_id": "M6.NS.4.1",
+      "stem": "Which situation is best represented by the number +$35?",
+      "options": [
+        "A. Spending $35 at a store",
+        "B. Owing $35 on a bill",
+        "C. Earning $35 from babysitting",
+        "D. Losing $35 from a wallet"
+      ],
+      "correct": "C",
+      "explanation": "Positive values represent gains or increases; earning $35 is a gain.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "real_world"},
+      "dok": 1
+    },
+    {
+      "id": "g6_s_ns_4_2_a",
+      "concept_id": "M6.NS.4.2",
+      "stem": "What is the opposite of −15?",
+      "options": ["A. 0", "B. 15", "C. −(−15) which equals −15", "D. 1/15"],
+      "correct": "B",
+      "explanation": "The opposite of a number is its reflection over 0 on the number line. Opposite of −15 is +15.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "g6_s_ns_4_2_b",
+      "concept_id": "M6.NS.4.2",
+      "stem": "Which two numbers on a number line are both 7 units from zero?",
+      "options": ["A. 7 and 14", "B. 7 and 0", "C. 7 and −7", "D. 0 and −7"],
+      "correct": "C",
+      "explanation": "Opposites are equidistant from zero; both 7 and −7 are exactly 7 units from 0.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "g6_s_rp_1_1_a",
+      "concept_id": "M6.RP.1.1",
+      "stem": "A class has 12 boys and 16 girls. Which correctly expresses the ratio of boys to the total number of students?",
+      "options": ["A. 12:16", "B. 16:12", "C. 12:28", "D. 28:12"],
+      "correct": "C",
+      "explanation": "Ratio of boys to total = 12 : (12 + 16) = 12 : 28.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "real_world"},
+      "dok": 1
+    },
+    {
+      "id": "g6_s_rp_1_1_b",
+      "concept_id": "M6.RP.1.1",
+      "stem": "Which of the following is NOT an equivalent way to write the ratio 3 to 5?",
+      "options": ["A. 3:5", "B. 3/5", "C. 5/3", "D. 3 to 5"],
+      "correct": "C",
+      "explanation": "3 to 5, 3:5, and 3/5 are all equivalent. 5/3 reverses the relationship.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "g6_s_rp_1_2_a",
+      "concept_id": "M6.RP.1.2",
+      "stem": "Which statement BEST defines a unit rate?",
+      "options": [
+        "A. A ratio that compares two quantities with the same units",
+        "B. A rate with a denominator of 1",
+        "C. Any fraction less than 1",
+        "D. A rate that equals exactly 100"
+      ],
+      "correct": "B",
+      "explanation": "A unit rate expresses the value per 1 unit of the second quantity (denominator = 1).",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "real_world"},
+      "dok": 1
+    },
+    {
+      "id": "g6_s_rp_3_1_a",
+      "concept_id": "M6.RP.3.1",
+      "stem": "Which correctly expresses 45% as a rate per 100?",
+      "options": ["A. 45/10", "B. 45/1000", "C. 45/100", "D. 4.5/100"],
+      "correct": "C",
+      "explanation": "Percent means 'per hundred,' so 45% = 45 per 100 = 45/100.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "g6_s_rp_3_1_b",
+      "concept_id": "M6.RP.3.1",
+      "stem": "A store says 3 out of every 100 items are returned. What percent of items are returned?",
+      "options": ["A. 0.03%", "B. 3%", "C. 30%", "D. 300%"],
+      "correct": "B",
+      "explanation": "3 out of 100 = 3/100 = 3%.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "real_world"},
+      "dok": 1
+    },
+    {
+      "id": "g6_s_ee_1_3_a",
+      "concept_id": "M6.EE.1.3",
+      "stem": "In the expression 5x² + 3x − 7, what is the coefficient of x?",
+      "options": ["A. 5", "B. 2", "C. 3", "D. −7"],
+      "correct": "C",
+      "explanation": "The coefficient is the number multiplied by the variable. In 3x, the coefficient is 3.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "g6_s_ee_1_3_b",
+      "concept_id": "M6.EE.1.3",
+      "stem": "In the expression 4y³, what is the exponent?",
+      "options": ["A. 4", "B. y", "C. 3", "D. 4y"],
+      "correct": "C",
+      "explanation": "The exponent tells how many times the base is multiplied by itself. In y³, the exponent is 3.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "g6_s_ee_1_3_c",
+      "concept_id": "M6.EE.1.3",
+      "stem": "Which of the following are like terms?",
+      "options": ["A. 3x and 3y", "B. 5x² and 5x", "C. 4ab and 7ab", "D. 2x and 2x²"],
+      "correct": "C",
+      "explanation": "Like terms have identical variable parts. 4ab and 7ab both have the variable ab.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "g6_s_ee_3_1_a",
+      "concept_id": "M6.EE.3.1",
+      "stem": "Which value of x makes the equation 2x + 5 = 17 true?",
+      "options": ["A. x = 4", "B. x = 6", "C. x = 11", "D. x = 7"],
+      "correct": "B",
+      "explanation": "2(6) + 5 = 12 + 5 = 17 ✓. Use substitution to verify.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "g6_s_ee_3_1_b",
+      "concept_id": "M6.EE.3.1",
+      "stem": "Which value of n is a solution to the inequality n + 3 > 10?",
+      "options": ["A. n = 5", "B. n = 7", "C. n = 8", "D. n = 6"],
+      "correct": "C",
+      "explanation": "8 + 3 = 11 > 10 ✓. Check: 5+3=8, 7+3=10 (not strictly greater), 6+3=9.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "g6_s_ee_4_1_a",
+      "concept_id": "M6.EE.4.1",
+      "stem": "A roller coaster has a minimum height requirement. Which inequality best represents 'riders must be at least 48 inches tall' where h = height?",
+      "options": ["A. h < 48", "B. h > 48", "C. h ≥ 48", "D. h ≤ 48"],
+      "correct": "C",
+      "explanation": "'At least 48' means 48 or more, so h ≥ 48.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "real_world"},
+      "dok": 2
+    },
+    {
+      "id": "g6_s_ee_4_1_b",
+      "concept_id": "M6.EE.4.1",
+      "stem": "An elevator can hold at most 2,000 pounds. If w = total weight, which inequality represents the safe load?",
+      "options": ["A. w > 2000", "B. w ≥ 2000", "C. w < 2000", "D. w ≤ 2000"],
+      "correct": "D",
+      "explanation": "'At most 2,000' means 2,000 or less, so w ≤ 2000.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "real_world"},
+      "dok": 2
+    },
+    {
+      "id": "g6_s_ee_5_1_a",
+      "concept_id": "M6.EE.5.1",
+      "stem": "In the relationship 'total earnings depends on hours worked', which is the independent variable?",
+      "options": [
+        "A. Total earnings",
+        "B. Hours worked",
+        "C. Hourly pay rate",
+        "D. Number of days"
+      ],
+      "correct": "B",
+      "explanation": "The independent variable is the input — what you control. Hours worked determines earnings, so it is independent.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "real_world"},
+      "dok": 2
+    },
+    {
+      "id": "g6_s_ee_5_1_b",
+      "concept_id": "M6.EE.5.1",
+      "stem": "A plant's height (y) grows 2 cm per week (x). Which variable is dependent?",
+      "options": ["A. Weeks (x)", "B. Height (y)", "C. Both are dependent", "D. Neither"],
+      "correct": "B",
+      "explanation": "Height depends on the number of weeks, so height (y) is the dependent variable.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "real_world"},
+      "dok": 2
+    },
+    {
+      "id": "g6_s_geo_2_1_a",
+      "concept_id": "M6.GEO.2.1",
+      "stem": "Which net correctly folds into a cube?",
+      "options": [
+        "A. A cross shape made of 6 squares",
+        "B. A row of 4 squares with 2 attached at one end",
+        "C. A T-shape made of 6 squares",
+        "D. All of the above"
+      ],
+      "correct": "D",
+      "explanation": "There are 11 valid nets for a cube. Crosses, T-shapes, and L-shapes can all fold into cubes.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "g6_s_geo_2_1_b",
+      "concept_id": "M6.GEO.2.1",
+      "stem": "A rectangular prism has 6 faces. How many pairs of congruent (identical) faces does it have?",
+      "options": ["A. 2", "B. 3", "C. 6", "D. 1"],
+      "correct": "B",
+      "explanation": "A rectangular prism has 3 pairs of congruent faces: top/bottom, front/back, left/right.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "g6_s_geo_3_1_a",
+      "concept_id": "M6.GEO.3.1",
+      "stem": "A rectangular prism is filled with unit cubes. Each layer has 4 × 3 = 12 cubes and there are 5 layers. What is the volume?",
+      "options": ["A. 12 cubic units", "B. 17 cubic units", "C. 60 cubic units", "D. 7 cubic units"],
+      "correct": "C",
+      "explanation": "Volume = base area × height = 12 × 5 = 60 cubic units. This demonstrates V = Bh.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "g6_s_geo_4_2_a",
+      "concept_id": "M6.GEO.4.2",
+      "stem": "Mia wants to wrap a gift box that is 10 cm × 8 cm × 5 cm. Approximately how many square centimeters of wrapping paper does she need (surface area)?",
+      "options": ["A. 400 cm²", "B. 340 cm²", "C": "300 cm²", "D. 160 cm²"],
+      "correct": "B",
+      "explanation": "SA = 2(10×8) + 2(10×5) + 2(8×5) = 160 + 100 + 80 = 340 cm².",
+      "three_axis": {"cognitive_demand": "application", "complexity": "medium", "context": "real_world"},
+      "dok": 2
+    },
+    {
+      "id": "g6_s_sp_1_1_a",
+      "concept_id": "M6.SP.1.1",
+      "stem": "Which of the following is a statistical question?",
+      "options": [
+        "A. How many students are in Ms. Taylor's class today?",
+        "B. What is 8 × 7?",
+        "C. How many minutes do 6th graders spend on homework each night?",
+        "D. What is the capital of North Carolina?"
+      ],
+      "correct": "C",
+      "explanation": "A statistical question anticipates variability across individuals — different students will have different homework times.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "real_world"},
+      "dok": 1
+    },
+    {
+      "id": "g6_s_sp_1_2_a",
+      "concept_id": "M6.SP.1.2",
+      "stem": "A data set shows test scores: 72, 85, 90, 68, 91, 85, 77. What makes this a data SET rather than a single data point?",
+      "options": [
+        "A. The values are all different",
+        "B. It contains multiple values from multiple observations",
+        "C. All values are greater than 50",
+        "D. The values are whole numbers"
+      ],
+      "correct": "B",
+      "explanation": "A data set is a collection of values gathered from multiple observations or individuals.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "g6_s_sp_2_1_a",
+      "concept_id": "M6.SP.2.1",
+      "stem": "Which type of display is BEST suited for showing the frequency of data grouped into intervals (e.g., ages 10–12, 13–15)?",
+      "options": ["A. Dot plot", "B. Box plot", "C. Histogram", "D. Stem-and-leaf plot"],
+      "correct": "C",
+      "explanation": "Histograms display data grouped into intervals (bins) with bar heights showing frequency.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "real_world"},
+      "dok": 2
+    },
+    {
+      "id": "g6_s_sp_4_1_a",
+      "concept_id": "M6.SP.4.1",
+      "stem": "A histogram shows most data clustered on the right with a long tail to the left. This distribution is best described as:",
+      "options": [
+        "A. Symmetric",
+        "B. Skewed right",
+        "C. Skewed left",
+        "D. Uniform"
+      ],
+      "correct": "C",
+      "explanation": "Skewed left (negatively skewed) means most data is on the right with the tail extending to the left.",
+      "three_axis": {"cognitive_demand": "reasoning", "complexity": "medium", "context": "real_world"},
+      "dok": 2
+    },
+    {
+      "id": "g6_s_sp_4_2_a",
+      "concept_id": "M6.SP.4.2",
+      "stem": "A data set has values: 12, 14, 15, 13, 11, 14, 87. What is likely the outlier and what measure of center does it most affect?",
+      "options": [
+        "A. 87 is an outlier; it greatly affects the mean",
+        "B. 87 is an outlier; it greatly affects the median",
+        "C. 11 is an outlier; it affects the mode",
+        "D. There is no outlier"
+      ],
+      "correct": "A",
+      "explanation": "87 is far from the cluster 11–15; it is an outlier. Outliers have a large impact on the mean but minimal impact on the median.",
+      "three_axis": {"cognitive_demand": "reasoning", "complexity": "medium", "context": "real_world"},
+      "dok": 2
+    },
+    {
+      "id": "g6_s_sp_5_1_a",
+      "concept_id": "M6.SP.5.1",
+      "stem": "A researcher collects the ages of 150 people at a community center. Which statement about this data set is appropriate?",
+      "options": [
+        "A. The data has 1 observation",
+        "B. The data was collected in a context where age varies among individuals",
+        "C. The data has no variability",
+        "D. The data can only be displayed in a bar graph"
+      ],
+      "correct": "B",
+      "explanation": "Summarizing a data set in context begins by noting that the data varies across the 150 individuals surveyed.",
+      "three_axis": {"cognitive_demand": "reasoning", "complexity": "medium", "context": "real_world"},
+      "dok": 2
+    },
+    {
+      "id": "g6_s_sp_5_2_a",
+      "concept_id": "M6.SP.5.2",
+      "stem": "A data set is heavily skewed right (with a few very large values). Which measure of center BEST represents the typical value?",
+      "options": ["A. Mean", "B. Median", "C. Mode", "D. Range"],
+      "correct": "B",
+      "explanation": "When data is skewed, the median is less affected by extreme values than the mean and better represents the typical observation.",
+      "three_axis": {"cognitive_demand": "reasoning", "complexity": "high", "context": "real_world"},
+      "dok": 3
+    },
+    {
+      "id": "g6_s_sp_5_2_b",
+      "concept_id": "M6.SP.5.2",
+      "stem": "A data set is symmetric and bell-shaped with no outliers. Which measure of center is MOST appropriate?",
+      "options": [
+        "A. Median only",
+        "B. Mode only",
+        "C. Mean (or median — they are approximately equal)",
+        "D. Range"
+      ],
+      "correct": "C",
+      "explanation": "For symmetric distributions with no outliers, mean and median are approximately equal — either is appropriate. The mean is often preferred.",
+      "three_axis": {"cognitive_demand": "reasoning", "complexity": "high", "context": "real_world"},
+      "dok": 3
+    }
+  ]
+}

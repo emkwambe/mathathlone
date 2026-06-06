@@ -1,0 +1,195 @@
+{
+  "course": "NC 7th Grade Math",
+  "division": "Challengers",
+  "visual_pool_id": "nc_grade_7_visual",
+  "total_visual_generators": 14,
+  "rendering_standard": "SVG inline, viewBox 400x300 minimum, labeled with aria-label",
+  "visual_generators": [
+    {
+      "id": "g7_vis_number_line_addition",
+      "concept_id": "M7.NS.1.1",
+      "category": "C",
+      "description": "Horizontal number line from −10 to 10 showing a starting point with an arrow indicating direction and magnitude of addition",
+      "svg_params": {
+        "range": [-10, 10],
+        "start_point": "randomized_negative",
+        "arrow_length": "randomized_positive_or_negative",
+        "label_start": true,
+        "label_end": true,
+        "show_tick_marks": true
+      },
+      "usage": "Static display only — shows the model; Mathlete computes the sum separately",
+      "format_hint_rule": "Never show the answer on the number line itself"
+    },
+    {
+      "id": "g7_vis_number_line_subtraction",
+      "concept_id": "M7.NS.1.3",
+      "category": "C",
+      "description": "Number line showing p − q as p + (−q) with two arrows: original position then additive inverse movement",
+      "svg_params": {
+        "range": [-15, 15],
+        "start_point": "randomized",
+        "arrow1": "subtracted_value_as_inverse",
+        "color_scheme": "blue_forward_red_inverse"
+      },
+      "usage": "Conceptual model — paired with static MC questions about meaning"
+    },
+    {
+      "id": "g7_vis_proportional_table",
+      "concept_id": "M7.RP.1.1",
+      "category": "B",
+      "description": "Rendered HTML table with x and y columns; one entry is missing — Mathlete identifies if proportional",
+      "svg_params": {
+        "rows": 4,
+        "x_values": "randomized_integers",
+        "y_values": "k*x or k*x+b (mixed proportional/non-proportional)",
+        "blank_cell": "none (classification task)"
+      },
+      "usage": "Proportional recognition task — paired with Group B static question"
+    },
+    {
+      "id": "g7_vis_proportional_graph",
+      "concept_id": "M7.RP.1.4",
+      "category": "B",
+      "description": "Coordinate plane (first quadrant) with labeled axes and a line through origin; a specific point is highlighted",
+      "svg_params": {
+        "quadrant": "first_only",
+        "x_range": [0, 10],
+        "y_range": [0, 50],
+        "highlight_point": "(1, k)",
+        "context_label": "e.g., 'Dollars earned (y) vs. Hours worked (x)'"
+      },
+      "usage": "Interpretation question — what does the highlighted point mean?"
+    },
+    {
+      "id": "g7_vis_scale_drawing",
+      "concept_id": "M7.RP.4.2",
+      "category": "A",
+      "description": "Labeled rectangle or L-shaped floor plan with scale ratio shown; dimensions labeled in scale units",
+      "svg_params": {
+        "shape": ["rectangle", "L_shape"],
+        "scale_label": "1 cm = X meters",
+        "dimension_labels": true,
+        "actual_units": "meters or feet"
+      },
+      "usage": "Generator — Mathlete computes actual length or area from scale"
+    },
+    {
+      "id": "g7_vis_angle_supplementary",
+      "concept_id": "M7.GEO.3.1",
+      "category": "A",
+      "description": "Two adjacent angles on a straight line (supplementary), one labeled with expression, one with question mark",
+      "svg_params": {
+        "angle1_label": "numerical or algebraic",
+        "angle2_label": "?",
+        "line": "straight",
+        "arc_indicators": true
+      },
+      "usage": "Generator — Mathlete solves for missing angle"
+    },
+    {
+      "id": "g7_vis_angle_complementary",
+      "concept_id": "M7.GEO.3.1",
+      "category": "A",
+      "description": "Two angles forming a right angle (complementary), one labeled, one as ?",
+      "svg_params": {
+        "right_angle_indicator": true,
+        "angle1_label": "numerical",
+        "angle2_label": "?"
+      },
+      "usage": "Generator — Mathlete computes complement"
+    },
+    {
+      "id": "g7_vis_vertical_angles",
+      "concept_id": "M7.GEO.3.1",
+      "category": "A",
+      "description": "Two intersecting lines forming 4 angles; one labeled, three showing relationships (two vertical, two supplementary)",
+      "svg_params": {
+        "intersection_type": "X_pattern",
+        "labeled_angle": "one corner",
+        "ask_for": "vertical or adjacent angle"
+      },
+      "usage": "Generator — Mathlete identifies and computes named angle"
+    },
+    {
+      "id": "g7_vis_parallel_transversal",
+      "concept_id": "M7.GEO.3.2",
+      "category": "A",
+      "description": "Two parallel lines cut by a transversal with all 8 angles numbered; one given, others as targets",
+      "svg_params": {
+        "parallel_indicator": "arrow marks on lines",
+        "angle_labels": ["1","2","3","4","5","6","7","8"],
+        "given_angle": "randomized",
+        "ask_for": "specific angle by name or number"
+      },
+      "usage": "Generator — Mathlete uses angle relationships to find target angle"
+    },
+    {
+      "id": "g7_vis_circle_labeled",
+      "concept_id": "M7.GEO.2.3",
+      "category": "A",
+      "description": "Circle with labeled radius or diameter; used for area/circumference generator questions",
+      "svg_params": {
+        "show_radius": true,
+        "show_diameter": "alternating",
+        "center_dot": true,
+        "dimension_label": "numeric value"
+      },
+      "usage": "Generator visual — accompanies circle calculation generators"
+    },
+    {
+      "id": "g7_vis_composite_figure",
+      "concept_id": "M7.GEO.4.1",
+      "category": "A",
+      "description": "L-shape, T-shape, or rectangle-minus-cutout with all necessary dimensions labeled",
+      "svg_params": {
+        "shapes": ["L_shape", "T_shape", "rectangle_with_semicircle"],
+        "dimension_labels": "all required sides",
+        "grid_background": false
+      },
+      "usage": "Generator visual — Mathlete decomposes and computes total area"
+    },
+    {
+      "id": "g7_vis_number_line_inequality",
+      "concept_id": "M7.EE.3.1",
+      "category": "C",
+      "description": "Number line showing a solved inequality with open/closed circle and arrow direction",
+      "svg_params": {
+        "range": [-10, 20],
+        "boundary_point": "computed from generator",
+        "circle_type": "open_or_closed",
+        "arrow_direction": "left_or_right"
+      },
+      "usage": "Answer verification visual — displayed AFTER Mathlete submits answer; NOT shown as the question (to prevent answer leaking)"
+    },
+    {
+      "id": "g7_vis_box_plot_comparison",
+      "concept_id": "M7.SP.2.1",
+      "category": "D",
+      "description": "Side-by-side horizontal box plots for two data sets on the same number line axis",
+      "svg_params": {
+        "orientation": "horizontal",
+        "axis_shared": true,
+        "labels": ["Group A", "Group B"],
+        "stats_shown": ["min", "Q1", "median", "Q3", "max"],
+        "data_range": [0, 100]
+      },
+      "usage": "Generator visual — Mathlete reads values and computes/compares IQR, median"
+    },
+    {
+      "id": "g7_vis_tree_diagram",
+      "concept_id": "M7.SP.4.2",
+      "category": "E",
+      "description": "Two-stage tree diagram for compound probability (e.g., flip coin then roll die); branches labeled with outcomes",
+      "svg_params": {
+        "stages": 2,
+        "stage1_outcomes": ["H", "T"],
+        "stage2_outcomes": ["1", "2", "3", "4", "5", "6"],
+        "branch_labels": true,
+        "terminal_nodes": true,
+        "highlight_target_outcome": false
+      },
+      "usage": "Static question visual — Mathlete counts outcomes from tree to find probability"
+    }
+  ]
+}

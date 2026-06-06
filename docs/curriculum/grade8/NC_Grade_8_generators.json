@@ -1,0 +1,477 @@
+{
+  "course": "NC 8th Grade Math",
+  "division": "Contenders",
+  "generator_pool_id": "nc_grade_8",
+  "isolation_rule": "No generators from this pool may be reused in Grade 7, Math 1, or any other course pool.",
+  "total_generators": 57,
+  "generators": [
+    {
+      "id": "g8_ns_eval_roots",
+      "concept_id": "M8.NS.2.1",
+      "generator_type": "eval_roots",
+      "description": "Evaluate the square root of a perfect square (1–225) or cube root of a perfect cube (1–512)",
+      "answer_type": "integer",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "root_type": ["square", "cube"],
+        "perfect_squares": [1,4,9,16,25,36,49,64,81,100,121,144,169,196,225],
+        "perfect_cubes": [1,8,27,64,125,216,343,512]
+      }
+    },
+    {
+      "id": "g8_ns_solve_square_eq",
+      "concept_id": "M8.NS.2.2",
+      "generator_type": "solve_square_equation",
+      "description": "Solve x² = p for p a positive rational; express both positive and negative roots",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "p_pool": [4, 9, 16, 25, 36, 49, 64, 81, 100, 2, 3, 5, 7, 0.25, 1.44],
+        "ask_both_roots": true
+      }
+    },
+    {
+      "id": "g8_ns_solve_cube_eq",
+      "concept_id": "M8.NS.2.3",
+      "generator_type": "solve_cube_equation",
+      "description": "Solve x³ = p for p a rational number (positive or negative perfect cubes)",
+      "answer_type": "integer",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "p_pool": [-512,-343,-216,-125,-64,-27,-8,-1,1,8,27,64,125,216,343,512]
+      }
+    },
+    {
+      "id": "g8_ns_approx_irrational",
+      "concept_id": "M8.NS.3.1",
+      "generator_type": "approximate_irrational",
+      "description": "Given an irrational number (non-perfect-square root), approximate to the nearest tenth or hundredth",
+      "answer_type": "decimal",
+      "visual_category": "C",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "radicand_pool": [2,3,5,6,7,8,10,11,12,13,14,15,17,18,19,20,21,23],
+        "precision": ["tenth", "hundredth"]
+      }
+    },
+    {
+      "id": "g8_ns_compare_irrationals",
+      "concept_id": "M8.NS.3.3",
+      "generator_type": "compare_irrationals",
+      "description": "Given two irrational numbers, identify which is larger; may include pi comparisons",
+      "answer_type": "MC",
+      "visual_category": "C",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "reasoning", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "pairs": [
+          ["√2", "√3"],
+          ["√5", "π/2"],
+          ["√10", "3.1"],
+          ["√7", "2.6"],
+          ["∛8", "√3"],
+          ["√50", "7"]
+        ]
+      }
+    },
+    {
+      "id": "g8_ee_simplify_exponents",
+      "concept_id": "M8.EE.1.1",
+      "generator_type": "simplify_integer_exponents",
+      "description": "Simplify expressions using product rule, quotient rule, power-of-power, zero exponent, or negative exponent",
+      "answer_type": "text",
+      "answer_type_note": "Simplified expression e.g. 'x^5' or '1/x^3'",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "rule": ["product", "quotient", "power_of_power", "zero", "negative"],
+        "base_type": ["integer", "variable", "mixed"],
+        "exponent_range": [-4, 6]
+      }
+    },
+    {
+      "id": "g8_ee_solve_linear_multistep",
+      "concept_id": "M8.EE.2.1",
+      "generator_type": "solve_linear_multistep",
+      "description": "Solve multi-step linear equations with rational coefficients requiring distribution and combining like terms",
+      "answer_type": "decimal_or_fraction",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "structure": ["ax + b = cx + d", "a(bx + c) = d", "ax + b(cx + d) = e"],
+        "coefficient_type": ["integer", "fraction"],
+        "solution_type": ["integer", "fraction", "decimal"]
+      }
+    },
+    {
+      "id": "g8_ee_solve_vars_both_sides",
+      "concept_id": "M8.EE.2.2",
+      "generator_type": "solve_vars_both_sides",
+      "description": "Solve equations with variable terms on both sides; answer is a rational number",
+      "answer_type": "decimal_or_fraction",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "structure": ["ax + b = cx + d", "a(x + b) = cx + d"],
+        "coefficient_range": [-8, 8],
+        "constant_range": [-20, 20]
+      }
+    },
+    {
+      "id": "g8_ee_solve_system_substitution",
+      "concept_id": "M8.EE.3.3",
+      "generator_type": "solve_system_substitution",
+      "description": "Solve a system of two linear equations using substitution; solution is an ordered pair",
+      "answer_type": "ordered_pair",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "form": ["slope_intercept_x2", "one_solved_for_x"],
+        "solution_type": "unique",
+        "coefficient_range": [-5, 5]
+      }
+    },
+    {
+      "id": "g8_ee_solve_system_elimination",
+      "concept_id": "M8.EE.3.4",
+      "generator_type": "solve_system_elimination",
+      "description": "Solve a system of two linear equations using elimination (addition/subtraction of equations)",
+      "answer_type": "ordered_pair",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "structure": "standard_form_ax+by=c",
+        "elimination_type": ["direct_cancel", "multiply_one", "multiply_both"],
+        "coefficient_range": [-6, 6]
+      }
+    },
+    {
+      "id": "g8_f_evaluate_function_notation",
+      "concept_id": "M8.F.1.4",
+      "generator_type": "evaluate_function_notation",
+      "description": "Given f(x) as a linear or quadratic expression, evaluate f(a) for a specific input value",
+      "answer_type": "integer_or_decimal",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "function_type": ["linear", "quadratic"],
+        "function_forms": ["f(x) = ax + b", "f(x) = ax² + b", "f(x) = ax² + bx + c"],
+        "input_range": [-5, 10]
+      }
+    },
+    {
+      "id": "g8_f_classify_equation_type",
+      "concept_id": "M8.F.2.3",
+      "generator_type": "classify_linear_nonlinear_equation",
+      "description": "Given an equation, classify as linear or nonlinear; identifies presence of x², 1/x, x^(1/2), etc.",
+      "answer_type": "MC",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "linear_examples": ["y = 3x - 2", "y = -x + 5", "2x + y = 7"],
+        "nonlinear_examples": ["y = x²", "y = 1/x", "y = √x", "y = 2^x"]
+      }
+    },
+    {
+      "id": "g8_f_construct_linear_function",
+      "concept_id": "M8.F.3.2",
+      "generator_type": "construct_linear_from_table",
+      "description": "Given a table of (x, y) values, write the linear equation in slope-intercept form",
+      "answer_type": "text",
+      "answer_type_note": "e.g., 'y = 2x + 3'",
+      "visual_category": "B",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "table_rows": 4,
+        "slope_range": [-5, 5],
+        "y_intercept_range": [-10, 10],
+        "slope_type": ["integer", "fraction"]
+      }
+    },
+    {
+      "id": "g8_geo_coordinate_translation",
+      "concept_id": "M8.GEO.TRANS.1.2",
+      "generator_type": "coordinate_translation",
+      "description": "Given a point or triangle vertices, apply translation (h, k) and find new coordinates",
+      "answer_type": "ordered_pair",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "shape": ["point", "triangle", "quadrilateral"],
+        "translation_range": [-8, 8],
+        "quadrant_start": ["I", "II", "III", "IV"]
+      }
+    },
+    {
+      "id": "g8_geo_coordinate_reflection",
+      "concept_id": "M8.GEO.TRANS.1.3",
+      "generator_type": "coordinate_reflection",
+      "description": "Given a point or shape vertices, reflect across x-axis, y-axis, or y=x",
+      "answer_type": "ordered_pair",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "line_of_reflection": ["x_axis", "y_axis", "y=x"],
+        "shape": ["point", "triangle"],
+        "coordinate_range": [-8, 8]
+      }
+    },
+    {
+      "id": "g8_geo_coordinate_rotation",
+      "concept_id": "M8.GEO.TRANS.1.4",
+      "generator_type": "coordinate_rotation",
+      "description": "Rotate a point or shape 90°, 180°, or 270° clockwise/counterclockwise about the origin",
+      "answer_type": "ordered_pair",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "degrees": [90, 180, 270],
+        "direction": ["clockwise", "counterclockwise"],
+        "shape": ["point", "triangle"]
+      }
+    },
+    {
+      "id": "g8_geo_coordinate_dilation",
+      "concept_id": "M8.GEO.TRANS.3.2",
+      "generator_type": "coordinate_dilation",
+      "description": "Apply a dilation with center at origin and scale factor k to a point or shape",
+      "answer_type": "ordered_pair",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "scale_factor_pool": [0.5, 0.25, 2, 3, 0.5, 1.5],
+        "center": "origin",
+        "shape": ["point", "triangle"]
+      }
+    },
+    {
+      "id": "g8_geo_similar_figures_sides",
+      "concept_id": "M8.GEO.TRANS.5.1",
+      "generator_type": "similar_figures_corresponding_sides",
+      "description": "Given two similar figures with some sides labeled, identify corresponding side pairs",
+      "answer_type": "decimal",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "scale_factor_pool": [2, 3, 0.5, 1.5, 2.5],
+        "figure_type": ["triangle", "rectangle", "quadrilateral"]
+      }
+    },
+    {
+      "id": "g8_geo_similar_figures_solve",
+      "concept_id": "M8.GEO.TRANS.5.2",
+      "generator_type": "similar_figures_missing_side",
+      "description": "Given two similar figures with a missing side length, set up and solve a proportion",
+      "answer_type": "decimal",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "real_world"},
+      "params": {
+        "known_sides": 3,
+        "missing_side": 1,
+        "scale_factor_range": [1.5, 5]
+      }
+    },
+    {
+      "id": "g8_geo_triangle_angle_sum",
+      "concept_id": "M8.GEO.TRANS.6.2",
+      "generator_type": "triangle_angle_sum",
+      "description": "Given two angles of a triangle (some as expressions), find the third using angle sum = 180°",
+      "answer_type": "integer",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "known_angles": 2,
+        "algebraic_expressions": "sometimes",
+        "include_exterior_angle": true
+      }
+    },
+    {
+      "id": "g8_geo_pythagorean_missing_side",
+      "concept_id": "M8.GEO.PV.1.2",
+      "generator_type": "pythagorean_find_missing_side",
+      "description": "Given two sides of a right triangle, find the missing side using a² + b² = c²",
+      "answer_type": "decimal",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "missing": ["leg", "hypotenuse"],
+        "pythagorean_triples": [[3,4,5],[5,12,13],[8,15,17],[7,24,25],[6,8,10]],
+        "non_triple_pairs": [[2,3],[4,7],[5,9],[3,8]]
+      }
+    },
+    {
+      "id": "g8_geo_pythagorean_2d_context",
+      "concept_id": "M8.GEO.PV.1.3",
+      "generator_type": "pythagorean_2d_word_problem",
+      "description": "Real-world 2D application of Pythagorean theorem (ladder/wall, diagonal of rectangle, direct path vs. path around corner)",
+      "answer_type": "decimal",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "application", "complexity": "medium", "context": "real_world"},
+      "params": {
+        "scenario_templates": ["ladder_wall", "diagonal_rectangle", "diagonal_square", "baseball_diamond", "direct_path"]
+      }
+    },
+    {
+      "id": "g8_geo_pythagorean_3d_context",
+      "concept_id": "M8.GEO.PV.1.4",
+      "generator_type": "pythagorean_3d_word_problem",
+      "description": "Apply Pythagorean theorem in 3D (e.g., diagonal of rectangular prism, height of pyramid from slant height)",
+      "answer_type": "decimal",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "application", "complexity": "high", "context": "real_world"},
+      "params": {
+        "scenario_templates": ["space_diagonal_box", "pyramid_height_from_slant", "tent_pole_height"]
+      }
+    },
+    {
+      "id": "g8_geo_pythagorean_converse",
+      "concept_id": "M8.GEO.PV.1.5",
+      "generator_type": "pythagorean_converse",
+      "description": "Given three side lengths, determine if they form a right triangle by testing a² + b² = c²",
+      "answer_type": "MC",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "right_triangle_triples": [[3,4,5],[5,12,13],[8,15,17]],
+        "non_right_triples": [[3,4,6],[5,7,9],[2,3,4]],
+        "mix_ratio": "50_50"
+      }
+    },
+    {
+      "id": "g8_geo_coordinate_distance",
+      "concept_id": "M8.GEO.PV.2.1",
+      "generator_type": "coordinate_distance",
+      "description": "Find the distance between two points in the coordinate plane using the distance formula",
+      "answer_type": "decimal",
+      "visual_category": "B",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "coordinate_range": [-10, 10],
+        "result_type": ["exact_integer", "irrational_rounded"]
+      }
+    },
+    {
+      "id": "g8_geo_volume_cylinder",
+      "concept_id": "M8.GEO.PV.3.2",
+      "generator_type": "volume_cylinder",
+      "description": "Compute volume of a cylinder V = πr²h given radius and height",
+      "answer_type": "decimal",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "radius_range": [2, 12],
+        "height_range": [3, 20],
+        "solve_for": ["volume", "radius", "height"],
+        "use_pi_approx": 3.14159
+      }
+    },
+    {
+      "id": "g8_geo_volume_cone",
+      "concept_id": "M8.GEO.PV.3.4",
+      "generator_type": "volume_cone",
+      "description": "Compute volume of a cone V = (1/3)πr²h given radius and height",
+      "answer_type": "decimal",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "radius_range": [2, 10],
+        "height_range": [3, 15],
+        "solve_for": ["volume", "height"],
+        "use_pi_approx": 3.14159
+      }
+    },
+    {
+      "id": "g8_geo_volume_sphere",
+      "concept_id": "M8.GEO.PV.3.6",
+      "generator_type": "volume_sphere",
+      "description": "Compute volume of a sphere V = (4/3)πr³ given radius or diameter",
+      "answer_type": "decimal",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "radius_range": [2, 10],
+        "given": ["radius", "diameter"],
+        "solve_for": ["volume", "radius"],
+        "use_pi_approx": 3.14159
+      }
+    },
+    {
+      "id": "g8_geo_volume_word_problem",
+      "concept_id": "M8.GEO.PV.4.1",
+      "generator_type": "volume_3d_word_problem",
+      "description": "Real-world volume problem involving one of: cylinder, cone, or sphere in context",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "application", "complexity": "high", "context": "real_world"},
+      "params": {
+        "solid_type": ["cylinder", "cone", "sphere"],
+        "scenario_templates": ["water_tank", "ice_cream_cone", "candle", "basketball", "can_of_soup"],
+        "solve_for": ["volume", "capacity_comparison", "radius_given_volume"]
+      }
+    },
+    {
+      "id": "g8_sp_two_way_table_read",
+      "concept_id": "M8.SP.3.1",
+      "generator_type": "two_way_table_read",
+      "description": "Given a two-way frequency table, read joint and marginal frequencies to answer questions",
+      "answer_type": "integer",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "real_world"},
+      "params": {
+        "table_size": "2x2 or 2x3",
+        "categories": ["grade_level_sport", "pet_ownership_grade", "lunch_choice_gender"],
+        "ask_for": ["joint_frequency", "marginal_frequency", "total"]
+      }
+    },
+    {
+      "id": "g8_sp_relative_frequency",
+      "concept_id": "M8.SP.3.2",
+      "generator_type": "relative_frequency_table",
+      "description": "Given a two-way frequency table, compute row, column, or total relative frequencies as decimals or percents",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "real_world"},
+      "params": {
+        "table_size": "2x2 or 2x3",
+        "frequency_type": ["row", "column", "total"],
+        "output_format": ["decimal", "percent"]
+      }
+    },
+    {
+      "id": "g8_sp_line_of_best_fit_solve",
+      "concept_id": "M8.SP.2.2",
+      "generator_type": "line_of_best_fit_prediction",
+      "description": "Given the equation of a line of best fit, substitute an x-value to make a prediction",
+      "answer_type": "decimal",
+      "visual_category": "B",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "application", "complexity": "medium", "context": "real_world"},
+      "params": {
+        "equation_form": "y = mx + b",
+        "slope_range": [0.5, 10],
+        "intercept_range": [-50, 50],
+        "x_prediction_range": [1, 30],
+        "contexts": ["study_time_vs_score", "height_vs_shoe_size", "temperature_vs_ice_cream_sales"]
+      }
+    }
+  ]
+}

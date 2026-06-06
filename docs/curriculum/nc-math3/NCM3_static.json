@@ -1,0 +1,471 @@
+{
+  "course": "NC Math 3",
+  "division": "Varsity+",
+  "static_pool_id": "nc_math_3_static",
+  "philosophy": "Every question targets a misconception that propagates into AP-level courses. DOK 2–3 emphasis. Questions on trig, logarithms, and rational functions are designed to catch errors that block AP Calc access.",
+  "total_static_items": 65,
+  "questions": [
+
+    // === FUNCTIONS & INVERSES ===
+
+    {
+      "id": "m3_s_fni_1_3_a",
+      "concept_id": "M3.FNI.1.3",
+      "misconception_targeted": "Students confuse 'increasing interval' with 'positive interval'",
+      "stem": "A function f is shown on a graph. It is positive on (−2, 4) and increasing on (1, 5). Which statement is true at x = 3?",
+      "options": [
+        "A. f is increasing AND positive",
+        "B. f is increasing but may be negative",
+        "C. f is positive but may be decreasing",
+        "D. f must be at a maximum"
+      ],
+      "correct": "A",
+      "explanation": "x = 3 falls within both (1, 5) [increasing] and (−2, 4) [positive], so f is both increasing and positive at x = 3. Increasing/decreasing and positive/negative are independent properties.",
+      "three_axis": {"cognitive_demand": "reasoning", "complexity": "high", "context": "abstract"},
+      "dok": 3
+    },
+    {
+      "id": "m3_s_fni_3_3_a",
+      "concept_id": "M3.FNI.3.3",
+      "misconception_targeted": "Students think f∘g = g∘f (composition is commutative)",
+      "stem": "Let f(x) = 2x + 1 and g(x) = x². Which statement is TRUE?",
+      "options": [
+        "A. (f∘g)(x) = (g∘f)(x) for all x",
+        "B. (f∘g)(x) = 2x² + 1, but (g∘f)(x) = (2x+1)² = 4x² + 4x + 1 — they are NOT equal",
+        "C. Composition is always commutative for polynomial functions",
+        "D. (f∘g)(x) = 2x² + 1 = (g∘f)(x)"
+      ],
+      "correct": "B",
+      "explanation": "Function composition is NOT generally commutative. (f∘g)(x) = f(g(x)) = f(x²) = 2x² + 1, while (g∘f)(x) = g(f(x)) = g(2x+1) = (2x+1)² = 4x² + 4x + 1. These are different functions.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "m3_s_fni_4_1_a",
+      "concept_id": "M3.FNI.4.1",
+      "misconception_targeted": "Students think f⁻¹(x) = 1/f(x) (multiplicative inverse vs. inverse function)",
+      "stem": "If f(x) = 3x + 2, which correctly represents f⁻¹(x)?",
+      "options": [
+        "A. 1/(3x + 2)",
+        "B. (x − 2)/3",
+        "C. 3x − 2",
+        "D. 1/3x − 2"
+      ],
+      "correct": "B",
+      "explanation": "f⁻¹(x) is the INVERSE FUNCTION — it undoes f. Swap x and y: x = 3y + 2, then solve: y = (x − 2)/3. The notation f⁻¹(x) does NOT mean 1/f(x) (that would be the multiplicative inverse).",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "m3_s_fni_4_3_a",
+      "concept_id": "M3.FNI.4.3",
+      "misconception_targeted": "Students think reflecting over y=x is the same as reflecting over the x-axis",
+      "stem": "A function f contains the point (3, 7). Its inverse f⁻¹ must contain which point?",
+      "options": [
+        "A. (−3, 7)",
+        "B. (3, −7)",
+        "C. (7, 3)",
+        "D. (−3, −7)"
+      ],
+      "correct": "C",
+      "explanation": "Inverse functions reflect over the line y = x. If (a, b) is on f, then (b, a) is on f⁻¹. The point (3, 7) on f becomes (7, 3) on f⁻¹.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "m3_s_fni_4_5_a",
+      "concept_id": "M3.FNI.4.5",
+      "misconception_targeted": "Students don't understand why quadratics need domain restriction for invertibility",
+      "stem": "Why does f(x) = x² NOT have an inverse function over all real numbers?",
+      "options": [
+        "A. It is not a function",
+        "B. It fails the horizontal line test — two inputs (e.g., 3 and −3) map to the same output (9)",
+        "C. It is not one-to-one because it has a minimum value",
+        "D. Quadratics can never have inverse functions"
+      ],
+      "correct": "B",
+      "explanation": "A function has an inverse only if it is one-to-one (each output comes from exactly one input). f(x) = x² fails because f(3) = f(−3) = 9. Restricting the domain to x ≥ 0 or x ≤ 0 makes it one-to-one.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "high", "context": "abstract"},
+      "dok": 3
+    },
+
+    // === EXPONENTIAL & LOGARITHMIC ===
+
+    {
+      "id": "m3_s_el_3_1_a",
+      "concept_id": "M3.EL.3.1",
+      "misconception_targeted": "Students think log is a multiplication operation",
+      "stem": "log₂(8) = ? Which reasoning is correct?",
+      "options": [
+        "A. log₂(8) = 2 × 8 = 16",
+        "B. log₂(8) = 8/2 = 4",
+        "C. log₂(8) = 3, because 2³ = 8",
+        "D. log₂(8) = log(2) + log(8)"
+      ],
+      "correct": "C",
+      "explanation": "log_b(x) = y means b^y = x. So log₂(8) asks: 2 to what power equals 8? Since 2³ = 8, the answer is 3. Logarithm is an exponent, not a product.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "m3_s_el_4_1_a",
+      "concept_id": "M3.EL.4.1",
+      "misconception_targeted": "Students apply log product rule as multiplication of logs",
+      "stem": "Which expression correctly expands log₃(5x)?",
+      "options": [
+        "A. log₃(5) × log₃(x)",
+        "B. log₃(5) + log₃(x)",
+        "C. 5 · log₃(x)",
+        "D. log₃(5x²)"
+      ],
+      "correct": "B",
+      "explanation": "Product rule: log_b(MN) = log_b(M) + log_b(N). The log of a product is the SUM of logs, NOT the product of logs.",
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "m3_s_el_6_1_a",
+      "concept_id": "M3.EL.6.1",
+      "misconception_targeted": "Students skip checking for extraneous solutions in log equations",
+      "stem": "Solve log₄(x − 3) = 2. Which answer is correct?",
+      "options": [
+        "A. x = 19, and no check needed",
+        "B. x = 19, after verifying x − 3 = 16 > 0 ✓",
+        "C. x = 7, because 4² − 3 = 13 ≠ x",
+        "D. x = 11 and x = −11"
+      ],
+      "correct": "B",
+      "explanation": "Convert: 4² = x − 3 → x = 19. Then check: the argument x − 3 = 16 > 0, so x = 19 is valid. Always verify that the argument of a logarithm is positive — negative arguments produce extraneous solutions.",
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "m3_s_el_5_2_a",
+      "concept_id": "M3.EL.5.2",
+      "misconception_targeted": "Students confuse taking log of both sides with canceling the base",
+      "stem": "Which step correctly begins solving 5^(2x+1) = 80?",
+      "options": [
+        "A. 2x + 1 = 80/5 = 16",
+        "B. Take log of both sides: (2x+1)·log(5) = log(80)",
+        "C. 2x + 1 = log₈₀(5)",
+        "D. 5^(2x+1) − 80 = 0, then factor"
+      ],
+      "correct": "B",
+      "explanation": "Take log of both sides, then apply the power rule to bring the exponent down: (2x+1)·log(5) = log(80). Then solve for x.",
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "dok": 2
+    },
+
+    // === POLYNOMIAL & RATIONAL FUNCTIONS ===
+
+    {
+      "id": "m3_s_pr_1_2_a",
+      "concept_id": "M3.PR.1.2",
+      "misconception_targeted": "Students confuse positive leading coefficient even degree with both ends going up",
+      "stem": "For f(x) = −2x⁴ + 3x² − 1, describe the end behavior.",
+      "options": [
+        "A. As x → ±∞, f(x) → +∞ (both ends up)",
+        "B. As x → +∞, f(x) → +∞; as x → −∞, f(x) → −∞",
+        "C. As x → ±∞, f(x) → −∞ (both ends down)",
+        "D. As x → +∞, f(x) → −∞; as x → −∞, f(x) → +∞"
+      ],
+      "correct": "C",
+      "explanation": "Even degree (4) → both ends go same direction. Negative leading coefficient (−2) → both ends go DOWN. So as x → ±∞, f(x) → −∞.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "m3_s_pr_1_3_a",
+      "concept_id": "M3.PR.1.3",
+      "misconception_targeted": "Students think all zeros cause the graph to cross the x-axis",
+      "stem": "f(x) = (x − 2)²(x + 1). What happens at x = 2?",
+      "options": [
+        "A. The graph crosses the x-axis at x = 2",
+        "B. The graph touches but does not cross the x-axis at x = 2 (even multiplicity)",
+        "C. The graph has a vertical asymptote at x = 2",
+        "D. x = 2 is not a zero"
+      ],
+      "correct": "B",
+      "explanation": "x = 2 has even multiplicity (2) — the graph TOUCHES and bounces off the x-axis, not crosses. x = −1 has odd multiplicity (1) — the graph crosses at that point.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "high", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "m3_s_pr_2_4_a",
+      "concept_id": "M3.PR.2.4",
+      "misconception_targeted": "Students confuse the Factor Theorem direction — if P(k) = 0 then (x-k) is a factor, not just that it's a root",
+      "stem": "P(x) is a polynomial and P(3) = 0. What can you conclude?",
+      "options": [
+        "A. x = 3 is the only zero of P",
+        "B. (x + 3) is a factor of P",
+        "C. (x − 3) is a factor of P",
+        "D. P(3) = 0 means 3 is not a valid input"
+      ],
+      "correct": "C",
+      "explanation": "Factor Theorem: P(k) = 0 if and only if (x − k) is a factor of P. Since P(3) = 0, (x − 3) is a factor — not (x + 3).",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "m3_s_pr_3_2_a",
+      "concept_id": "M3.PR.3.2",
+      "misconception_targeted": "Students think real-coefficient polynomials can have an odd number of complex zeros",
+      "stem": "A degree-5 polynomial with real coefficients has zeros 2, −1, and 3i. How many zeros does it have in total, and what must also be a zero?",
+      "options": [
+        "A. 3 zeros total — 2, −1, and 3i",
+        "B. 5 zeros: 2, −1, 3i, −3i, and one more real zero",
+        "C. 5 zeros: 2, −1, 3i, −3i, and the 5th is always 0",
+        "D. Exactly 5 zeros with no constraint on type"
+      ],
+      "correct": "B",
+      "explanation": "Conjugate Root Theorem: complex zeros of real-coefficient polynomials come in conjugate pairs. If 3i is a zero, so is −3i. The degree-5 polynomial has 5 zeros total: 2, −1, 3i, −3i, and one more real zero.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "high", "context": "abstract"},
+      "dok": 3
+    },
+    {
+      "id": "m3_s_pr_5_4_a",
+      "concept_id": "M3.PR.5.4",
+      "misconception_targeted": "Students confuse holes with vertical asymptotes",
+      "stem": "f(x) = (x² − 4)/(x − 2). What happens at x = 2?",
+      "options": [
+        "A. Vertical asymptote at x = 2",
+        "B. Hole at (2, 4) — a removable discontinuity",
+        "C. The function equals 4 at x = 2",
+        "D. The function is undefined everywhere"
+      ],
+      "correct": "B",
+      "explanation": "Factor: (x²−4)/(x−2) = (x+2)(x−2)/(x−2). The (x−2) cancels, leaving f(x) = x + 2 with a HOLE at x = 2 (not a vertical asymptote). The hole's y-coordinate: plug x = 2 into simplified form: 2 + 2 = 4. Hole at (2, 4).",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "high", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "m3_s_pr_6_1_a",
+      "concept_id": "M3.PR.6.1",
+      "misconception_targeted": "Students forget to check extraneous solutions after multiplying by LCD",
+      "stem": "Solving 3/(x − 2) = 5 gives x = 17/5. Is this valid?",
+      "options": [
+        "A. No — x = 17/5 makes the denominator zero",
+        "B. Yes — 17/5 ≠ 2, so the original denominator is non-zero ✓",
+        "C. No — all rational equations have extraneous solutions",
+        "D. Yes — we always trust the algebraic solution"
+      ],
+      "correct": "B",
+      "explanation": "For rational equations, the excluded value is x = 2. Since 17/5 ≠ 2, the solution is valid. Always check that the solution doesn't make any denominator equal to zero.",
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "dok": 2
+    },
+
+    // === TRIGONOMETRY ★ AP PIPELINE ===
+
+    {
+      "id": "m3_s_trig_1_2_a",
+      "concept_id": "M3.TRIG.1.2",
+      "misconception_targeted": "Students apply conversion incorrectly (multiply by π instead of π/180)",
+      "stem": "Convert 150° to radians.",
+      "options": ["A. 150π", "B. 5π/6", "C. 6π/5", "D. 5π/3"],
+      "correct": "B",
+      "explanation": "Multiply by π/180: 150 × (π/180) = 150π/180 = 5π/6. The common error is multiplying by π instead of dividing by 180.",
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "m3_s_trig_2_2_a",
+      "concept_id": "M3.TRIG.2.2",
+      "misconception_targeted": "Students mix up sin and cos on the unit circle",
+      "stem": "On the unit circle, the point corresponding to 60° is (1/2, √3/2). What are cos(60°) and sin(60°)?",
+      "options": [
+        "A. cos(60°) = √3/2, sin(60°) = 1/2",
+        "B. cos(60°) = 1/2, sin(60°) = √3/2",
+        "C. cos(60°) = 1/2, sin(60°) = 1/2",
+        "D. cos(60°) = √3, sin(60°) = 1"
+      ],
+      "correct": "B",
+      "explanation": "Unit circle convention: point = (cos θ, sin θ). So x-coordinate = cos, y-coordinate = sin. cos(60°) = 1/2 and sin(60°) = √3/2.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "high", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "m3_s_trig_2_3_a",
+      "concept_id": "M3.TRIG.2.3",
+      "misconception_targeted": "Students use positive trig values in quadrants where they should be negative",
+      "stem": "Find sin(210°).",
+      "options": ["A. √3/2", "B. 1/2", "C. −1/2", "D. −√3/2"],
+      "correct": "C",
+      "explanation": "210° is in Quadrant III. Reference angle = 210° − 180° = 30°. sin(30°) = 1/2. In QII I, sine is NEGATIVE. So sin(210°) = −1/2. (ASTC: Only sine positive in QII; Only tangent positive in QIII.)",
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "m3_s_trig_4_1_a",
+      "concept_id": "M3.TRIG.4.1",
+      "misconception_targeted": "Students think arcsin(sin(x)) = x for all x",
+      "stem": "Evaluate arcsin(sin(5π/4)).",
+      "options": [
+        "A. 5π/4",
+        "B. −π/4",
+        "C. 3π/4",
+        "D. π/4"
+      ],
+      "correct": "B",
+      "explanation": "sin(5π/4) = −√2/2. Now arcsin(−√2/2) must give a result in [−π/2, π/2] (the restricted range). arcsin(−√2/2) = −π/4. So arcsin(sin(5π/4)) ≠ 5π/4 because 5π/4 is outside the restricted range.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "high", "context": "abstract"},
+      "dok": 3
+    },
+    {
+      "id": "m3_s_trig_5_1_a",
+      "concept_id": "M3.TRIG.5.1",
+      "misconception_targeted": "Students use sin²x + cos²x = 1 to incorrectly claim sin x + cos x = 1",
+      "stem": "A student writes: 'Since sin²x + cos²x = 1, then sin x + cos x = 1.' Is this correct?",
+      "options": [
+        "A. Yes — it follows from the Pythagorean identity",
+        "B. No — √(sin²x + cos²x) ≠ sin x + cos x; the identity applies to SQUARED terms only",
+        "C. Yes — it is true for all values of x",
+        "D. Yes — because sin and cos are both less than 1"
+      ],
+      "correct": "B",
+      "explanation": "sin²x + cos²x = 1 is the Pythagorean identity. This does NOT imply sin x + cos x = 1. For example, at x = 0: sin(0) + cos(0) = 0 + 1 = 1, but at x = π/4: √2/2 + √2/2 = √2 ≠ 1. The identity involves squares, not first powers.",
+      "three_axis": {"cognitive_demand": "reasoning", "complexity": "high", "context": "abstract"},
+      "dok": 3
+    },
+    {
+      "id": "m3_s_trig_6_1_a",
+      "concept_id": "M3.TRIG.6.1",
+      "misconception_targeted": "Students find only one solution when trig equations have two in [0, 2π)",
+      "stem": "Solve sin(x) = √3/2 on [0, 2π). How many solutions are there?",
+      "options": [
+        "A. One solution: x = π/3",
+        "B. Two solutions: x = π/3 and x = 2π/3",
+        "C. Two solutions: x = π/3 and x = 4π/3",
+        "D. Three solutions"
+      ],
+      "correct": "B",
+      "explanation": "sin = √3/2 is positive in QI and QII. QI solution: π/3. QII solution: π − π/3 = 2π/3. Both are in [0, 2π). Missing the second quadrant solution is the most common error in trig equations.",
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "m3_s_trig_7_1_a",
+      "concept_id": "M3.TRIG.7.1",
+      "misconception_targeted": "Students don't recognize the ambiguous case (SSA) and assume unique solution",
+      "stem": "In triangle ABC, a = 10, b = 14, and A = 30°. How many triangles are possible?",
+      "options": [
+        "A. Exactly one triangle",
+        "B. No triangle — the sides are incompatible",
+        "C. Two triangles are possible (ambiguous case)",
+        "D. Infinitely many triangles"
+      ],
+      "correct": "C",
+      "explanation": "This is SSA (given side-side-angle not the included angle). Since a < b and a > b·sin(A) = 14·sin(30°) = 7, two triangles are possible. The height h = b·sin(A) = 7 < a = 10 < b = 14 → two solutions.",
+      "three_axis": {"cognitive_demand": "reasoning", "complexity": "high", "context": "real_world"},
+      "dok": 3
+    },
+
+    // === GEOMETRY & CIRCLES ===
+
+    {
+      "id": "m3_s_geo_2_3_a",
+      "concept_id": "M3.GEO.CIR.2.3",
+      "misconception_targeted": "Students add the wrong value when completing the square (use coefficient not half-coefficient squared)",
+      "stem": "To complete the square for x² + 6x, you add:",
+      "options": [
+        "A. 6 (add the coefficient)",
+        "B. 9 (add (6/2)² = 3² = 9)",
+        "C. 36 (add 6²)",
+        "D. 3 (add half the coefficient)"
+      ],
+      "correct": "B",
+      "explanation": "Completing the square: take half the linear coefficient (6/2 = 3), then SQUARE it (3² = 9). So x² + 6x + 9 = (x + 3)². Adding 6 or 36 are common errors.",
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "m3_s_geo_3_3_a",
+      "concept_id": "M3.GEO.CIR.3.3",
+      "misconception_targeted": "Students confuse central angle and inscribed angle",
+      "stem": "An inscribed angle intercepts an arc of 120°. What is the measure of the inscribed angle?",
+      "options": ["A. 120°", "B. 240°", "C. 60°", "D. 30°"],
+      "correct": "C",
+      "explanation": "Inscribed Angle Theorem: the inscribed angle = half the intercepted arc. 120°/2 = 60°. A central angle would equal the arc (120°). Students often confuse these two.",
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "dok": 1
+    },
+
+    // === PROBABILITY & STATISTICS ===
+
+    {
+      "id": "m3_s_ps_2_1_a",
+      "concept_id": "M3.PS.2.1",
+      "misconception_targeted": "Students think all probabilities in a distribution must be equal",
+      "stem": "Which of the following IS a valid probability distribution for X?",
+      "options": [
+        "A. P(X=1)=0.4, P(X=2)=0.3, P(X=3)=0.4 (sum = 1.1)",
+        "B. P(X=1)=0.5, P(X=2)=0.3, P(X=3)=0.2 (sum = 1.0, all non-negative)",
+        "C. P(X=1)=0.6, P(X=2)=−0.1, P(X=3)=0.5 (negative probability)",
+        "D. P(X=1)=0.3, P(X=2)=0.3, P(X=3)=0.3 (sum = 0.9)"
+      ],
+      "correct": "B",
+      "explanation": "A valid probability distribution requires: (1) all probabilities ≥ 0, and (2) probabilities sum to exactly 1. Only B satisfies both conditions.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "m3_s_ps_3_1_a",
+      "concept_id": "M3.PS.3.1",
+      "misconception_targeted": "Students apply Empirical Rule to non-normal distributions",
+      "stem": "For a NORMAL distribution with μ = 70 and σ = 5, approximately what percent of data falls within ONE standard deviation of the mean?",
+      "options": ["A. 50%", "B. 68%", "C. 95%", "D. 99.7%"],
+      "correct": "B",
+      "explanation": "Empirical Rule (68-95-99.7): 68% of data falls within 1σ, 95% within 2σ, 99.7% within 3σ. This applies specifically to NORMAL distributions.",
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "real_world"},
+      "dok": 1
+    },
+    {
+      "id": "m3_s_ps_3_2_a",
+      "concept_id": "M3.PS.3.2",
+      "misconception_targeted": "Students interpret z-score as a probability",
+      "stem": "A student scores 85 on a test where μ = 75 and σ = 10. The z-score is +1.0. What does this mean?",
+      "options": [
+        "A. There is a 1.0% chance the student scored 85",
+        "B. The student scored exactly 1 point above the mean",
+        "C. The student's score is 1 standard deviation above the mean",
+        "D. The student scored in the top 1% of the class"
+      ],
+      "correct": "C",
+      "explanation": "z = (85−75)/10 = 1.0 means the score is 1 standard deviation above the mean. A z-score is a standardized distance, NOT a probability or a point-count.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "real_world"},
+      "dok": 2
+    },
+    {
+      "id": "m3_s_ps_5_1_a",
+      "concept_id": "M3.PS.5.1",
+      "misconception_targeted": "Students think rejecting the null hypothesis proves the alternative",
+      "stem": "A researcher rejects the null hypothesis at α = 0.05. Which conclusion is correct?",
+      "options": [
+        "A. The alternative hypothesis is proven to be true",
+        "B. There is sufficient evidence at the 5% level to support the alternative hypothesis",
+        "C. There is a 95% probability the alternative is correct",
+        "D. The null hypothesis is definitely false"
+      ],
+      "correct": "B",
+      "explanation": "Rejecting H₀ means there is sufficient statistical evidence — NOT proof. We never 'prove' hypotheses in statistics. We either reject or fail to reject H₀ based on probability thresholds.",
+      "three_axis": {"cognitive_demand": "reasoning", "complexity": "high", "context": "real_world"},
+      "dok": 3
+    },
+    {
+      "id": "m3_s_ps_5_2_a",
+      "concept_id": "M3.PS.5.2",
+      "misconception_targeted": "Students think p-value is the probability that the null hypothesis is true",
+      "stem": "A p-value of 0.03 means:",
+      "options": [
+        "A. There is a 3% chance the null hypothesis is true",
+        "B. There is a 97% chance the alternative hypothesis is true",
+        "C. If the null hypothesis were true, there is a 3% chance of observing results at least as extreme as the data",
+        "D. The effect size is 3% of the expected value"
+      ],
+      "correct": "C",
+      "explanation": "The p-value is the probability of observing the data (or more extreme results) GIVEN THAT the null hypothesis is true. It is NOT the probability that H₀ is true or false. This is the most commonly misunderstood concept in all of statistics.",
+      "three_axis": {"cognitive_demand": "reasoning", "complexity": "high", "context": "real_world"},
+      "dok": 3
+    }
+  ]
+}

@@ -1,0 +1,624 @@
+{
+  "course": "NC 6th Grade Math",
+  "division": "Rising Stars",
+  "generator_pool_id": "nc_grade_6",
+  "isolation_rule": "No generators from this pool may be reused in Grade 7, Grade 8, Math 1, or any other course pool.",
+  "total_generators": 58,
+  "generators": [
+    {
+      "id": "g6_ns_add_sub_decimals",
+      "concept_id": "M6.NS.1.1",
+      "generator_type": "add_sub_decimals",
+      "description": "Add or subtract two multi-digit decimals (up to thousandths) using the standard algorithm",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "operation": ["add", "subtract"],
+        "decimal_places": [1, 2, 3],
+        "digit_count": [2, 3, 4],
+        "regrouping": true
+      }
+    },
+    {
+      "id": "g6_ns_multiply_decimals",
+      "concept_id": "M6.NS.1.2",
+      "generator_type": "multiply_decimals",
+      "description": "Multiply two multi-digit decimals; factors have at most 4 total digits combined",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "factor1_decimal_places": [1, 2],
+        "factor2_decimal_places": [1, 2],
+        "max_factor_value": 99.9
+      }
+    },
+    {
+      "id": "g6_ns_long_division_whole",
+      "concept_id": "M6.NS.1.3",
+      "generator_type": "long_division_whole_numbers",
+      "description": "Divide a multi-digit whole number by a 1- or 2-digit whole number; remainder possible",
+      "answer_type": "decimal",
+      "answer_type_note": "Express remainder as decimal or R form — specify in heat settings",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "dividend_range": [100, 9999],
+        "divisor_range": [2, 25],
+        "allow_remainder": true
+      }
+    },
+    {
+      "id": "g6_ns_divide_decimals",
+      "concept_id": "M6.NS.1.4",
+      "generator_type": "divide_decimals",
+      "description": "Divide a decimal by a whole number or a decimal by a decimal (tenths/hundredths level)",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "dividend_decimal_places": [1, 2],
+        "divisor_type": ["whole_number", "decimal_tenths"],
+        "dividend_range": [0.1, 99.9]
+      }
+    },
+    {
+      "id": "g6_ns_divide_fractions",
+      "concept_id": "M6.NS.2.2",
+      "generator_type": "divide_fractions_algorithm",
+      "description": "Divide a fraction by a fraction using the invert-and-multiply algorithm; simplify answer",
+      "answer_type": "fraction",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "numerator_range": [1, 8],
+        "denominator_pool": [2, 3, 4, 5, 6, 8, 10],
+        "include_mixed_numbers": false,
+        "simplify_answer": true
+      }
+    },
+    {
+      "id": "g6_ns_fraction_division_word",
+      "concept_id": "M6.NS.2.3",
+      "generator_type": "fraction_division_word_problem",
+      "description": "Real-world problem requiring fraction ÷ fraction (e.g., 'How many 1/4-cup servings in 3/4 cup?')",
+      "answer_type": "fraction",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "application", "complexity": "medium", "context": "real_world"},
+      "params": {
+        "scenario_templates": [
+          "servings_in_container",
+          "ribbon_cut_into_pieces",
+          "distance_per_interval",
+          "recipe_halving"
+        ],
+        "fraction_complexity": "unit_or_simple"
+      }
+    },
+    {
+      "id": "g6_ns_find_gcf",
+      "concept_id": "M6.NS.3.1",
+      "generator_type": "find_gcf",
+      "description": "Find the Greatest Common Factor of two whole numbers ≤ 100",
+      "answer_type": "integer",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "number_range": [2, 100],
+        "gcf_range": [2, 24],
+        "method_hint": "none"
+      }
+    },
+    {
+      "id": "g6_ns_find_lcm",
+      "concept_id": "M6.NS.3.2",
+      "generator_type": "find_lcm",
+      "description": "Find the Least Common Multiple of two whole numbers ≤ 12",
+      "answer_type": "integer",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "number_range": [2, 12],
+        "pairs_pool": [
+          [3, 4], [4, 6], [3, 5], [6, 8], [4, 10], [5, 6],
+          [6, 9], [2, 7], [3, 8], [4, 9], [6, 10], [8, 12]
+        ]
+      }
+    },
+    {
+      "id": "g6_ns_gcf_rewrite_expression",
+      "concept_id": "M6.NS.3.3",
+      "generator_type": "gcf_distributive_rewrite",
+      "description": "Given sum a + b where GCF > 1, rewrite using distributive property: e.g. 12 + 18 → 6(2 + 3)",
+      "answer_type": "text",
+      "answer_type_note": "Factored form like '6(2 + 3)'",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "gcf_pool": [2, 3, 4, 5, 6, 7, 8, 9, 10],
+        "sum_range": [10, 100]
+      }
+    },
+    {
+      "id": "g6_ns_compute_absolute_value",
+      "concept_id": "M6.NS.4.4",
+      "generator_type": "compute_absolute_value",
+      "description": "Compute |x| for a given rational number (integer, fraction, or decimal) including negatives",
+      "answer_type": "decimal",
+      "visual_category": "C",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "real_world"},
+      "params": {
+        "value_type": ["negative_integer", "positive_integer", "negative_decimal", "negative_fraction"],
+        "range": [-50, 50]
+      }
+    },
+    {
+      "id": "g6_ns_compare_order_rationals",
+      "concept_id": "M6.NS.4.5",
+      "generator_type": "compare_order_rationals",
+      "description": "Given 3–5 rational numbers (mix of integers, fractions, decimals), order them from least to greatest",
+      "answer_type": "MC",
+      "answer_type_note": "MC options show different orderings",
+      "visual_category": "C",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "value_types": ["negative_integers", "fractions", "decimals", "mixed"],
+        "count": [3, 4, 5],
+        "include_negatives": true
+      }
+    },
+    {
+      "id": "g6_ns_graph_coordinate_plane",
+      "concept_id": "M6.NS.4.6",
+      "generator_type": "identify_coordinate_plane_point",
+      "description": "Given coordinates, identify the correct quadrant or ordered pair; or given a plotted point, name its coordinates",
+      "answer_type": "ordered_pair",
+      "visual_category": "B",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "coordinate_range": [-10, 10],
+        "quadrants": ["I", "II", "III", "IV", "axes"],
+        "task": ["name_point", "identify_quadrant"]
+      }
+    },
+    {
+      "id": "g6_ns_coordinate_distance_6",
+      "concept_id": "M6.NS.4.7",
+      "generator_type": "coordinate_distance_same_axis",
+      "description": "Find the distance between two points that share an x-coordinate or y-coordinate using absolute value",
+      "answer_type": "integer_or_decimal",
+      "visual_category": "B",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "shared_axis": ["x", "y"],
+        "coordinate_range": [-10, 10],
+        "include_same_sign_pairs": true,
+        "include_opposite_sign_pairs": true
+      }
+    },
+    {
+      "id": "g6_rp_calculate_unit_rate",
+      "concept_id": "M6.RP.1.3",
+      "generator_type": "calculate_unit_rate",
+      "description": "Given a rate (e.g., 150 miles in 3 hours), compute the unit rate (50 miles per hour)",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "real_world"},
+      "params": {
+        "context_pool": ["miles_per_hour", "dollars_per_item", "pages_per_minute", "calories_per_serving", "words_per_minute"],
+        "denominator_range": [2, 12],
+        "numerator_range": [10, 500]
+      }
+    },
+    {
+      "id": "g6_rp_ratio_table_solve",
+      "concept_id": "M6.RP.2.1",
+      "generator_type": "ratio_table_missing_value",
+      "description": "Given a ratio table with one missing entry, compute the missing equivalent ratio value",
+      "answer_type": "integer_or_decimal",
+      "visual_category": "B",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "real_world"},
+      "params": {
+        "table_rows": 4,
+        "ratio_range": [1, 20],
+        "missing_position": ["middle", "last"],
+        "context_pool": ["recipe", "speed", "price", "map_scale"]
+      }
+    },
+    {
+      "id": "g6_rp_ratio_word_problem",
+      "concept_id": "M6.RP.2.3",
+      "generator_type": "ratio_word_problem",
+      "description": "Real-world ratio problem: given part-to-part or part-to-whole ratio plus one quantity, find the other",
+      "answer_type": "integer_or_decimal",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "application", "complexity": "medium", "context": "real_world"},
+      "params": {
+        "ratio_type": ["part_to_part", "part_to_whole"],
+        "context_pool": ["paint_mix", "class_ratio", "ingredient_scaling", "distance"],
+        "total_range": [12, 200]
+      }
+    },
+    {
+      "id": "g6_rp_percent_of_quantity",
+      "concept_id": "M6.RP.3.2",
+      "generator_type": "percent_of_quantity",
+      "description": "Calculate p% of n (e.g., 30% of 250 = 75)",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "real_world"},
+      "params": {
+        "percent_pool": [10, 15, 20, 25, 30, 40, 50, 60, 75, 80, 100, 5, 12.5],
+        "base_range": [20, 500]
+      }
+    },
+    {
+      "id": "g6_rp_percent_whole_part",
+      "concept_id": "M6.RP.3.3",
+      "generator_type": "percent_whole_or_part",
+      "description": "Solve percent problems: find whole given part+percent; or find percent given part+whole",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "real_world"},
+      "params": {
+        "solve_for": ["whole", "percent"],
+        "percent_pool": [10, 20, 25, 40, 50, 60, 75, 80],
+        "part_range": [5, 200]
+      }
+    },
+    {
+      "id": "g6_rp_fraction_decimal_pct_6",
+      "concept_id": "M6.RP.3.4",
+      "generator_type": "fraction_decimal_percent_convert_6",
+      "description": "Convert between fraction, decimal, and percent — Grade 6 level values (clean fractions with denominators ≤ 20)",
+      "answer_type": "decimal_or_fraction_or_percent",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "denominators_pool": [2, 4, 5, 8, 10, 20, 25, 100],
+        "input_form": ["fraction", "decimal", "percent"],
+        "output_form": ["fraction", "decimal", "percent"]
+      }
+    },
+    {
+      "id": "g6_rp_unit_conversion",
+      "concept_id": "M6.RP.4.1",
+      "generator_type": "unit_conversion_ratio",
+      "description": "Convert between measurement units using ratio reasoning (e.g., feet to inches, km to m, minutes to hours)",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "real_world"},
+      "params": {
+        "conversion_pairs": [
+          {"from": "feet", "to": "inches", "factor": 12},
+          {"from": "yards", "to": "feet", "factor": 3},
+          {"from": "miles", "to": "feet", "factor": 5280},
+          {"from": "km", "to": "m", "factor": 1000},
+          {"from": "hours", "to": "minutes", "factor": 60},
+          {"from": "pounds", "to": "ounces", "factor": 16},
+          {"from": "liters", "to": "milliliters", "factor": 1000}
+        ],
+        "value_range": [1, 50]
+      }
+    },
+    {
+      "id": "g6_ee_eval_numerical_exponents",
+      "concept_id": "M6.EE.1.1",
+      "generator_type": "evaluate_numerical_exponents",
+      "description": "Evaluate an expression with whole-number exponents (e.g., 3² + 4, 2³ × 5); no variables",
+      "answer_type": "integer",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "base_range": [2, 12],
+        "exponent_range": [2, 4],
+        "expression_types": ["base^exp", "base^exp + c", "base^exp × c", "base^exp - c"]
+      }
+    },
+    {
+      "id": "g6_ee_evaluate_algebraic_expr",
+      "concept_id": "M6.EE.1.4",
+      "generator_type": "evaluate_algebraic_expression",
+      "description": "Substitute a given integer or decimal value for the variable and evaluate the expression",
+      "answer_type": "integer_or_decimal",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "expression_forms": ["ax + b", "ax² + b", "a/x + b", "ax + bx"],
+        "substitution_range": [1, 15],
+        "coefficient_range": [1, 10]
+      }
+    },
+    {
+      "id": "g6_ee_expand_distributive_6",
+      "concept_id": "M6.EE.2.1",
+      "generator_type": "expand_distributive_6",
+      "description": "Apply the distributive property to expand a(b + c) or a(b − c); whole-number coefficients",
+      "answer_type": "text",
+      "answer_type_note": "Expanded form e.g. '3x + 6'",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "outer_range": [2, 10],
+        "inner_term_range": [1, 12],
+        "include_variable": true,
+        "operation": ["add", "subtract"]
+      }
+    },
+    {
+      "id": "g6_ee_combine_like_terms_6",
+      "concept_id": "M6.EE.2.2",
+      "generator_type": "combine_like_terms_6",
+      "description": "Simplify an expression by combining like terms (whole-number coefficients, one or two variables)",
+      "answer_type": "text",
+      "answer_type_note": "Simplified expression e.g. '7x + 3y'",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "variable_count": [1, 2],
+        "term_count": [3, 4],
+        "coefficient_range": [1, 10],
+        "include_constants": true
+      }
+    },
+    {
+      "id": "g6_ee_solve_one_step_add_sub",
+      "concept_id": "M6.EE.3.2",
+      "generator_type": "solve_one_step_add_sub",
+      "description": "Solve x + p = q or x − p = q where p, q are non-negative integers or decimals",
+      "answer_type": "integer_or_decimal",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "p_range": [1, 50],
+        "q_range": [1, 100],
+        "value_type": ["integer", "decimal"],
+        "solution_positive": true
+      }
+    },
+    {
+      "id": "g6_ee_solve_one_step_mul_div",
+      "concept_id": "M6.EE.3.3",
+      "generator_type": "solve_one_step_mul_div",
+      "description": "Solve px = q or x/p = q where p, q are positive integers; solution is rational",
+      "answer_type": "decimal_or_fraction",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "p_range": [2, 20],
+        "q_range": [2, 100],
+        "operation": ["multiply", "divide"],
+        "solution_type": ["integer", "fraction"]
+      }
+    },
+    {
+      "id": "g6_ee_write_dep_indep_eq",
+      "concept_id": "M6.EE.5.2",
+      "generator_type": "write_dependent_equation",
+      "description": "Given a real-world context with a rate (e.g., d = 45t), write the equation relating the two variables",
+      "answer_type": "text",
+      "answer_type_note": "Equation form like 'd = 45t'",
+      "visual_category": "B",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "real_world"},
+      "params": {
+        "context_pool": ["distance_rate_time", "total_cost_rate", "earnings_per_hour", "calories_burned"],
+        "rate_range": [2, 100]
+      }
+    },
+    {
+      "id": "g6_geo_area_triangle_6",
+      "concept_id": "M6.GEO.1.1",
+      "generator_type": "area_triangle_6",
+      "description": "Compute area of a triangle given base and height using A = ½bh",
+      "answer_type": "decimal",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "base_range": [2, 24],
+        "height_range": [2, 20],
+        "base_type": ["integer", "decimal"],
+        "solve_for": ["area", "base", "height"]
+      }
+    },
+    {
+      "id": "g6_geo_area_parallelogram",
+      "concept_id": "M6.GEO.1.2",
+      "generator_type": "area_parallelogram",
+      "description": "Compute area of a parallelogram given base and height using A = bh",
+      "answer_type": "decimal",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "base_range": [3, 25],
+        "height_range": [2, 20],
+        "slant_height_distractor": true,
+        "solve_for": ["area", "base", "height"]
+      }
+    },
+    {
+      "id": "g6_geo_area_trapezoid",
+      "concept_id": "M6.GEO.1.3",
+      "generator_type": "area_trapezoid",
+      "description": "Compute area of a trapezoid given b₁, b₂, and h using A = ½(b₁ + b₂)h",
+      "answer_type": "decimal",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "b1_range": [3, 20],
+        "b2_range": [5, 25],
+        "height_range": [2, 15],
+        "solve_for": ["area", "missing_base", "height"]
+      }
+    },
+    {
+      "id": "g6_geo_area_composite_6",
+      "concept_id": "M6.GEO.1.4",
+      "generator_type": "area_composite_decompose_6",
+      "description": "Find area of a composite polygon by decomposing into triangles and rectangles",
+      "answer_type": "decimal",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "shape_combos": ["rectangle+triangle", "L_shape", "T_shape", "irregular_polygon"],
+        "dimension_range": [3, 20]
+      }
+    },
+    {
+      "id": "g6_geo_surface_area_net_prism",
+      "concept_id": "M6.GEO.2.2",
+      "generator_type": "surface_area_prism_net",
+      "description": "Given dimensions of a rectangular or triangular prism, compute total surface area by summing face areas",
+      "answer_type": "decimal",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "prism_type": ["rectangular", "triangular"],
+        "dimension_range": [2, 15]
+      }
+    },
+    {
+      "id": "g6_geo_surface_area_net_pyramid",
+      "concept_id": "M6.GEO.2.3",
+      "generator_type": "surface_area_pyramid_net",
+      "description": "Compute surface area of a right square or rectangular pyramid using its net (base + lateral faces)",
+      "answer_type": "decimal",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "pyramid_type": ["square_base", "rectangular_base"],
+        "base_range": [2, 12],
+        "slant_height_range": [3, 15]
+      }
+    },
+    {
+      "id": "g6_geo_volume_rect_prism_whole",
+      "concept_id": "M6.GEO.3.2",
+      "generator_type": "volume_rect_prism_whole",
+      "description": "Compute volume of a rectangular prism V = lwh with whole-number edge lengths",
+      "answer_type": "integer",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "l_range": [2, 15],
+        "w_range": [2, 15],
+        "h_range": [2, 15],
+        "solve_for": ["volume", "length", "width", "height"]
+      }
+    },
+    {
+      "id": "g6_geo_volume_rect_prism_frac",
+      "concept_id": "M6.GEO.3.3",
+      "generator_type": "volume_rect_prism_fractional",
+      "description": "Compute volume of a rectangular prism with fractional edge lengths (e.g., 2½ × 3 × 1¼)",
+      "answer_type": "fraction_or_decimal",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "dimension_fractions": ["halves", "thirds", "quarters"],
+        "max_dimension": 6
+      }
+    },
+    {
+      "id": "g6_geo_area_real_world_6",
+      "concept_id": "M6.GEO.4.1",
+      "generator_type": "area_real_world_6",
+      "description": "Real-world area problem (e.g., flooring cost, garden space, painting a wall) using triangle/quadrilateral formulas",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "application", "complexity": "medium", "context": "real_world"},
+      "params": {
+        "scenario_pool": ["floor_area", "garden_plot", "wall_paint", "fabric_cut", "tile_count"],
+        "shape_types": ["triangle", "parallelogram", "trapezoid", "composite"],
+        "dimension_range": [3, 30]
+      }
+    },
+    {
+      "id": "g6_geo_volume_word_6",
+      "concept_id": "M6.GEO.4.3",
+      "generator_type": "volume_word_problem_6",
+      "description": "Real-world volume problem for rectangular prisms (e.g., box capacity, sand in a container)",
+      "answer_type": "decimal_or_integer",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "application", "complexity": "medium", "context": "real_world"},
+      "params": {
+        "scenario_pool": ["shipping_box", "fish_tank", "sandbox", "storage_bin"],
+        "dimension_type": ["whole_number", "decimal"],
+        "dimension_range": [2, 20]
+      }
+    },
+    {
+      "id": "g6_sp_compute_center_stats",
+      "concept_id": "M6.SP.3.1",
+      "generator_type": "compute_mean_median_mode",
+      "description": "Given a data set of 5–9 values, compute the mean, median, or mode as specified",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "dataset_size": [5, 6, 7, 8, 9],
+        "value_range": [1, 100],
+        "measure": ["mean", "median", "mode", "all_three"],
+        "include_outlier": "sometimes"
+      }
+    },
+    {
+      "id": "g6_sp_compute_variability",
+      "concept_id": "M6.SP.3.2",
+      "generator_type": "compute_range_iqr",
+      "description": "Given a data set or five-number summary, compute range and IQR",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "dataset_size": [6, 7, 8, 9, 10],
+        "value_range": [5, 100],
+        "ask_for": ["range", "IQR", "both"]
+      }
+    },
+    {
+      "id": "g6_sp_compute_mad",
+      "concept_id": "M6.SP.3.3",
+      "generator_type": "compute_mad",
+      "description": "Compute Mean Absolute Deviation for a small data set (5–7 values with clean integer mean)",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "dataset_size": [5, 6, 7],
+        "value_range": [10, 80],
+        "mean_type": "integer",
+        "max_deviation": 20
+      }
+    },
+    {
+      "id": "g6_sp_five_number_summary",
+      "concept_id": "M6.SP.2.2",
+      "generator_type": "five_number_summary",
+      "description": "Given a sorted or unsorted data set, identify min, Q1, median, Q3, max",
+      "answer_type": "integer_or_decimal",
+      "visual_category": "D",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "dataset_size": [7, 9, 11],
+        "value_range": [10, 100],
+        "ask_for": ["all_five", "single_stat"]
+      }
+    }
+  ]
+}

@@ -1,0 +1,1004 @@
+{
+  "course": "NC Math 3",
+  "division": "Varsity+",
+  "generator_pool_id": "nc_math_3",
+  "isolation_rule": "No generator IDs shared with nc_math_1, algebra_1, math_fundamentals, or grade-level pools.",
+  "ap_pipeline_note": "TRIG unit generators are AP infrastructure — treat with highest quality. Unit circle and law of sines/cosines errors at this level persist into AP Calc.",
+  "total_generators": 72,
+
+  "generators": [
+
+    // ===== UNIT 1: FUNCTIONS & INVERSES =====
+
+    {
+      "id": "m3_fni_eval_function",
+      "concept_id": "M3.FNI.1.2",
+      "generator_type": "evaluate_function_m3",
+      "description": "Evaluate f(a), f(x+h), f(g(x)), or f(-x) for polynomial, rational, radical, or piecewise functions",
+      "answer_type": "integer_or_decimal",
+      "visual_category": null,
+      "mf_prereq": ["Alg1.FLF.1.3"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "function_types": ["polynomial_deg2", "polynomial_deg3", "rational_simple", "radical", "absolute_value"],
+        "input_types": ["integer", "negative", "fraction", "expression_x_plus_h"],
+        "difficulty_variants": [
+          {"label": "easy", "type": "polynomial_deg2", "input": "integer"},
+          {"label": "standard", "type": "rational_simple", "input": "fraction"},
+          {"label": "hard", "type": "polynomial_deg3", "input": "x_plus_h"}
+        ]
+      }
+    },
+    {
+      "id": "m3_fni_avg_rate_change",
+      "concept_id": "M3.FNI.2.1",
+      "generator_type": "average_rate_of_change_m3",
+      "description": "Compute [f(b) - f(a)] / (b - a) for polynomial, exponential, or rational functions over a given interval [a, b]",
+      "answer_type": "decimal",
+      "visual_category": "B",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "real_world"},
+      "params": {
+        "function_types": ["linear", "quadratic", "cubic", "exponential", "rational"],
+        "interval_range": [-5, 10],
+        "context_pool": ["population_growth", "projectile_height", "profit_model"],
+        "difficulty_variants": [
+          {"label": "easy", "type": "quadratic", "interval": "small_integers"},
+          {"label": "standard", "type": "cubic_or_exponential"},
+          {"label": "hard", "type": "rational", "context": "real_world"}
+        ]
+      }
+    },
+    {
+      "id": "m3_fni_function_operations",
+      "concept_id": "M3.FNI.3.1",
+      "generator_type": "function_operations_algebraic",
+      "description": "Compute (f+g)(x), (f-g)(x), or (f·g)(x) algebraically and simplify",
+      "answer_type": "text",
+      "answer_type_note": "Simplified polynomial or rational expression",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "operation": ["add", "subtract", "multiply"],
+        "f_types": ["linear", "quadratic"],
+        "g_types": ["linear", "quadratic"],
+        "simplify_required": true,
+        "difficulty_variants": [
+          {"label": "easy", "op": "add", "types": "linear+linear"},
+          {"label": "standard", "op": "subtract_or_multiply", "types": "quadratic+linear"},
+          {"label": "hard", "op": "multiply", "types": "quadratic+quadratic"}
+        ]
+      }
+    },
+    {
+      "id": "m3_fni_eval_composite",
+      "concept_id": "M3.FNI.3.4",
+      "generator_type": "evaluate_composite_function",
+      "description": "Evaluate (f∘g)(a) numerically or (f∘g)(x) algebraically",
+      "answer_type": "integer_or_text",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "task": ["evaluate_numerically", "compose_algebraically"],
+        "f_types": ["linear", "quadratic", "sqrt"],
+        "g_types": ["linear", "quadratic"],
+        "input_values": "integer",
+        "difficulty_variants": [
+          {"label": "easy", "task": "evaluate_numerically", "f": "linear", "g": "linear"},
+          {"label": "standard", "task": "evaluate_numerically", "f": "quadratic", "g": "linear"},
+          {"label": "hard", "task": "compose_algebraically"}
+        ]
+      }
+    },
+    {
+      "id": "m3_fni_find_inverse_algebraic",
+      "concept_id": "M3.FNI.4.2",
+      "generator_type": "find_inverse_function_algebraic",
+      "description": "Find f⁻¹(x) by swapping x and y and solving; function types include linear, quadratic (restricted), simple rational",
+      "answer_type": "text",
+      "answer_type_note": "e.g., 'f⁻¹(x) = (x - 3)/2'",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "function_types": ["linear", "quadratic_restricted_x_geq_0", "cubic", "rational_linear_over_linear"],
+        "difficulty_variants": [
+          {"label": "easy", "type": "linear"},
+          {"label": "standard", "type": "quadratic_restricted"},
+          {"label": "hard", "type": "rational_linear_over_linear"}
+        ]
+      }
+    },
+    {
+      "id": "m3_fni_verify_inverse_composition",
+      "concept_id": "M3.FNI.4.4",
+      "generator_type": "verify_inverse_via_composition",
+      "description": "Given f(x) and g(x), verify g = f⁻¹ by showing (f∘g)(x) = x AND (g∘f)(x) = x",
+      "answer_type": "MC",
+      "answer_type_note": "MC: is g the inverse of f? Yes/No with justification",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "pair_types": [
+          {"f": "2x+3", "g": "(x-3)/2", "is_inverse": true},
+          {"f": "x²", "g": "√x", "is_inverse": "only_on_restricted_domain"},
+          {"f": "1/(x-1)", "g": "1/x + 1", "is_inverse": true}
+        ],
+        "include_non_inverse_distractors": true
+      }
+    },
+    {
+      "id": "m3_fni_eval_piecewise",
+      "concept_id": "M3.FNI.5.2",
+      "generator_type": "evaluate_piecewise_function",
+      "description": "Given a piecewise function with 2–3 pieces, evaluate at a specified input by selecting the correct piece",
+      "answer_type": "integer_or_decimal",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "pieces": [2, 3],
+        "piece_types": ["linear", "quadratic", "constant", "absolute_value"],
+        "boundary_types": ["open_closed", "strict_inequality"],
+        "input_at_boundary": "sometimes",
+        "difficulty_variants": [
+          {"label": "easy", "pieces": 2, "input": "clearly_in_one_piece"},
+          {"label": "standard", "pieces": 3, "input": "may_be_at_boundary"},
+          {"label": "hard", "pieces": 3, "piece_type": "quadratic+linear+constant"}
+        ]
+      }
+    },
+    {
+      "id": "m3_fni_domain_range",
+      "concept_id": "M3.FNI.1.1",
+      "generator_type": "domain_range_from_representation",
+      "description": "Determine domain and/or range of a function from a graph, table, or equation (including radical and rational restrictions)",
+      "answer_type": "text",
+      "answer_type_note": "Interval notation e.g. '(-∞, ∞)' or '[2, ∞)'",
+      "visual_category": "B",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "function_types": ["linear", "quadratic", "square_root", "rational", "piecewise"],
+        "representation": ["equation", "graph_read", "table"],
+        "task": ["find_domain", "find_range", "both"]
+      }
+    },
+
+    // ===== UNIT 2: EXPONENTIAL & LOGARITHMIC FUNCTIONS =====
+
+    {
+      "id": "m3_el_simplify_rational_exp",
+      "concept_id": "M3.EL.1.1",
+      "generator_type": "simplify_rational_exponents",
+      "description": "Simplify expressions with rational exponents (e.g., x^(2/3), x^(-1/2)) and convert between radical and rational exponent notation",
+      "answer_type": "text",
+      "visual_category": null,
+      "mf_prereq": ["MF.ER.1.1–1.7"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "expression_types": [
+          "x^(m/n) to radical form",
+          "√[n](x^m) to rational exponent",
+          "simplify x^(2/3) · x^(1/3)",
+          "(x^(1/2))^4"
+        ],
+        "variable_base": true,
+        "numeric_base": true
+      }
+    },
+    {
+      "id": "m3_el_convert_exp_log",
+      "concept_id": "M3.EL.3.2",
+      "generator_type": "convert_exp_log_form",
+      "description": "Rewrite bˣ = y as log_b(y) = x and vice versa",
+      "answer_type": "text",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "bases": [2, 3, 5, 10, "e"],
+        "direction": ["exp_to_log", "log_to_exp"],
+        "value_types": ["integer", "fraction", "variable"],
+        "difficulty_variants": [
+          {"label": "easy", "direction": "exp_to_log", "base": "small_integer"},
+          {"label": "standard", "base": 10, "value": "decimal"},
+          {"label": "hard", "base": "e", "direction": "both"}
+        ]
+      }
+    },
+    {
+      "id": "m3_el_evaluate_logarithm",
+      "concept_id": "M3.EL.3.3",
+      "generator_type": "evaluate_logarithm",
+      "description": "Evaluate log_b(x) for common values; includes log₁₀, ln, and other bases using definitions",
+      "answer_type": "decimal_or_integer",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "log_types": ["log_base_2", "log_base_3", "log_base_10", "ln", "log_base_5"],
+        "argument_pool": [1, 2, 4, 8, 16, 32, 9, 27, 81, 10, 100, 1000, "e", "e²", "e³"],
+        "special_cases": ["log_b(1) = 0", "log_b(b) = 1"],
+        "difficulty_variants": [
+          {"label": "easy", "type": "log_base_2", "argument": "power_of_2"},
+          {"label": "standard", "type": "log_base_10_or_ln", "argument": "standard_values"},
+          {"label": "hard", "type": "any_base", "argument": "requires_change_of_base"}
+        ]
+      }
+    },
+    {
+      "id": "m3_el_log_product_quotient",
+      "concept_id": "M3.EL.4.1",
+      "generator_type": "log_product_quotient_rules",
+      "description": "Apply product rule (log MN = log M + log N) and quotient rule (log M/N = log M - log N) to expand or condense",
+      "answer_type": "text",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "direction": ["expand", "condense"],
+        "rule": ["product", "quotient"],
+        "base": ["log_base_generic", "log10", "ln"],
+        "term_count": [2, 3]
+      }
+    },
+    {
+      "id": "m3_el_log_power_change_base",
+      "concept_id": "M3.EL.4.2",
+      "generator_type": "log_power_and_change_of_base",
+      "description": "Apply power rule (log Mᵖ = p·log M) and change of base: log_b(M) = log(M)/log(b)",
+      "answer_type": "text_or_decimal",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "task": ["apply_power_rule", "change_of_base_exact", "change_of_base_decimal"],
+        "base_pool": [2, 3, 5, 6, 7],
+        "argument_types": ["variable_expression", "numeric"]
+      }
+    },
+    {
+      "id": "m3_el_expand_condense_log",
+      "concept_id": "M3.EL.4.3",
+      "generator_type": "expand_condense_log_expression",
+      "description": "Expand a single log into sum/difference/multiples, or condense multiple log terms into one",
+      "answer_type": "text",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "direction": ["expand", "condense"],
+        "expression_complexity": ["two_terms", "three_terms", "power_and_product"],
+        "include_coefficients": true,
+        "difficulty_variants": [
+          {"label": "easy", "direction": "expand", "complexity": "two_terms"},
+          {"label": "standard", "direction": "condense", "complexity": "three_terms"},
+          {"label": "hard", "direction": "both", "complexity": "power_and_product_and_quotient"}
+        ]
+      }
+    },
+    {
+      "id": "m3_el_solve_exp_common_base",
+      "concept_id": "M3.EL.5.1",
+      "generator_type": "solve_exponential_eq_common_base",
+      "description": "Solve bˣ = bʸ by rewriting both sides with a common base; equate exponents",
+      "answer_type": "decimal_or_integer",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "bases": [2, 3, 4, 8, 9, 27],
+        "structure": ["b^(ax+c) = b^d", "b^x = b^(-n)", "(1/b)^x = b^c"],
+        "solution_type": ["integer", "fraction"]
+      }
+    },
+    {
+      "id": "m3_el_solve_exp_log",
+      "concept_id": "M3.EL.5.2",
+      "generator_type": "solve_exponential_eq_using_logs",
+      "description": "Solve a·bˣ = c by taking log of both sides and applying power rule; includes base e",
+      "answer_type": "decimal",
+      "answer_type_note": "Exact form (ln) or decimal approximation to 4 decimal places",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "structure": ["b^x = c", "a·b^x = c", "b^(ax+d) = c"],
+        "base_types": ["integer_base", "natural_base_e"],
+        "difficulty_variants": [
+          {"label": "easy", "structure": "b^x = c", "base": "integer"},
+          {"label": "standard", "structure": "a·b^x = c"},
+          {"label": "hard", "structure": "b^(ax+d) = c or base_e"}
+        ]
+      }
+    },
+    {
+      "id": "m3_el_solve_log_exp",
+      "concept_id": "M3.EL.6.1",
+      "generator_type": "solve_log_equation_via_exponential",
+      "description": "Solve log_b(ax + c) = d by converting to exponential form; check for extraneous solutions",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "structure": ["log_b(x) = d", "log_b(ax + c) = d", "ln(ax + c) = d"],
+        "check_extraneous": true,
+        "base_types": ["integer_base", "natural_base_e"]
+      }
+    },
+    {
+      "id": "m3_el_solve_log_properties",
+      "concept_id": "M3.EL.6.2",
+      "generator_type": "solve_log_equation_via_properties",
+      "description": "Condense both sides to single logs, then equate arguments; check domain/extraneous solutions",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "structure": [
+          "log_b(x) + log_b(c) = d",
+          "log_b(x+a) - log_b(x) = c",
+          "2·log_b(x) = log_b(c)"
+        ],
+        "check_extraneous": true,
+        "extraneous_probability": "30% of problems"
+      }
+    },
+    {
+      "id": "m3_el_exp_model_word_problem",
+      "concept_id": "M3.EL.8.1",
+      "generator_type": "exponential_model_word_problem",
+      "description": "Solve A = Pe^(rt) or A = P(1 + r/n)^(nt) for any variable in a real-world context",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "application", "complexity": "high", "context": "real_world"},
+      "params": {
+        "scenarios": ["compound_interest", "population_growth", "radioactive_decay", "cooling_law", "bacteria_culture"],
+        "solve_for": ["amount_A", "time_t", "rate_r", "initial_P"],
+        "formula_variants": ["continuous_e", "discrete_compound", "simple_ab^x"]
+      }
+    },
+    {
+      "id": "m3_el_log_model_word_problem",
+      "concept_id": "M3.EL.8.2",
+      "generator_type": "logarithmic_model_word_problem",
+      "description": "Apply logarithmic models: pH = -log[H⁺], Richter scale, decibel formula",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "application", "complexity": "high", "context": "real_world"},
+      "params": {
+        "model_pool": [
+          {"name": "pH", "formula": "pH = -log[H+]"},
+          {"name": "Richter", "formula": "M = log(I/I₀)"},
+          {"name": "decibel", "formula": "dB = 10·log(I/I₀)"}
+        ],
+        "solve_for": ["output_value", "input_value", "compare_two_events"]
+      }
+    },
+
+    // ===== UNIT 3: POLYNOMIAL & RATIONAL FUNCTIONS =====
+
+    {
+      "id": "m3_pr_polynomial_long_div",
+      "concept_id": "M3.PR.2.1",
+      "generator_type": "polynomial_long_division",
+      "description": "Divide polynomial P(x) by D(x) using long division; express result as Q(x) + R(x)/D(x)",
+      "answer_type": "text",
+      "visual_category": null,
+      "mf_prereq": ["Alg1.POLY (polynomial operations)"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "dividend_degree": [3, 4],
+        "divisor_degree": 2,
+        "missing_terms": "sometimes",
+        "remainder_types": ["zero", "non_zero_linear"]
+      }
+    },
+    {
+      "id": "m3_pr_synthetic_division",
+      "concept_id": "M3.PR.2.2",
+      "generator_type": "synthetic_division",
+      "description": "Use synthetic division to divide a polynomial by (x − k); express as Q(x) + R/(x − k)",
+      "answer_type": "text",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "polynomial_degree": [3, 4],
+        "k_values": [-5, -4, -3, -2, -1, 1, 2, 3, 4, 5],
+        "missing_terms": "sometimes",
+        "difficulty_variants": [
+          {"label": "easy", "degree": 3, "k": "small_positive_integer"},
+          {"label": "standard", "degree": 4},
+          {"label": "hard", "degree": 4, "k": "fraction_or_negative"}
+        ]
+      }
+    },
+    {
+      "id": "m3_pr_remainder_theorem",
+      "concept_id": "M3.PR.2.3",
+      "generator_type": "remainder_theorem_evaluate",
+      "description": "Use Remainder Theorem: evaluate P(k) to find remainder when P(x) is divided by (x − k)",
+      "answer_type": "integer",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "polynomial_degree": [3, 4],
+        "k_range": [-4, 4],
+        "task": ["find_remainder", "verify_is_factor_if_zero"]
+      }
+    },
+    {
+      "id": "m3_pr_rational_root_candidates",
+      "concept_id": "M3.PR.3.1",
+      "generator_type": "rational_root_theorem_candidates",
+      "description": "List all possible rational roots ±p/q for a polynomial equation with integer coefficients",
+      "answer_type": "MC",
+      "answer_type_note": "MC: which value is NOT a possible rational root?",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "leading_coeff_pool": [1, 2, 3, 4, 6],
+        "constant_pool": [±1, ±2, ±3, ±4, ±6, ±8, ±12],
+        "degree": [3, 4],
+        "task": ["list_all_possible", "identify_NOT_possible_MC"]
+      }
+    },
+    {
+      "id": "m3_pr_find_all_zeros",
+      "concept_id": "M3.PR.4.1",
+      "generator_type": "find_all_zeros_polynomial",
+      "description": "Find all real and complex zeros of a degree-3 or degree-4 polynomial using rational root theorem, synthetic division, and quadratic formula",
+      "answer_type": "text",
+      "answer_type_note": "Full set of zeros including complex conjugate pairs",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "degree": [3, 4],
+        "zero_types": ["all_real", "two_real_two_complex", "one_real_two_complex"],
+        "leading_coefficient": [1, 2, -1],
+        "difficulty_variants": [
+          {"label": "standard", "zero_type": "all_real", "degree": 3},
+          {"label": "hard", "zero_type": "two_real_two_complex", "degree": 4}
+        ]
+      }
+    },
+    {
+      "id": "m3_pr_write_poly_from_zeros",
+      "concept_id": "M3.PR.4.2",
+      "generator_type": "write_polynomial_from_zeros",
+      "description": "Construct a polynomial with given real and/or complex zeros; include conjugate pairs automatically",
+      "answer_type": "text",
+      "answer_type_note": "Expanded polynomial in standard form",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "zero_sets": [
+          {"zeros": [2, -3, 1], "degree": 3},
+          {"zeros": [0, 4, "2i", "-2i"], "degree": 4},
+          {"zeros": ["1+√2", "1-√2", 3], "degree": 3},
+          {"zeros": [2, 2, -1], "multiplicity": [2, 1], "degree": 3}
+        ]
+      }
+    },
+    {
+      "id": "m3_pr_rational_function_domain",
+      "concept_id": "M3.PR.5.1",
+      "generator_type": "rational_function_domain",
+      "description": "Find the domain of f(x) = p(x)/q(x) by identifying zeros of q(x)",
+      "answer_type": "text",
+      "answer_type_note": "Interval or set notation excluding excluded values",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "denominator_types": ["linear", "factored_quadratic", "difference_of_squares"],
+        "excluded_values_count": [1, 2]
+      }
+    },
+    {
+      "id": "m3_pr_vertical_asymptotes",
+      "concept_id": "M3.PR.5.2",
+      "generator_type": "find_vertical_asymptotes",
+      "description": "Find vertical asymptotes of f(x) = p(x)/q(x) after canceling common factors",
+      "answer_type": "text",
+      "visual_category": "B",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "denominator_zeros": [1, 2],
+        "common_factor_sometimes": true,
+        "mixed_with_holes": true
+      }
+    },
+    {
+      "id": "m3_pr_horiz_slant_asymptotes",
+      "concept_id": "M3.PR.5.3",
+      "generator_type": "find_horizontal_slant_asymptotes",
+      "description": "Determine HA or slant asymptote by comparing degrees of numerator and denominator",
+      "answer_type": "text",
+      "visual_category": "B",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "degree_comparison": ["num_less", "num_equal", "num_one_more"],
+        "cases": {
+          "num_less": "HA: y = 0",
+          "num_equal": "HA: y = leading_coeff_ratio",
+          "num_one_more": "slant_via_division"
+        }
+      }
+    },
+    {
+      "id": "m3_pr_holes",
+      "concept_id": "M3.PR.5.4",
+      "generator_type": "find_holes_rational_function",
+      "description": "Find hole(s) by identifying and canceling common factors; express as point (x, y) with y from simplified function",
+      "answer_type": "ordered_pair",
+      "visual_category": "B",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "common_factors": [1, 2],
+        "factor_types": ["linear_simple", "linear_negative"],
+        "always_has_hole": true
+      }
+    },
+    {
+      "id": "m3_pr_solve_rational_equation",
+      "concept_id": "M3.PR.6.1",
+      "generator_type": "solve_rational_equation",
+      "description": "Multiply by LCD, solve resulting polynomial equation, check for extraneous solutions (where denominator = 0)",
+      "answer_type": "decimal_or_fraction",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "structure": [
+          "a/x + b = c",
+          "1/(x-a) + 1/(x-b) = c",
+          "(x+a)/(x+b) = c/d"
+        ],
+        "extraneous_solutions": "20% of problems",
+        "difficulty_variants": [
+          {"label": "easy", "structure": "a/x + b = c"},
+          {"label": "standard", "structure": "(x+a)/(x+b) = c/d"},
+          {"label": "hard", "check_extraneous": true}
+        ]
+      }
+    },
+    {
+      "id": "m3_pr_solve_poly_inequality",
+      "concept_id": "M3.PR.6.2",
+      "generator_type": "solve_polynomial_inequality",
+      "description": "Solve p(x) > 0, p(x) < 0, etc. using sign chart; express solution in interval notation",
+      "answer_type": "text",
+      "answer_type_note": "Interval notation e.g. '(-∞, -2) ∪ (3, ∞)'",
+      "visual_category": "B",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "polynomial_degree": [2, 3],
+        "operator": ["<", ">", "≤", "≥"],
+        "zero_count": [2, 3],
+        "sign_chart_required": true
+      }
+    },
+    {
+      "id": "m3_pr_solve_rational_inequality",
+      "concept_id": "M3.PR.6.3",
+      "generator_type": "solve_rational_inequality",
+      "description": "Solve p(x)/q(x) > 0 using sign chart, noting that q(x) = 0 creates excluded values (open intervals)",
+      "answer_type": "text",
+      "visual_category": "B",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "numerator_degree": [1, 2],
+        "denominator_degree": [1, 2],
+        "operator": ["<", ">", "≤", "≥"],
+        "excluded_value_handling": "always_open_at_VA"
+      }
+    },
+
+    // ===== UNIT 4: TRIGONOMETRY ★ AP PIPELINE =====
+
+    {
+      "id": "m3_trig_coterminal_angles",
+      "concept_id": "M3.TRIG.1.1",
+      "generator_type": "coterminal_angles",
+      "description": "Find positive and negative coterminal angles for a given angle in degrees or radians",
+      "answer_type": "integer_or_fraction",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "units": ["degrees", "radians"],
+        "given_angle_degrees": [30, 45, 60, 90, 120, 135, 150, 210, 225, 240, 270, 300, 315, 330],
+        "task": ["find_positive_coterminal", "find_negative_coterminal", "both"]
+      }
+    },
+    {
+      "id": "m3_trig_degree_radian_convert",
+      "concept_id": "M3.TRIG.1.2",
+      "generator_type": "degree_radian_conversion",
+      "description": "Convert angle measures between degrees and radians using π/180 or 180/π",
+      "answer_type": "fraction_or_decimal",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "direction": ["degrees_to_radians", "radians_to_degrees"],
+        "special_angles_degrees": [30, 45, 60, 90, 120, 135, 150, 180, 210, 225, 240, 270, 300, 315, 330, 360],
+        "special_angle_radians": ["π/6", "π/4", "π/3", "π/2", "2π/3", "3π/4", "5π/6", "π", "7π/6", "5π/4", "4π/3", "3π/2", "5π/3", "7π/4", "11π/6", "2π"],
+        "output_exact": true
+      }
+    },
+    {
+      "id": "m3_trig_unit_circle_coords",
+      "concept_id": "M3.TRIG.2.1",
+      "generator_type": "unit_circle_coordinates",
+      "description": "Given an angle (degrees or radians), find the (cos θ, sin θ) coordinates on the unit circle for special angles",
+      "answer_type": "ordered_pair",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "angle_pool_degrees": [0, 30, 45, 60, 90, 120, 135, 150, 180, 210, 225, 240, 270, 300, 315, 330, 360],
+        "angle_format": ["degrees", "radians"],
+        "answer_format": "exact_fractions",
+        "special_values": {
+          "0": "(1, 0)", "30": "(√3/2, 1/2)", "45": "(√2/2, √2/2)",
+          "60": "(1/2, √3/2)", "90": "(0, 1)", "180": "(-1, 0)", "270": "(0, -1)"
+        }
+      }
+    },
+    {
+      "id": "m3_trig_exact_trig_values",
+      "concept_id": "M3.TRIG.2.2",
+      "generator_type": "exact_trig_values_unit_circle",
+      "description": "Find exact value of sin θ, cos θ, or tan θ for any special angle using unit circle",
+      "answer_type": "fraction_or_text",
+      "answer_type_note": "Exact form e.g. '√3/2' or 'undefined'",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "trig_function": ["sin", "cos", "tan", "csc", "sec", "cot"],
+        "angle_pool": "all_16_special_angles_degrees_and_radians",
+        "include_undefined": true,
+        "difficulty_variants": [
+          {"label": "easy", "functions": ["sin", "cos"], "quadrant": "I"},
+          {"label": "standard", "functions": ["sin", "cos", "tan"], "all_quadrants": true},
+          {"label": "hard", "functions": ["csc", "sec", "cot"], "all_quadrants": true}
+        ]
+      }
+    },
+    {
+      "id": "m3_trig_reference_angles",
+      "concept_id": "M3.TRIG.2.3",
+      "generator_type": "trig_with_reference_angles",
+      "description": "Find the reference angle for a given angle, then compute the trig value with correct quadrant sign",
+      "answer_type": "fraction_or_text",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "angle_quadrants": ["II", "III", "IV"],
+        "given_angle_pool_degrees": [120, 135, 150, 210, 225, 240, 300, 315, 330],
+        "trig_functions": ["sin", "cos", "tan"],
+        "sign_determination": "ASTC_rule"
+      }
+    },
+    {
+      "id": "m3_trig_eval_inverse_trig",
+      "concept_id": "M3.TRIG.4.2",
+      "generator_type": "evaluate_inverse_trig_functions",
+      "description": "Evaluate arcsin, arccos, arctan for exact values; answer in radians within restricted range",
+      "answer_type": "text",
+      "answer_type_note": "Exact radian form e.g. 'π/6' or 'π/3'",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "functions": ["arcsin", "arccos", "arctan"],
+        "input_pool": ["1/2", "√2/2", "√3/2", "1", "-1/2", "-√2/2", "-√3/2", "0", "-1", "√3", "-√3"],
+        "output_range": {
+          "arcsin": "[-π/2, π/2]",
+          "arccos": "[0, π]",
+          "arctan": "(-π/2, π/2)"
+        }
+      }
+    },
+    {
+      "id": "m3_trig_apply_basic_identity",
+      "concept_id": "M3.TRIG.5.1",
+      "generator_type": "apply_basic_trig_identity",
+      "description": "Use reciprocal, quotient, or Pythagorean identity to simplify an expression or find a missing trig value",
+      "answer_type": "text_or_fraction",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "identity_types": ["reciprocal", "quotient", "pythagorean"],
+        "task": ["simplify_expression", "find_missing_value_given_one_trig_and_quadrant"],
+        "difficulty_variants": [
+          {"label": "easy", "task": "simplify_using_pythagorean"},
+          {"label": "standard", "task": "find_sin_given_cos_and_quadrant"},
+          {"label": "hard", "task": "simplify_complex_expression"}
+        ]
+      }
+    },
+    {
+      "id": "m3_trig_solve_basic_trig_eq",
+      "concept_id": "M3.TRIG.6.1",
+      "generator_type": "solve_basic_trig_equation",
+      "description": "Solve sin(x) = c, cos(x) = c, or tan(x) = c on a given interval [0, 2π); give all solutions",
+      "answer_type": "text",
+      "answer_type_note": "All solutions in exact radian form within specified interval",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "functions": ["sin", "cos", "tan"],
+        "value_pool": ["1/2", "√2/2", "√3/2", "1", "-1/2", "-√2/2", "-√3/2", "0", "-1", "√3"],
+        "interval": "[0, 2π)",
+        "solution_count": [1, 2],
+        "include_general_solution": false
+      }
+    },
+    {
+      "id": "m3_trig_law_of_sines",
+      "concept_id": "M3.TRIG.7.1",
+      "generator_type": "law_of_sines_solve",
+      "description": "Solve non-right triangles using Law of Sines; includes AAS, ASA, and SSA (ambiguous case with 0, 1, or 2 triangles)",
+      "answer_type": "decimal",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "real_world"},
+      "params": {
+        "case_types": ["AAS", "ASA", "SSA_one_solution", "SSA_two_solutions", "SSA_no_solution"],
+        "angle_range": [20, 150],
+        "side_range": [5, 30],
+        "solve_for": ["missing_side", "missing_angle"],
+        "include_ambiguous_check": true,
+        "difficulty_variants": [
+          {"label": "easy", "case": "AAS"},
+          {"label": "standard", "case": "ASA"},
+          {"label": "hard", "case": "SSA_ambiguous"}
+        ]
+      }
+    },
+    {
+      "id": "m3_trig_law_of_cosines",
+      "concept_id": "M3.TRIG.7.2",
+      "generator_type": "law_of_cosines_solve",
+      "description": "Solve non-right triangles using Law of Cosines; SAS (find missing side) or SSS (find missing angle)",
+      "answer_type": "decimal",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "real_world"},
+      "params": {
+        "case_types": ["SAS_find_side", "SSS_find_angle"],
+        "angle_range": [20, 160],
+        "side_range": [5, 30],
+        "formula_versions": {
+          "SAS": "c² = a² + b² - 2ab·cos(C)",
+          "SSS": "cos(C) = (a² + b² - c²)/(2ab)"
+        }
+      }
+    },
+    {
+      "id": "m3_trig_triangle_area_sas",
+      "concept_id": "M3.TRIG.8.1",
+      "generator_type": "triangle_area_sas_formula",
+      "description": "Compute the area of a triangle using Area = (1/2)ab·sin(C) given two sides and included angle",
+      "answer_type": "decimal",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "real_world"},
+      "params": {
+        "side_range": [5, 25],
+        "angle_pool_degrees": [30, 45, 60, 90, 120, 135, 150],
+        "include_non_special_angles": true
+      }
+    },
+
+    // ===== UNIT 5: GEOMETRY & CIRCLES =====
+
+    {
+      "id": "m3_geo_coord_proof_distance",
+      "concept_id": "M3.GEO.CIR.1.1",
+      "generator_type": "coordinate_proof_distance_midpoint",
+      "description": "Use distance formula to classify a triangle (scalene/isosceles/equilateral/right) from vertex coordinates",
+      "answer_type": "MC",
+      "visual_category": "B",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "application", "complexity": "high", "context": "abstract"},
+      "params": {
+        "triangle_types": ["right", "isosceles", "equilateral", "scalene"],
+        "coordinate_range": [-8, 8],
+        "task": ["classify_triangle", "find_midpoint_of_side", "verify_parallelogram"]
+      }
+    },
+    {
+      "id": "m3_geo_write_circle_equation",
+      "concept_id": "M3.GEO.CIR.2.1",
+      "generator_type": "write_circle_equation_standard",
+      "description": "Write (x − h)² + (y − k)² = r² given center (h, k) and radius r",
+      "answer_type": "text",
+      "visual_category": "B",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "center_range": [-8, 8],
+        "radius_range": [1, 10],
+        "include_origin_center": true
+      }
+    },
+    {
+      "id": "m3_geo_graph_circle_features",
+      "concept_id": "M3.GEO.CIR.2.2",
+      "generator_type": "identify_circle_features",
+      "description": "Given (x − h)² + (y − k)² = r², identify center and radius; determine if a point is inside/on/outside",
+      "answer_type": "ordered_pair_and_integer",
+      "visual_category": "B",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "task": ["identify_center_radius", "determine_point_location"],
+        "center_range": [-6, 6],
+        "radius_range": [2, 8]
+      }
+    },
+    {
+      "id": "m3_geo_complete_square_circle",
+      "concept_id": "M3.GEO.CIR.2.3",
+      "generator_type": "complete_square_circle_equation",
+      "description": "Convert x² + y² + Dx + Ey + F = 0 to standard form by completing the square twice",
+      "answer_type": "text",
+      "answer_type_note": "(x − h)² + (y − k)² = r²",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "D_range": [-10, 10],
+        "E_range": [-10, 10],
+        "ensure_positive_r_squared": true,
+        "difficulty_variants": [
+          {"label": "easy", "one_variable_missing": true},
+          {"label": "standard", "both_variables_present": true},
+          {"label": "hard", "leading_coefficients_not_1": true}
+        ]
+      }
+    },
+    {
+      "id": "m3_geo_inscribed_angle",
+      "concept_id": "M3.GEO.CIR.3.3",
+      "generator_type": "inscribed_angle_solve",
+      "description": "Apply inscribed angle theorem: inscribed angle = half the intercepted arc; includes cyclic quadrilateral opposite angles sum to 180°",
+      "answer_type": "integer_or_decimal",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "problem_types": ["inscribed_angle_from_arc", "arc_from_inscribed_angle", "cyclic_quad_opposite_angles"],
+        "arc_range": [30, 300],
+        "include_central_angle_comparison": true
+      }
+    },
+    {
+      "id": "m3_geo_arc_length",
+      "concept_id": "M3.CIR.4.1",
+      "generator_type": "arc_length_calculation",
+      "description": "Compute arc length using s = rθ (radians) or s = (θ/360)·2πr (degrees)",
+      "answer_type": "decimal",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "real_world"},
+      "params": {
+        "angle_units": ["radians", "degrees"],
+        "radius_range": [2, 15],
+        "angle_range_radians": ["π/6", "π/4", "π/3", "π/2", "2π/3", "π", "4π/3"],
+        "solve_for": ["arc_length", "radius", "angle"]
+      }
+    },
+    {
+      "id": "m3_geo_sector_area",
+      "concept_id": "M3.CIR.4.2",
+      "generator_type": "sector_area_calculation",
+      "description": "Compute sector area using A = (1/2)r²θ (radians) or A = (θ/360)·πr² (degrees)",
+      "answer_type": "decimal",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "real_world"},
+      "params": {
+        "angle_units": ["radians", "degrees"],
+        "radius_range": [2, 15],
+        "solve_for": ["area", "radius", "angle"]
+      }
+    },
+    {
+      "id": "m3_geo_dilation_non_origin",
+      "concept_id": "M3.GEO.CIR.5.1",
+      "generator_type": "dilation_center_not_at_origin",
+      "description": "Apply dilation with center (a, b) ≠ (0,0) and scale factor k to a given point or shape",
+      "answer_type": "ordered_pair",
+      "visual_category": "B",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "center_range": [-5, 5],
+        "scale_factor_pool": [2, 3, 0.5, 0.25, 1.5],
+        "shape": ["point", "triangle"],
+        "formula": "P' = center + k(P - center)"
+      }
+    },
+
+    // ===== UNIT 6: PROBABILITY & STATISTICS =====
+
+    {
+      "id": "m3_ps_counting_perm_comb",
+      "concept_id": "M3.PS.1.1",
+      "generator_type": "counting_permutations_combinations",
+      "description": "Apply fundamental counting principle, P(n,r) = n!/(n-r)!, or C(n,r) = n!/(r!(n-r)!)",
+      "answer_type": "integer",
+      "visual_category": null,
+      "mf_prereq": ["Grade 7 SP.4.x (sample spaces)"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "real_world"},
+      "params": {
+        "problem_types": ["fundamental_counting", "permutation", "combination"],
+        "n_range": [4, 15],
+        "r_range": [2, 8],
+        "context_pool": ["committee_selection", "password_creation", "race_podium", "card_hand"]
+      }
+    },
+    {
+      "id": "m3_ps_expected_value",
+      "concept_id": "M3.PS.2.2",
+      "generator_type": "compute_expected_value",
+      "description": "Calculate E(X) = Σ[x · P(x)] from a probability distribution table",
+      "answer_type": "decimal",
+      "visual_category": "D",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "real_world"},
+      "params": {
+        "outcome_count": [3, 4, 5],
+        "probability_sum_check": 1.0,
+        "context_pool": ["carnival_game", "insurance_payout", "lottery", "dice_game"]
+      }
+    },
+    {
+      "id": "m3_ps_binomial_probability",
+      "concept_id": "M3.PS.2.3",
+      "generator_type": "binomial_probability",
+      "description": "Apply B(n, k, p): P(X = k) = C(n,k) · pᵏ · (1-p)^(n-k)",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "real_world"},
+      "params": {
+        "n_range": [5, 15],
+        "p_pool": [0.1, 0.2, 0.25, 0.3, 0.4, 0.5, 0.6, 0.7, 0.75, 0.8],
+        "task": ["find_P_X_equals_k", "find_P_X_at_least_k"],
+        "context_pool": ["free_throws", "quality_control", "multiple_choice_guessing"]
+      }
+    },
+    {
+      "id": "m3_ps_compute_zscore",
+      "concept_id": "M3.PS.3.2",
+      "generator_type": "compute_zscore",
+      "description": "Calculate z = (x - μ) / σ; or find x given z, μ, σ",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "real_world"},
+      "params": {
+        "mean_range": [50, 500],
+        "std_dev_range": [5, 50],
+        "x_range": "within_3_sigma",
+        "solve_for": ["z_score", "x_value"],
+        "context_pool": ["exam_scores", "heights", "product_weights"]
+      }
+    },
+    {
+      "id": "m3_ps_normal_dist_probability",
+      "concept_id": "M3.PS.3.3",
+      "generator_type": "normal_distribution_probability",
+      "description": "Use z-score and z-table (or Empirical Rule for multiples of σ) to find probability P(X < x), P(X > x), or P(a < X < b)",
+      "answer_type": "decimal",
+      "visual_category": "D",
+      "visual_flag": true,
+      "three_axis": {"cognitive_demand": "application", "complexity": "high", "context": "real_world"},
+      "params": {
+        "task": ["P_less_than", "P_greater_than", "P_between"],
+        "method": ["empirical_rule_multiples", "z_table"],
+        "z_values": "standard_z_table_entries",
+        "context_pool": ["exam_scores", "product_heights", "rainfall_data"]
+      }
+    }
+
+  ]
+}

@@ -1,0 +1,615 @@
+{
+  "course": "NC 7th Grade Math",
+  "division": "Challengers",
+  "generator_pool_id": "nc_grade_7",
+  "isolation_rule": "No generators from this pool may be reused in Grade 6, Grade 8, or any other course pool.",
+  "total_generators": 54,
+  "generators": [
+    {
+      "id": "g7_ns_add_rational",
+      "concept_id": "M7.NS.1.2",
+      "generator_type": "add_rational",
+      "description": "Add two rational numbers (integers, fractions, or decimals with mixed signs)",
+      "answer_type": "decimal_or_fraction",
+      "visual_category": null,
+      "three_axis": {
+        "cognitive_demand": "procedural",
+        "complexity": "low",
+        "context": "abstract"
+      },
+      "params": {
+        "operand_types": ["integer", "fraction", "decimal"],
+        "sign_mix": true,
+        "denominator_range": [2, 12]
+      }
+    },
+    {
+      "id": "g7_ns_subtract_rational",
+      "concept_id": "M7.NS.1.4",
+      "generator_type": "subtract_rational",
+      "description": "Subtract two rational numbers with mixed signs",
+      "answer_type": "decimal_or_fraction",
+      "visual_category": null,
+      "three_axis": {
+        "cognitive_demand": "procedural",
+        "complexity": "low",
+        "context": "abstract"
+      },
+      "params": {
+        "operand_types": ["integer", "fraction", "decimal"],
+        "sign_mix": true
+      }
+    },
+    {
+      "id": "g7_ns_multiply_rational",
+      "concept_id": "M7.NS.2.2",
+      "generator_type": "multiply_rational",
+      "description": "Multiply two rational numbers (integers, fractions, decimals), applying sign rules",
+      "answer_type": "decimal_or_fraction",
+      "visual_category": null,
+      "three_axis": {
+        "cognitive_demand": "procedural",
+        "complexity": "low",
+        "context": "abstract"
+      },
+      "params": {
+        "operand_types": ["integer", "fraction", "decimal"],
+        "sign_mix": true
+      }
+    },
+    {
+      "id": "g7_ns_divide_rational",
+      "concept_id": "M7.NS.2.4",
+      "generator_type": "divide_rational",
+      "description": "Divide two rational numbers with mixed signs, including fraction ÷ fraction",
+      "answer_type": "decimal_or_fraction",
+      "visual_category": null,
+      "three_axis": {
+        "cognitive_demand": "procedural",
+        "complexity": "low",
+        "context": "abstract"
+      },
+      "params": {
+        "operand_types": ["integer", "fraction", "decimal"],
+        "sign_mix": true,
+        "exclude_zero_divisor": true
+      }
+    },
+    {
+      "id": "g7_ns_rational_to_decimal",
+      "concept_id": "M7.NS.3.1",
+      "generator_type": "rational_to_decimal",
+      "description": "Convert a fraction to its decimal form; Mathletes identify if it terminates or repeats",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "three_axis": {
+        "cognitive_demand": "procedural",
+        "complexity": "low",
+        "context": "abstract"
+      },
+      "params": {
+        "fraction_pool": [
+          {"num": 1, "den": 3},
+          {"num": 1, "den": 6},
+          {"num": 1, "den": 7},
+          {"num": 1, "den": 9},
+          {"num": 2, "den": 3},
+          {"num": 3, "den": 8},
+          {"num": 5, "den": 6}
+        ]
+      }
+    },
+    {
+      "id": "g7_ns_rational_word_problem",
+      "concept_id": "M7.NS.4.1",
+      "generator_type": "rational_word_problem",
+      "description": "One-step or two-step real-world scenario requiring operations with rational numbers",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "three_axis": {
+        "cognitive_demand": "application",
+        "complexity": "medium",
+        "context": "real_world"
+      },
+      "params": {
+        "scenario_templates": [
+          "temperature_change",
+          "bank_balance",
+          "distance_net_change",
+          "recipe_scaling"
+        ],
+        "num_steps": [1, 2]
+      }
+    },
+    {
+      "id": "g7_rp_find_unit_rate",
+      "concept_id": "M7.RP.1.2",
+      "generator_type": "find_unit_rate",
+      "description": "Given a proportional table or two values, compute k = y/x (unit rate / constant of proportionality)",
+      "answer_type": "decimal",
+      "visual_category": "B",
+      "three_axis": {
+        "cognitive_demand": "procedural",
+        "complexity": "medium",
+        "context": "real_world"
+      },
+      "params": {
+        "representation": ["table", "two_points"],
+        "k_range": [0.5, 20],
+        "context_pool": ["miles per hour", "dollars per pound", "pages per minute"]
+      }
+    },
+    {
+      "id": "g7_rp_write_prop_equation",
+      "concept_id": "M7.RP.1.3",
+      "generator_type": "write_prop_equation",
+      "description": "Given k, write the equation y = kx; or given equation, identify k",
+      "answer_type": "text",
+      "visual_category": null,
+      "three_axis": {
+        "cognitive_demand": "procedural",
+        "complexity": "medium",
+        "context": "abstract"
+      },
+      "params": {
+        "k_range": [0.25, 15],
+        "k_type": ["integer", "decimal", "fraction"]
+      }
+    },
+    {
+      "id": "g7_rp_proportional_solve",
+      "concept_id": "M7.RP.2.1",
+      "generator_type": "proportional_solve",
+      "description": "Solve for a missing value in a proportion within a real-world context",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "three_axis": {
+        "cognitive_demand": "application",
+        "complexity": "medium",
+        "context": "real_world"
+      },
+      "params": {
+        "missing_position": ["x", "y"],
+        "context_pool": ["cooking recipe", "map scale", "unit cost", "speed-distance-time"],
+        "k_range": [0.5, 50]
+      }
+    },
+    {
+      "id": "g7_rp_percent_tax_tip_discount",
+      "concept_id": "M7.RP.3.1",
+      "generator_type": "percent_tax_tip_discount",
+      "description": "Calculate final price after applying a tax, tip, or discount percentage",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "three_axis": {
+        "cognitive_demand": "procedural",
+        "complexity": "medium",
+        "context": "real_world"
+      },
+      "params": {
+        "scenario_type": ["tax", "tip", "discount"],
+        "base_price_range": [5, 200],
+        "percent_range": [5, 30]
+      }
+    },
+    {
+      "id": "g7_rp_simple_interest",
+      "concept_id": "M7.RP.3.2",
+      "generator_type": "simple_interest",
+      "description": "Calculate simple interest I = Prt or final amount; or find missing P, r, or t",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "three_axis": {
+        "cognitive_demand": "procedural",
+        "complexity": "medium",
+        "context": "real_world"
+      },
+      "params": {
+        "principal_range": [100, 5000],
+        "rate_range": [0.02, 0.12],
+        "time_range": [1, 5],
+        "solve_for": ["I", "A", "P", "r", "t"]
+      }
+    },
+    {
+      "id": "g7_rp_percent_change",
+      "concept_id": "M7.RP.3.3",
+      "generator_type": "percent_change",
+      "description": "Compute percent increase or decrease; or find new/original value given percent change",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "three_axis": {
+        "cognitive_demand": "procedural",
+        "complexity": "medium",
+        "context": "real_world"
+      },
+      "params": {
+        "direction": ["increase", "decrease"],
+        "original_range": [50, 500],
+        "percent_range": [5, 60],
+        "solve_for": ["percent_change", "new_value", "original_value"]
+      }
+    },
+    {
+      "id": "g7_rp_fraction_decimal_percent",
+      "concept_id": "M7.RP.3.4",
+      "generator_type": "fraction_decimal_percent_convert",
+      "description": "Convert between fraction, decimal, and percent representations",
+      "answer_type": "decimal_or_fraction_or_percent",
+      "visual_category": null,
+      "three_axis": {
+        "cognitive_demand": "procedural",
+        "complexity": "low",
+        "context": "abstract"
+      },
+      "params": {
+        "input_form": ["fraction", "decimal", "percent"],
+        "output_form": ["fraction", "decimal", "percent"],
+        "value_pool": [0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 0.1, 0.2, 0.3, 0.4, 0.6]
+      }
+    },
+    {
+      "id": "g7_rp_scale_drawing_compute",
+      "concept_id": "M7.RP.4.2",
+      "generator_type": "scale_drawing_compute",
+      "description": "Given scale factor and drawing measurement, compute actual length or area",
+      "answer_type": "decimal",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {
+        "cognitive_demand": "procedural",
+        "complexity": "high",
+        "context": "real_world"
+      },
+      "params": {
+        "scale_ratios": ["1:10", "1:50", "1:100", "1:500"],
+        "measurement_type": ["length", "area"],
+        "drawing_dim_range": [2, 20]
+      }
+    },
+    {
+      "id": "g7_ee_add_sub_linear_expr",
+      "concept_id": "M7.EE.1.1",
+      "generator_type": "add_sub_linear_expr",
+      "description": "Add or subtract two linear expressions with rational coefficients and simplify",
+      "answer_type": "text",
+      "answer_type_note": "Simplified expression e.g. '3x - 5'",
+      "visual_category": null,
+      "three_axis": {
+        "cognitive_demand": "procedural",
+        "complexity": "low",
+        "context": "abstract"
+      },
+      "params": {
+        "num_terms": [2, 3],
+        "coefficient_type": ["integer", "fraction"],
+        "include_negation": true
+      }
+    },
+    {
+      "id": "g7_ee_factor_linear_expr",
+      "concept_id": "M7.EE.1.2",
+      "generator_type": "factor_linear_expr",
+      "description": "Factor a linear expression by pulling out the GCF (e.g., 6x + 9 → 3(2x + 3))",
+      "answer_type": "text",
+      "visual_category": null,
+      "three_axis": {
+        "cognitive_demand": "procedural",
+        "complexity": "medium",
+        "context": "abstract"
+      },
+      "params": {
+        "gcf_range": [2, 6],
+        "inner_coefficient_range": [1, 8]
+      }
+    },
+    {
+      "id": "g7_ee_expand_linear_expr",
+      "concept_id": "M7.EE.1.3",
+      "generator_type": "expand_linear_expr",
+      "description": "Expand an expression using the distributive property with rational coefficients",
+      "answer_type": "text",
+      "visual_category": null,
+      "three_axis": {
+        "cognitive_demand": "procedural",
+        "complexity": "low",
+        "context": "abstract"
+      },
+      "params": {
+        "outer_coefficient_type": ["integer", "fraction", "negative"],
+        "inner_terms": [2, 3]
+      }
+    },
+    {
+      "id": "g7_ee_solve_linear_rational",
+      "concept_id": "M7.EE.2.1",
+      "generator_type": "solve_linear_rational",
+      "description": "Solve ax + b = c or ax/n + b = c where a, b, c are rational numbers",
+      "answer_type": "decimal_or_fraction",
+      "visual_category": null,
+      "three_axis": {
+        "cognitive_demand": "procedural",
+        "complexity": "medium",
+        "context": "abstract"
+      },
+      "params": {
+        "coefficient_type": ["integer", "fraction", "decimal"],
+        "solution_type": ["integer", "fraction", "decimal"]
+      }
+    },
+    {
+      "id": "g7_ee_solve_distrib_like_terms",
+      "concept_id": "M7.EE.2.2",
+      "generator_type": "solve_distrib_like_terms",
+      "description": "Solve equations requiring distributive property and combining like terms",
+      "answer_type": "decimal_or_fraction",
+      "visual_category": null,
+      "three_axis": {
+        "cognitive_demand": "procedural",
+        "complexity": "medium",
+        "context": "abstract"
+      },
+      "params": {
+        "structure": ["a(bx + c) = d", "ax + bx + c = d", "a(bx + c) + dx = e"]
+      }
+    },
+    {
+      "id": "g7_ee_solve_inequality_onestep",
+      "concept_id": "M7.EE.3.1",
+      "generator_type": "solve_inequality_onestep",
+      "description": "Solve a one-step inequality; Mathlete identifies the solution set description",
+      "answer_type": "MC",
+      "visual_category": "C",
+      "visual_flag": true,
+      "three_axis": {
+        "cognitive_demand": "procedural",
+        "complexity": "medium",
+        "context": "abstract"
+      },
+      "params": {
+        "operation": ["add", "subtract", "multiply", "divide"],
+        "include_flip_rule": true,
+        "negative_coefficient": true
+      }
+    },
+    {
+      "id": "g7_ee_solve_inequality_multistep",
+      "concept_id": "M7.EE.3.2",
+      "generator_type": "solve_multistep_inequality",
+      "description": "Solve a two-step inequality with rational coefficients",
+      "answer_type": "MC",
+      "visual_category": "C",
+      "visual_flag": true,
+      "three_axis": {
+        "cognitive_demand": "procedural",
+        "complexity": "medium",
+        "context": "abstract"
+      },
+      "params": {
+        "structure": ["ax + b < c", "ax + b ≥ c", "ax - b ≤ c"],
+        "negative_coefficient": true
+      }
+    },
+    {
+      "id": "g7_geo_angle_relationship_solve",
+      "concept_id": "M7.GEO.1.1",
+      "generator_type": "angle_relationship_solve",
+      "description": "Given one angle measure, find a missing angle using supplementary, complementary, or vertical angle relationships",
+      "answer_type": "integer",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {
+        "cognitive_demand": "procedural",
+        "complexity": "medium",
+        "context": "abstract"
+      },
+      "params": {
+        "relationship": ["supplementary", "complementary", "vertical", "adjacent"],
+        "known_angle_range": [15, 165]
+      }
+    },
+    {
+      "id": "g7_geo_circle_area_circumference",
+      "concept_id": "M7.GEO.2.3",
+      "generator_type": "circle_area_circumference",
+      "description": "Given radius or diameter, compute area or circumference; or solve for radius given area/circumference",
+      "answer_type": "decimal",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {
+        "cognitive_demand": "procedural",
+        "complexity": "medium",
+        "context": "abstract"
+      },
+      "params": {
+        "given": ["radius", "diameter"],
+        "solve_for": ["area", "circumference", "radius", "diameter"],
+        "radius_range": [2, 15],
+        "use_pi_approx": 3.14159
+      }
+    },
+    {
+      "id": "g7_geo_angle_equation_solve",
+      "concept_id": "M7.GEO.3.1",
+      "generator_type": "angle_equation_solve",
+      "description": "Two angles in a relationship (complementary/supplementary/vertical) expressed with algebra; solve for x then find angle",
+      "answer_type": "integer",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {
+        "cognitive_demand": "procedural",
+        "complexity": "low",
+        "context": "abstract"
+      },
+      "params": {
+        "angle1_expr": "ax + b",
+        "angle2_expr": "cx + d",
+        "relationship": ["supplementary", "complementary", "vertical"],
+        "a_range": [1, 5],
+        "b_range": [5, 45]
+      }
+    },
+    {
+      "id": "g7_geo_parallel_lines_angles",
+      "concept_id": "M7.GEO.3.2",
+      "generator_type": "parallel_lines_transversal",
+      "description": "Given one angle formed by parallel lines cut by a transversal, find all named angles",
+      "answer_type": "integer",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {
+        "cognitive_demand": "procedural",
+        "complexity": "medium",
+        "context": "abstract"
+      },
+      "params": {
+        "given_angle_range": [30, 150],
+        "ask_for": ["alternate_interior", "corresponding", "co_interior", "vertical"]
+      }
+    },
+    {
+      "id": "g7_geo_composite_area",
+      "concept_id": "M7.GEO.4.1",
+      "generator_type": "composite_area",
+      "description": "Find the area of a composite figure made of rectangles, triangles, or semicircles",
+      "answer_type": "decimal",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {
+        "cognitive_demand": "procedural",
+        "complexity": "high",
+        "context": "abstract"
+      },
+      "params": {
+        "component_shapes": ["rectangle+triangle", "rectangle+semicircle", "L-shape", "T-shape"],
+        "dimension_range": [2, 20]
+      }
+    },
+    {
+      "id": "g7_geo_area_2d_objects",
+      "concept_id": "M7.GEO.4.2",
+      "generator_type": "area_2d_solve",
+      "description": "Compute area of a named 2-D shape (triangle, parallelogram, trapezoid) given dimensions",
+      "answer_type": "decimal",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {
+        "cognitive_demand": "procedural",
+        "complexity": "medium",
+        "context": "real_world"
+      },
+      "params": {
+        "shapes": ["triangle", "parallelogram", "trapezoid"],
+        "dimension_range": [3, 25],
+        "solve_for": ["area", "base", "height"]
+      }
+    },
+    {
+      "id": "g7_geo_volume_3d_objects",
+      "concept_id": "M7.GEO.4.3",
+      "generator_type": "volume_3d_prism_pyramid",
+      "description": "Calculate volume of a right prism or right pyramid given base area and height",
+      "answer_type": "decimal",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {
+        "cognitive_demand": "procedural",
+        "complexity": "medium",
+        "context": "real_world"
+      },
+      "params": {
+        "solid_types": ["rectangular_prism", "triangular_prism", "rectangular_pyramid"],
+        "dimension_range": [2, 20]
+      }
+    },
+    {
+      "id": "g7_geo_surface_area_3d",
+      "concept_id": "M7.GEO.4.4",
+      "generator_type": "surface_area_3d",
+      "description": "Compute surface area of a right prism or right pyramid by summing face areas",
+      "answer_type": "decimal",
+      "visual_category": "A",
+      "visual_flag": true,
+      "three_axis": {
+        "cognitive_demand": "procedural",
+        "complexity": "high",
+        "context": "real_world"
+      },
+      "params": {
+        "solid_types": ["rectangular_prism", "triangular_prism"],
+        "dimension_range": [2, 15]
+      }
+    },
+    {
+      "id": "g7_sp_theoretical_probability",
+      "concept_id": "M7.SP.3.3",
+      "generator_type": "theoretical_probability",
+      "description": "Compute P(event) from a simple uniform sample space (dice, coins, marbles, spinners)",
+      "answer_type": "fraction",
+      "visual_category": null,
+      "three_axis": {
+        "cognitive_demand": "procedural",
+        "complexity": "medium",
+        "context": "abstract"
+      },
+      "params": {
+        "experiment_type": ["dice", "coins", "marbles", "spinner", "cards"],
+        "event_type": ["simple", "complement"]
+      }
+    },
+    {
+      "id": "g7_sp_experimental_probability",
+      "concept_id": "M7.SP.3.2",
+      "generator_type": "experimental_probability",
+      "description": "Given a frequency table of experimental results, compute P(event) as a fraction or decimal",
+      "answer_type": "fraction",
+      "visual_category": null,
+      "three_axis": {
+        "cognitive_demand": "procedural",
+        "complexity": "medium",
+        "context": "real_world"
+      },
+      "params": {
+        "total_trials": [20, 50, 100, 200],
+        "num_outcomes": [2, 3, 4, 5]
+      }
+    },
+    {
+      "id": "g7_sp_compound_probability",
+      "concept_id": "M7.SP.4.1",
+      "generator_type": "compound_probability",
+      "description": "Compute probability of a compound event using multiplication rule or sample space enumeration",
+      "answer_type": "fraction",
+      "visual_category": "E",
+      "visual_flag": true,
+      "three_axis": {
+        "cognitive_demand": "procedural",
+        "complexity": "medium",
+        "context": "abstract"
+      },
+      "params": {
+        "experiment_type": ["two_dice", "coin_and_spinner", "two_draws_with_replacement"],
+        "event_type": ["AND", "specific_outcome"]
+      }
+    },
+    {
+      "id": "g7_sp_compare_measures_center",
+      "concept_id": "M7.SP.2.1",
+      "generator_type": "compare_center_variability",
+      "description": "Given two data sets, compute and compare mean/median and IQR/MAD",
+      "answer_type": "decimal",
+      "visual_category": "D",
+      "visual_flag": true,
+      "three_axis": {
+        "cognitive_demand": "reasoning",
+        "complexity": "high",
+        "context": "real_world"
+      },
+      "params": {
+        "dataset_size": [7, 9, 11],
+        "value_range": [10, 100],
+        "ask_for": ["mean", "median", "IQR", "MAD", "comparison"]
+      }
+    }
+  ]
+}

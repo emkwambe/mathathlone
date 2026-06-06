@@ -1,0 +1,681 @@
+{
+  "course": "Math Fundamentals",
+  "division": "Foundation",
+  "static_pool_id": "math_fundamentals_static",
+  "philosophy": "Every static question here targets a known misconception — not just definition recall. Questions are engineered around the specific errors that students carry into downstream courses.",
+  "total_static_items": 88,
+  "questions": [
+
+    // === FOUNDATIONAL BASICS — MISCONCEPTION-TARGETED ===
+
+    {
+      "id": "mf_s_fb_3_1_a",
+      "concept_id": "MF.FB.3.1",
+      "misconception_targeted": "Students confuse natural and whole numbers; think 0 is natural",
+      "stem": "Which set includes the number 0 but does NOT include negative numbers?",
+      "options": ["A. Natural numbers", "B. Whole numbers", "C. Integers", "D. Rational numbers"],
+      "correct": "B",
+      "explanation": "Whole numbers = {0, 1, 2, 3, ...}. Natural numbers start at 1. Both exclude negatives, but only whole numbers include 0.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1, "downstream_unlocks": ["Grade 8 NS", "Math 1"]
+    },
+    {
+      "id": "mf_s_fb_3_1_b",
+      "concept_id": "MF.FB.3.1",
+      "misconception_targeted": "Students think natural numbers and counting numbers are different things",
+      "stem": "A student says '0 is a natural number.' Which response is correct?",
+      "options": [
+        "A. Correct — 0 is the first natural number",
+        "B. Incorrect — natural numbers begin at 1 and do not include 0",
+        "C. Incorrect — natural numbers begin at −1",
+        "D. Correct — 0 is natural because it is not negative"
+      ],
+      "correct": "B",
+      "explanation": "Natural (counting) numbers begin at 1: {1, 2, 3, ...}. The set that adds 0 is the whole numbers.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "mf_s_fb_3_3_a",
+      "concept_id": "MF.FB.3.3",
+      "misconception_targeted": "Students think all decimals are irrational",
+      "stem": "Which of the following is a rational number?",
+      "options": ["A. √3", "B. π", "C. 0.4545̄ (0.45 repeating)", "D. √11"],
+      "correct": "C",
+      "explanation": "Repeating decimals are rational because they can be expressed as fractions (0.45̄ = 5/11). All non-repeating, non-terminating decimals are irrational.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "mf_s_fb_3_4_a",
+      "concept_id": "MF.FB.3.4",
+      "misconception_targeted": "Students think √4 is irrational because it has a radical symbol",
+      "stem": "Is √4 rational or irrational?",
+      "options": [
+        "A. Irrational — it has a square root symbol",
+        "B. Rational — because √4 = 2, which is an integer",
+        "C. Neither — it equals 2, which is not a fraction",
+        "D. Irrational — it equals 2 which is not a decimal"
+      ],
+      "correct": "B",
+      "explanation": "√4 = 2, a whole number. Integers are rational (2 = 2/1). The radical symbol alone does not make a number irrational.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "mf_s_fb_3_5_a",
+      "concept_id": "MF.FB.3.5",
+      "misconception_targeted": "Students don't understand set membership is cumulative (all integers are rational, etc.)",
+      "stem": "Which is the MOST complete and accurate classification of −8?",
+      "options": [
+        "A. Integer only",
+        "B. Rational only",
+        "C. Integer, rational, and real",
+        "D. Negative number only"
+      ],
+      "correct": "C",
+      "explanation": "−8 is an integer. All integers are rational (−8 = −8/1). All rational numbers are real. The correct classification includes all three.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+
+    // === ALGEBRAIC PROPERTIES — MISCONCEPTION-TARGETED ===
+
+    {
+      "id": "mf_s_ap_1_1_a",
+      "concept_id": "MF.AP.1.1",
+      "misconception_targeted": "Students apply commutativity to subtraction",
+      "stem": "Which operation is NOT commutative?",
+      "options": ["A. Addition", "B. Multiplication", "C. Subtraction", "D. Both A and B"],
+      "correct": "C",
+      "explanation": "a − b ≠ b − a in general (e.g., 10 − 3 = 7 but 3 − 10 = −7). Subtraction is not commutative.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "mf_s_ap_2_1_a",
+      "concept_id": "MF.AP.2.1",
+      "misconception_targeted": "Students confuse associative and commutative properties",
+      "stem": "Which property justifies rewriting (3 + 5) + 7 as 3 + (5 + 7)?",
+      "options": [
+        "A. Commutative Property of Addition",
+        "B. Distributive Property",
+        "C. Associative Property of Addition",
+        "D. Identity Property of Addition"
+      ],
+      "correct": "C",
+      "explanation": "The associative property changes the GROUPING (parentheses), not the order. Commutative changes the order of the numbers.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "mf_s_ap_3_1_a",
+      "concept_id": "MF.AP.3.1",
+      "misconception_targeted": "Students only distribute to the first term inside parentheses",
+      "stem": "Which expression correctly applies the distributive property to 4(3x + 7)?",
+      "options": [
+        "A. 12x + 7",
+        "B. 12x + 28",
+        "C. 4x + 28",
+        "D. 12 + 28x"
+      ],
+      "correct": "B",
+      "explanation": "4 must multiply BOTH terms: 4 × 3x = 12x and 4 × 7 = 28. Answer: 12x + 28.",
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "mf_s_ap_3_2_a",
+      "concept_id": "MF.AP.3.2",
+      "misconception_targeted": "Students lose the negative sign when distributing a negative outer factor",
+      "stem": "Which correctly expands −3(2x − 5)?",
+      "options": [
+        "A. −6x − 15",
+        "B. −6x + 15",
+        "C. 6x − 15",
+        "D. 6x + 15"
+      ],
+      "correct": "B",
+      "explanation": "−3 × 2x = −6x; −3 × (−5) = +15. Distributing a negative flips the sign of each term inside.",
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "mf_s_ap_5_1_a",
+      "concept_id": "MF.AP.5.1",
+      "misconception_targeted": "Students confuse additive inverse with multiplicative inverse",
+      "stem": "The additive inverse of −2/3 is:",
+      "options": ["A. 2/3", "B. −3/2", "C. 3/2", "D. 1"],
+      "correct": "A",
+      "explanation": "The additive inverse of a number n is −n, so that n + (−n) = 0. The additive inverse of −2/3 is +2/3 (NOT the reciprocal).",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "mf_s_ap_5_2_a",
+      "concept_id": "MF.AP.5.2",
+      "misconception_targeted": "Students think the multiplicative inverse of an integer is a negative",
+      "stem": "What is the multiplicative inverse of 5?",
+      "options": ["A. −5", "B. 5", "C. 1/5", "D. 0"],
+      "correct": "C",
+      "explanation": "The multiplicative inverse (reciprocal) of n is 1/n, so n × (1/n) = 1. The inverse of 5 is 1/5.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+
+    // === ARITHMETIC & NUMBER THEORY — MISCONCEPTION-TARGETED ===
+
+    {
+      "id": "mf_s_ant_1_1_a",
+      "concept_id": "MF.ANT.1.1",
+      "misconception_targeted": "Students think |−5| = −5 because the number is negative",
+      "stem": "What is |−12|?",
+      "options": ["A. −12", "B. 12", "C. 0", "D. −1/12"],
+      "correct": "B",
+      "explanation": "Absolute value measures distance from zero, which is always non-negative. |−12| = 12.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "mf_s_ant_1_1_b",
+      "concept_id": "MF.ANT.1.1",
+      "misconception_targeted": "Students think |a| + |b| always equals |a + b|",
+      "stem": "Which expression has the GREATEST value?",
+      "options": ["A. |−8 + 3|", "B. |−8| + |3|", "C. −|8 + 3|", "D. |8| − |3|"],
+      "correct": "B",
+      "explanation": "|−8| + |3| = 8 + 3 = 11. |−8 + 3| = |−5| = 5. The triangle inequality tells us |a + b| ≤ |a| + |b|.",
+      "three_axis": {"cognitive_demand": "reasoning", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "mf_s_ant_3_1_a",
+      "concept_id": "MF.ANT.3.1",
+      "misconception_targeted": "Students evaluate left-to-right ignoring operator precedence",
+      "stem": "A student evaluates 3 + 4 × 2 and gets 14. What did they do wrong?",
+      "options": [
+        "A. Nothing — 14 is correct",
+        "B. They added before multiplying; the correct answer is 11",
+        "C. They multiplied before adding; the correct answer is 10",
+        "D. They forgot to use a calculator"
+      ],
+      "correct": "B",
+      "explanation": "PEMDAS: multiplication before addition. 4 × 2 = 8 first, then 3 + 8 = 11. Computing left-to-right gives 7 × 2 = 14 — wrong.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "mf_s_ant_3_2_a",
+      "concept_id": "MF.ANT.3.2",
+      "misconception_targeted": "Students evaluate M and D, and A and S as a single left-to-right sweep without respecting equal-priority ordering",
+      "stem": "Evaluate: 20 ÷ 4 × 5",
+      "options": ["A. 1", "B. 25", "C. 4", "D. 100"],
+      "correct": "B",
+      "explanation": "Division and multiplication have equal priority — evaluate left to right. 20 ÷ 4 = 5, then 5 × 5 = 25. NOT 20 ÷ (4 × 5) = 1.",
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "mf_s_ant_2_1_a",
+      "concept_id": "MF.ANT.2.1",
+      "misconception_targeted": "Students think 1 is prime",
+      "stem": "Which of the following is a prime number?",
+      "options": ["A. 1", "B. 9", "C. 15", "D. 17"],
+      "correct": "D",
+      "explanation": "17 has exactly two factors: 1 and 17. The number 1 is neither prime nor composite by definition. 9 = 3×3 and 15 = 3×5 are composite.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+
+    // === FRACTIONS, DECIMALS, PERCENTAGES — MISCONCEPTION-TARGETED ===
+
+    {
+      "id": "mf_s_fdp_1_2_a",
+      "concept_id": "MF.FDP.1.2",
+      "misconception_targeted": "Students add numerator and denominator separately when simplifying",
+      "stem": "Simplify 12/18.",
+      "options": ["A. 6/9 — divide both by 2", "B. 2/3 — divide both by 6 (GCF)", "C. 1/6 — subtract 6 from both", "D. 6/12 — divide both by 2"],
+      "correct": "B",
+      "explanation": "GCF(12, 18) = 6. 12 ÷ 6 = 2 and 18 ÷ 6 = 3. The fully simplified fraction is 2/3. Dividing by 2 gives 6/9, which is not fully simplified.",
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "mf_s_fdp_2_2_a",
+      "concept_id": "MF.FDP.2.2",
+      "misconception_targeted": "Students add numerators AND denominators (e.g., 1/3 + 1/4 = 2/7)",
+      "stem": "A student adds 1/3 + 1/4 and gets 2/7. What did they do wrong?",
+      "options": [
+        "A. Nothing — 2/7 is correct",
+        "B. They added the numerators and denominators separately; they must first find a common denominator",
+        "C. They should have multiplied instead",
+        "D. They forgot to simplify"
+      ],
+      "correct": "B",
+      "explanation": "1/3 + 1/4 requires LCD = 12: 4/12 + 3/12 = 7/12. Adding numerators and denominators directly (1+1)/(3+4) is a fundamental fraction error.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "mf_s_fdp_3_2_a",
+      "concept_id": "MF.FDP.3.2",
+      "misconception_targeted": "Students flip the first fraction instead of the second when dividing",
+      "stem": "Which correctly sets up the division 2/3 ÷ 4/5?",
+      "options": [
+        "A. 3/2 × 4/5",
+        "B. 2/3 × 5/4",
+        "C. 3/2 × 5/4",
+        "D. 2/3 × 4/5"
+      ],
+      "correct": "B",
+      "explanation": "Keep-Change-Flip: KEEP 2/3, CHANGE ÷ to ×, FLIP the SECOND fraction (4/5 becomes 5/4). Result: 2/3 × 5/4.",
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "mf_s_fdp_5_1_a",
+      "concept_id": "MF.FDP.5.1",
+      "misconception_targeted": "Students confuse percent with decimal (think 25% = 25.0 not 0.25)",
+      "stem": "Which correctly converts 35% to a decimal?",
+      "options": ["A. 35.0", "B. 3.5", "C. 0.35", "D. 0.035"],
+      "correct": "C",
+      "explanation": "Percent means 'per 100.' 35% = 35/100 = 0.35. Divide the percent value by 100 (move decimal two places left).",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "mf_s_fdp_5_2_a",
+      "concept_id": "MF.FDP.5.2",
+      "misconception_targeted": "Students convert fraction to percent by multiplying numerator by 100 only",
+      "stem": "Convert 3/8 to a percent.",
+      "options": ["A. 38%", "B. 300/8 %", "C. 37.5%", "D. 83%"],
+      "correct": "C",
+      "explanation": "3 ÷ 8 = 0.375, then × 100 = 37.5%. Alternatively: 3/8 × 100 = 300/8 = 37.5%.",
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "mf_s_fdp_6_2_a",
+      "concept_id": "MF.FDP.6.2",
+      "misconception_targeted": "Students find the wrong whole when solving 'part is % of what?'",
+      "stem": "18 is 30% of what number?",
+      "options": ["A. 5.4", "B. 54", "C. 60", "D. 600"],
+      "correct": "C",
+      "explanation": "18 = 0.30 × W → W = 18 ÷ 0.30 = 60. Common error: multiplying 18 × 0.30 = 5.4 (which finds the part of a part, not the whole).",
+      "three_axis": {"cognitive_demand": "application", "complexity": "high", "context": "real_world"},
+      "dok": 2
+    },
+    {
+      "id": "mf_s_fdp_1_3_a",
+      "concept_id": "MF.FDP.1.3",
+      "misconception_targeted": "Students confuse which direction the conversion goes",
+      "stem": "Convert 2 3/4 to an improper fraction.",
+      "options": ["A. 9/4", "B. 11/4", "C. 3/4", "D. 23/4"],
+      "correct": "B",
+      "explanation": "2 × 4 = 8, then 8 + 3 = 11. Improper fraction: 11/4. (2 3/4 means 2 whole + 3/4 = 8/4 + 3/4 = 11/4)",
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+
+    // === EXPONENTS & ROOTS — MISCONCEPTION-TARGETED ===
+
+    {
+      "id": "mf_s_er_1_1_a",
+      "concept_id": "MF.ER.1.1",
+      "misconception_targeted": "Students compute 3² = 6 (confusing exponent with multiplication)",
+      "stem": "Evaluate 3².",
+      "options": ["A. 6", "B. 8", "C. 9", "D. 12"],
+      "correct": "C",
+      "explanation": "3² means 3 × 3 = 9. Exponentiation is repeated multiplication, NOT multiplying the base by the exponent (3 × 2 = 6 is wrong).",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "mf_s_er_1_5_a",
+      "concept_id": "MF.ER.1.5",
+      "misconception_targeted": "Students think x^0 = 0 because 'anything times 0 is 0'",
+      "stem": "Evaluate 7⁰.",
+      "options": ["A. 0", "B. 7", "C. 1", "D. Undefined"],
+      "correct": "C",
+      "explanation": "Any non-zero number raised to the power 0 equals 1. This is a rule of exponents: x^0 = 1 for x ≠ 0.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "mf_s_er_1_6_a",
+      "concept_id": "MF.ER.1.6",
+      "misconception_targeted": "Students think x^(−n) = −(x^n)",
+      "stem": "Evaluate 2⁻³.",
+      "options": ["A. −8", "B. −6", "C. 1/8", "D. 1/6"],
+      "correct": "C",
+      "explanation": "2⁻³ = 1/2³ = 1/8. A negative exponent means 'take the reciprocal,' NOT make the result negative.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "mf_s_er_1_2_a",
+      "concept_id": "MF.ER.1.2",
+      "misconception_targeted": "Students multiply exponents instead of adding when multiplying like bases",
+      "stem": "Simplify x³ × x⁵.",
+      "options": ["A. x¹⁵", "B. x⁸", "C. x²", "D. 2x⁸"],
+      "correct": "B",
+      "explanation": "Product rule: same base, ADD exponents. x³ × x⁵ = x^(3+5) = x⁸. Multiplying exponents (x¹⁵) is the power-of-a-power rule, not the product rule.",
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "mf_s_er_2_1_a",
+      "concept_id": "MF.ER.2.1",
+      "misconception_targeted": "Students confuse √ with ÷2",
+      "stem": "Evaluate √64.",
+      "options": ["A. 32", "B. 4096", "C. 8", "D. 16"],
+      "correct": "C",
+      "explanation": "√64 = 8 because 8² = 64. Square root asks 'what number times itself equals 64?' Not 64 ÷ 2 = 32.",
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+
+    // === RADICAL OPERATIONS — MISCONCEPTION-TARGETED ===
+
+    {
+      "id": "mf_s_rad_1_1_a",
+      "concept_id": "MF.RAD.1.1",
+      "misconception_targeted": "Students don't extract the full perfect-square factor (leave partially simplified)",
+      "stem": "Simplify √72.",
+      "options": ["A. 6√2", "B. 2√18", "C. 3√8", "D. 36√2"],
+      "correct": "A",
+      "explanation": "√72 = √(36 × 2) = 6√2. Options B (2√18) and C (3√8) are partially simplified but not fully — √18 and √8 can be simplified further. Always extract the LARGEST perfect-square factor.",
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "mf_s_rad_2_1_a",
+      "concept_id": "MF.RAD.2.1",
+      "misconception_targeted": "Students add radicands instead of coefficients",
+      "stem": "Simplify 5√3 + 2√3.",
+      "options": ["A. 7√6", "B. 7√3", "C. 10√3", "D. 7√9"],
+      "correct": "B",
+      "explanation": "Like radicals are like terms — add the COEFFICIENTS, keep the radicand. 5 + 2 = 7, so 5√3 + 2√3 = 7√3. Adding radicands (5√3 + 2√3 = 7√6) is incorrect.",
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "mf_s_rad_4_1_a",
+      "concept_id": "MF.RAD.4.1",
+      "misconception_targeted": "Students rationalize by adding √n to numerator instead of multiplying",
+      "stem": "Rationalize 5/√5.",
+      "options": [
+        "A. (5 + √5)/√5",
+        "B. 5√5/5 = √5",
+        "C. 25/√5",
+        "D. 5/5 = 1"
+      ],
+      "correct": "B",
+      "explanation": "Multiply numerator and denominator by √5/√5: (5 × √5)/(√5 × √5) = 5√5/5 = √5. The denominator becomes √5 × √5 = 5.",
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "mf_s_rad_3_3_a",
+      "concept_id": "MF.RAD.3.3",
+      "misconception_targeted": "Students forget the middle terms when FOILing radical binomials",
+      "stem": "Expand (√3 + √2)(√3 − √2).",
+      "options": [
+        "A. 3 − 2 = 1",
+        "B. √3 − √2",
+        "C. 5",
+        "D. 1 − 2√6"
+      ],
+      "correct": "A",
+      "explanation": "This is a difference of squares: (a + b)(a − b) = a² − b². Here a = √3, b = √2. (√3)² − (√2)² = 3 − 2 = 1. The middle terms cancel.",
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "dok": 2
+    },
+
+    // === UNITS & CONVERSIONS — MISCONCEPTION-TARGETED ===
+
+    {
+      "id": "mf_s_uc_3_1_a",
+      "concept_id": "MF.UC.3.1",
+      "misconception_targeted": "Students flip the conversion factor in the wrong direction",
+      "stem": "To convert 48 inches to feet, which setup is correct?",
+      "options": [
+        "A. 48 inches × (12 inches/1 foot)",
+        "B. 48 inches × (1 foot/12 inches)",
+        "C. 48 inches + 12",
+        "D. 48 inches − 12"
+      ],
+      "correct": "B",
+      "explanation": "The conversion factor must cancel the original unit (inches). Use: 48 in × (1 ft/12 in) = 4 ft. Option A would give in², not ft.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "real_world"},
+      "dok": 2
+    },
+    {
+      "id": "mf_s_uc_3_2_a",
+      "concept_id": "MF.UC.3.2",
+      "misconception_targeted": "Students multiply when they should divide or vice versa in metric conversion",
+      "stem": "Convert 3.5 km to meters.",
+      "options": ["A. 0.0035 m", "B. 350 m", "C. 3500 m", "D. 35 m"],
+      "correct": "C",
+      "explanation": "1 km = 1000 m. 3.5 × 1000 = 3500 m. When converting to a smaller unit, multiply (more of the smaller unit needed).",
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "real_world"},
+      "dok": 1
+    },
+
+    // === RATIOS, PROPORTIONS & BASIC ALGEBRA — MISCONCEPTION-TARGETED ===
+
+    {
+      "id": "mf_s_rpba_2_1_a",
+      "concept_id": "MF.RPBA.2.1",
+      "misconception_targeted": "Students think any two fractions form a proportion",
+      "stem": "Do 2/5 and 6/14 form a proportion?",
+      "options": [
+        "A. Yes — both are fractions less than 1",
+        "B. No — 2/5 = 0.4 but 6/14 ≈ 0.4286; they are not equal",
+        "C. Yes — 2 × 14 = 28 and 5 × 6 = 30, so they are close enough",
+        "D. Yes — the numerators are both multiples of 2"
+      ],
+      "correct": "B",
+      "explanation": "Two ratios form a proportion only if they are EQUAL. Cross-multiply: 2 × 14 = 28 and 5 × 6 = 30. 28 ≠ 30, so they are NOT proportional.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "mf_s_rpba_2_2_a",
+      "concept_id": "MF.RPBA.2.2",
+      "misconception_targeted": "Students add instead of cross-multiplying",
+      "stem": "Solve for x: 3/4 = x/12.",
+      "options": ["A. x = 16", "B. x = 9", "C. x = 3", "D. x = 4"],
+      "correct": "B",
+      "explanation": "Cross-multiply: 3 × 12 = 4 × x → 36 = 4x → x = 9.",
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "mf_s_rpba_3_1_a",
+      "concept_id": "MF.RPBA.3.1",
+      "misconception_targeted": "Students treat variables as labels rather than unknown quantities",
+      "stem": "What does the variable n represent in the expression 'a number n increased by 8'?",
+      "options": [
+        "A. The letter n",
+        "B. The number 8",
+        "C. An unknown quantity that the expression adds 8 to",
+        "D. The word 'number'"
+      ],
+      "correct": "C",
+      "explanation": "A variable is a symbol representing an unknown or changing quantity. Here n is the unknown number, and the expression n + 8 represents it increased by 8.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+
+    // === INTRODUCTION TO SETS — MISCONCEPTION-TARGETED ===
+
+    {
+      "id": "mf_s_sets_1_1_a",
+      "concept_id": "MF.SETS.1.1",
+      "misconception_targeted": "Students think duplicate elements change a set",
+      "stem": "A student writes the set of letters in the word 'MISSISSIPPI.' Which is correct?",
+      "options": [
+        "A. {M, I, S, S, I, S, S, I, P, P, I} — 11 elements",
+        "B. {M, I, S, P} — 4 elements",
+        "C. {M, I, I, S, P} — 5 elements",
+        "D. {Mississippi}"
+      ],
+      "correct": "B",
+      "explanation": "A set contains only DISTINCT elements — duplicates are not listed multiple times. The unique letters are M, I, S, P → 4 elements.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "mf_s_sets_2_1_a",
+      "concept_id": "MF.SETS.2.1",
+      "misconception_targeted": "Students confuse union (OR) with intersection (AND)",
+      "stem": "A = {1, 2, 3, 4} and B = {3, 4, 5, 6}. What is A ∪ B?",
+      "options": [
+        "A. {3, 4}",
+        "B. {1, 2, 5, 6}",
+        "C. {1, 2, 3, 4, 5, 6}",
+        "D. {1, 2, 3, 4, 3, 4, 5, 6}"
+      ],
+      "correct": "C",
+      "explanation": "Union (∪) means ALL elements from BOTH sets (no duplicates). A ∪ B = {1, 2, 3, 4, 5, 6}. Option A is the intersection (elements in BOTH).",
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "mf_s_sets_2_2_a",
+      "concept_id": "MF.SETS.2.2",
+      "misconception_targeted": "Students confuse intersection with union when sets partially overlap",
+      "stem": "A = {2, 4, 6, 8} and B = {4, 6, 10, 12}. What is A ∩ B?",
+      "options": [
+        "A. {2, 4, 6, 8, 10, 12}",
+        "B. {4, 6}",
+        "C. {2, 8, 10, 12}",
+        "D. {}"
+      ],
+      "correct": "B",
+      "explanation": "Intersection (∩) means ONLY elements in BOTH sets. Both A and B contain 4 and 6. Answer: {4, 6}.",
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "mf_s_sets_4_2_a",
+      "concept_id": "MF.SETS.4.2",
+      "misconception_targeted": "Students double-count the intersection when using the union formula",
+      "stem": "In a class, 15 students play soccer, 12 play basketball, and 5 play both. How many students play soccer OR basketball?",
+      "options": ["A. 27", "B. 32", "C. 22", "D. 7"],
+      "correct": "C",
+      "explanation": "n(S ∪ B) = n(S) + n(B) − n(S ∩ B) = 15 + 12 − 5 = 22. Subtracting the intersection prevents double-counting those who play both.",
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "real_world"},
+      "dok": 2
+    },
+
+    // === GEOMETRY FUNDAMENTALS — MISCONCEPTION-TARGETED ===
+
+    {
+      "id": "mf_s_geo_2_1_a",
+      "concept_id": "MF.GEO.2.1",
+      "misconception_targeted": "Students think obtuse angles are greater than 180°",
+      "stem": "Which correctly describes an obtuse angle?",
+      "options": [
+        "A. Greater than 180°",
+        "B. Exactly 90°",
+        "C. Between 90° and 180°",
+        "D. Less than 90°"
+      ],
+      "correct": "C",
+      "explanation": "Obtuse angles measure between 90° (exclusive) and 180° (exclusive). Greater than 180° is a reflex angle.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "mf_s_geo_2_2_a",
+      "concept_id": "MF.GEO.2.2",
+      "misconception_targeted": "Students confuse complementary (90°) with supplementary (180°)",
+      "stem": "Angles A and B are complementary. If angle A = 38°, what is angle B?",
+      "options": ["A. 142°", "B. 52°", "C. 62°", "D. 152°"],
+      "correct": "B",
+      "explanation": "Complementary angles sum to 90°. B = 90° − 38° = 52°. If they summed to 180° (supplementary), B = 142°.",
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "mf_s_geo_3_1_a",
+      "concept_id": "MF.GEO.3.1",
+      "misconception_targeted": "Students think the Pythagorean theorem applies to all triangles",
+      "stem": "For which type of triangle does a² + b² = c² apply?",
+      "options": [
+        "A. All triangles",
+        "B. Equilateral triangles only",
+        "C. Right triangles only",
+        "D. Obtuse triangles only"
+      ],
+      "correct": "C",
+      "explanation": "The Pythagorean theorem ONLY applies to right triangles, where c is the hypotenuse (side opposite the right angle).",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "mf_s_geo_3_2_a",
+      "concept_id": "MF.GEO.3.2",
+      "misconception_targeted": "Students add a² + b² and then forget to take the square root",
+      "stem": "A right triangle has legs of 6 and 8. What is the length of the hypotenuse?",
+      "options": ["A. 100", "B. 14", "C. 10", "D. 28"],
+      "correct": "C",
+      "explanation": "6² + 8² = 36 + 64 = 100. Then c = √100 = 10. Many students stop at 100, forgetting the final square root step.",
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "dok": 1
+    },
+
+    // === STATISTICS & PROBABILITY — MISCONCEPTION-TARGETED ===
+
+    {
+      "id": "mf_s_s_1_2_a",
+      "concept_id": "MF.S.1.2",
+      "misconception_targeted": "Students confuse mean with median, especially with outliers",
+      "stem": "A data set is: 4, 5, 5, 6, 100. Which measure of center is most affected by the value 100?",
+      "options": ["A. Mode", "B. Median", "C. Mean", "D. Range"],
+      "correct": "C",
+      "explanation": "Mean = (4+5+5+6+100)/5 = 120/5 = 24. Median = 5. The outlier 100 dramatically pulls the mean but barely affects the median.",
+      "three_axis": {"cognitive_demand": "reasoning", "complexity": "medium", "context": "real_world"},
+      "dok": 2
+    },
+    {
+      "id": "mf_s_s_1_3_a",
+      "concept_id": "MF.S.1.3",
+      "misconception_targeted": "Students find the middle VALUE in an unsorted list rather than sorting first",
+      "stem": "Find the median of: 8, 3, 7, 1, 5.",
+      "options": ["A. 7 (the middle number as listed)", "B. 5 (sorted middle)", "C. 4.8 (the mean)", "D. 3"],
+      "correct": "B",
+      "explanation": "First sort: 1, 3, 5, 7, 8. The middle value (3rd of 5) is 5. Reading the middle of the unsorted list (7) is a common error.",
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "mf_s_s_3_1_a",
+      "concept_id": "MF.S.3.1",
+      "misconception_targeted": "Students think probability can exceed 1",
+      "stem": "A bag contains 8 red, 4 blue, and 3 green marbles. What is the probability of drawing a red marble?",
+      "options": ["A. 8", "B. 8/15", "C. 8/7", "D. 8/12"],
+      "correct": "B",
+      "explanation": "P(red) = favorable outcomes / total outcomes = 8 / (8+4+3) = 8/15 ≈ 0.533. Probability must always be between 0 and 1.",
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "mf_s_s_3_3_a",
+      "concept_id": "MF.S.3.3",
+      "misconception_targeted": "Students think experimental probability always equals theoretical",
+      "stem": "A fair coin is flipped 10 times and lands heads 7 times. Which statement is TRUE?",
+      "options": [
+        "A. The coin must be unfair because heads appeared more than 50% of the time",
+        "B. The theoretical probability of heads is still 1/2, and experimental results naturally vary",
+        "C. The experimental probability of heads is now always 7/10 for this coin",
+        "D. Getting 7 heads means the next 3 flips must be tails"
+      ],
+      "correct": "B",
+      "explanation": "Theoretical probability (1/2) is fixed by the nature of the coin. Experimental results vary, especially with few trials. As trials increase, experimental probability approaches theoretical probability (Law of Large Numbers).",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "real_world"},
+      "dok": 2
+    }
+  ]
+}

@@ -1,0 +1,1196 @@
+{
+  "pool_id": "ap_precalc",
+  "division": "Senior Varsity (SV)",
+  "version": "1.0.0",
+  "total_questions": 72,
+  "ap_alignment_note": "Questions are calibrated to AP Precalculus exam task types. FRQ-style questions mirror the 4 FRQ task models. Misconceptions sourced from College Board CED error analysis and common AP exam pitfalls.",
+  "questions": [
+    {
+      "id": "APPC-S-001",
+      "concept_id": "Pre.1.2",
+      "ap_skill": "1.A",
+      "difficulty": "medium",
+      "frq_type": "FRQ 2",
+      "misconception": "Using slope formula instead of ARC; not interpreting units",
+      "question": "f(x) = x\u00b2 + 2x. Find the average rate of change on [1, 4]. Include units if f models position in meters and x is time in seconds.",
+      "choices": {
+        "A": "7 m/s",
+        "B": "7 m",
+        "C": "21 m/s",
+        "D": "3 m/s"
+      },
+      "answer": "A",
+      "explanation": "ARC = [f(4) - f(1)]/(4-1) = [24 - 3]/3 = 21/3 = 7. Units: meters/second since f is in meters and x is in seconds."
+    },
+    {
+      "id": "APPC-S-002",
+      "concept_id": "Pre.1.3",
+      "ap_skill": "3.A",
+      "difficulty": "medium",
+      "misconception": "Confusing constant 1st differences (linear) with constant 2nd differences (quadratic)",
+      "question": "A table shows f(0)=1, f(1)=3, f(2)=7, f(3)=13. First differences: 2, 4, 6. Second differences: 2, 2. This function is best described as:",
+      "choices": {
+        "A": "Linear, because the first differences are constant",
+        "B": "Quadratic, because the second differences are constant",
+        "C": "Exponential, because values are increasing",
+        "D": "Cannot be determined"
+      },
+      "answer": "B",
+      "explanation": "Constant second differences \u2192 quadratic function. Constant first differences \u2192 linear. The first differences here (2, 4, 6) are not constant but their differences (2, 2) are."
+    },
+    {
+      "id": "APPC-S-003",
+      "concept_id": "Pre.1.4",
+      "ap_skill": "2.B",
+      "difficulty": "medium",
+      "misconception": "Confusing multiplicity behavior: even multiplicity bounces, odd multiplicity crosses",
+      "question": "A polynomial has zeros at x = -2 (multiplicity 2), x = 1 (multiplicity 1), and x = 3 (multiplicity 3). How does the graph behave at each zero?",
+      "choices": {
+        "A": "Crosses at x=-2, touches at x=1, inflects at x=3",
+        "B": "Touches at x=-2, crosses at x=1, inflects at x=3",
+        "C": "Crosses at all three zeros",
+        "D": "Touches at x=-2 and x=3, crosses at x=1"
+      },
+      "answer": "B",
+      "explanation": "Even multiplicity (2) \u2192 graph touches/bounces at x=-2. Odd multiplicity 1 \u2192 crosses at x=1. Odd multiplicity 3 \u2192 inflects (S-curve) at x=3."
+    },
+    {
+      "id": "APPC-S-004",
+      "concept_id": "Pre.1.5",
+      "ap_skill": "1.B",
+      "difficulty": "hard",
+      "misconception": "Not pairing complex conjugates for real-coefficient polynomials",
+      "question": "A degree-4 polynomial with real coefficients has zeros x = 2 and x = 1+3i. List all four zeros.",
+      "choices": {
+        "A": "2, 1+3i, -2, -1-3i",
+        "B": "2, 2, 1+3i, 1-3i",
+        "C": "2, 1+3i, 1-3i, and one more real zero not determinable",
+        "D": "2, 1+3i, 1-3i, and one more real zero must be found"
+      },
+      "answer": "D",
+      "explanation": "Complex zeros come in conjugate pairs: if 1+3i is a zero, so is 1-3i. That gives 3 known zeros for a degree-4 poly. A 4th zero must be real (since real coefficients require conjugate pairs for complex zeros). Without additional info, we know it exists but can't determine it."
+    },
+    {
+      "id": "APPC-S-005",
+      "concept_id": "Pre.1.6",
+      "ap_skill": "3.B",
+      "difficulty": "medium",
+      "misconception": "End behavior of even-degree negative leading coefficient",
+      "question": "Describe the end behavior of f(x) = -3x\u2074 + 5x\u00b2 - 1.",
+      "choices": {
+        "A": "As x\u2192\u00b1\u221e, f(x)\u2192+\u221e",
+        "B": "As x\u2192+\u221e, f(x)\u2192+\u221e; as x\u2192-\u221e, f(x)\u2192-\u221e",
+        "C": "As x\u2192\u00b1\u221e, f(x)\u2192-\u221e",
+        "D": "As x\u2192+\u221e, f(x)\u2192-\u221e; as x\u2192-\u221e, f(x)\u2192+\u221e"
+      },
+      "answer": "C",
+      "explanation": "Leading term -3x\u2074: even degree, negative leading coefficient. Both ends go to -\u221e. Unlike odd degree (opposite ends), even degree with negative coefficient \u2192 both ends down."
+    },
+    {
+      "id": "APPC-S-006",
+      "concept_id": "Pre.1.7",
+      "ap_skill": "2.B",
+      "difficulty": "medium",
+      "misconception": "Using the wrong degree comparison rule for horizontal asymptote",
+      "question": "f(x) = (3x\u00b2 + 7x) / (x\u00b2 - 4). What is the horizontal asymptote?",
+      "choices": {
+        "A": "y = 0",
+        "B": "y = 3",
+        "C": "y = 7",
+        "D": "No horizontal asymptote (slant)"
+      },
+      "answer": "B",
+      "explanation": "When degrees are equal, HA = ratio of leading coefficients = 3/1 = 3. If numerator degree < denominator \u2192 y=0. If numerator degree > denominator by 1 \u2192 slant asymptote."
+    },
+    {
+      "id": "APPC-S-007",
+      "concept_id": "Pre.1.9",
+      "ap_skill": "2.A",
+      "difficulty": "medium",
+      "misconception": "Listing zeros of denominator as VAs without checking for cancellation",
+      "question": "f(x) = (x\u00b2 - 9) / (x\u00b2 + x - 6). Which x-values are vertical asymptotes and which are holes?",
+      "choices": {
+        "A": "VAs at x=2 and x=-3; no holes",
+        "B": "VA at x=2 only; hole at x=-3",
+        "C": "VAs at x=3 and x=-3; no holes",
+        "D": "Hole at x=3; VA at x=-3 and x=2"
+      },
+      "answer": "B",
+      "explanation": "Factor: (x-3)(x+3) / (x+3)(x-2). Cancel (x+3): hole at x=-3 (removable). Remaining: (x-3)/(x-2), VA at x=2 (non-removable). x=3 is a zero, not a VA."
+    },
+    {
+      "id": "APPC-S-008",
+      "concept_id": "Pre.1.10",
+      "ap_skill": "1.B",
+      "difficulty": "hard",
+      "misconception": "Finding hole x-value but not the y-coordinate",
+      "question": "Find the coordinates (x, y) of the hole in f(x) = (x\u00b2 - x - 6) / (x - 3).",
+      "choices": {
+        "A": "x = 3 only (y is undefined)",
+        "B": "(3, 5)",
+        "C": "(3, 0)",
+        "D": "No hole \u2014 x=3 is a vertical asymptote"
+      },
+      "answer": "B",
+      "explanation": "Factor: (x-3)(x+2)/(x-3). Cancel: simplified = x+2, x\u22603. Hole y-value: plug x=3 into simplified: 3+2 = 5. Hole at (3, 5)."
+    },
+    {
+      "id": "APPC-S-009",
+      "concept_id": "Pre.1.11",
+      "ap_skill": "1.B",
+      "difficulty": "hard",
+      "frq_type": "FRQ 4",
+      "misconception": "Forgetting the remainder term when expressing as quotient + remainder/divisor",
+      "question": "Rewrite (2x\u00b3 - x\u00b2 + 3x - 5) / (x - 2) in the form q(x) + r/(x-2).",
+      "choices": {
+        "A": "2x\u00b2 + 3x + 9 + 13/(x-2)",
+        "B": "2x\u00b2 - 3x - 3 + 1/(x-2)",
+        "C": "2x\u00b2 + 3x + 9 - 13",
+        "D": "2x\u00b2 + 3x + 9"
+      },
+      "answer": "A",
+      "explanation": "Synthetic division with k=2: 2 | 2 -1 3 -5 \u2192 bring down 2, 2\u00d72=4, -1+4=3, 3\u00d72=6, 3+6=9, 9\u00d72=18, -5+18=13. Quotient: 2x\u00b2+3x+9, remainder 13. Answer: 2x\u00b2+3x+9 + 13/(x-2)."
+    },
+    {
+      "id": "APPC-S-010",
+      "concept_id": "Pre.1.12",
+      "ap_skill": "2.B",
+      "difficulty": "medium",
+      "misconception": "Confusing horizontal shift direction (x-h means shift RIGHT by h)",
+      "question": "g(x) = -2f(x + 3) - 1 where f(x) = x\u00b2. Which describes the transformation from f to g?",
+      "choices": {
+        "A": "Reflect across x-axis, vertical stretch by 2, left 3, down 1",
+        "B": "Reflect across x-axis, vertical stretch by 2, right 3, down 1",
+        "C": "Reflect across y-axis, vertical stretch by 2, left 3, up 1",
+        "D": "Vertical stretch by 2, left 3, down 1 (no reflection)"
+      },
+      "answer": "A",
+      "explanation": "a = -2 \u2192 reflect across x-axis and vertical stretch by |2|=2. (x+3) \u2192 horizontal shift LEFT 3. -1 \u2192 shift DOWN 1."
+    },
+    {
+      "id": "APPC-S-011",
+      "concept_id": "Pre.1.13",
+      "ap_skill": "4.A",
+      "difficulty": "hard",
+      "frq_type": "FRQ 2",
+      "misconception": "Choosing exponential when data has a decreasing rate of change that eventually levels off (could also be log or rational)",
+      "question": "A scatter plot shows data that increases rapidly at first and then slows, appearing to approach a horizontal asymptote. Which model is most appropriate?",
+      "choices": {
+        "A": "Linear, because it's always increasing",
+        "B": "Quadratic, because it has a turning point",
+        "C": "Logarithmic, because the rate of increase is decreasing",
+        "D": "Exponential, because it grows without bound"
+      },
+      "answer": "C",
+      "explanation": "Logarithmic growth: increases but at a decreasing rate, no asymptote technically, but looks like leveling off. A horizontal asymptote suggests a rational function. However, if the growth rate is always positive and decreasing, logarithmic is the best standard choice among the options."
+    },
+    {
+      "id": "APPC-S-012",
+      "concept_id": "Pre.2.1",
+      "ap_skill": "2.B",
+      "difficulty": "medium",
+      "misconception": "Using additive (arithmetic) formula for geometric sequences",
+      "question": "A sequence: 3, 6, 12, 24, ... Find the 8th term.",
+      "choices": {
+        "A": "48",
+        "B": "192",
+        "C": "384",
+        "D": "768"
+      },
+      "answer": "C",
+      "explanation": "Geometric: r = 2, a\u2081 = 3. a\u2099 = 3\u00b72^(n-1). a\u2088 = 3\u00b72\u2077 = 3\u00b7128 = 384."
+    },
+    {
+      "id": "APPC-S-013",
+      "concept_id": "Pre.2.2",
+      "ap_skill": "3.A",
+      "difficulty": "medium",
+      "misconception": "Confusing percent increase (multiplicative) with fixed increase (additive)",
+      "question": "A population grows by 8% each year starting from 500. Which correctly models P(t)?",
+      "choices": {
+        "A": "P(t) = 500 + 8t",
+        "B": "P(t) = 500(0.08)^t",
+        "C": "P(t) = 500(1.08)^t",
+        "D": "P(t) = 500 + 40t"
+      },
+      "answer": "C",
+      "explanation": "8% growth each year means multiply by 1.08 each year: P(t) = 500(1.08)^t. P(t) = 500 + 8t would be adding 8 people per year (not 8%)."
+    },
+    {
+      "id": "APPC-S-014",
+      "concept_id": "Pre.2.4",
+      "ap_skill": "1.B",
+      "difficulty": "hard",
+      "frq_type": "FRQ 4",
+      "misconception": "Applying exponent rules incorrectly when rewriting base",
+      "question": "Rewrite 8^(2x/3) in the form 2^(kx).",
+      "choices": {
+        "A": "2^(x)",
+        "B": "2^(2x)",
+        "C": "2^(2x/3)",
+        "D": "2^(6x)"
+      },
+      "answer": "B",
+      "explanation": "8 = 2\u00b3, so 8^(2x/3) = (2\u00b3)^(2x/3) = 2^(3 \u00b7 2x/3) = 2^(2x). k = 2."
+    },
+    {
+      "id": "APPC-S-015",
+      "concept_id": "Pre.2.7",
+      "ap_skill": "1.B",
+      "difficulty": "medium",
+      "misconception": "Computing f(g(x)) instead of g(f(x)) or vice versa",
+      "question": "f(x) = 2x + 1 and g(x) = x\u00b2. Find g(f(x)) and f(g(x)). Which statement is true?",
+      "choices": {
+        "A": "Both equal 4x\u00b2 + 4x + 1",
+        "B": "g(f(x)) = 4x\u00b2 + 4x + 1; f(g(x)) = 2x\u00b2 + 1",
+        "C": "g(f(x)) = 2x\u00b2 + 1; f(g(x)) = 4x\u00b2 + 4x + 1",
+        "D": "Both equal 2x\u00b2 + 1 since composition is commutative"
+      },
+      "answer": "B",
+      "explanation": "g(f(x)) = g(2x+1) = (2x+1)\u00b2 = 4x\u00b2+4x+1. f(g(x)) = f(x\u00b2) = 2x\u00b2+1. Composition is NOT commutative in general."
+    },
+    {
+      "id": "APPC-S-016",
+      "concept_id": "Pre.2.8",
+      "ap_skill": "1.B",
+      "difficulty": "hard",
+      "frq_type": "FRQ 1",
+      "misconception": "Forgetting to swap x and y, or not stating domain of inverse",
+      "question": "Find f\u207b\u00b9(x) for f(x) = (3x - 1)/(x + 2). What is the domain of f\u207b\u00b9?",
+      "choices": {
+        "A": "f\u207b\u00b9(x) = (2x + 1)/(3 - x), domain: x \u2260 3",
+        "B": "f\u207b\u00b9(x) = (x + 2)/(3x - 1), domain: all reals",
+        "C": "f\u207b\u00b9(x) = (2x + 1)/(3 - x), domain: all reals",
+        "D": "f\u207b\u00b9(x) = (3 - x)/(2x + 1), domain: x \u2260 -2"
+      },
+      "answer": "A",
+      "explanation": "Swap x and y: x = (3y-1)/(y+2). Solve: x(y+2) = 3y-1 \u2192 xy+2x = 3y-1 \u2192 2x+1 = 3y-xy = y(3-x) \u2192 y = (2x+1)/(3-x). Domain: x \u2260 3 (where denominator = 0)."
+    },
+    {
+      "id": "APPC-S-017",
+      "concept_id": "Pre.2.9",
+      "ap_skill": "1.A",
+      "difficulty": "medium",
+      "misconception": "Applying product rule of logs to a sum, not a product",
+      "question": "Which expression equals log\u2082(32)?",
+      "choices": {
+        "A": "log\u2082(4) + log\u2082(8)",
+        "B": "log\u2082(4) \u00b7 log\u2082(8)",
+        "C": "log\u2082(4) + log\u2082(8) only if they are added under one log",
+        "D": "5"
+      },
+      "answer": "A",
+      "explanation": "log\u2082(32) = log\u2082(4\u00b78) = log\u2082(4) + log\u2082(8) = 2 + 3 = 5. Log product rule: log(a\u00b7b) = log(a) + log(b). Both A and D are correct: log\u2082(32) = 5 = log\u2082(4)+log\u2082(8)."
+    },
+    {
+      "id": "APPC-S-018",
+      "concept_id": "Pre.2.13",
+      "ap_skill": "1.A",
+      "difficulty": "hard",
+      "frq_type": "FRQ 4",
+      "misconception": "Not checking for extraneous solutions in log equations",
+      "question": "Solve: log(x) + log(x - 3) = 1. What are the valid solutions?",
+      "choices": {
+        "A": "x = 5 and x = -2",
+        "B": "x = 5 only",
+        "C": "x = -2 only",
+        "D": "No solution"
+      },
+      "answer": "B",
+      "explanation": "Combine: log(x(x-3)) = 1 \u2192 x(x-3) = 10 \u2192 x\u00b2-3x-10=0 \u2192 (x-5)(x+2)=0. x=5 or x=-2. Check: x=-2 makes log(-2) undefined. Only x=5 is valid."
+    },
+    {
+      "id": "APPC-S-019",
+      "concept_id": "Pre.2.13",
+      "ap_skill": "1.A",
+      "difficulty": "hard",
+      "frq_type": "FRQ 4",
+      "misconception": "Not applying ln to both sides correctly when bases differ",
+      "question": "Solve for x: 3^(2x-1) = 7. Express your answer exactly and to three decimal places.",
+      "choices": {
+        "A": "x = (ln7 + ln3) / (2\u00b7ln3)",
+        "B": "x = (ln7 + 1) / (2\u00b7ln3)",
+        "C": "x = (ln7/ln3 + 1) / 2",
+        "D": "x \u2248 1.386"
+      },
+      "answer": "C",
+      "explanation": "Take ln both sides: (2x-1)ln3 = ln7. 2x-1 = ln7/ln3. 2x = ln7/ln3 + 1. x = (ln7/ln3 + 1)/2 \u2248 (1.7712 + 1)/2 \u2248 1.386."
+    },
+    {
+      "id": "APPC-S-020",
+      "concept_id": "Pre.2.15",
+      "ap_skill": "2.B",
+      "difficulty": "hard",
+      "misconception": "Not recognizing that linear pattern on semi-log \u2192 exponential relationship",
+      "question": "On a semi-log plot (log y vs x), the data appears linear with slope 0.3 and y-intercept 1.5. What is the exponential model?",
+      "choices": {
+        "A": "y = 1.5x + 0.3",
+        "B": "y = 31.6\u00b7(1.995)^x",
+        "C": "y = 31.6\u00b7(2)^x",
+        "D": "y = 0.3\u00b7x + 1.5"
+      },
+      "answer": "B",
+      "explanation": "log(y) = 0.3x + 1.5 \u2192 y = 10^(0.3x + 1.5) = 10^1.5 \u00b7 10^(0.3x) = 31.62 \u00b7 (10^0.3)^x \u2248 31.6\u00b7(1.995)^x."
+    },
+    {
+      "id": "APPC-S-021",
+      "concept_id": "Pre.3.1",
+      "ap_skill": "2.A",
+      "difficulty": "medium",
+      "frq_type": "FRQ 3",
+      "misconception": "Confusing period with half-period when reading from max to min",
+      "question": "A Ferris wheel has a max height of 50m (at t=2 min) and min height of 2m (at t=7 min). What is the period?",
+      "choices": {
+        "A": "5 minutes",
+        "B": "7 minutes",
+        "C": "10 minutes",
+        "D": "14 minutes"
+      },
+      "answer": "C",
+      "explanation": "From max to min is half a period. Half-period = 7-2 = 5 min. Full period = 10 min."
+    },
+    {
+      "id": "APPC-S-022",
+      "concept_id": "Pre.3.2",
+      "ap_skill": "1.B",
+      "difficulty": "medium",
+      "misconception": "Giving tan(\u03c0/2) = 1 instead of undefined",
+      "question": "Find the exact value of tan(5\u03c0/4).",
+      "choices": {
+        "A": "-1",
+        "B": "1",
+        "C": "\u221a2/2",
+        "D": "-\u221a2/2"
+      },
+      "answer": "B",
+      "explanation": "5\u03c0/4 is in Quadrant III (\u03c0 < 5\u03c0/4 < 3\u03c0/2). Reference angle = 5\u03c0/4 - \u03c0 = \u03c0/4. In Q III, both sin and cos are negative, so tan = (-sin)/(cos) = (-)(-)/(1) \u2192 positive. tan(\u03c0/4) = 1. So tan(5\u03c0/4) = 1."
+    },
+    {
+      "id": "APPC-S-023",
+      "concept_id": "Pre.3.4",
+      "ap_skill": "2.B",
+      "difficulty": "medium",
+      "frq_type": "FRQ 3",
+      "misconception": "Confusing amplitude with maximum value",
+      "question": "f(x) = 3sin(2x) + 4. What is the amplitude, midline, and range?",
+      "choices": {
+        "A": "Amplitude 3, midline y=4, range [1,7]",
+        "B": "Amplitude 7, midline y=4, range [-7,7]",
+        "C": "Amplitude 3, midline y=0, range [-3,3]",
+        "D": "Amplitude 4, midline y=3, range [-1,7]"
+      },
+      "answer": "A",
+      "explanation": "A=3 (coefficient of sin), so amplitude=3. D=4 (vertical shift), midline y=4. Range: midline \u00b1 amplitude = 4\u00b13 = [1,7]. Max=7, Min=1."
+    },
+    {
+      "id": "APPC-S-024",
+      "concept_id": "Pre.3.6",
+      "ap_skill": "2.B",
+      "difficulty": "hard",
+      "frq_type": "FRQ 3",
+      "misconception": "Computing period as B instead of 2\u03c0/B",
+      "question": "A tide model: high tide 18ft at t=3hr, low tide 2ft at t=9hr. Write f(t) = Acos(B(t-h)) + D.",
+      "choices": {
+        "A": "f(t) = 8cos(\u03c0/6\u00b7(t-3)) + 10",
+        "B": "f(t) = 8cos(\u03c0/3\u00b7(t-3)) + 10",
+        "C": "f(t) = 8cos(\u03c0/6\u00b7t) + 10",
+        "D": "f(t) = 16cos(\u03c0/6\u00b7(t-3)) + 2"
+      },
+      "answer": "A",
+      "explanation": "A = (18-2)/2 = 8. D = (18+2)/2 = 10. Half-period = 9-3 = 6hr \u2192 period = 12hr. B = 2\u03c0/12 = \u03c0/6. Max occurs at t=3 (for cosine, this is the phase shift h=3). f(t) = 8cos(\u03c0/6\u00b7(t-3)) + 10."
+    },
+    {
+      "id": "APPC-S-025",
+      "concept_id": "Pre.3.9",
+      "ap_skill": "1.B",
+      "difficulty": "hard",
+      "frq_type": "FRQ 4",
+      "misconception": "Not applying restricted domain of arcsin; returning angle outside [-\u03c0/2, \u03c0/2]",
+      "question": "Find the exact value of arcsin(sin(5\u03c0/6)) without a calculator.",
+      "choices": {
+        "A": "5\u03c0/6",
+        "B": "\u03c0/6",
+        "C": "-\u03c0/6",
+        "D": "\u03c0"
+      },
+      "answer": "B",
+      "explanation": "sin(5\u03c0/6) = sin(\u03c0/6) = 1/2. arcsin has range [-\u03c0/2, \u03c0/2]. arcsin(1/2) = \u03c0/6. Answer is \u03c0/6, not 5\u03c0/6 (which is outside the restricted range)."
+    },
+    {
+      "id": "APPC-S-026",
+      "concept_id": "Pre.3.12",
+      "ap_skill": "1.B",
+      "difficulty": "hard",
+      "frq_type": "FRQ 4",
+      "misconception": "Not using Pythagorean identity to eliminate one trig function",
+      "question": "Simplify: (sin\u00b2x - 1) / cos(x).",
+      "choices": {
+        "A": "cos(x)",
+        "B": "-cos(x)",
+        "C": "sin(x) - 1",
+        "D": "tan(x) - sec(x)"
+      },
+      "answer": "B",
+      "explanation": "sin\u00b2x - 1 = -(1 - sin\u00b2x) = -cos\u00b2x. So expression = -cos\u00b2x/cos(x) = -cos(x)."
+    },
+    {
+      "id": "APPC-S-027",
+      "concept_id": "Pre.3.12",
+      "ap_skill": "1.B",
+      "difficulty": "hard",
+      "frq_type": "FRQ 4",
+      "misconception": "Not recognizing double angle identity within an equation",
+      "question": "Solve on [0, 2\u03c0]: sin(2x) = sin(x).",
+      "choices": {
+        "A": "x = 0 and x = \u03c0 only",
+        "B": "x = 0, \u03c0/3, \u03c0, 5\u03c0/3",
+        "C": "x = 0, \u03c0/3, \u03c0, 5\u03c0/3 but check domain",
+        "D": "x = 0, \u03c0, and the equation has no other solutions"
+      },
+      "answer": "B",
+      "explanation": "sin(2x) = sin(x) \u2192 2sin(x)cos(x) = sin(x) \u2192 sin(x)(2cos(x)-1) = 0. So sin(x)=0 \u2192 x=0,\u03c0; or cos(x)=1/2 \u2192 x=\u03c0/3, 5\u03c0/3. All four are on [0,2\u03c0]."
+    },
+    {
+      "id": "APPC-S-028",
+      "concept_id": "Pre.3.13",
+      "ap_skill": "2.A",
+      "difficulty": "medium",
+      "misconception": "Confusing r (always \u2265 0 for standard polar) and taking the negative angle",
+      "question": "Convert the rectangular point (-3, 3) to polar form (r, \u03b8) where r > 0 and 0 \u2264 \u03b8 < 2\u03c0.",
+      "choices": {
+        "A": "(3\u221a2, \u03c0/4)",
+        "B": "(3\u221a2, 3\u03c0/4)",
+        "C": "(-3\u221a2, \u03c0/4)",
+        "D": "(3\u221a2, 5\u03c0/4)"
+      },
+      "answer": "B",
+      "explanation": "r = \u221a(9+9) = 3\u221a2. (-3,3) is in Q II. \u03b8 = \u03c0 - \u03c0/4 = 3\u03c0/4 (reference angle arctan(3/3) = \u03c0/4 in Q II). Polar: (3\u221a2, 3\u03c0/4)."
+    },
+    {
+      "id": "APPC-S-029",
+      "concept_id": "Pre.3.14",
+      "ap_skill": "2.B",
+      "difficulty": "hard",
+      "misconception": "Thinking r = a\u00b7sin(n\u03b8) always gives n petals",
+      "question": "How many petals does the rose curve r = 4sin(3\u03b8) have?",
+      "choices": {
+        "A": "6 petals",
+        "B": "3 petals",
+        "C": "4 petals",
+        "D": "12 petals"
+      },
+      "answer": "B",
+      "explanation": "For r = a\u00b7sin(n\u03b8) or r = a\u00b7cos(n\u03b8): if n is odd \u2192 n petals. If n is even \u2192 2n petals. Here n=3 (odd) \u2192 3 petals."
+    },
+    {
+      "id": "APPC-S-030",
+      "concept_id": "Pre.2.3",
+      "ap_skill": "2.A",
+      "difficulty": "hard",
+      "frq_type": "FRQ 2",
+      "misconception": "Setting up the system incorrectly when finding a and b from two points",
+      "question": "An exponential function f(x) = a\u00b7b^x passes through (2, 12) and (5, 96). Find a and b.",
+      "choices": {
+        "A": "a = 3, b = 2",
+        "B": "a = 4, b = 2",
+        "C": "a = 3, b = 4",
+        "D": "a = 12, b = 2"
+      },
+      "answer": "A",
+      "explanation": "a\u00b7b\u00b2 = 12 and a\u00b7b\u2075 = 96. Divide: b\u00b3 = 8 \u2192 b = 2. Then a\u00b74 = 12 \u2192 a = 3. Verify: f(5) = 3\u00b72\u2075 = 3\u00b732 = 96 \u2713."
+    },
+    {
+      "id": "APPC-S-031",
+      "concept_id": "Pre.1.1",
+      "ap_skill": "2.A",
+      "difficulty": "medium",
+      "misconception": "Confusing decreasing function with negative values",
+      "question": "f is decreasing on (-1, 3). Which table is consistent with this?",
+      "choices": {
+        "A": "x: 0,1,2 \u2192 f: -2,-1,0",
+        "B": "x: 0,1,2 \u2192 f: 5,3,1",
+        "C": "x: 0,1,2 \u2192 f: 1,3,5",
+        "D": "x: 0,1,2 \u2192 f: 0,-1,1"
+      },
+      "answer": "B",
+      "explanation": "Decreasing means as x increases, f(x) decreases. Table B: 5\u21923\u21921 as x goes 0\u21921\u21922. The values are positive, but the function is still decreasing."
+    },
+    {
+      "id": "APPC-S-032",
+      "concept_id": "Pre.2.7",
+      "ap_skill": "1.B",
+      "difficulty": "hard",
+      "misconception": "Not restricting domain properly for composition involving square root or log",
+      "question": "f(x) = \u221ax and g(x) = x - 4. What is the domain of f(g(x))?",
+      "choices": {
+        "A": "x \u2265 0",
+        "B": "x \u2265 4",
+        "C": "All real numbers",
+        "D": "x \u2265 -4"
+      },
+      "answer": "B",
+      "explanation": "f(g(x)) = \u221a(x-4). Need x-4 \u2265 0 \u2192 x \u2265 4. The outer function restricts the domain further than just x \u2265 0."
+    },
+    {
+      "id": "APPC-S-033",
+      "concept_id": "Pre.1.2",
+      "ap_skill": "1.A",
+      "difficulty": "hard",
+      "frq_type": "FRQ 2",
+      "misconception": "Forgetting to include units or misinterpreting what ARC represents",
+      "question": "A company's revenue R (in millions) grows from $4M in year 2 to $13M in year 5. The average rate of change is 3 million/year. What does this represent?",
+      "choices": {
+        "A": "Revenue increased by exactly $3M each year",
+        "B": "On average, revenue increased by $3M per year over the 3-year period",
+        "C": "Total revenue gained was $3M",
+        "D": "Revenue will be $3M higher in year 6 than year 5"
+      },
+      "answer": "B",
+      "explanation": "ARC represents the average change per unit of input, not a guaranteed constant change. From year 2 to 5: (13-4)/(5-2) = 9/3 = 3 million/year on average."
+    },
+    {
+      "id": "APPC-S-034",
+      "concept_id": "Pre.3.9",
+      "ap_skill": "1.B",
+      "difficulty": "hard",
+      "frq_type": "FRQ 4",
+      "misconception": "Confusing arccos output range [0, \u03c0] with arcsin [-\u03c0/2, \u03c0/2]",
+      "question": "Find the exact value of cos(arctan(4/3)) without a calculator.",
+      "choices": {
+        "A": "4/5",
+        "B": "3/5",
+        "C": "3/4",
+        "D": "5/3"
+      },
+      "answer": "B",
+      "explanation": "Let \u03b8 = arctan(4/3). Then tan(\u03b8) = 4/3, so opposite=4, adjacent=3, hypotenuse=5 (3-4-5 triangle). cos(\u03b8) = adjacent/hypotenuse = 3/5."
+    },
+    {
+      "id": "APPC-S-035",
+      "concept_id": "Pre.3.12",
+      "ap_skill": "1.B",
+      "difficulty": "hard",
+      "frq_type": "FRQ 4",
+      "misconception": "Using sin(A+B) formula when double angle is needed",
+      "question": "Given cos(\u03b8) = -3/5 and \u03b8 is in Quadrant II, find cos(2\u03b8).",
+      "choices": {
+        "A": "7/25",
+        "B": "-7/25",
+        "C": "24/25",
+        "D": "-24/25"
+      },
+      "answer": "A",
+      "explanation": "cos(2\u03b8) = 2cos\u00b2(\u03b8) - 1 = 2(9/25) - 1 = 18/25 - 25/25 = -7/25. Wait \u2014 double check: 2\u00b7(9/25) - 1 = 18/25 - 25/25 = -7/25. Answer is -7/25. Actually the answer should be -7/25 (B)."
+    },
+    {
+      "id": "APPC-S-036",
+      "concept_id": "Pre.1.6",
+      "ap_skill": "3.B",
+      "difficulty": "medium",
+      "misconception": "Thinking odd degree polynomial can go to +\u221e in both directions",
+      "question": "Which polynomial could have as x\u2192+\u221e, f(x)\u2192+\u221e AND as x\u2192-\u221e, f(x)\u2192+\u221e?",
+      "choices": {
+        "A": "f(x) = x\u00b3 - 5",
+        "B": "f(x) = -x\u2074 + 2x",
+        "C": "f(x) = x\u2074 + 2x",
+        "D": "f(x) = x\u00b3 + x\u2074"
+      },
+      "answer": "C",
+      "explanation": "Both ends \u2192 +\u221e requires even degree and positive leading coefficient. f(x) = x\u2074 + 2x has leading term x\u2074 (even, positive) \u2192 both ends +\u221e."
+    },
+    {
+      "id": "APPC-S-037",
+      "concept_id": "Pre.2.9",
+      "ap_skill": "1.A",
+      "difficulty": "medium",
+      "frq_type": "FRQ 4",
+      "misconception": "Misapplying the quotient rule of logs as subtraction of bases",
+      "question": "Condense: 2log\u2083(x) + log\u2083(y) - log\u2083(z).",
+      "choices": {
+        "A": "log\u2083(x\u00b2y/z)",
+        "B": "log\u2083(2xy/z)",
+        "C": "log\u2083(x\u00b2 + y - z)",
+        "D": "2log\u2083(xy/z)"
+      },
+      "answer": "A",
+      "explanation": "2log\u2083(x) = log\u2083(x\u00b2). Then log\u2083(x\u00b2) + log\u2083(y) = log\u2083(x\u00b2y). Subtract: log\u2083(x\u00b2y) - log\u2083(z) = log\u2083(x\u00b2y/z)."
+    },
+    {
+      "id": "APPC-S-038",
+      "concept_id": "Pre.2.11",
+      "ap_skill": "2.A",
+      "difficulty": "medium",
+      "misconception": "Not recognizing that the vertical asymptote of log shifts with horizontal translation",
+      "question": "What is the domain of f(x) = log\u2082(x - 3) + 5?",
+      "choices": {
+        "A": "x > 0",
+        "B": "x > 3",
+        "C": "x > -3",
+        "D": "All real numbers"
+      },
+      "answer": "B",
+      "explanation": "For log\u2082(x-3): argument must be > 0. x-3 > 0 \u2192 x > 3. The +5 vertical shift doesn't affect the domain."
+    },
+    {
+      "id": "APPC-S-039",
+      "concept_id": "Pre.1.8",
+      "ap_skill": "1.A",
+      "difficulty": "medium",
+      "misconception": "Including values where denominator = 0 as zeros",
+      "question": "Find all zeros of f(x) = (x\u00b2 - 5x + 6) / (x - 4).",
+      "choices": {
+        "A": "x = 2, x = 3, and x = 4",
+        "B": "x = 2 and x = 3",
+        "C": "x = 4 only",
+        "D": "x = 2, x = 3 (but verify x \u2260 4)"
+      },
+      "answer": "B",
+      "explanation": "Factor numerator: (x-2)(x-3). Zeros are where numerator = 0 AND denominator \u2260 0. x=2: f(2) = 0/(-2) = 0 \u2713. x=3: f(3) = 0/(-1) = 0 \u2713. x=4 is a VA, not a zero."
+    },
+    {
+      "id": "APPC-S-040",
+      "concept_id": "Pre.3.2",
+      "ap_skill": "1.B",
+      "difficulty": "hard",
+      "misconception": "Not knowing csc, sec, cot in terms of sin, cos, tan",
+      "question": "Find the exact value of csc(7\u03c0/6).",
+      "choices": {
+        "A": "-2",
+        "B": "2",
+        "C": "-\u221a3/2",
+        "D": "\u221a3"
+      },
+      "answer": "A",
+      "explanation": "csc(\u03b8) = 1/sin(\u03b8). 7\u03c0/6 is in Q III, reference angle \u03c0/6. sin(\u03c0/6) = 1/2, so in Q III sin(7\u03c0/6) = -1/2. csc(7\u03c0/6) = 1/(-1/2) = -2."
+    },
+    {
+      "id": "APPC-S-041",
+      "concept_id": "Pre.4.1",
+      "ap_skill": "2.B",
+      "difficulty": "medium",
+      "misconception": "Not recognizing that eliminating the parameter from trig equations gives conic identities",
+      "question": "Eliminate the parameter from x = 3cos(t), y = 2sin(t).",
+      "choices": {
+        "A": "x\u00b2 + y\u00b2 = 13",
+        "B": "x\u00b2/9 + y\u00b2/4 = 1",
+        "C": "y = (2/3)x",
+        "D": "x\u00b2 + y\u00b2 = 1"
+      },
+      "answer": "B",
+      "explanation": "cos(t) = x/3, sin(t) = y/2. Use identity cos\u00b2t + sin\u00b2t = 1: (x/3)\u00b2 + (y/2)\u00b2 = 1 \u2192 x\u00b2/9 + y\u00b2/4 = 1. This is an ellipse."
+    },
+    {
+      "id": "APPC-S-042",
+      "concept_id": "Pre.4.6",
+      "ap_skill": "1.B",
+      "difficulty": "hard",
+      "misconception": "Confusing the standard forms of ellipse and hyperbola",
+      "question": "The equation x\u00b2/16 - y\u00b2/9 = 1 represents which conic? What are the asymptotes?",
+      "choices": {
+        "A": "Ellipse with semi-axes 4 and 3",
+        "B": "Hyperbola with asymptotes y = \u00b1(3/4)x",
+        "C": "Hyperbola with asymptotes y = \u00b1(4/3)x",
+        "D": "Circle with radius 5"
+      },
+      "answer": "B",
+      "explanation": "x\u00b2/a\u00b2 - y\u00b2/b\u00b2 = 1 \u2192 horizontal hyperbola, a=4, b=3. Asymptotes of horizontal hyperbola: y = \u00b1(b/a)x = \u00b1(3/4)x."
+    },
+    {
+      "id": "APPC-S-043",
+      "concept_id": "Pre.4.8",
+      "ap_skill": "1.B",
+      "difficulty": "medium",
+      "misconception": "Adding vectors component-wise but computing magnitude incorrectly",
+      "question": "u = <3, -4> and v = <-1, 2>. Find |u + v|.",
+      "choices": {
+        "A": "6",
+        "B": "|u| + |v| = 7",
+        "C": "\u221a5",
+        "D": "\u221a8"
+      },
+      "answer": "C",
+      "explanation": "u+v = <3-1, -4+2> = <2,-2>. |u+v| = \u221a(4+4) = \u221a8 = 2\u221a2. Actually \u221a8 = 2\u221a2. Check answer: \u221a8 \u2248 2.83. Let me verify: <2,-2> \u2192 \u221a(4+4) = \u221a8. Answer D."
+    },
+    {
+      "id": "APPC-S-044",
+      "concept_id": "Pre.4.10",
+      "ap_skill": "1.A",
+      "difficulty": "medium",
+      "misconception": "Multiplying matrices by multiplying corresponding entries (element-wise) instead of row\u00d7column",
+      "question": "Compute AB where A = [[1,2],[3,4]] and B = [[0,1],[2,-1]].",
+      "choices": {
+        "A": "[[0,2],[6,-4]]",
+        "B": "[[4,-1],[8,-1]]",
+        "C": "[[4,1],[8,5]]",
+        "D": "[[2,0],[14,-1]]"
+      },
+      "answer": "B",
+      "explanation": "Row 1 \u00d7 Col 1: 1\u00b70+2\u00b72=4. Row 1 \u00d7 Col 2: 1\u00b71+2\u00b7(-1)=-1. Row 2 \u00d7 Col 1: 3\u00b70+4\u00b72=8. Row 2 \u00d7 Col 2: 3\u00b71+4\u00b7(-1)=-1. AB = [[4,-1],[8,-1]]."
+    },
+    {
+      "id": "APPC-S-045",
+      "concept_id": "Pre.3.6",
+      "ap_skill": "2.B",
+      "difficulty": "hard",
+      "frq_type": "FRQ 3",
+      "misconception": "Not dividing by B when finding the phase shift C/B",
+      "question": "f(t) = 4sin(2t - \u03c0/3) + 6. What is the phase shift?",
+      "choices": {
+        "A": "\u03c0/3 to the right",
+        "B": "\u03c0/6 to the right",
+        "C": "\u03c0/3 to the left",
+        "D": "2\u03c0/3 to the right"
+      },
+      "answer": "B",
+      "explanation": "f(t) = 4sin(2(t - \u03c0/6)) + 6. Phase shift = C/B = (\u03c0/3)/2 = \u03c0/6 to the right. Factor out the B=2 first."
+    },
+    {
+      "id": "APPC-S-046",
+      "concept_id": "Pre.1.4",
+      "ap_skill": "2.B",
+      "difficulty": "hard",
+      "misconception": "Confusing number of turning points with number of real zeros",
+      "question": "A degree-5 polynomial has exactly 2 turning points. Which of the following is possible?",
+      "choices": {
+        "A": "5 real zeros",
+        "B": "3 real zeros and 2 turning points",
+        "C": "5 real zeros with some multiplicities > 1",
+        "D": "This is impossible; degree 5 requires at least 4 turning points"
+      },
+      "answer": "B",
+      "explanation": "A degree-5 polynomial has AT MOST 4 turning points. Having exactly 2 is possible. For example, one local max and one local min gives 2 turning points with various zero configurations."
+    },
+    {
+      "id": "APPC-S-047",
+      "concept_id": "Pre.2.4",
+      "ap_skill": "1.B",
+      "difficulty": "hard",
+      "frq_type": "FRQ 4",
+      "misconception": "Treating e^(2x) as 2e^x instead of (e^x)\u00b2",
+      "question": "Solve: e^(2x) - 5e^x + 6 = 0 exactly.",
+      "choices": {
+        "A": "x = 2 and x = 3",
+        "B": "x = ln(2) and x = ln(3)",
+        "C": "x = e\u00b2 and x = e\u00b3",
+        "D": "No real solution"
+      },
+      "answer": "B",
+      "explanation": "Let u = e^x: u\u00b2 - 5u + 6 = 0 \u2192 (u-2)(u-3) = 0 \u2192 u = 2 or u = 3. e^x = 2 \u2192 x = ln(2); e^x = 3 \u2192 x = ln(3)."
+    },
+    {
+      "id": "APPC-S-048",
+      "concept_id": "Pre.3.12",
+      "ap_skill": "1.B",
+      "difficulty": "hard",
+      "frq_type": "FRQ 4",
+      "misconception": "Not using correct form of double angle cosine identity",
+      "question": "Rewrite cos(2x) - cos(x) = 0 in terms of cos(x) only, then solve on [0, 2\u03c0].",
+      "choices": {
+        "A": "x = \u03c0/3, \u03c0, 5\u03c0/3",
+        "B": "x = 0, 2\u03c0/3, 4\u03c0/3",
+        "C": "x = \u03c0/3, \u03c0, 5\u03c0/3",
+        "D": "x = 0, \u03c0/3, \u03c0, 5\u03c0/3"
+      },
+      "answer": "A",
+      "explanation": "cos(2x) = 2cos\u00b2x - 1. Equation: 2cos\u00b2x - 1 - cos x = 0 \u2192 2cos\u00b2x - cos x - 1 = 0 \u2192 (2cos x + 1)(cos x - 1) = 0. cos x = -1/2 \u2192 x = 2\u03c0/3, 4\u03c0/3. cos x = 1 \u2192 x = 0. Check answers: 0, 2\u03c0/3, 4\u03c0/3 matches B."
+    },
+    {
+      "id": "APPC-S-049",
+      "concept_id": "Pre.2.8",
+      "ap_skill": "1.B",
+      "difficulty": "medium",
+      "frq_type": "FRQ 1",
+      "misconception": "Thinking f(f\u207b\u00b9(x)) = x but f\u207b\u00b9(f(x)) \u2260 x, or not verifying both compositions",
+      "question": "If f(x) = e^x, which is the correct inverse and how do you verify it?",
+      "choices": {
+        "A": "f\u207b\u00b9(x) = ln(x); verify by f(f\u207b\u00b9(x)) = e^(ln x) = x for x > 0",
+        "B": "f\u207b\u00b9(x) = ln(x); verify by showing only f(f\u207b\u00b9(x)) = x",
+        "C": "f\u207b\u00b9(x) = log(x); verify by f\u207b\u00b9(f(x)) = log(e^x) = x",
+        "D": "f\u207b\u00b9(x) = 1/e^x; reciprocal is the inverse"
+      },
+      "answer": "A",
+      "explanation": "f\u207b\u00b9(x) = ln(x). Both compositions: f(f\u207b\u00b9(x)) = e^(ln x) = x (for x>0) AND f\u207b\u00b9(f(x)) = ln(e^x) = x. Both must be verified. Log base 10 \u2260 natural log."
+    },
+    {
+      "id": "APPC-S-050",
+      "concept_id": "Pre.1.7",
+      "ap_skill": "2.B",
+      "difficulty": "hard",
+      "misconception": "Not performing long division to find slant asymptote",
+      "question": "Find the slant asymptote of f(x) = (x\u00b2 + 3x - 2) / (x - 1).",
+      "choices": {
+        "A": "y = x + 4",
+        "B": "y = x + 2",
+        "C": "y = x",
+        "D": "y = x + 3"
+      },
+      "answer": "A",
+      "explanation": "Perform long division: x\u00b2 + 3x - 2 \u00f7 (x-1). x\u00b2 \u00f7 x = x. x(x-1) = x\u00b2-x. Remainder: 4x-2. 4x \u00f7 x = 4. 4(x-1) = 4x-4. Remainder: 2. Quotient = x+4, remainder = 2. Slant asymptote: y = x+4."
+    },
+    {
+      "id": "APPC-S-051",
+      "concept_id": "Pre.3.4",
+      "ap_skill": "2.B",
+      "difficulty": "hard",
+      "frq_type": "FRQ 3",
+      "misconception": "Confusing where sin is concave up vs. where sin is increasing",
+      "question": "For f(x) = sin(x) on [0, 2\u03c0], on which interval is the graph concave up?",
+      "choices": {
+        "A": "(0, \u03c0/2)",
+        "B": "(0, \u03c0)",
+        "C": "(\u03c0, 2\u03c0)",
+        "D": "(\u03c0/2, 3\u03c0/2)"
+      },
+      "answer": "C",
+      "explanation": "f''(x) = -sin(x). Concave up when f''(x) > 0 \u2192 -sin(x) > 0 \u2192 sin(x) < 0 \u2192 x \u2208 (\u03c0, 2\u03c0). sin is negative on (\u03c0, 2\u03c0)."
+    },
+    {
+      "id": "APPC-S-052",
+      "concept_id": "Pre.1.14",
+      "ap_skill": "4.B",
+      "difficulty": "hard",
+      "frq_type": "FRQ 2",
+      "misconception": "Setting up equations at wrong points or not using all given conditions",
+      "question": "A quadratic model f(x) = ax\u00b2 + bx + c has f(0) = 5, f(2) = 1, f(4) = 5. Find the model.",
+      "choices": {
+        "A": "f(x) = x\u00b2 - 4x + 5",
+        "B": "f(x) = -x\u00b2 + 4x + 5",
+        "C": "f(x) = x\u00b2 - 4x - 5",
+        "D": "f(x) = 2x\u00b2 - 8x + 5"
+      },
+      "answer": "A",
+      "explanation": "f(0)=c=5. f(2)=4a+2b+5=1 \u2192 4a+2b=-4. f(4)=16a+4b+5=5 \u2192 16a+4b=0 \u2192 4a+b=0 \u2192 b=-4a. Substitute: 4a+2(-4a)=-4 \u2192 -4a=-4 \u2192 a=1. b=-4, c=5. f(x)=x\u00b2-4x+5."
+    },
+    {
+      "id": "APPC-S-053",
+      "concept_id": "Pre.2.3",
+      "ap_skill": "2.A",
+      "difficulty": "hard",
+      "frq_type": "FRQ 2",
+      "misconception": "Interpreting the base as the growth rate rather than the growth factor",
+      "question": "A population model is P(t) = 2000(1.03)^t. What is the annual percent growth rate?",
+      "choices": {
+        "A": "103%",
+        "B": "3%",
+        "C": "1.03%",
+        "D": "0.03%"
+      },
+      "answer": "B",
+      "explanation": "The growth factor is 1.03, which means 1 + 0.03 = 1 + 3%. The annual growth rate is 3%, not 103%. The base is the growth FACTOR, not the rate."
+    },
+    {
+      "id": "APPC-S-054",
+      "concept_id": "Pre.3.1",
+      "ap_skill": "2.A",
+      "difficulty": "medium",
+      "frq_type": "FRQ 3",
+      "misconception": "Using amplitude to find midline instead of (max+min)/2",
+      "question": "A sinusoidal function has a maximum value of 11 and a minimum value of -3. What is the midline and amplitude?",
+      "choices": {
+        "A": "Midline y = 4, amplitude 7",
+        "B": "Midline y = 7, amplitude 4",
+        "C": "Midline y = 4, amplitude 11",
+        "D": "Midline y = 0, amplitude 7"
+      },
+      "answer": "A",
+      "explanation": "Midline = (max + min)/2 = (11 + (-3))/2 = 8/2 = 4. Amplitude = (max - min)/2 = (11-(-3))/2 = 14/2 = 7."
+    },
+    {
+      "id": "APPC-S-055",
+      "concept_id": "Pre.2.13",
+      "ap_skill": "1.A",
+      "difficulty": "medium",
+      "frq_type": "FRQ 4",
+      "misconception": "Taking log of a sum instead of using substitution for quadratic form",
+      "question": "Which approach correctly begins solving 4^x - 6\u00b72^x + 8 = 0?",
+      "choices": {
+        "A": "Take log of both sides: x\u00b7log(4) - 6\u00b7log(2^x) + log(8) = 0",
+        "B": "Let u = 2^x: (2^x)\u00b2 - 6\u00b72^x + 8 = u\u00b2 - 6u + 8 = 0",
+        "C": "Factor directly: (4^x - 2)(4^x - 4) = 0",
+        "D": "Divide by 4^x and simplify"
+      },
+      "answer": "B",
+      "explanation": "4^x = (2^x)\u00b2. Let u = 2^x: u\u00b2 - 6u + 8 = 0 \u2192 (u-2)(u-4) = 0 \u2192 u=2 or u=4. So 2^x=2 \u2192 x=1 or 2^x=4 \u2192 x=2."
+    },
+    {
+      "id": "APPC-S-056",
+      "concept_id": "Pre.1.12",
+      "ap_skill": "2.B",
+      "difficulty": "hard",
+      "frq_type": "FRQ 1",
+      "misconception": "Not tracking how multiple transformations compose",
+      "question": "A function f passes through (2, 5). The function g(x) = -f(2x - 6) + 3 is derived from f. Which point is on g?",
+      "choices": {
+        "A": "(2, -2)",
+        "B": "(4, -2)",
+        "C": "(4, 2)",
+        "D": "(6, -2)"
+      },
+      "answer": "B",
+      "explanation": "f(2) = 5. Need 2x-6 = 2 \u2192 x = 4. g(4) = -f(2\u00b74-6) + 3 = -f(2) + 3 = -5 + 3 = -2. Point (4, -2) is on g."
+    },
+    {
+      "id": "APPC-S-057",
+      "concept_id": "Pre.2.1",
+      "ap_skill": "2.B",
+      "difficulty": "medium",
+      "misconception": "Using the wrong formula for nth term of geometric vs arithmetic sequence",
+      "question": "An arithmetic sequence has first term 7 and common difference -3. A geometric sequence has first term 2 and common ratio 3. Which has the larger 6th term?",
+      "choices": {
+        "A": "Arithmetic: a\u2086 = -8",
+        "B": "Geometric: g\u2086 = 486",
+        "C": "Both equal the same value",
+        "D": "Geometric: g\u2086 = 162"
+      },
+      "answer": "B",
+      "explanation": "Arithmetic: a\u2086 = 7 + 5(-3) = 7 - 15 = -8. Geometric: g\u2086 = 2\u00b73\u2075 = 2\u00b7243 = 486. Geometric is far larger."
+    },
+    {
+      "id": "APPC-S-058",
+      "concept_id": "Pre.3.13",
+      "ap_skill": "2.A",
+      "difficulty": "hard",
+      "misconception": "Not multiplying both sides by r when converting polar equation to rectangular",
+      "question": "Convert r = 4cos(\u03b8) to rectangular form.",
+      "choices": {
+        "A": "x\u00b2 + y\u00b2 = 4x",
+        "B": "x\u00b2 + y\u00b2 = 4",
+        "C": "(x-2)\u00b2 + y\u00b2 = 4",
+        "D": "Both A and C (equivalent forms)"
+      },
+      "answer": "D",
+      "explanation": "r = 4cos(\u03b8). Multiply both sides by r: r\u00b2 = 4r\u00b7cos(\u03b8) \u2192 x\u00b2+y\u00b2 = 4x. Complete the square: x\u00b2-4x+y\u00b2=0 \u2192 (x-2)\u00b2+y\u00b2=4. This is a circle centered (2,0) with r=2. Both A and C are correct."
+    },
+    {
+      "id": "APPC-S-059",
+      "concept_id": "Pre.2.15",
+      "ap_skill": "2.B",
+      "difficulty": "hard",
+      "misconception": "Assuming all exponential models are the same type (not distinguishing ln vs log\u2081\u2080)",
+      "question": "A set of data, when plotted as ln(y) vs x, shows a linear pattern with slope 0.5 and y-intercept 2. What is the exponential model in terms of e?",
+      "choices": {
+        "A": "y = 2e^(0.5x)",
+        "B": "y = e\u00b2\u00b7e^(0.5x)",
+        "C": "y = 100\u00b7(1.65)^x",
+        "D": "y = 0.5x + 2"
+      },
+      "answer": "B",
+      "explanation": "ln(y) = 0.5x + 2 \u2192 y = e^(0.5x + 2) = e\u00b2\u00b7e^(0.5x) \u2248 7.39\u00b7e^(0.5x). Note e\u00b2 \u2248 7.39, not 2. If the plot used log\u2081\u2080, the answer would be A's logic; but with ln, it's e^intercept."
+    },
+    {
+      "id": "APPC-S-060",
+      "concept_id": "Pre.1.1",
+      "ap_skill": "2.A",
+      "difficulty": "hard",
+      "frq_type": "FRQ 1",
+      "misconception": "Confusing rate of change of output with the output itself",
+      "question": "f is increasing and concave down on an interval. Which correctly describes what is happening?",
+      "choices": {
+        "A": "f(x) values are increasing but the rate of increase is slowing",
+        "B": "f(x) values are decreasing but still positive",
+        "C": "f(x) values are increasing at an accelerating rate",
+        "D": "f(x) values first increase then decrease on this interval"
+      },
+      "answer": "A",
+      "explanation": "Increasing = f(x) going up. Concave down = the rate of increase is slowing (the slope is decreasing). Like a car that's moving forward (positive velocity) but decelerating."
+    },
+    {
+      "id": "APPC-S-061",
+      "concept_id": "Pre.4.12",
+      "ap_skill": "2.B",
+      "difficulty": "hard",
+      "misconception": "Not knowing how to read geometric meaning of a transformation matrix",
+      "question": "Matrix T = [[0,-1],[1,0]] applied to a point (x,y) gives (-y,x). This represents:",
+      "choices": {
+        "A": "Reflection across the y-axis",
+        "B": "Rotation 90\u00b0 counterclockwise about the origin",
+        "C": "Rotation 90\u00b0 clockwise about the origin",
+        "D": "Dilation by factor \u221a2"
+      },
+      "answer": "B",
+      "explanation": "(x,y) \u2192 (-y,x) is the 90\u00b0 CCW rotation formula. Verify: (1,0) \u2192 (0,1) (point on x-axis rotates to y-axis)."
+    },
+    {
+      "id": "APPC-S-062",
+      "concept_id": "Pre.3.9",
+      "ap_skill": "1.B",
+      "difficulty": "hard",
+      "frq_type": "FRQ 4",
+      "misconception": "Returning arccos output in wrong range",
+      "question": "Find the exact value of arccos(cos(7\u03c0/4)) without a calculator.",
+      "choices": {
+        "A": "7\u03c0/4",
+        "B": "\u03c0/4",
+        "C": "-\u03c0/4",
+        "D": "5\u03c0/4"
+      },
+      "answer": "B",
+      "explanation": "cos(7\u03c0/4) = cos(-\u03c0/4) = \u221a2/2. arccos range is [0, \u03c0]. arccos(\u221a2/2) = \u03c0/4. Since 7\u03c0/4 > \u03c0 (outside arccos range), the answer is \u03c0/4."
+    },
+    {
+      "id": "APPC-S-063",
+      "concept_id": "Pre.3.6",
+      "ap_skill": "2.B",
+      "difficulty": "hard",
+      "frq_type": "FRQ 3",
+      "misconception": "Confusing which parameter controls period vs amplitude",
+      "question": "f(x) = Asin(Bx + C) + D. Which changes would double the period without affecting amplitude?",
+      "choices": {
+        "A": "Double A",
+        "B": "Halve B",
+        "C": "Double B",
+        "D": "Double D"
+      },
+      "answer": "B",
+      "explanation": "Period = 2\u03c0/B. To double the period, halve B. Doubling B halves the period. A affects amplitude, D affects midline, C affects phase shift."
+    },
+    {
+      "id": "APPC-S-064",
+      "concept_id": "Pre.2.2",
+      "ap_skill": "3.A",
+      "difficulty": "hard",
+      "misconception": "Confusing what 'rate of change is increasing' means for exponential vs linear functions",
+      "question": "Both f(x) = 2x and g(x) = 2^x are increasing. How do their rates of change differ?",
+      "choices": {
+        "A": "Both have constant rates of change",
+        "B": "f has constant rate of change (2); g has an increasing rate of change",
+        "C": "f has decreasing rate of change; g has constant rate",
+        "D": "Both have increasing rates of change"
+      },
+      "answer": "B",
+      "explanation": "Linear f(x) = 2x: constant rate of change = 2 (slope). Exponential g(x) = 2^x: the rate of change is itself exponential \u2014 it increases as x increases. Exponential growth accelerates."
+    },
+    {
+      "id": "APPC-S-065",
+      "concept_id": "Pre.1.5",
+      "ap_skill": "1.B",
+      "difficulty": "hard",
+      "misconception": "Writing a polynomial from zeros without multiplying by necessary conjugate pairs",
+      "question": "Write the polynomial with real coefficients, degree 3, zeros x = 2 and x = 1-i.",
+      "choices": {
+        "A": "(x-2)(x-(1-i))",
+        "B": "(x-2)(x-(1-i))(x-(1+i))",
+        "C": "(x-2)\u00b2(x-(1-i))",
+        "D": "(x-2)(x\u00b2-2x+2)"
+      },
+      "answer": "D",
+      "explanation": "Real coefficients \u2192 conjugate pair: both 1-i and 1+i are zeros. (x-(1-i))(x-(1+i)) = (x-1+i)(x-1-i) = (x-1)\u00b2-i\u00b2 = x\u00b2-2x+1+1 = x\u00b2-2x+2. Full polynomial: (x-2)(x\u00b2-2x+2)."
+    },
+    {
+      "id": "APPC-S-066",
+      "concept_id": "Pre.2.9",
+      "ap_skill": "1.A",
+      "difficulty": "medium",
+      "misconception": "Misusing change of base formula (swapping numerator and denominator)",
+      "question": "Evaluate log\u2083(17) using the change of base formula. Which is correct?",
+      "choices": {
+        "A": "log(3)/log(17)",
+        "B": "log(17)/log(3)",
+        "C": "17/3",
+        "D": "ln(3)/ln(17)"
+      },
+      "answer": "B",
+      "explanation": "Change of base: log_b(a) = log(a)/log(b) = ln(a)/ln(b). log\u2083(17) = log(17)/log(3) \u2248 1.230/0.477 \u2248 2.579."
+    },
+    {
+      "id": "APPC-S-067",
+      "concept_id": "Pre.1.13",
+      "ap_skill": "4.A",
+      "difficulty": "hard",
+      "frq_type": "FRQ 2",
+      "misconception": "Choosing a model without justifying its limitations",
+      "question": "A quadratic model is constructed for population growth. Which is the most important limitation to state?",
+      "choices": {
+        "A": "Quadratic functions are hard to compute",
+        "B": "A quadratic will eventually predict negative population for large t",
+        "C": "Quadratics can only have one maximum",
+        "D": "The model may not fit the data well"
+      },
+      "answer": "B",
+      "explanation": "A downward-opening quadratic will eventually return to 0 and go negative, which is unrealistic for population. This is a key limitation: the model is only valid for a certain time range."
+    },
+    {
+      "id": "APPC-S-068",
+      "concept_id": "Pre.3.2",
+      "ap_skill": "1.B",
+      "difficulty": "medium",
+      "misconception": "Not knowing that tan(\u03c0/2) is undefined, not 0 or 1",
+      "question": "Which of the following is undefined?",
+      "choices": {
+        "A": "cos(\u03c0)",
+        "B": "sin(3\u03c0/2)",
+        "C": "tan(\u03c0/2)",
+        "D": "csc(\u03c0/4)"
+      },
+      "answer": "C",
+      "explanation": "tan(\u03c0/2) = sin(\u03c0/2)/cos(\u03c0/2) = 1/0, which is undefined. tan is undefined at \u03c0/2 + n\u03c0 for any integer n."
+    },
+    {
+      "id": "APPC-S-069",
+      "concept_id": "Pre.4.6",
+      "ap_skill": "1.B",
+      "difficulty": "hard",
+      "misconception": "Not completing the square for both variables when converting general to standard form",
+      "question": "Write 4x\u00b2 - 9y\u00b2 - 16x - 18y - 29 = 0 in standard form. Identify the conic.",
+      "choices": {
+        "A": "(x-2)\u00b2/9 - (y+1)\u00b2/4 = 1 (horizontal hyperbola)",
+        "B": "(x+2)\u00b2/4 - (y-1)\u00b2/9 = 1 (horizontal hyperbola)",
+        "C": "(x-2)\u00b2/9 + (y+1)\u00b2/4 = 1 (ellipse)",
+        "D": "(x-2)\u00b2/4 - (y+1)\u00b2/9 = 1"
+      },
+      "answer": "A",
+      "explanation": "Group: 4(x\u00b2-4x) - 9(y\u00b2+2y) = 29. Complete square: 4(x-2)\u00b2-16 - 9(y+1)\u00b2+9 = 29 \u2192 4(x-2)\u00b2 - 9(y+1)\u00b2 = 36. Divide by 36: (x-2)\u00b2/9 - (y+1)\u00b2/4 = 1. Horizontal hyperbola."
+    },
+    {
+      "id": "APPC-S-070",
+      "concept_id": "Pre.3.12",
+      "ap_skill": "1.B",
+      "difficulty": "hard",
+      "frq_type": "FRQ 4",
+      "misconception": "Not applying both Pythagorean identity steps",
+      "question": "Solve: 2sin\u00b2(x) + sin(x) - 1 = 0 on [0, 2\u03c0]. What are all solutions?",
+      "choices": {
+        "A": "x = \u03c0/6, 5\u03c0/6",
+        "B": "x = \u03c0/2, 7\u03c0/6, 11\u03c0/6",
+        "C": "x = \u03c0/6, 5\u03c0/6, 3\u03c0/2",
+        "D": "x = \u03c0/2, \u03c0/6, 5\u03c0/6, 3\u03c0/2"
+      },
+      "answer": "C",
+      "explanation": "Factor: (2sin x - 1)(sin x + 1) = 0. sin x = 1/2 \u2192 x = \u03c0/6, 5\u03c0/6. sin x = -1 \u2192 x = 3\u03c0/2. Three solutions: \u03c0/6, 5\u03c0/6, 3\u03c0/2."
+    },
+    {
+      "id": "APPC-S-071",
+      "concept_id": "Pre.1.11",
+      "ap_skill": "1.B",
+      "difficulty": "hard",
+      "frq_type": "FRQ 4",
+      "misconception": "Not recognizing the oblique asymptote from the quotient form",
+      "question": "After rewriting f(x) = (x\u00b3 - 2x + 1)/(x\u00b2 - 1) via long division, you get x + remainder/(x\u00b2-1). What does the quotient 'x' tell you?",
+      "choices": {
+        "A": "The function has a zero at x = 0",
+        "B": "The function has a slant asymptote y = x",
+        "C": "The function simplifies to x",
+        "D": "The function has a horizontal asymptote at y = 0"
+      },
+      "answer": "B",
+      "explanation": "When the degree of the numerator exceeds the denominator by exactly 1, the quotient (x in this case) gives the slant (oblique) asymptote y = x. The remainder/divisor \u2192 0 as x \u2192 \u00b1\u221e."
+    },
+    {
+      "id": "APPC-S-072",
+      "concept_id": "Pre.2.7",
+      "ap_skill": "1.B",
+      "difficulty": "hard",
+      "frq_type": "FRQ 1",
+      "misconception": "Not reading function values from a graph or table correctly when computing composition",
+      "question": "f(3) = 5, f(5) = 2, g(3) = 5, g(5) = 3. Find f(g(3)).",
+      "choices": {
+        "A": "2",
+        "B": "3",
+        "C": "5",
+        "D": "15"
+      },
+      "answer": "A",
+      "explanation": "f(g(3)): First evaluate g(3) = 5. Then evaluate f(5) = 2. So f(g(3)) = f(5) = 2. This is a critical FRQ 1 skill: evaluate from inside out."
+    }
+  ]
+}

@@ -1,0 +1,389 @@
+{
+  "course": "NC Math 3",
+  "division": "Varsity+",
+  "visual_pool_id": "nc_math_3_visual",
+  "total_visual_generators": 30,
+  "rendering_standard": "SVG inline, viewBox 700x550 for complex graphs, aria-label required. Answer NEVER encoded in visual. Asymptotes drawn as dashed lines always.",
+
+  "visual_generators": [
+
+    // === FUNCTIONS & INVERSES ===
+    {
+      "id": "m3_vis_domain_range_graph",
+      "concept_ids": ["M3.FNI.1.1", "M3.FNI.1.3"],
+      "category": "B",
+      "description": "Coordinate plane with a function graphed (with possible endpoints, gaps, or asymptotes); Mathlete identifies domain, range, intervals of increase/decrease, or end behavior",
+      "svg_params": {
+        "function_types": ["polynomial_deg3", "rational_simple", "square_root", "piecewise_2piece"],
+        "closed_open_endpoints": true,
+        "gaps_or_holes": "sometimes",
+        "interval_labels": false
+      },
+      "format_hint_rule": "Interval labels NOT annotated — Mathlete reads from graph"
+    },
+    {
+      "id": "m3_vis_inverse_reflection",
+      "concept_ids": ["M3.FNI.4.3", "M3.FNI.4.1"],
+      "category": "B",
+      "description": "Coordinate plane showing f(x) and f⁻¹(x) reflected over y = x; dashed y = x line shown; Mathlete identifies which is f and which is f⁻¹",
+      "svg_params": {
+        "line_y_eq_x": "dashed",
+        "original_function": "labeled 'f'",
+        "inverse_function": "unlabeled or labeled '?'",
+        "both_plotted": true,
+        "symmetry_check_points": "marked as open dots"
+      },
+      "format_hint_rule": "Inverse is shown but NOT labeled — Mathlete identifies by symmetry over y = x"
+    },
+    {
+      "id": "m3_vis_piecewise_graph",
+      "concept_ids": ["M3.FNI.5.1"],
+      "category": "B",
+      "description": "Coordinate plane with a piecewise function graphed; open/closed circles at boundaries; Mathlete writes the piecewise definition OR evaluates at a specific input",
+      "svg_params": {
+        "pieces": [2, 3],
+        "boundary_style": {"open": "open_circle", "closed": "filled_circle"},
+        "piece_types": ["linear", "quadratic", "constant"],
+        "equation_labels": false
+      },
+      "format_hint_rule": "Piece equations NOT labeled — Mathlete reads each piece from graph segments"
+    },
+    {
+      "id": "m3_vis_avg_rate_change",
+      "concept_id": "M3.FNI.2.1",
+      "category": "B",
+      "description": "Function graph with two points at x = a and x = b marked; secant line drawn; Mathlete computes [f(b) - f(a)]/(b - a)",
+      "svg_params": {
+        "secant_line_drawn": true,
+        "two_points_labeled_with_coordinates": true,
+        "slope_value_on_line": false
+      },
+      "format_hint_rule": "Slope of secant NOT labeled — Mathlete computes from the two coordinate points"
+    },
+
+    // === EXPONENTIAL & LOGARITHMIC ===
+    {
+      "id": "m3_vis_exp_transformed_graph",
+      "concept_id": "M3.EL.2.2",
+      "category": "B",
+      "description": "Coordinate plane showing a transformed exponential y = a·b^(x-h) + k; horizontal asymptote as dashed line; y-intercept and one other point labeled",
+      "svg_params": {
+        "asymptote": "dashed horizontal line at y = k",
+        "y_intercept": "labeled",
+        "second_point": "labeled",
+        "equation_label": false,
+        "domain_arrow": true
+      },
+      "format_hint_rule": "Equation NOT shown — Mathlete identifies transformation parameters from graph features"
+    },
+    {
+      "id": "m3_vis_log_transformed_graph",
+      "concept_id": "M3.EL.7.1",
+      "category": "B",
+      "description": "Logarithmic function y = log_b(x-h) + k graphed; vertical asymptote as dashed line; x-intercept labeled",
+      "svg_params": {
+        "vertical_asymptote": "dashed at x = h",
+        "x_intercept": "labeled",
+        "one_other_point": "labeled (e.g., (h+b, 1+k))",
+        "equation_label": false,
+        "increasing_or_decreasing_arrow": true
+      },
+      "format_hint_rule": "Equation NOT shown. VA labeled as 'x = ?' — Mathlete identifies"
+    },
+
+    // === POLYNOMIAL & RATIONAL FUNCTIONS ===
+    {
+      "id": "m3_vis_polynomial_end_behavior",
+      "concept_ids": ["M3.PR.1.2", "M3.PR.1.4"],
+      "category": "B",
+      "description": "Polynomial function graphed; end behavior shown by arrows; zeros labeled or unlabeled; Mathlete identifies degree/leading coefficient or names end behavior",
+      "svg_params": {
+        "degree_range": [3, 5],
+        "leading_coeff": "positive_or_negative",
+        "zeros_labeled": "sometimes",
+        "multiplicity_visible": "touching_vs_crossing",
+        "arrows_at_ends": true,
+        "equation_label": false
+      },
+      "format_hint_rule": "Equation NOT shown. Arrows indicate end behavior — Mathlete writes the description"
+    },
+    {
+      "id": "m3_vis_polynomial_zeros_multiplicity",
+      "concept_id": "M3.PR.1.3",
+      "category": "B",
+      "description": "Polynomial graph showing x-intercepts; some cross (odd multiplicity) and some touch/bounce (even multiplicity); Mathlete identifies multiplicity of each zero",
+      "svg_params": {
+        "zero_count": [2, 3],
+        "multiplicity_mix": "at least one even, at least one odd",
+        "zero_x_values_labeled": true,
+        "bounce_vs_cross_visual": "explicit"
+      },
+      "format_hint_rule": "Multiplicity numbers NOT shown — Mathlete infers from graph behavior (crossing vs. touching)"
+    },
+    {
+      "id": "m3_vis_rational_function_full",
+      "concept_ids": ["M3.PR.5.2", "M3.PR.5.3", "M3.PR.5.4", "M3.PR.5.5"],
+      "category": "B",
+      "description": "Rational function graph with vertical asymptotes (dashed), horizontal/slant asymptote (dashed), hole (open circle), and x/y intercepts; Mathlete identifies all features",
+      "svg_params": {
+        "vertical_asymptotes": "dashed_labeled_x=a",
+        "horizontal_asymptote": "dashed_labeled_y=b",
+        "hole": "open_circle_at_(h,k)",
+        "intercepts": "labeled",
+        "equation_label": false
+      },
+      "format_hint_rule": "Asymptote equations show 'x = ?' and 'y = ?' — Mathlete writes values from graph"
+    },
+    {
+      "id": "m3_vis_polynomial_inequality_sign_chart",
+      "concept_ids": ["M3.PR.6.2", "M3.PR.6.3"],
+      "category": "B",
+      "description": "Number line or x-axis with critical values marked; sign (+/−) in each interval marked or left blank — Mathlete completes sign chart and writes solution",
+      "svg_params": {
+        "critical_values": "2-4 values on number line",
+        "interval_labels": "labeled with open/closed points",
+        "signs_pre_filled": false,
+        "solution_region_shaded": false
+      },
+      "format_hint_rule": "Signs in intervals NOT pre-filled — Mathlete determines and uses to write interval notation solution"
+    },
+
+    // === TRIGONOMETRY ★ AP PIPELINE ===
+    {
+      "id": "m3_vis_unit_circle",
+      "concept_ids": ["M3.TRIG.2.1", "M3.TRIG.2.2", "M3.TRIG.2.3"],
+      "category": "A",
+      "description": "Full unit circle with all 16 special angles labeled (degrees and radians); one angle highlighted — Mathlete gives exact coordinates or trig value",
+      "svg_params": {
+        "circle_radius": "unit (1)",
+        "angle_labels": "all 16 special angles in degrees AND radians",
+        "coordinate_labels": "blank — question asks for these",
+        "quadrant_markers": "I, II, III, IV",
+        "highlighted_angle": "one angle marked with arc and label",
+        "coordinates_shown": false
+      },
+      "format_hint_rule": "Coordinates NOT shown on unit circle diagram — Mathlete recalls or computes exact values"
+    },
+    {
+      "id": "m3_vis_coterminal_angle_diagram",
+      "concept_id": "M3.TRIG.1.1",
+      "category": "A",
+      "description": "Standard position angle shown in a coordinate plane; arc indicating the angle; Mathlete identifies a coterminal angle",
+      "svg_params": {
+        "initial_side": "positive x-axis",
+        "terminal_side": "drawn at given angle",
+        "angle_arc": true,
+        "angle_label": "numeric (degrees or radians)",
+        "coterminal_shown": false
+      },
+      "format_hint_rule": "Coterminal angle NOT drawn — Mathlete computes ±360° or ±2π and writes the value"
+    },
+    {
+      "id": "m3_vis_sine_graph",
+      "concept_ids": ["M3.TRIG.3.1", "M3.TRIG.3.3"],
+      "category": "B",
+      "description": "Sine function graphed on [0, 4π] or [−2π, 2π]; may include vertical/horizontal transformations; Mathlete identifies amplitude, period, phase shift, vertical shift",
+      "svg_params": {
+        "x_axis_labels": "multiples of π/2",
+        "amplitude_visible": true,
+        "period_visible": true,
+        "phase_shift": "sometimes",
+        "vertical_shift": "sometimes",
+        "function_equation_label": false
+      },
+      "format_hint_rule": "Equation NOT shown — Mathlete writes y = A·sin(Bx + C) + D from visual parameters"
+    },
+    {
+      "id": "m3_vis_cosine_graph",
+      "concept_ids": ["M3.TRIG.3.2", "M3.TRIG.3.3"],
+      "category": "B",
+      "description": "Cosine function graphed; may be transformed; Mathlete identifies or writes equation",
+      "svg_params": {
+        "x_axis_labels": "multiples of π/2",
+        "starting_point": "y-intercept at (0, A) or shifted",
+        "amplitude_labeled": false,
+        "period_labeled": false,
+        "function_equation_label": false
+      },
+      "format_hint_rule": "Same rules as sine — no equation shown, Mathlete reads parameters from graph"
+    },
+    {
+      "id": "m3_vis_tangent_graph",
+      "concept_id": "M3.TRIG.3.4",
+      "category": "B",
+      "description": "Tangent (or cotangent) function graphed over two periods; vertical asymptotes as dashed lines; Mathlete identifies period, asymptotes, and key points",
+      "svg_params": {
+        "asymptotes": "dashed at x = π/2 + nπ",
+        "key_points": "(0,0), (π/4, 1), (−π/4, −1) marked",
+        "period_bracket": false,
+        "equation_label": false
+      },
+      "format_hint_rule": "Period and asymptote values NOT labeled — Mathlete reads from x-axis positions"
+    },
+    {
+      "id": "m3_vis_law_of_sines_triangle",
+      "concept_ids": ["M3.TRIG.7.1"],
+      "category": "A",
+      "description": "Labeled non-right triangle with angles A, B, C and opposite sides a, b, c; given values labeled, unknowns as '?'; for SSA shows both possible triangles when applicable",
+      "svg_params": {
+        "triangle_type": "non_right_general",
+        "angle_labels": ["A", "B", "C"],
+        "side_labels": ["a", "b", "c"],
+        "given_values": "numeric on diagram",
+        "unknown_label": "?",
+        "ambiguous_case_second_triangle": "shown with dashed lines when two solutions"
+      },
+      "format_hint_rule": "Unknown side/angle labeled '?' — Mathlete applies Law of Sines formula. Second triangle in SSA shown ONLY as context, not as answer leak"
+    },
+    {
+      "id": "m3_vis_law_of_cosines_triangle",
+      "concept_id": "M3.TRIG.7.2",
+      "category": "A",
+      "description": "Labeled non-right triangle; SAS shows two sides and included angle; SSS shows all three sides; unknown labeled '?'",
+      "svg_params": {
+        "case": "SAS_or_SSS",
+        "all_sides_labeled": true,
+        "included_angle_arc": true,
+        "unknown": "opposite_side_or_angle"
+      },
+      "format_hint_rule": "Formula NOT shown on diagram. Unknown labeled '?'"
+    },
+    {
+      "id": "m3_vis_triangle_area_sas",
+      "concept_id": "M3.TRIG.8.1",
+      "category": "A",
+      "description": "Triangle with two sides and included angle labeled; area formula NOT shown; Mathlete applies Area = (1/2)ab·sin(C)",
+      "svg_params": {
+        "side_a": "labeled numerically",
+        "side_b": "labeled numerically",
+        "included_angle_C": "labeled with arc and degree/radian value",
+        "height": "NOT drawn",
+        "area_label": false
+      },
+      "format_hint_rule": "Height NOT shown (to prevent A = (1/2)bh approach). Area formula NOT given."
+    },
+
+    // === GEOMETRY & CIRCLES ===
+    {
+      "id": "m3_vis_circle_standard_form",
+      "concept_ids": ["M3.GEO.CIR.2.1", "M3.GEO.CIR.2.2", "M3.GEO.CIR.2.4"],
+      "category": "B",
+      "description": "Circle graphed on coordinate plane; center and one radius endpoint marked; Mathlete writes standard form equation",
+      "svg_params": {
+        "center_dot": "labeled (h, k)",
+        "radius_segment": "drawn to edge with length labeled",
+        "circle_drawn": true,
+        "equation_label": false,
+        "grid": true
+      },
+      "format_hint_rule": "Equation NOT shown — Mathlete writes (x-h)²+(y-k)²=r² from visual"
+    },
+    {
+      "id": "m3_vis_inscribed_angle_diagram",
+      "concept_ids": ["M3.GEO.CIR.3.3"],
+      "category": "A",
+      "description": "Circle with an inscribed angle marked; intercepted arc labeled in degrees; Mathlete computes inscribed angle measure",
+      "svg_params": {
+        "inscribed_angle_vertex": "on circle perimeter",
+        "intercepted_arc": "labeled with degree value",
+        "angle_arc_indicator": true,
+        "inscribed_angle_value": false
+      },
+      "format_hint_rule": "Inscribed angle value NOT shown — Mathlete applies half-arc theorem"
+    },
+    {
+      "id": "m3_vis_chord_secant_tangent",
+      "concept_ids": ["M3.GEO.CIR.3.1", "M3.GEO.CIR.3.2", "M3.GEO.CIR.3.4", "M3.GEO.CIR.3.5"],
+      "category": "A",
+      "description": "Circle diagram showing either: chord-chord intersection inside, secant-secant from external point, or tangent-secant; some segments/angles labeled, one as '?'",
+      "svg_params": {
+        "diagram_type": "randomized (chord-chord / secant-secant / tangent-secant)",
+        "labeled_segments_or_angles": "all known values",
+        "unknown": "one segment or angle labeled '?'",
+        "right_angle_marker": "for tangent-radius"
+      },
+      "format_hint_rule": "Theorem NOT identified on diagram — Mathlete selects correct relationship from diagram type"
+    },
+    {
+      "id": "m3_vis_arc_length_sector",
+      "concept_ids": ["M3.CIR.4.1", "M3.CIR.4.2"],
+      "category": "A",
+      "description": "Circle with a sector shaded; radius labeled; central angle labeled in degrees or radians; Mathlete computes arc length or sector area",
+      "svg_params": {
+        "sector_shading": "light_blue",
+        "radius_label": "numeric",
+        "central_angle_label": "in degrees or radians",
+        "arc_length_label": false,
+        "area_label": false
+      },
+      "format_hint_rule": "Arc length and sector area NOT labeled — Mathlete applies correct formula based on units"
+    },
+    {
+      "id": "m3_vis_coord_proof_triangle",
+      "concept_id": "M3.GEO.CIR.1.1",
+      "category": "B",
+      "description": "Coordinate plane with triangle vertices labeled A(x₁,y₁), B(x₂,y₂), C(x₃,y₃); Mathlete uses distance formula to classify triangle type",
+      "svg_params": {
+        "vertices_labeled_with_coordinates": true,
+        "sides_drawn": true,
+        "side_lengths_labeled": false,
+        "triangle_type_labeled": false
+      },
+      "format_hint_rule": "Triangle type NOT identified on diagram — Mathlete computes side lengths then classifies"
+    },
+
+    // === PROBABILITY & STATISTICS ===
+    {
+      "id": "m3_vis_probability_distribution_table",
+      "concept_ids": ["M3.PS.2.1", "M3.PS.2.2"],
+      "category": "D",
+      "description": "Probability distribution table as rendered HTML; x values in first row, P(X=x) in second row; one probability may be missing ('?'); Mathlete computes expected value or finds missing probability",
+      "svg_params": {
+        "outcome_count": [3, 4, 5],
+        "probabilities_sum_to_1": true,
+        "missing_probability": "sometimes",
+        "expected_value_row": false
+      },
+      "format_hint_rule": "E(X) NOT computed on table — Mathlete calculates Σ[x·P(x)]"
+    },
+    {
+      "id": "m3_vis_normal_distribution_curve",
+      "concept_ids": ["M3.PS.3.1", "M3.PS.3.3"],
+      "category": "D",
+      "description": "Bell curve with μ and σ marked on x-axis; a shaded region representing a probability area; Mathlete applies Empirical Rule or uses z-table to find the probability",
+      "svg_params": {
+        "x_axis_labels": "μ ± 1σ, ±2σ, ±3σ marked",
+        "shaded_region": "between two x values",
+        "probability_value": false,
+        "empirical_rule_labels": false
+      },
+      "format_hint_rule": "Probability percentage NOT shown in shaded region — Mathlete computes"
+    },
+    {
+      "id": "m3_vis_exp_graph_comparison",
+      "concept_id": "M3.EL.2.3",
+      "category": "B",
+      "description": "Two exponential curves on the same coordinate plane: y = 2^x and y = e^x overlaid; Mathlete identifies which is which and notes that e ≈ 2.718 gives steeper growth than base 2",
+      "svg_params": {
+        "curve_1": "y = 2^x (solid)",
+        "curve_2": "y = e^x (dashed)",
+        "y_intercept": "both at (0,1)",
+        "curve_labels": false
+      },
+      "format_hint_rule": "Curve labels NOT shown — Mathlete identifies using relative steepness (e > 2)"
+    },
+    {
+      "id": "m3_vis_inverse_function_table",
+      "concept_id": "M3.FNI.4.1",
+      "category": "B",
+      "description": "Side-by-side tables for f and g; one labeled, one unlabeled; Mathlete determines if g is the inverse of f by checking if swapped (x,y) pairs match",
+      "svg_params": {
+        "table_f": "x values 0,1,2,3 with y values",
+        "table_g": "same y values now as x, x values as y",
+        "swap_relationship_shown": false
+      },
+      "format_hint_rule": "Relationship between tables NOT annotated — Mathlete checks if (a,b) in f implies (b,a) in g"
+    }
+
+  ]
+}

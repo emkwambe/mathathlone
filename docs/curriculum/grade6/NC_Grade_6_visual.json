@@ -1,0 +1,229 @@
+{
+  "course": "NC 6th Grade Math",
+  "division": "Rising Stars",
+  "visual_pool_id": "nc_grade_6_visual",
+  "total_visual_generators": 15,
+  "rendering_standard": "SVG inline, viewBox 400x300 minimum, aria-label required, answer NEVER encoded in visual",
+  "visual_generators": [
+    {
+      "id": "g6_vis_number_line_fraction_division",
+      "concept_id": "M6.NS.2.1",
+      "category": "C",
+      "description": "Horizontal number line from 0 to 3; equal-sized segments matching the divisor fraction are marked; total is shaded — Mathlete counts how many segments fit",
+      "svg_params": {
+        "range": [0, 3],
+        "segment_size": "divisor fraction (e.g., 1/4)",
+        "shaded_length": "dividend (e.g., 3/4)",
+        "tick_labels": "fraction benchmarks at 1/4 intervals",
+        "show_answer": false
+      },
+      "format_hint_rule": "Number of segments NOT labeled or annotated — Mathlete counts from visual"
+    },
+    {
+      "id": "g6_vis_integer_number_line",
+      "concept_id": "M6.NS.4.2",
+      "category": "C",
+      "description": "Number line from −15 to 15 with integers labeled; a point and its reflection (opposite) are shown as open circles",
+      "svg_params": {
+        "range": [-15, 15],
+        "tick_interval": 1,
+        "major_labels": "every 5",
+        "point_a": "randomized integer",
+        "point_b": "opposite — shown as open circle, unlabeled",
+        "zero_marker": "filled dot"
+      },
+      "format_hint_rule": "Opposite point is drawn but NOT labeled — Mathlete names it"
+    },
+    {
+      "id": "g6_vis_absolute_value_number_line",
+      "concept_id": "M6.NS.4.4",
+      "category": "C",
+      "description": "Number line with a point marked; a double-headed arrow from 0 to the point shows distance — Mathlete reads the absolute value",
+      "svg_params": {
+        "range": [-20, 20],
+        "point": "randomized negative or positive",
+        "distance_arrow": "from 0 to point, bidirectional",
+        "distance_label": false
+      },
+      "format_hint_rule": "Arrow shows the distance visually; numeric distance NOT labeled"
+    },
+    {
+      "id": "g6_vis_compare_rationals_number_line",
+      "concept_id": "M6.NS.4.5",
+      "category": "C",
+      "description": "Number line showing 3–5 rational numbers plotted as labeled points; Mathlete orders them",
+      "svg_params": {
+        "range": [-5, 5],
+        "tick_interval": 0.5,
+        "points": "3-5 randomized rationals (mix of fractions, decimals, integers)",
+        "labels": "each point labeled with its fraction/decimal form",
+        "pre_ordered": false
+      },
+      "format_hint_rule": "Points are randomly positioned on line (not pre-sorted); Mathlete writes order"
+    },
+    {
+      "id": "g6_vis_coordinate_plane_all_quadrants",
+      "concept_id": "M6.NS.4.6",
+      "category": "B",
+      "description": "Full 4-quadrant coordinate plane (−10 to 10 on both axes) with one or more labeled or unlabeled points",
+      "svg_params": {
+        "x_range": [-10, 10],
+        "y_range": [-10, 10],
+        "grid": true,
+        "axes_labeled": true,
+        "quadrant_labels": "I, II, III, IV in corners",
+        "task_variants": [
+          "plot_given_point (interactive)",
+          "name_coordinates_of_plotted_point (MC)",
+          "identify_quadrant_of_point (MC)"
+        ]
+      },
+      "format_hint_rule": "For name-coordinates tasks, point is plotted with NO coordinate label"
+    },
+    {
+      "id": "g6_vis_coordinate_distance_same_axis",
+      "concept_id": "M6.NS.4.7",
+      "category": "B",
+      "description": "Two points with the same x-coordinate or same y-coordinate plotted; segment connecting them shown; Mathlete computes distance",
+      "svg_params": {
+        "shared_axis": "x or y (randomized)",
+        "point_a": "randomized",
+        "point_b": "same shared coordinate as A, different other coordinate",
+        "segment_drawn": true,
+        "distance_label": false
+      },
+      "format_hint_rule": "Segment drawn but NOT labeled with length — Mathlete uses absolute value"
+    },
+    {
+      "id": "g6_vis_ratio_table",
+      "concept_id": "M6.RP.2.1",
+      "category": "B",
+      "description": "HTML-rendered 2-column ratio table (x, y) with 4 rows; one cell is blank — Mathlete fills the missing equivalent ratio",
+      "svg_params": {
+        "columns": ["x", "y"],
+        "rows": 4,
+        "blank_position": ["row_2", "row_3", "row_4"],
+        "ratio": "k randomized from 1.5 to 20",
+        "context_header": "context label (e.g., 'Miles : Gallons')"
+      },
+      "format_hint_rule": "Blank cell shows '?'; no visible formula or pattern hint"
+    },
+    {
+      "id": "g6_vis_double_number_line",
+      "concept_id": "M6.RP.2.2",
+      "category": "C",
+      "description": "Two parallel number lines aligned at 0; top line shows one quantity (e.g., miles), bottom shows the other (e.g., hours); one value missing",
+      "svg_params": {
+        "top_range": [0, 100],
+        "bottom_range": [0, 10],
+        "tick_marks": "equal intervals on both",
+        "missing_value_position": "top or bottom",
+        "context_labels": "unit labels on each line"
+      },
+      "format_hint_rule": "Missing value shown as '?' on appropriate tick; equivalent ratio relationship NOT annotated"
+    },
+    {
+      "id": "g6_vis_inequality_number_line_6",
+      "concept_id": "M6.EE.4.2",
+      "category": "C",
+      "description": "Number line from −5 to 20 showing a simple inequality graph (open/closed circle + arrow); Mathlete identifies or matches the inequality",
+      "svg_params": {
+        "range": [-5, 20],
+        "boundary_point": "randomized integer",
+        "circle_type": "open (strict) or closed (non-strict)",
+        "arrow_direction": "left or right",
+        "inequality_label": false
+      },
+      "format_hint_rule": "Inequality symbol NOT shown on graph — Mathlete reads and writes the matching inequality"
+    },
+    {
+      "id": "g6_vis_dep_indep_graph_table",
+      "concept_id": "M6.EE.5.3",
+      "category": "B",
+      "description": "Side-by-side display: a table of (x, y) values and a coordinate graph in the first quadrant showing the plotted points and line",
+      "svg_params": {
+        "quadrant": "first_only",
+        "x_range": [0, 10],
+        "y_range": [0, 60],
+        "relationship": "linear (y = kx)",
+        "context_axis_labels": "e.g., 'Hours (x)' and 'Distance in miles (y)'"
+      },
+      "format_hint_rule": "Equation NOT shown on graph or table; Mathlete analyzes relationship"
+    },
+    {
+      "id": "g6_vis_triangle_labeled",
+      "concept_id": "M6.GEO.1.1",
+      "category": "A",
+      "description": "Labeled triangle with base and height marked (including height for obtuse triangles drawn outside the triangle); one value as '?'",
+      "svg_params": {
+        "triangle_types": ["right", "acute", "obtuse"],
+        "base_label": "numeric",
+        "height_label": "numeric or ?",
+        "height_line": "dashed for obtuse",
+        "right_angle_marker": "where applicable"
+      },
+      "format_hint_rule": "Formula NOT shown on diagram; height clearly distinguished from slant side"
+    },
+    {
+      "id": "g6_vis_parallelogram_labeled",
+      "concept_id": "M6.GEO.1.2",
+      "category": "A",
+      "description": "Labeled parallelogram with base, height (perpendicular, drawn as dashed line), and slant side; one value as '?'",
+      "svg_params": {
+        "base_label": "numeric",
+        "height_label": "numeric (dashed perpendicular)",
+        "slant_label": "numeric (distractor — NOT the height)",
+        "height_indicator_arc": true
+      },
+      "format_hint_rule": "CRITICAL: slant side included as a distractor; height is the perpendicular dashed line, NOT the slant"
+    },
+    {
+      "id": "g6_vis_trapezoid_labeled",
+      "concept_id": "M6.GEO.1.3",
+      "category": "A",
+      "description": "Labeled trapezoid with both parallel bases (b₁ and b₂), height, and right angle markers on the height",
+      "svg_params": {
+        "b1_label": "numeric",
+        "b2_label": "numeric",
+        "height_label": "numeric or ?",
+        "parallel_indicators": "arrow marks on both bases",
+        "height_dashed": true
+      },
+      "format_hint_rule": "b₁ and b₂ labeled explicitly; height clearly perpendicular to both bases"
+    },
+    {
+      "id": "g6_vis_prism_net",
+      "concept_id": "M6.GEO.2.2",
+      "category": "A",
+      "description": "Unfolded net of a rectangular or triangular prism with all faces labeled with dimensions",
+      "svg_params": {
+        "prism_type": ["rectangular", "triangular"],
+        "net_layout": "cross_shape or T_shape",
+        "face_labels": "all faces dimensioned (l × w)",
+        "face_count_label": false
+      },
+      "format_hint_rule": "Individual face areas NOT pre-computed on diagram; Mathlete sums them"
+    },
+    {
+      "id": "g6_vis_box_plot",
+      "concept_id": "M6.SP.2.2",
+      "category": "D",
+      "description": "Horizontal box-and-whisker plot on a labeled number line; five-number summary values either shown as tick labels or partially hidden",
+      "svg_params": {
+        "orientation": "horizontal",
+        "number_line_range": [0, 100],
+        "tick_labels": "major gridlines labeled",
+        "whiskers": true,
+        "median_line": true,
+        "box_fill": "light_fill",
+        "task_variants": [
+          "read_median (label hidden)",
+          "read_Q1_Q3 (partially hidden)",
+          "compute_IQR",
+          "identify_five_number_summary"
+        ]
+      },
+      "format_hint_rule": "For read tasks, the target stat is NOT labeled — Mathlete reads from position on number line"
+    }
+  ]
+}

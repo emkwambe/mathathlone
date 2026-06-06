@@ -1,0 +1,1645 @@
+{
+  "course": "Math Fundamentals",
+  "division": "Foundation",
+  "generator_pool_id": "math_fundamentals",
+  "special_permission": "CROSS_DIVISION — this pool may serve diagnostic and remedial heats in any division",
+  "total_generators": 145,
+  "tier_breakdown": {
+    "tier_1": { "units": ["FB","AP","ANT","FDP","RPBA"], "generator_count": 72 },
+    "tier_2": { "units": ["UC","ER","GEO","S"], "generator_count": 56 },
+    "tier_3": { "units": ["RAD","SETS"], "generator_count": 17 }
+  },
+
+  "generators": [
+
+    // ======= TIER 1: FOUNDATIONAL BASICS =======
+
+    {
+      "id": "mf_fb_mult_facts_1_6",
+      "concept_id": "MF.FB.1.1",
+      "tier": 1,
+      "generator_type": "multiplication_facts_1_6",
+      "description": "Recall product of two single-digit numbers where at least one factor is 1–6",
+      "answer_type": "integer",
+      "visual_category": null,
+      "downstream_unlocks": ["ALL"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "factor1_range": [1, 6],
+        "factor2_range": [1, 9],
+        "presentation": ["equation", "array_count", "word_form"],
+        "time_pressure_mode": true
+      }
+    },
+    {
+      "id": "mf_fb_mult_facts_7_12",
+      "concept_id": "MF.FB.1.2",
+      "tier": 1,
+      "generator_type": "multiplication_facts_7_12",
+      "description": "Recall product of two numbers where at least one factor is 7–12",
+      "answer_type": "integer",
+      "visual_category": null,
+      "downstream_unlocks": ["ALL"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "factor1_range": [7, 12],
+        "factor2_range": [1, 12],
+        "presentation": ["equation", "word_form"],
+        "time_pressure_mode": true
+      }
+    },
+    {
+      "id": "mf_fb_division_facts",
+      "concept_id": "MF.FB.1.3",
+      "tier": 1,
+      "generator_type": "division_facts",
+      "description": "Recall basic division fact where dividend ≤ 144 and divisor ≤ 12; answer is a whole number",
+      "answer_type": "integer",
+      "visual_category": null,
+      "downstream_unlocks": ["ALL"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "divisor_range": [2, 12],
+        "quotient_range": [1, 12],
+        "include_missing_dividend": true,
+        "include_missing_divisor": true
+      }
+    },
+    {
+      "id": "mf_fb_mult_div_mixed",
+      "concept_id": "MF.FB.1.4",
+      "tier": 1,
+      "generator_type": "mult_div_mixed_practice",
+      "description": "Mixed multiplication and division fact problems; randomizes between the two",
+      "answer_type": "integer",
+      "visual_category": null,
+      "downstream_unlocks": ["ALL"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "operation": "random",
+        "factor_range": [2, 12],
+        "time_pressure_mode": true
+      }
+    },
+    {
+      "id": "mf_fb_long_division_no_rem",
+      "concept_id": "MF.FB.2.1",
+      "tier": 1,
+      "generator_type": "long_division_no_remainder",
+      "description": "Divide a multi-digit number by a 1-digit divisor with no remainder",
+      "answer_type": "integer",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 6", "Grade 7"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "dividend_range": [12, 9999],
+        "divisor_range": [2, 9],
+        "exact_division_only": true,
+        "digits": [2, 3, 4]
+      }
+    },
+    {
+      "id": "mf_fb_long_division_with_rem",
+      "concept_id": "MF.FB.2.2",
+      "tier": 1,
+      "generator_type": "long_division_with_remainder",
+      "description": "Divide a multi-digit number by a 1- or 2-digit divisor; express remainder as R or decimal",
+      "answer_type": "decimal",
+      "answer_type_note": "Accept 'R' notation or decimal — heat setting controls format",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 6 NS"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "dividend_range": [15, 9999],
+        "divisor_range": [2, 25],
+        "remainder_guaranteed": true,
+        "remainder_format": ["R_notation", "decimal"]
+      }
+    },
+    {
+      "id": "mf_fb_classify_real_number",
+      "concept_id": "MF.FB.3.5",
+      "tier": 1,
+      "generator_type": "classify_real_number",
+      "description": "Given a number (integer, fraction, decimal, radical, or pi), classify it into the correct set(s) in the real number hierarchy",
+      "answer_type": "MC",
+      "visual_category": "C",
+      "visual_flag": true,
+      "downstream_unlocks": ["Grade 8 NS", "Math 1"],
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "number_pool": [
+          "−7", "0", "1/3", "√2", "π", "4.5", "0.333...", "√9", "−2/5", "0.125", "∛8", "−√5"
+        ],
+        "classification_levels": ["natural", "whole", "integer", "rational", "irrational", "real"],
+        "task": ["name_all_sets", "is_it_rational_MC", "which_set_does_NOT_contain"]
+      }
+    },
+
+    // ======= TIER 1: ALGEBRAIC PROPERTIES =======
+
+    {
+      "id": "mf_ap_distributive_expand_add",
+      "concept_id": "MF.AP.3.1",
+      "tier": 1,
+      "generator_type": "distributive_expand_addition",
+      "description": "Expand a(b + c) using the distributive property; coefficients are integers or simple fractions",
+      "answer_type": "text",
+      "answer_type_note": "e.g., '3x + 12' or '6a + 10b'",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 6 EE", "Grade 7 EE", "Grade 8 EE", "Math 1"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "outer_range": [2, 10],
+        "inner_terms": 2,
+        "include_variable": true,
+        "coefficient_type": ["integer", "fraction", "negative"],
+        "difficulty_variants": [
+          {"label": "easy", "outer_type": "positive_integer", "inner_type": "integer"},
+          {"label": "standard", "outer_type": "negative_integer", "inner_type": "integer"},
+          {"label": "hard", "outer_type": "fraction", "inner_type": "variable_terms"}
+        ]
+      }
+    },
+    {
+      "id": "mf_ap_distributive_expand_sub",
+      "concept_id": "MF.AP.3.2",
+      "tier": 1,
+      "generator_type": "distributive_expand_subtraction",
+      "description": "Expand a(b − c) using the distributive property; includes negative outer coefficients",
+      "answer_type": "text",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 6 EE", "Grade 7 EE", "Grade 8 EE"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "outer_range": [-8, 8],
+        "exclude_zero": true,
+        "inner_terms": 2,
+        "difficulty_variants": [
+          {"label": "easy", "outer_type": "positive_integer"},
+          {"label": "standard", "outer_type": "negative_integer"},
+          {"label": "hard", "outer_type": "fraction_or_decimal"}
+        ]
+      }
+    },
+    {
+      "id": "mf_ap_find_additive_inverse",
+      "concept_id": "MF.AP.5.1",
+      "tier": 1,
+      "generator_type": "find_additive_inverse",
+      "description": "Given a number n, find −n (additive inverse) such that n + (−n) = 0",
+      "answer_type": "integer_or_fraction",
+      "visual_category": "C",
+      "visual_flag": true,
+      "downstream_unlocks": ["Grade 7 NS (subtraction as additive inverse)"],
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "params": {
+        "value_types": ["positive_integer", "negative_integer", "fraction", "decimal"],
+        "value_range": [-20, 20]
+      }
+    },
+    {
+      "id": "mf_ap_find_multiplicative_inverse",
+      "concept_id": "MF.AP.5.2",
+      "tier": 1,
+      "generator_type": "find_multiplicative_inverse",
+      "description": "Given a number a (integer or fraction), find 1/a such that a × (1/a) = 1",
+      "answer_type": "fraction",
+      "visual_category": null,
+      "downstream_unlocks": ["FDP divide fractions", "Grade 6 NS divide fractions"],
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "params": {
+        "input_types": ["positive_integer", "simple_fraction", "unit_fraction"],
+        "value_range": [2, 20],
+        "exclude_zero": true
+      }
+    },
+    {
+      "id": "mf_ap_simplify_with_properties",
+      "concept_id": "MF.AP.6.1",
+      "tier": 1,
+      "generator_type": "simplify_with_properties",
+      "description": "Simplify a numerical or algebraic expression by identifying and applying the correct property (commutative, associative, or distributive)",
+      "answer_type": "text",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 6 EE", "Grade 7 EE"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "property_focus": ["commutative_add", "associative_add", "distributive", "identity", "inverse"],
+        "expression_complexity": ["numerical", "one_variable", "two_variables"],
+        "task": ["simplify", "identify_property_used", "choose_equivalent_expression"]
+      }
+    },
+
+    // ======= TIER 1: ARITHMETIC & NUMBER THEORY =======
+
+    {
+      "id": "mf_ant_compute_abs_value",
+      "concept_id": "MF.ANT.1.1",
+      "tier": 1,
+      "generator_type": "compute_absolute_value_mf",
+      "description": "Evaluate |x| for integers, fractions, and decimals; includes expressions like |−3 + 5|",
+      "answer_type": "decimal",
+      "visual_category": "C",
+      "visual_flag": true,
+      "downstream_unlocks": ["Grade 6 NS.4.4", "Grade 7 NS"],
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "params": {
+        "value_types": ["negative_integer", "positive_integer", "negative_fraction", "expression"],
+        "expression_forms": ["|a|", "|a + b|", "|a| + |b|", "|a − b|"],
+        "range": [-30, 30]
+      }
+    },
+    {
+      "id": "mf_ant_add_integers",
+      "concept_id": "MF.ANT.1.2",
+      "tier": 1,
+      "generator_type": "add_integers_mf",
+      "description": "Add two or three integers with mixed signs; includes same-sign and opposite-sign cases",
+      "answer_type": "integer",
+      "visual_category": "C",
+      "visual_flag": true,
+      "downstream_unlocks": ["Grade 7 NS.1.2"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "operand_count": [2, 3],
+        "value_range": [-50, 50],
+        "sign_pattern": ["pos_pos", "neg_neg", "pos_neg", "neg_pos", "mixed_three"],
+        "difficulty_variants": [
+          {"label": "easy", "range": [-10, 10]},
+          {"label": "standard", "range": [-25, 25]},
+          {"label": "hard", "range": [-50, 50], "operand_count": 3}
+        ]
+      }
+    },
+    {
+      "id": "mf_ant_subtract_integers",
+      "concept_id": "MF.ANT.1.3",
+      "tier": 1,
+      "generator_type": "subtract_integers_mf",
+      "description": "Subtract integers using add-the-opposite method; covers all sign combinations",
+      "answer_type": "integer",
+      "visual_category": "C",
+      "visual_flag": true,
+      "downstream_unlocks": ["Grade 7 NS.1.4"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "value_range": [-50, 50],
+        "sign_pattern": ["pos_minus_pos", "pos_minus_neg", "neg_minus_pos", "neg_minus_neg"],
+        "difficulty_variants": [
+          {"label": "easy", "pattern": "pos_minus_pos"},
+          {"label": "standard", "pattern": "pos_minus_neg"},
+          {"label": "hard", "pattern": "neg_minus_neg"}
+        ]
+      }
+    },
+    {
+      "id": "mf_ant_multiply_integers",
+      "concept_id": "MF.ANT.1.4",
+      "tier": 1,
+      "generator_type": "multiply_integers_mf",
+      "description": "Multiply two integers applying sign rules; answer requires sign determination",
+      "answer_type": "integer",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 7 NS.2.2"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "factor_range": [-12, 12],
+        "exclude_zero": false,
+        "sign_patterns": ["pos*pos", "pos*neg", "neg*pos", "neg*neg"]
+      }
+    },
+    {
+      "id": "mf_ant_divide_integers",
+      "concept_id": "MF.ANT.1.5",
+      "tier": 1,
+      "generator_type": "divide_integers_mf",
+      "description": "Divide two integers applying sign rules; dividend divisible by divisor; division by zero excluded",
+      "answer_type": "integer",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 7 NS.2.4"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "divisor_range": [-12, 12],
+        "quotient_range": [-12, 12],
+        "exclude_zero_divisor": true,
+        "sign_patterns": ["pos÷pos", "pos÷neg", "neg÷pos", "neg÷neg"]
+      }
+    },
+    {
+      "id": "mf_ant_prime_factorization",
+      "concept_id": "MF.ANT.2.2",
+      "tier": 1,
+      "generator_type": "prime_factorization",
+      "description": "Find the prime factorization of a composite number; express in exponential form",
+      "answer_type": "text",
+      "answer_type_note": "e.g., '2³ × 3' or '2^3 * 3'",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 6 NS.3.1 (GCF)", "Grade 6 NS.3.2 (LCM)"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "composite_pool": [12, 18, 20, 24, 28, 30, 36, 40, 42, 45, 48, 50, 56, 60, 72, 84, 90, 100, 120, 144],
+        "output_format": ["exponential", "expanded"],
+        "difficulty_variants": [
+          {"label": "easy", "pool": [12, 18, 20, 24, 28, 30]},
+          {"label": "standard", "pool": [36, 42, 45, 48, 56, 60]},
+          {"label": "hard", "pool": [72, 84, 90, 100, 120, 144]}
+        ]
+      }
+    },
+    {
+      "id": "mf_ant_find_gcf",
+      "concept_id": "MF.ANT.2.3",
+      "tier": 1,
+      "generator_type": "find_gcf_mf",
+      "description": "Find the GCF of two (or three) whole numbers using prime factorization or listing factors",
+      "answer_type": "integer",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 6 NS.3.1", "FDP simplify fractions"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "number_count": [2, 3],
+        "number_range": [2, 120],
+        "gcf_range": [1, 24]
+      }
+    },
+    {
+      "id": "mf_ant_find_lcm",
+      "concept_id": "MF.ANT.2.4",
+      "tier": 1,
+      "generator_type": "find_lcm_mf",
+      "description": "Find the LCM of two whole numbers; used for common denominators in fraction addition",
+      "answer_type": "integer",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 6 NS.3.2", "FDP add unlike fractions"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "number_count": [2, 3],
+        "number_range": [2, 20],
+        "lcm_ceiling": 120
+      }
+    },
+    {
+      "id": "mf_ant_eval_pemdas",
+      "concept_id": "MF.ANT.3.2",
+      "tier": 1,
+      "generator_type": "evaluate_pemdas",
+      "description": "Evaluate a multi-operation numerical expression following the correct order of operations",
+      "answer_type": "integer_or_decimal",
+      "visual_category": null,
+      "downstream_unlocks": ["ALL expression evaluation across Gr6–8 and Math 1"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "operations": ["parentheses", "exponents", "multiply", "divide", "add", "subtract"],
+        "expression_templates": [
+          "a + b × c",
+          "(a + b) × c",
+          "a² + b − c",
+          "a × (b + c) − d",
+          "(a + b)² ÷ c",
+          "a − b × (c + d)"
+        ],
+        "value_range": [1, 15],
+        "difficulty_variants": [
+          {"label": "easy", "ops": ["add_sub_mul_div"], "no_exponents": true},
+          {"label": "standard", "ops": ["parentheses_included"], "no_exponents": false},
+          {"label": "hard", "ops": ["nested_parentheses", "exponents"], "value_range": [1, 20]}
+        ]
+      }
+    },
+    {
+      "id": "mf_ant_eval_pemdas_abs_value",
+      "concept_id": "MF.ANT.3.3",
+      "tier": 1,
+      "generator_type": "evaluate_pemdas_with_absolute_value",
+      "description": "Evaluate expressions with absolute value treated as grouping symbol within PEMDAS",
+      "answer_type": "integer",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 6 NS", "Grade 7 NS"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "templates": [
+          "|a| + b",
+          "|a − b| × c",
+          "a + |b × c|",
+          "|a| − |b|",
+          "|a + b| ÷ c"
+        ],
+        "value_range": [-15, 15]
+      }
+    },
+
+    // ======= TIER 1: FRACTIONS, DECIMALS, PERCENTAGES =======
+
+    {
+      "id": "mf_fdp_equivalent_fractions",
+      "concept_id": "MF.FDP.1.1",
+      "tier": 1,
+      "generator_type": "equivalent_fractions",
+      "description": "Given a fraction and a target denominator (or numerator), find the equivalent fraction",
+      "answer_type": "fraction",
+      "visual_category": "C",
+      "visual_flag": true,
+      "downstream_unlocks": ["ALL fraction operations"],
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "params": {
+        "base_denominators": [2, 3, 4, 5, 6, 8, 10, 12],
+        "scale_factors": [2, 3, 4, 5],
+        "task": ["find_missing_numerator", "find_missing_denominator", "identify_equivalent_MC"]
+      }
+    },
+    {
+      "id": "mf_fdp_simplify_fraction",
+      "concept_id": "MF.FDP.1.2",
+      "tier": 1,
+      "generator_type": "simplify_fraction",
+      "description": "Reduce a fraction to lowest terms by dividing numerator and denominator by GCF",
+      "answer_type": "fraction",
+      "visual_category": null,
+      "downstream_unlocks": ["ALL — answer validation for every fraction generator in the platform"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "numerator_range": [2, 50],
+        "denominator_range": [4, 100],
+        "gcf_range": [2, 12],
+        "already_simplified_pool": "20% of problems",
+        "difficulty_variants": [
+          {"label": "easy", "gcf_range": [2, 4]},
+          {"label": "standard", "gcf_range": [5, 8]},
+          {"label": "hard", "gcf_range": [9, 12]}
+        ]
+      }
+    },
+    {
+      "id": "mf_fdp_mixed_improper_convert",
+      "concept_id": "MF.FDP.1.3",
+      "tier": 1,
+      "generator_type": "mixed_improper_convert",
+      "description": "Convert a mixed number to an improper fraction or vice versa",
+      "answer_type": "fraction",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 6 NS", "FDP multiply/divide mixed numbers"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "whole_part_range": [1, 10],
+        "denominator_pool": [2, 3, 4, 5, 6, 8, 10],
+        "direction": ["mixed_to_improper", "improper_to_mixed"]
+      }
+    },
+    {
+      "id": "mf_fdp_add_sub_like_denom",
+      "concept_id": "MF.FDP.2.1",
+      "tier": 1,
+      "generator_type": "add_sub_fractions_like_denominators",
+      "description": "Add or subtract two fractions with the same denominator; simplify result",
+      "answer_type": "fraction",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 6 NS"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "operation": ["add", "subtract"],
+        "denominator_pool": [2, 3, 4, 5, 6, 8, 10, 12],
+        "numerator_range": [1, 11],
+        "simplify_required": true
+      }
+    },
+    {
+      "id": "mf_fdp_add_sub_unlike_denom",
+      "concept_id": "MF.FDP.2.2",
+      "tier": 1,
+      "generator_type": "add_sub_fractions_unlike_denominators",
+      "description": "Add or subtract two fractions with different denominators; find LCD, convert, simplify",
+      "answer_type": "fraction",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 6 NS.1.x", "Grade 7 NS rational ops"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "operation": ["add", "subtract"],
+        "denominator_pairs": [[2,3],[3,4],[4,5],[2,5],[3,8],[4,6],[5,10],[6,8],[3,9],[4,12]],
+        "simplify_required": true,
+        "include_mixed_results": true,
+        "difficulty_variants": [
+          {"label": "easy", "pairs": [[2,3],[3,4],[2,5]]},
+          {"label": "standard", "pairs": [[4,6],[3,8],[5,10]]},
+          {"label": "hard", "pairs": [[6,8],[4,12],[3,9]], "mixed_numbers": true}
+        ]
+      }
+    },
+    {
+      "id": "mf_fdp_multiply_fractions",
+      "concept_id": "MF.FDP.3.1",
+      "tier": 1,
+      "generator_type": "multiply_fractions_mf",
+      "description": "Multiply two fractions (or mixed numbers at hard level); simplify before or after multiplying",
+      "answer_type": "fraction",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 6 NS", "Grade 7 NS"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "numerator_range": [1, 8],
+        "denominator_pool": [2, 3, 4, 5, 6, 8, 10, 12],
+        "cross_cancel": true,
+        "difficulty_variants": [
+          {"label": "easy", "type": "proper × proper"},
+          {"label": "standard", "type": "proper × proper, cross-cancel"},
+          {"label": "hard", "type": "mixed × proper"}
+        ]
+      }
+    },
+    {
+      "id": "mf_fdp_divide_fractions",
+      "concept_id": "MF.FDP.3.2",
+      "tier": 1,
+      "generator_type": "divide_fractions_mf",
+      "description": "Divide a fraction by a fraction using Keep-Change-Flip; simplify result",
+      "answer_type": "fraction",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 6 NS.2.2"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "numerator_range": [1, 8],
+        "denominator_pool": [2, 3, 4, 5, 6, 8, 10],
+        "include_whole_number_divisors": true,
+        "difficulty_variants": [
+          {"label": "easy", "type": "unit_fraction ÷ unit_fraction"},
+          {"label": "standard", "type": "proper ÷ proper"},
+          {"label": "hard", "type": "proper ÷ mixed or mixed ÷ proper"}
+        ]
+      }
+    },
+    {
+      "id": "mf_fdp_add_sub_decimals",
+      "concept_id": "MF.FDP.4.2",
+      "tier": 1,
+      "generator_type": "add_sub_decimals_mf",
+      "description": "Add or subtract decimals; align decimal points; operands up to thousandths place",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 6 NS.1.1"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "operation": ["add", "subtract"],
+        "decimal_places": [1, 2, 3],
+        "value_range": [0.001, 999.999],
+        "mixed_decimal_places": true
+      }
+    },
+    {
+      "id": "mf_fdp_multiply_decimals",
+      "concept_id": "MF.FDP.4.3",
+      "tier": 1,
+      "generator_type": "multiply_decimals_mf",
+      "description": "Multiply two decimals; total decimal places ≤ 4; count and place decimal point",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 6 NS.1.2"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "factor_decimal_places": [1, 2],
+        "combined_decimal_places": [1, 2, 3, 4],
+        "factor_range": [0.1, 99.9]
+      }
+    },
+    {
+      "id": "mf_fdp_divide_decimals",
+      "concept_id": "MF.FDP.4.4",
+      "tier": 1,
+      "generator_type": "divide_decimals_mf",
+      "description": "Divide a decimal by a whole number or decimal by decimal; shift decimal, divide as integers",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 6 NS.1.4"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "divisor_type": ["whole_number", "decimal_tenths", "decimal_hundredths"],
+        "dividend_range": [0.1, 99.9],
+        "difficulty_variants": [
+          {"label": "easy", "divisor": "whole_number"},
+          {"label": "standard", "divisor": "decimal_tenths"},
+          {"label": "hard", "divisor": "decimal_hundredths"}
+        ]
+      }
+    },
+    {
+      "id": "mf_fdp_triple_convert",
+      "concept_id": "MF.FDP.5.2",
+      "tier": 1,
+      "generator_type": "fraction_decimal_percent_triple_convert",
+      "description": "Convert between any two forms of fraction, decimal, and percent; both clean and repeating decimals",
+      "answer_type": "decimal_or_fraction_or_percent",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 6 RP.3.4", "Grade 7 RP.3.4"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "value_pool": [0.125, 0.25, 0.333, 0.375, 0.5, 0.625, 0.666, 0.75, 0.875, 0.1, 0.2, 0.4, 0.6, 0.8],
+        "input_form": ["fraction", "decimal", "percent"],
+        "output_form": ["fraction", "decimal", "percent"],
+        "include_repeating_decimals": true,
+        "repeating_notation": "bar or '...' suffix"
+      }
+    },
+    {
+      "id": "mf_fdp_percent_find_part",
+      "concept_id": "MF.FDP.6.1",
+      "tier": 1,
+      "generator_type": "percent_find_part",
+      "description": "Calculate P% of N (e.g., 35% of 80 = 28)",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 6 RP.3.2", "Grade 7 RP.3.1–3.3"],
+      "three_axis": {"cognitive_demand": "application", "complexity": "medium", "context": "real_world"},
+      "params": {
+        "percent_pool": [5, 10, 12.5, 15, 20, 25, 30, 33.3, 40, 50, 60, 75, 80, 100],
+        "base_range": [20, 500],
+        "context_pool": ["test score", "sale price", "tax calculation", "survey result"]
+      }
+    },
+    {
+      "id": "mf_fdp_percent_find_whole_or_pct",
+      "concept_id": "MF.FDP.6.2",
+      "tier": 1,
+      "generator_type": "percent_find_whole_or_percent",
+      "description": "Find the whole given part and percent; or find the percent given part and whole",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 6 RP.3.3", "Grade 7 RP.3.3"],
+      "three_axis": {"cognitive_demand": "application", "complexity": "high", "context": "real_world"},
+      "params": {
+        "solve_for": ["whole", "percent"],
+        "percent_pool": [10, 20, 25, 40, 50, 60, 75, 80],
+        "part_range": [5, 300]
+      }
+    },
+
+    // ======= TIER 1: RATIOS, PROPORTIONS & BASIC ALGEBRA =======
+
+    {
+      "id": "mf_rpba_simplify_ratio",
+      "concept_id": "MF.RPBA.1.2",
+      "tier": 1,
+      "generator_type": "simplify_ratio",
+      "description": "Reduce a ratio a:b to its simplest form by dividing both terms by GCF",
+      "answer_type": "text",
+      "answer_type_note": "e.g., '3:4' or '3/4'",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 6 RP.1.1"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "ratio_value_range": [2, 60],
+        "gcf_range": [2, 12],
+        "format": ["colon", "fraction", "word_form"]
+      }
+    },
+    {
+      "id": "mf_rpba_solve_proportion_cross",
+      "concept_id": "MF.RPBA.2.2",
+      "tier": 1,
+      "generator_type": "solve_proportion_cross_multiplication",
+      "description": "Solve a/b = c/? or a/?  = c/d using cross-multiplication",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 6 RP", "Grade 7 RP", "Grade 8 GEO similar figures"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "known_values_range": [2, 50],
+        "missing_position": ["top_right", "bottom_right", "bottom_left", "top_left"],
+        "solution_type": ["integer", "decimal"],
+        "difficulty_variants": [
+          {"label": "easy", "solution": "integer"},
+          {"label": "standard", "solution": "one_decimal"},
+          {"label": "hard", "solution": "two_decimal"}
+        ]
+      }
+    },
+    {
+      "id": "mf_rpba_proportion_word_problem",
+      "concept_id": "MF.RPBA.2.3",
+      "tier": 1,
+      "generator_type": "proportion_word_problem",
+      "description": "Real-world proportion problem: set up and solve using cross-multiplication",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 6 RP.2.3", "Grade 7 RP.2.1"],
+      "three_axis": {"cognitive_demand": "application", "complexity": "medium", "context": "real_world"},
+      "params": {
+        "context_pool": [
+          "recipe_scaling", "map_distance", "speed_distance", "unit_price",
+          "shadow_height", "gear_ratio", "exchange_rate"
+        ],
+        "missing_position": ["total", "part", "rate"]
+      }
+    },
+    {
+      "id": "mf_rpba_one_step_eq_add_sub",
+      "concept_id": "MF.RPBA.3.2",
+      "tier": 1,
+      "generator_type": "one_step_equation_add_sub_mf",
+      "description": "Solve x + a = b or x − a = b using inverse operations",
+      "answer_type": "integer_or_decimal",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 6 EE.3.2"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "a_range": [1, 50],
+        "b_range": [1, 100],
+        "solution_type": ["positive_integer", "negative_integer", "decimal"]
+      }
+    },
+    {
+      "id": "mf_rpba_one_step_eq_mul_div",
+      "concept_id": "MF.RPBA.3.3",
+      "tier": 1,
+      "generator_type": "one_step_equation_mul_div_mf",
+      "description": "Solve ax = b or x/a = b using inverse operations",
+      "answer_type": "decimal_or_fraction",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 6 EE.3.3"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "a_range": [2, 20],
+        "b_range": [2, 100],
+        "solution_type": ["integer", "fraction", "decimal"]
+      }
+    },
+
+    // ======= TIER 2: UNITS & CONVERSIONS =======
+
+    {
+      "id": "mf_uc_convert_metric_length",
+      "concept_id": "MF.UC.1.2",
+      "tier": 2,
+      "generator_type": "convert_metric_length",
+      "description": "Convert between metric length units (mm, cm, m, km) using powers of 10",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 6 RP.4.1"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "real_world"},
+      "params": {
+        "conversions": [
+          {"from": "mm", "to": "cm", "factor": 0.1},
+          {"from": "cm", "to": "m", "factor": 0.01},
+          {"from": "m", "to": "km", "factor": 0.001},
+          {"from": "km", "to": "m", "factor": 1000},
+          {"from": "m", "to": "cm", "factor": 100},
+          {"from": "cm", "to": "mm", "factor": 10}
+        ],
+        "value_range": [0.01, 10000]
+      }
+    },
+    {
+      "id": "mf_uc_convert_metric_mass",
+      "concept_id": "MF.UC.1.4",
+      "tier": 2,
+      "generator_type": "convert_metric_mass",
+      "description": "Convert between g and kg",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 6 RP.4.1"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "real_world"},
+      "params": {
+        "conversions": [
+          {"from": "g", "to": "kg", "factor": 0.001},
+          {"from": "kg", "to": "g", "factor": 1000}
+        ],
+        "value_range": [0.5, 5000]
+      }
+    },
+    {
+      "id": "mf_uc_convert_metric_volume",
+      "concept_id": "MF.UC.1.6",
+      "tier": 2,
+      "generator_type": "convert_metric_volume",
+      "description": "Convert between mL and L",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 6 RP.4.1"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "real_world"},
+      "params": {
+        "conversions": [
+          {"from": "mL", "to": "L", "factor": 0.001},
+          {"from": "L", "to": "mL", "factor": 1000}
+        ],
+        "value_range": [1, 5000]
+      }
+    },
+    {
+      "id": "mf_uc_convert_imperial_length",
+      "concept_id": "MF.UC.2.2",
+      "tier": 2,
+      "generator_type": "convert_imperial_length",
+      "description": "Convert between inches, feet, yards, and miles",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 6 RP.4.1"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "real_world"},
+      "params": {
+        "conversions": [
+          {"from": "in", "to": "ft", "factor": 0.0833},
+          {"from": "ft", "to": "in", "factor": 12},
+          {"from": "ft", "to": "yd", "factor": 0.333},
+          {"from": "yd", "to": "ft", "factor": 3},
+          {"from": "mi", "to": "ft", "factor": 5280}
+        ]
+      }
+    },
+    {
+      "id": "mf_uc_convert_imperial_weight",
+      "concept_id": "MF.UC.2.4",
+      "tier": 2,
+      "generator_type": "convert_imperial_weight",
+      "description": "Convert between ounces, pounds, and tons",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 6 RP.4.1"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "real_world"},
+      "params": {
+        "conversions": [
+          {"from": "oz", "to": "lb", "factor": 0.0625},
+          {"from": "lb", "to": "oz", "factor": 16},
+          {"from": "lb", "to": "ton", "factor": 0.0005},
+          {"from": "ton", "to": "lb", "factor": 2000}
+        ]
+      }
+    },
+    {
+      "id": "mf_uc_convert_imperial_volume",
+      "concept_id": "MF.UC.2.6",
+      "tier": 2,
+      "generator_type": "convert_imperial_volume",
+      "description": "Convert between fl oz, cups, pints, quarts, and gallons",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 6 RP.4.1"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "real_world"},
+      "params": {
+        "conversions": [
+          {"from": "fl oz", "to": "cup", "factor": 0.125},
+          {"from": "cup", "to": "pint", "factor": 0.5},
+          {"from": "pint", "to": "quart", "factor": 0.5},
+          {"from": "quart", "to": "gallon", "factor": 0.25},
+          {"from": "gallon", "to": "quart", "factor": 4}
+        ]
+      }
+    },
+    {
+      "id": "mf_uc_dimensional_analysis_single",
+      "concept_id": "MF.UC.3.2",
+      "tier": 2,
+      "generator_type": "dimensional_analysis_single_step",
+      "description": "Convert a quantity using a single conversion factor; set up with unit fraction multiplication",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 6 RP.4.1", "Grade 7 RP"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "real_world"},
+      "params": {
+        "unit_pairs": ["in↔cm", "mi↔km", "kg↔lb", "L↔gal", "oz↔g"],
+        "given_range": [1, 100],
+        "show_unit_fraction_setup": false
+      }
+    },
+    {
+      "id": "mf_uc_dimensional_analysis_multi",
+      "concept_id": "MF.UC.3.3",
+      "tier": 2,
+      "generator_type": "dimensional_analysis_multi_step",
+      "description": "Convert a quantity through a chain of 2–3 conversion factors (e.g., miles to inches)",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "downstream_unlocks": ["Math 1 modeling"],
+      "three_axis": {"cognitive_demand": "application", "complexity": "high", "context": "real_world"},
+      "params": {
+        "chain_length": [2, 3],
+        "conversion_chains": [
+          "miles → feet → inches",
+          "km → m → cm → mm",
+          "gallons → quarts → pints → cups",
+          "tons → pounds → ounces"
+        ]
+      }
+    },
+    {
+      "id": "mf_uc_convert_compound_rates",
+      "concept_id": "MF.UC.3.4",
+      "tier": 2,
+      "generator_type": "convert_compound_rates",
+      "description": "Convert compound rate units (e.g., miles/hour → feet/second) using dimensional analysis",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 8 SP slope interpretation", "Math 1 modeling"],
+      "three_axis": {"cognitive_demand": "application", "complexity": "high", "context": "real_world"},
+      "params": {
+        "rate_conversions": [
+          {"from": "mi/hr", "to": "ft/sec", "steps": 2},
+          {"from": "km/hr", "to": "m/sec", "steps": 1},
+          {"from": "ft/min", "to": "in/sec", "steps": 2}
+        ],
+        "given_range": [10, 120]
+      }
+    },
+
+    // ======= TIER 2: EXPONENTS & ROOTS =======
+
+    {
+      "id": "mf_er_eval_exponent_basic",
+      "concept_id": "MF.ER.1.1",
+      "tier": 2,
+      "generator_type": "evaluate_exponent_basic",
+      "description": "Evaluate b^n for whole-number base and exponent; includes b=0 and b=1 cases",
+      "answer_type": "integer",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 6 EE.1.1", "Grade 8 EE.1.1"],
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "params": {
+        "base_range": [0, 12],
+        "exponent_range": [0, 5],
+        "include_b_zero": true,
+        "include_b_one": true
+      }
+    },
+    {
+      "id": "mf_er_exp_product_quotient",
+      "concept_id": "MF.ER.1.2",
+      "tier": 2,
+      "generator_type": "exponent_product_quotient_rules",
+      "description": "Simplify x^a × x^b = x^(a+b) and x^a / x^b = x^(a-b)",
+      "answer_type": "text",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 8 EE.1.1"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "rule": ["product", "quotient"],
+        "base_type": ["variable", "integer"],
+        "exponent_range": [1, 6]
+      }
+    },
+    {
+      "id": "mf_er_exp_power_of_power",
+      "concept_id": "MF.ER.1.3",
+      "tier": 2,
+      "generator_type": "exponent_power_of_power",
+      "description": "Simplify (x^a)^b = x^(ab)",
+      "answer_type": "text",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 8 EE.1.1"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "inner_exponent_range": [2, 5],
+        "outer_exponent_range": [2, 4],
+        "base_type": ["variable", "integer", "mixed"]
+      }
+    },
+    {
+      "id": "mf_er_eval_zero_exponent",
+      "concept_id": "MF.ER.1.5",
+      "tier": 2,
+      "generator_type": "evaluate_zero_exponent",
+      "description": "Evaluate any non-zero base raised to the power 0; confirm answer is always 1",
+      "answer_type": "integer",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 8 EE.1.1"],
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "params": {
+        "base_pool": [2, 3, 5, 7, 10, 100, "x", "2x", "−5"],
+        "distractor_values": ["0", "undefined", "base_itself"]
+      }
+    },
+    {
+      "id": "mf_er_eval_negative_exponent",
+      "concept_id": "MF.ER.1.6",
+      "tier": 2,
+      "generator_type": "evaluate_negative_exponent",
+      "description": "Evaluate x^(−n) = 1/x^n; rewrite negative exponents as positive fractions",
+      "answer_type": "fraction",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 8 EE.1.1"],
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "base_range": [2, 10],
+        "negative_exponent_range": [-4, -1],
+        "task": ["evaluate_to_fraction", "rewrite_as_positive_exp"]
+      }
+    },
+    {
+      "id": "mf_er_simplify_all_exp_laws",
+      "concept_id": "MF.ER.1.7",
+      "tier": 2,
+      "generator_type": "simplify_all_exponent_laws",
+      "description": "Apply multiple exponent laws in sequence to simplify complex expressions",
+      "answer_type": "text",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 8 EE.1.1", "Math 1 polynomial ops"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "expression_types": [
+          "(x^a × x^b) / x^c",
+          "(x^a)^b × x^c",
+          "x^a × y^b / (x^c × y^d)",
+          "(2x^a)^3"
+        ],
+        "exponent_range": [-3, 6],
+        "bases": ["single_variable", "numeric_and_variable"]
+      }
+    },
+    {
+      "id": "mf_er_eval_square_root",
+      "concept_id": "MF.ER.2.1",
+      "tier": 2,
+      "generator_type": "evaluate_square_root_mf",
+      "description": "Find √n for perfect squares; connect to squaring as inverse operations",
+      "answer_type": "integer",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 8 NS.2.1", "Grade 8 NS.2.2"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "perfect_squares": [1,4,9,16,25,36,49,64,81,100,121,144,169,196,225],
+        "include_reverse": true
+      }
+    },
+    {
+      "id": "mf_er_eval_cube_root",
+      "concept_id": "MF.ER.2.2",
+      "tier": 2,
+      "generator_type": "evaluate_cube_root_mf",
+      "description": "Find ∛n for perfect cubes; connect to cubing as inverse",
+      "answer_type": "integer",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 8 NS.2.3"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "perfect_cubes": [1,8,27,64,125,216,343,512],
+        "include_negative_cubes": true
+      }
+    },
+    {
+      "id": "mf_er_approx_square_root",
+      "concept_id": "MF.ER.2.4",
+      "tier": 2,
+      "generator_type": "approximate_square_root_mf",
+      "description": "Estimate √n for non-perfect squares between two consecutive integers; refine to nearest tenth",
+      "answer_type": "decimal",
+      "visual_category": "C",
+      "visual_flag": true,
+      "downstream_unlocks": ["Grade 8 NS.3.1", "Grade 8 NS.3.2"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "radicand_pool": [2,3,5,6,7,8,10,11,12,13,14,15,17,18,19,20,21,23,24,26,27,28,29,30],
+        "precision": ["integer_bounds", "nearest_tenth"],
+        "task": ["between_which_integers", "approximate_to_tenth"]
+      }
+    },
+
+    // ======= TIER 2: GEOMETRY FUNDAMENTALS =======
+
+    {
+      "id": "mf_geo_perimeter_polygon",
+      "concept_id": "MF.GEO.1.1",
+      "tier": 2,
+      "generator_type": "perimeter_polygon_mf",
+      "description": "Compute perimeter of squares, rectangles, triangles, and regular polygons",
+      "answer_type": "decimal",
+      "visual_category": "A",
+      "visual_flag": true,
+      "downstream_unlocks": ["Grade 6 GEO (assumed entering knowledge)"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "shapes": ["square", "rectangle", "equilateral_triangle", "scalene_triangle", "regular_hexagon"],
+        "side_range": [2, 30],
+        "solve_for": ["perimeter", "missing_side"],
+        "difficulty_variants": [
+          {"label": "easy", "shapes": ["square", "rectangle"]},
+          {"label": "standard", "shapes": ["triangle", "regular_polygon"]},
+          {"label": "hard", "solve_for": "missing_side"}
+        ]
+      }
+    },
+    {
+      "id": "mf_geo_area_sq_rect",
+      "concept_id": "MF.GEO.1.2",
+      "tier": 2,
+      "generator_type": "area_square_rectangle_mf",
+      "description": "Compute area of squares (A = s²) and rectangles (A = lw)",
+      "answer_type": "decimal",
+      "visual_category": "A",
+      "visual_flag": true,
+      "downstream_unlocks": ["Grade 6 GEO.1.1 (assumed)"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "shapes": ["square", "rectangle"],
+        "dimension_range": [2, 25],
+        "solve_for": ["area", "side", "length", "width"]
+      }
+    },
+    {
+      "id": "mf_geo_area_triangle_mf",
+      "concept_id": "MF.GEO.1.3",
+      "tier": 2,
+      "generator_type": "area_triangle_mf",
+      "description": "Compute area of a triangle A = ½bh; includes right, acute, and obtuse triangles",
+      "answer_type": "decimal",
+      "visual_category": "A",
+      "visual_flag": true,
+      "downstream_unlocks": ["Grade 6 GEO.1.1"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "triangle_types": ["right", "acute", "obtuse"],
+        "base_range": [3, 24],
+        "height_range": [2, 20],
+        "slant_height_distractor": true,
+        "solve_for": ["area", "base", "height"]
+      }
+    },
+    {
+      "id": "mf_geo_complementary_angle",
+      "concept_id": "MF.GEO.2.2",
+      "tier": 2,
+      "generator_type": "complementary_angle_mf",
+      "description": "Given one angle, find its complement (sum = 90°)",
+      "answer_type": "integer",
+      "visual_category": "A",
+      "visual_flag": true,
+      "downstream_unlocks": ["Grade 7 GEO.1.1", "Grade 7 GEO.3.1"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "known_angle_range": [5, 85],
+        "include_algebraic": false
+      }
+    },
+    {
+      "id": "mf_geo_supplementary_angle",
+      "concept_id": "MF.GEO.2.3",
+      "tier": 2,
+      "generator_type": "supplementary_angle_mf",
+      "description": "Given one angle, find its supplement (sum = 180°)",
+      "answer_type": "integer",
+      "visual_category": "A",
+      "visual_flag": true,
+      "downstream_unlocks": ["Grade 7 GEO.3.1"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "known_angle_range": [10, 170],
+        "include_algebraic": false
+      }
+    },
+    {
+      "id": "mf_geo_vertical_adjacent_angle",
+      "concept_id": "MF.GEO.2.4",
+      "tier": 2,
+      "generator_type": "vertical_adjacent_angle_mf",
+      "description": "Given one angle at an intersection, find vertical or adjacent angles using their properties",
+      "answer_type": "integer",
+      "visual_category": "A",
+      "visual_flag": true,
+      "downstream_unlocks": ["Grade 7 GEO.3.1", "Grade 8 GEO.TRANS.6"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "given_angle_range": [20, 160],
+        "ask_for": ["vertical_angle", "adjacent_angle"],
+        "include_multiple_unknowns": true
+      }
+    },
+    {
+      "id": "mf_geo_pythagorean_mf",
+      "concept_id": "MF.GEO.3.2",
+      "tier": 2,
+      "generator_type": "pythagorean_theorem_mf",
+      "description": "Find the missing side of a right triangle using a² + b² = c²",
+      "answer_type": "decimal",
+      "visual_category": "A",
+      "visual_flag": true,
+      "downstream_unlocks": ["Grade 8 GEO.PV.1.2"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "missing_side": ["leg_a", "leg_b", "hypotenuse"],
+        "pythagorean_triples": [[3,4,5],[5,12,13],[8,15,17],[7,24,25],[6,8,10],[9,12,15]],
+        "non_triple_pairs": [[2,3],[4,7],[5,8],[3,7]],
+        "difficulty_variants": [
+          {"label": "easy", "type": "triple_find_hypotenuse"},
+          {"label": "standard", "type": "triple_find_leg"},
+          {"label": "hard", "type": "non_triple"}
+        ]
+      }
+    },
+    {
+      "id": "mf_geo_pythagorean_word_mf",
+      "concept_id": "MF.GEO.3.3",
+      "tier": 2,
+      "generator_type": "pythagorean_word_problem_mf",
+      "description": "Real-world Pythagorean problem (ladder, diagonal, direct path)",
+      "answer_type": "decimal",
+      "visual_category": "A",
+      "visual_flag": true,
+      "downstream_unlocks": ["Grade 8 GEO.PV.1.3"],
+      "three_axis": {"cognitive_demand": "application", "complexity": "high", "context": "real_world"},
+      "params": {
+        "scenarios": ["ladder_wall", "diagonal_rectangle", "direct_path_park", "baseball_diamond", "TV_screen_diagonal"]
+      }
+    },
+
+    // ======= TIER 2: STATISTICS & PROBABILITY =======
+
+    {
+      "id": "mf_s_compute_mean",
+      "concept_id": "MF.S.1.2",
+      "tier": 2,
+      "generator_type": "compute_mean_mf",
+      "description": "Compute the arithmetic mean of a data set of 4–8 values; answer may be non-integer",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 6 SP.3.1"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "dataset_size": [4, 5, 6, 7, 8],
+        "value_range": [1, 100],
+        "mean_type": ["integer", "one_decimal"]
+      }
+    },
+    {
+      "id": "mf_s_compute_median",
+      "concept_id": "MF.S.1.3",
+      "tier": 2,
+      "generator_type": "compute_median_mf",
+      "description": "Order values and identify the median; handles both odd and even dataset sizes",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 6 SP.3.1"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "dataset_size": [5, 6, 7, 8, 9],
+        "value_range": [1, 100],
+        "pre_sorted": false
+      }
+    },
+    {
+      "id": "mf_s_compute_mode",
+      "concept_id": "MF.S.1.4",
+      "tier": 2,
+      "generator_type": "compute_mode_mf",
+      "description": "Identify mode(s) in a data set; includes no-mode, unimodal, and bimodal cases",
+      "answer_type": "integer_or_MC",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 6 SP.3.1"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "dataset_size": [6, 7, 8],
+        "value_range": [1, 50],
+        "mode_types": ["unimodal", "bimodal", "no_mode"],
+        "distribution": "20% no_mode, 60% unimodal, 20% bimodal"
+      }
+    },
+    {
+      "id": "mf_s_compute_range",
+      "concept_id": "MF.S.2.1",
+      "tier": 2,
+      "generator_type": "compute_range_mf",
+      "description": "Calculate range = max − min for a data set",
+      "answer_type": "integer_or_decimal",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 6 SP.3.2"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "dataset_size": [5, 6, 7, 8],
+        "value_range": [1, 100],
+        "include_negatives": false
+      }
+    },
+    {
+      "id": "mf_s_compute_iqr",
+      "concept_id": "MF.S.2.2",
+      "tier": 2,
+      "generator_type": "compute_iqr_mf",
+      "description": "Find Q1, Q3, and IQR = Q3 − Q1 for a dataset; odd-size datasets only to avoid interpolation",
+      "answer_type": "decimal",
+      "visual_category": "D",
+      "visual_flag": true,
+      "downstream_unlocks": ["Grade 6 SP.3.2", "Grade 7 SP.2.x"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "dataset_size": [7, 9, 11],
+        "value_range": [5, 100],
+        "ask_for": ["Q1", "Q3", "IQR", "all_three"]
+      }
+    },
+    {
+      "id": "mf_s_simple_probability",
+      "concept_id": "MF.S.3.1",
+      "tier": 2,
+      "generator_type": "simple_probability_mf",
+      "description": "Calculate P(event) from a clearly defined uniform sample space (dice, marbles, coins, spinner)",
+      "answer_type": "fraction",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 7 SP.3.3"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "experiment_type": ["dice", "marbles", "coins", "spinner", "cards_no_face"],
+        "event_type": ["simple", "complement"],
+        "event_complexity": ["one_outcome", "multiple_outcomes"]
+      }
+    },
+    {
+      "id": "mf_s_sample_space_list",
+      "concept_id": "MF.S.3.2",
+      "tier": 2,
+      "generator_type": "sample_space_list",
+      "description": "List all outcomes in a sample space for a simple or two-stage experiment",
+      "answer_type": "MC",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 7 SP.4.1", "Grade 7 SP.4.2"],
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "experiment_types": ["single_die", "single_coin", "two_coins", "coin_and_die"],
+        "task": ["count_outcomes", "identify_event", "list_sample_space_MC"]
+      }
+    },
+    {
+      "id": "mf_s_probability_prediction",
+      "concept_id": "MF.S.3.4",
+      "tier": 2,
+      "generator_type": "probability_prediction_mf",
+      "description": "Given P(event) and number of trials, predict expected frequency of the event",
+      "answer_type": "decimal",
+      "visual_category": null,
+      "downstream_unlocks": ["Grade 7 SP.3.2"],
+      "three_axis": {"cognitive_demand": "application", "complexity": "medium", "context": "real_world"},
+      "params": {
+        "probability_pool": ["1/2", "1/3", "1/4", "1/6", "2/5", "3/8"],
+        "trials_pool": [12, 20, 24, 30, 36, 48, 60, 100, 120]
+      }
+    },
+
+    // ======= TIER 3: RADICAL OPERATIONS =======
+
+    {
+      "id": "mf_rad_simplify_sqrt",
+      "concept_id": "MF.RAD.1.1",
+      "tier": 3,
+      "generator_type": "simplify_square_root",
+      "description": "Simplify √n by extracting the largest perfect-square factor (e.g., √72 = 6√2)",
+      "answer_type": "text",
+      "answer_type_note": "e.g., '6√2' — format: coefficient followed by radical",
+      "visual_category": null,
+      "downstream_unlocks": ["Math 1 quadratics", "Math 1 Pythagorean exact values"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "radicand_pool": [8, 12, 18, 20, 24, 27, 28, 32, 45, 48, 50, 72, 75, 80, 98, 108, 125, 147, 162, 200],
+        "difficulty_variants": [
+          {"label": "easy", "pool": [8, 12, 18, 20, 28]},
+          {"label": "standard", "pool": [32, 45, 50, 72, 75]},
+          {"label": "hard", "pool": [98, 108, 125, 147, 162, 200]}
+        ]
+      }
+    },
+    {
+      "id": "mf_rad_simplify_sqrt_variable",
+      "concept_id": "MF.RAD.1.2",
+      "tier": 3,
+      "generator_type": "simplify_sqrt_with_variables",
+      "description": "Simplify √(ax^n) by extracting perfect-square variable factors (e.g., √(x⁶) = x³, √(4x⁵) = 2x²√x)",
+      "answer_type": "text",
+      "visual_category": null,
+      "downstream_unlocks": ["Math 1"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "expression_types": ["√(x^n)", "√(ax^n)", "√(ax^m × y^n)"],
+        "exponent_range": [2, 8],
+        "coefficient_pool": [1, 4, 9, 16, 25]
+      }
+    },
+    {
+      "id": "mf_rad_simplify_nth_root",
+      "concept_id": "MF.RAD.1.3",
+      "tier": 3,
+      "generator_type": "simplify_nth_root",
+      "description": "Simplify cube roots and nth roots by extracting perfect-cube/nth-power factors",
+      "answer_type": "text",
+      "visual_category": null,
+      "downstream_unlocks": ["Math 2", "AP Pre-Calc"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "root_index": [3, 4],
+        "radicand_pool_cuberoot": [16, 24, 54, 81, 128, 250],
+        "radicand_pool_fourthroot": [32, 48, 162]
+      }
+    },
+    {
+      "id": "mf_rad_add_sub_like_radicals",
+      "concept_id": "MF.RAD.2.1",
+      "tier": 3,
+      "generator_type": "add_sub_like_radical_expressions",
+      "description": "Add/subtract radical terms with identical radicands (e.g., 3√5 + 2√5 = 5√5)",
+      "answer_type": "text",
+      "visual_category": null,
+      "downstream_unlocks": ["Math 1"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "radicand_pool": [2, 3, 5, 6, 7, 10],
+        "coefficient_range": [1, 8],
+        "operation": ["add", "subtract", "mixed"],
+        "term_count": [2, 3]
+      }
+    },
+    {
+      "id": "mf_rad_add_sub_unlike_radicals",
+      "concept_id": "MF.RAD.2.2",
+      "tier": 3,
+      "generator_type": "add_sub_unlike_radical_expressions",
+      "description": "Simplify unlike radicals first, then combine like terms (e.g., √8 + √18 = 5√2)",
+      "answer_type": "text",
+      "visual_category": null,
+      "downstream_unlocks": ["Math 1"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "pairs": [["√8","√18"], ["√12","√27"], ["√20","√45"], ["√50","√32"], ["2√12","3√27"]],
+        "operation": ["add", "subtract"]
+      }
+    },
+    {
+      "id": "mf_rad_multiply_radicals_mono",
+      "concept_id": "MF.RAD.3.1",
+      "tier": 3,
+      "generator_type": "multiply_radicals_monomial_x_monomial",
+      "description": "Multiply two radical monomials: (a√m)(b√n) = ab√(mn); simplify result",
+      "answer_type": "text",
+      "visual_category": null,
+      "downstream_unlocks": ["Math 1"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "coefficient_range": [1, 6],
+        "radicand_pool": [2, 3, 5, 6, 7, 10, 11, 15],
+        "simplify_product": true
+      }
+    },
+    {
+      "id": "mf_rad_multiply_radicals_mono_bi",
+      "concept_id": "MF.RAD.3.2",
+      "tier": 3,
+      "generator_type": "multiply_radicals_monomial_x_binomial",
+      "description": "Multiply a√m × (b√n + c√p) using distribution; simplify each term",
+      "answer_type": "text",
+      "visual_category": null,
+      "downstream_unlocks": ["Math 1 quadratic formula"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "outer_coefficient_range": [1, 4],
+        "inner_radicands": [[2, 3], [5, 7], [2, 8], [3, 12], [6, 10]],
+        "simplify_each_term": true
+      }
+    },
+    {
+      "id": "mf_rad_multiply_radicals_foil",
+      "concept_id": "MF.RAD.3.3",
+      "tier": 3,
+      "generator_type": "multiply_radicals_binomial_x_binomial_FOIL",
+      "description": "FOIL two binomial radical expressions; collect like terms; simplify all radicals",
+      "answer_type": "text",
+      "visual_category": null,
+      "downstream_unlocks": ["Math 1", "Math 2"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "binomial_templates": [
+          "(√a + √b)(√a − √b)",
+          "(a + √b)(a − √b)",
+          "(√a + √b)²",
+          "(a√m + b)(c√m + d)"
+        ],
+        "radicand_pool": [2, 3, 5, 6, 7]
+      }
+    },
+    {
+      "id": "mf_rad_rationalize_mono_denom",
+      "concept_id": "MF.RAD.4.1",
+      "tier": 3,
+      "generator_type": "rationalize_monomial_denominator",
+      "description": "Rationalize a fraction with √n in the denominator by multiplying by √n/√n",
+      "answer_type": "text",
+      "visual_category": null,
+      "downstream_unlocks": ["Math 1"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "numerator_pool": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        "denominator_radicand_pool": [2, 3, 5, 6, 7, 10, 11],
+        "simplify_numerator": true
+      }
+    },
+    {
+      "id": "mf_rad_rationalize_conjugate",
+      "concept_id": "MF.RAD.4.2",
+      "tier": 3,
+      "generator_type": "rationalize_binomial_denominator_conjugate",
+      "description": "Rationalize a fraction with binomial denominator (a + √b) by multiplying by conjugate (a − √b)",
+      "answer_type": "text",
+      "visual_category": null,
+      "downstream_unlocks": ["Math 2", "AP Pre-Calc"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "high", "context": "abstract"},
+      "params": {
+        "denominator_templates": ["a + √b", "√a + √b", "a − √b"],
+        "integer_range": [1, 5],
+        "radicand_pool": [2, 3, 5, 7],
+        "simplify_result": true
+      }
+    },
+
+    // ======= TIER 3: INTRODUCTION TO SETS =======
+
+    {
+      "id": "mf_sets_set_union",
+      "concept_id": "MF.SETS.2.1",
+      "tier": 3,
+      "generator_type": "set_union",
+      "description": "Find A ∪ B (all elements in A or B or both); list in roster notation",
+      "answer_type": "text",
+      "answer_type_note": "Set in roster notation e.g. '{1, 2, 3, 4, 5}'",
+      "visual_category": "E",
+      "visual_flag": true,
+      "downstream_unlocks": ["Grade 7 SP compound events", "Math 1 functions"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "element_type": ["integers", "letters", "mixed"],
+        "set_size_range": [3, 7],
+        "overlap_count_range": [0, 3]
+      }
+    },
+    {
+      "id": "mf_sets_set_intersection",
+      "concept_id": "MF.SETS.2.2",
+      "tier": 3,
+      "generator_type": "set_intersection",
+      "description": "Find A ∩ B (elements in BOTH A and B)",
+      "answer_type": "text",
+      "visual_category": "E",
+      "visual_flag": true,
+      "downstream_unlocks": ["Grade 7 SP compound events"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "element_type": ["integers", "letters"],
+        "set_size_range": [3, 7],
+        "disjoint_probability": "20% — produces empty intersection"
+      }
+    },
+    {
+      "id": "mf_sets_set_complement",
+      "concept_id": "MF.SETS.2.3",
+      "tier": 3,
+      "generator_type": "set_complement",
+      "description": "Find A' (elements in universal set U but NOT in A)",
+      "answer_type": "text",
+      "visual_category": "E",
+      "visual_flag": true,
+      "downstream_unlocks": ["Math 1 probability", "Grade 7 SP"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "universal_set_size": [8, 10, 12],
+        "subset_size_range": [3, 7]
+      }
+    },
+    {
+      "id": "mf_sets_identify_subsets",
+      "concept_id": "MF.SETS.1.2",
+      "tier": 3,
+      "generator_type": "identify_subsets_of_set",
+      "description": "Given a set A, identify subsets or count the number of subsets (2^n formula)",
+      "answer_type": "MC",
+      "visual_category": "E",
+      "visual_flag": true,
+      "downstream_unlocks": ["AP Pre-Calc"],
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "set_size": [2, 3, 4],
+        "task": ["list_all_subsets", "count_subsets_MC", "is_this_a_subset_MC"]
+      }
+    },
+    {
+      "id": "mf_sets_find_cardinality",
+      "concept_id": "MF.SETS.4.1",
+      "tier": 3,
+      "generator_type": "find_set_cardinality",
+      "description": "Count elements in a set expressed in roster or set-builder notation",
+      "answer_type": "integer",
+      "visual_category": null,
+      "downstream_unlocks": ["SETS.4.2"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "low", "context": "abstract"},
+      "params": {
+        "notation": ["roster", "set_builder_simple"],
+        "set_size_range": [2, 10]
+      }
+    },
+    {
+      "id": "mf_sets_cardinality_union_formula",
+      "concept_id": "MF.SETS.4.2",
+      "tier": 3,
+      "generator_type": "cardinality_union_formula",
+      "description": "Apply n(A ∪ B) = n(A) + n(B) − n(A ∩ B) to find a missing cardinality",
+      "answer_type": "integer",
+      "visual_category": "E",
+      "visual_flag": true,
+      "downstream_unlocks": ["Math 1 probability (inclusion-exclusion)"],
+      "three_axis": {"cognitive_demand": "procedural", "complexity": "medium", "context": "abstract"},
+      "params": {
+        "solve_for": ["n_union", "n_A", "n_B", "n_intersection"],
+        "total_range": [10, 50],
+        "overlap_range": [1, 15],
+        "context_pool": ["class survey", "Venn diagram", "hobby groups"]
+      }
+    }
+
+  ]
+}

@@ -1,0 +1,543 @@
+{
+  "pool_id": "ap_precalc",
+  "division": "Senior Varsity (SV)",
+  "version": "1.0.0",
+  "total_visual_specs": 28,
+  "global_rules": [
+    "CRITICAL: The answer is NEVER encoded in the visual. Visuals show setup only.",
+    "AP exam tests all four representations: graphical, numerical, analytical, verbal. Visuals primarily serve graphical and numerical representations.",
+    "Coordinate planes use clean grid with labeled axes. Tick marks every 1 unit unless otherwise noted.",
+    "All curves drawn with smooth, mathematically accurate shape — not schematic.",
+    "Dashed lines for asymptotes; solid dots for defined points; open dots for excluded points (holes).",
+    "All visuals must be renderable in SVG format for web delivery.",
+    "Color convention: black for curve, blue for labeled values, red for unknowns/questions, gray for asymptotes."
+  ],
+  "visual_specs": [
+
+    {
+      "id": "APPC-VIS-001",
+      "concept_id": "Pre.1.1",
+      "type": "function_graph",
+      "title": "Covariation — Graph with Intervals Marked",
+      "description": "A generic function graph with several intervals marked on the x-axis. Intervals where f is increasing, decreasing, or constant are visible but NOT labeled. Student must identify behavior.",
+      "elements": {
+        "axes": { "x_range": [-4, 6], "y_range": [-5, 8] },
+        "curve": { "type": "generic_polynomial", "style": "solid_black" },
+        "interval_brackets": { "shown": true, "labeled_with_values": false }
+      },
+      "ap_representation": "graphical",
+      "format_hint": "MC: Over which interval is f increasing?",
+      "answer_not_in_visual": true
+    },
+
+    {
+      "id": "APPC-VIS-002",
+      "concept_id": "Pre.1.2",
+      "type": "function_graph",
+      "title": "Average Rate of Change — Secant Line Setup",
+      "description": "A curve with two points marked at x=a and x=b. The secant line is drawn through these points but the slope value is NOT labeled.",
+      "elements": {
+        "axes": { "x_range": [-1, 6], "y_range": [-2, 10] },
+        "curve": { "type": "quadratic_or_cubic", "style": "solid_black" },
+        "points": {
+          "P1": { "at_x": "a", "labeled": "(a, f(a))", "dot": true },
+          "P2": { "at_x": "b", "labeled": "(b, f(b))", "dot": true }
+        },
+        "secant_line": { "shown": true, "slope_not_labeled": true }
+      },
+      "ap_representation": "graphical",
+      "format_hint": "Gridded: Compute the average rate of change from x=a to x=b.",
+      "answer_not_in_visual": true
+    },
+
+    {
+      "id": "APPC-VIS-003",
+      "concept_id": "Pre.1.4",
+      "type": "poly_graph",
+      "title": "Polynomial Graph — Zero Behavior",
+      "description": "Polynomial graph shown. Zeros visible as x-intercepts. Graph shows crosses at some zeros and bounces at others — but multiplicities are NOT labeled. Student reads behavior.",
+      "elements": {
+        "axes": { "x_range": [-5, 5], "y_range": [-10, 12] },
+        "curve": { "style": "solid_black", "shows_crosses_and_bounces": true },
+        "x_intercepts": { "marked_as_dots": true, "coordinates_not_labeled": true },
+        "turning_points": { "visible": true, "not_labeled": true }
+      },
+      "ap_representation": "graphical",
+      "format_hint": "MC: Which polynomial equation could match this graph?",
+      "answer_not_in_visual": true
+    },
+
+    {
+      "id": "APPC-VIS-004",
+      "concept_id": "Pre.1.7",
+      "type": "rational_graph",
+      "title": "Rational Function — Asymptotes Without Labels",
+      "description": "Rational function graphed with visible horizontal and vertical asymptotes (dashed gray lines). Asymptote values NOT labeled — only positions visible.",
+      "elements": {
+        "axes": { "x_range": [-6, 6], "y_range": [-6, 8] },
+        "curve": { "two_branches": true, "style": "solid_black" },
+        "vertical_asymptotes": { "dashed_gray": true, "values_not_labeled": true },
+        "horizontal_asymptote": { "dashed_gray": true, "value_not_labeled": true },
+        "holes": { "open_dot_if_present": true }
+      },
+      "ap_representation": "graphical",
+      "format_hint": "MC or expression: Identify the equations of all asymptotes.",
+      "answer_not_in_visual": true
+    },
+
+    {
+      "id": "APPC-VIS-005",
+      "concept_id": "Pre.1.10",
+      "type": "rational_graph",
+      "title": "Rational Function — Hole Visible, Not Labeled",
+      "description": "Simplified rational function shown with one open circle indicating a hole. The hole coordinates are NOT labeled.",
+      "elements": {
+        "axes": { "x_range": [-4, 6], "y_range": [-4, 8] },
+        "curve": { "style": "solid_black", "continuous_except_hole": true },
+        "hole": {
+          "open_circle": true,
+          "x_value": "parametric",
+          "y_value": "parametric",
+          "coordinates_not_labeled": true
+        },
+        "vertical_asymptote_if_any": "dashed_gray"
+      },
+      "ap_representation": "graphical",
+      "format_hint": "Expression: Find the exact coordinates of the hole.",
+      "answer_not_in_visual": true
+    },
+
+    {
+      "id": "APPC-VIS-006",
+      "concept_id": "Pre.1.12",
+      "type": "function_graph",
+      "title": "Function Transformation — Original and Transformed",
+      "description": "Parent function f (solid) and a transformed function g (dashed) shown on the same plane. Labels say 'f' and 'g' only — no equation of g shown.",
+      "elements": {
+        "axes": { "x_range": [-6, 6], "y_range": [-8, 10] },
+        "original_function": { "label": "f", "style": "solid_black" },
+        "transformed_function": { "label": "g", "style": "dashed_blue" },
+        "key_points": { "parent_only": true, "image_not_labeled": true }
+      },
+      "ap_representation": "graphical",
+      "format_hint": "MC: Which equation represents g in terms of f?",
+      "answer_not_in_visual": true
+    },
+
+    {
+      "id": "APPC-VIS-007",
+      "concept_id": "Pre.1.13",
+      "type": "scatter_plot",
+      "title": "Scatter Plot for Model Selection",
+      "description": "Scatter plot with data points showing a specific pattern (rapid growth then leveling, or clear parabolic shape, etc.). No regression line shown — student selects appropriate model.",
+      "elements": {
+        "axes": { "labeled_with_context_variables": true },
+        "data_points": { "approximately_10_15_points": true, "clear_trend_shown": true },
+        "regression_line": "not_shown",
+        "residuals": "not_shown"
+      },
+      "ap_representation": "numerical/graphical",
+      "format_hint": "MC: Which function type best models this data? Justify.",
+      "answer_not_in_visual": true
+    },
+
+    {
+      "id": "APPC-VIS-008",
+      "concept_id": "Pre.2.3",
+      "type": "exp_graph",
+      "title": "Exponential Function — Graph with Two Points",
+      "description": "Exponential curve with two labeled points. The equation is NOT shown. Student determines a and b from the points.",
+      "elements": {
+        "axes": { "x_range": [-2, 6], "y_range": [0, 50] },
+        "curve": { "type": "exponential_growth_or_decay", "style": "solid_black" },
+        "labeled_points": {
+          "P1": "labeled (x₁, y₁)",
+          "P2": "labeled (x₂, y₂)"
+        },
+        "equation": "not_shown",
+        "asymptote": { "y_equals_0": "dashed_gray" }
+      },
+      "ap_representation": "graphical",
+      "format_hint": "Expression: Find f(x) = a·b^x.",
+      "answer_not_in_visual": true
+    },
+
+    {
+      "id": "APPC-VIS-009",
+      "concept_id": "Pre.2.7",
+      "type": "function_graph",
+      "title": "Composition Input/Output — f and g Graphs",
+      "description": "Two separate graphs side by side: f(x) on left, g(x) on right. Specific x-values are labeled on g's graph. Student reads g(x) then finds f(g(x)).",
+      "elements": {
+        "graph_f": {
+          "axes": { "x_range": [-4, 6] },
+          "curve": "generic_function",
+          "specific_y_values_readable": true
+        },
+        "graph_g": {
+          "axes": { "x_range": [-2, 5] },
+          "curve": "generic_function",
+          "labeled_x_values": [1, 2, 3, 4],
+          "y_values_readable": true
+        },
+        "composition_label": "not_shown"
+      },
+      "ap_representation": "graphical",
+      "format_hint": "Numeric: Find f(g(2)) using the graphs.",
+      "answer_not_in_visual": true
+    },
+
+    {
+      "id": "APPC-VIS-010",
+      "concept_id": "Pre.2.8",
+      "type": "coordinate_plane",
+      "title": "Inverse Functions — y=x Reflection",
+      "description": "f(x) graphed (solid) and its inverse f⁻¹(x) graphed (dashed). Line y=x shown in gray. No equations labeled — student must identify which is f and which is f⁻¹.",
+      "elements": {
+        "axes": { "x_range": [-5, 7], "y_range": [-5, 7] },
+        "f_curve": { "label": "Curve A", "style": "solid_black" },
+        "finv_curve": { "label": "Curve B", "style": "dashed_blue" },
+        "line_y_equals_x": { "style": "gray_dotted" },
+        "reflection_relationship": "visible_but_not_stated"
+      },
+      "ap_representation": "graphical",
+      "format_hint": "MC or expression: Identify which curve is f⁻¹ and write its equation.",
+      "answer_not_in_visual": true
+    },
+
+    {
+      "id": "APPC-VIS-011",
+      "concept_id": "Pre.2.11",
+      "type": "log_graph",
+      "title": "Logarithmic Function — Transformed",
+      "description": "Log function graph with visible vertical asymptote (dashed) and labeled points (key points like x-intercept and one other). Equation NOT shown.",
+      "elements": {
+        "axes": { "x_range": [-1, 8], "y_range": [-4, 4] },
+        "curve": { "type": "log_with_transformation", "style": "solid_black" },
+        "vertical_asymptote": { "dashed_gray": true, "value_not_labeled": true },
+        "labeled_points": { "x_intercept": "open_dot", "one_other_point": "closed_dot" }
+      },
+      "ap_representation": "graphical",
+      "format_hint": "Expression: Write the equation of this function.",
+      "answer_not_in_visual": true
+    },
+
+    {
+      "id": "APPC-VIS-012",
+      "concept_id": "Pre.2.15",
+      "type": "semi_log_plot",
+      "title": "Semi-Log Plot — log(y) vs x",
+      "description": "Scatter plot with y-axis labeled as log(y) or ln(y). Data falls approximately linearly. The regression line is shown. Slope and intercept NOT labeled.",
+      "elements": {
+        "x_axis": { "linear_scale": true, "label": "x" },
+        "y_axis": { "log_scale_label": "log(y) or ln(y)" },
+        "data_points": { "approximately_8_10_points": true },
+        "regression_line": { "shown": true, "equation_not_shown": true },
+        "two_readable_points_on_line": true
+      },
+      "ap_representation": "graphical/numerical",
+      "format_hint": "Expression: Determine the exponential model y = f(x) from the semi-log plot.",
+      "answer_not_in_visual": true
+    },
+
+    {
+      "id": "APPC-VIS-013",
+      "concept_id": "Pre.3.1",
+      "type": "periodic_graph",
+      "title": "Periodic Phenomenon — Real World Context",
+      "description": "Sinusoidal-looking curve over time, labeled with context (height, temperature, etc.). Max and min points are visible but NOT labeled with coordinates. Student extracts features.",
+      "elements": {
+        "axes": { "x_label": "Time (hours or seconds)", "y_label": "context_quantity" },
+        "curve": { "shows_two_full_cycles": true },
+        "max_min_points": { "visible": true, "coordinates_not_labeled": true },
+        "one_labeled_point_on_x": "shown_for_reference"
+      },
+      "ap_representation": "graphical",
+      "format_hint": "Numeric: Identify amplitude, period, midline from the graph.",
+      "answer_not_in_visual": true
+    },
+
+    {
+      "id": "APPC-VIS-014",
+      "concept_id": "Pre.3.2",
+      "type": "unit_circle",
+      "title": "Unit Circle — Angle and Coordinates",
+      "description": "Unit circle with ONE specific angle shown (terminal side drawn). The coordinates of the terminal point are NOT labeled. Student finds exact trig values.",
+      "elements": {
+        "unit_circle": { "center": "(0,0)", "radius": 1, "style": "solid_black" },
+        "terminal_side": { "angle": "parametric", "style": "blue_arrow" },
+        "terminal_point": { "open_circle": true, "coordinates_not_labeled": true },
+        "reference_triangle": { "shown": true, "legs_not_labeled": true },
+        "angle_arc": { "shown": true, "value_labeled": "θ = [angle in radians]" }
+      },
+      "ap_representation": "graphical",
+      "format_hint": "Exact: Find sin(θ), cos(θ), tan(θ).",
+      "answer_not_in_visual": true
+    },
+
+    {
+      "id": "APPC-VIS-015",
+      "concept_id": "Pre.3.4",
+      "type": "sinusoidal_graph",
+      "title": "Sine/Cosine Graph — Read Parameters",
+      "description": "Full sinusoidal graph (2 full periods). Midline shown as dashed. Max and min visible. NO equation shown. Student identifies A, B, D.",
+      "elements": {
+        "axes": { "x_range": [0, "4π"], "y_range": [-6, 8] },
+        "curve": { "style": "solid_black" },
+        "midline": { "style": "dashed_gray" },
+        "max_points": { "dots": true, "x_values_labeled_on_axis": true, "y_not_labeled": true },
+        "min_points": { "dots": true, "y_not_labeled": true },
+        "equation": "not_shown"
+      },
+      "ap_representation": "graphical",
+      "format_hint": "Expression: Write f(x) = Asin(Bx + C) + D or Acos(Bx + C) + D.",
+      "answer_not_in_visual": true
+    },
+
+    {
+      "id": "APPC-VIS-016",
+      "concept_id": "Pre.3.6",
+      "type": "sinusoidal_graph",
+      "title": "Sinusoidal Model — Context with Labeled Min/Max Time",
+      "description": "Graph showing periodic context (e.g., tide height). Max height time and min height time are labeled on x-axis. Heights NOT labeled as y-values. Only context info given in problem statement.",
+      "elements": {
+        "axes": { "x_label": "Time (hours)", "y_label": "Height (ft)" },
+        "curve": { "sinusoidal": true, "shows_1.5_cycles": true },
+        "max_at_t1": { "time_labeled_on_x_axis": true },
+        "min_at_t2": { "time_labeled_on_x_axis": true },
+        "height_values": "given_in_problem_text_only"
+      },
+      "ap_representation": "graphical",
+      "frq_alignment": "FRQ 3: Modeling Periodic Context",
+      "format_hint": "Expression: Write f(t) = Asin(B(t-h)) + D using context.",
+      "answer_not_in_visual": true
+    },
+
+    {
+      "id": "APPC-VIS-017",
+      "concept_id": "Pre.3.4",
+      "type": "sinusoidal_graph",
+      "title": "Sinusoidal Concavity — Mark the Interval",
+      "description": "Sine curve drawn over two periods. No shading. Student must identify concave up and concave down intervals from the curve's shape.",
+      "elements": {
+        "axes": { "x_range": [0, "4π"] },
+        "curve": { "type": "sin_x", "style": "solid_black" },
+        "inflection_points": { "marked_as_dots": true, "x_values_labeled": true },
+        "shading": "none — student determines"
+      },
+      "ap_representation": "graphical",
+      "frq_alignment": "FRQ 3: Modeling Periodic Context Part C",
+      "format_hint": "Interval notation: On which intervals is f concave up?",
+      "answer_not_in_visual": true
+    },
+
+    {
+      "id": "APPC-VIS-018",
+      "concept_id": "Pre.3.13",
+      "type": "polar_plane",
+      "title": "Polar Plane — Plot Point",
+      "description": "Polar coordinate plane with circles (r=1,2,3,4) and angle lines (every π/6). ONE point marked — student identifies or converts coordinates.",
+      "elements": {
+        "polar_grid": { "r_circles": [1, 2, 3, 4], "angle_lines": "every_π/6" },
+        "marked_point": { "r": "parametric", "theta": "parametric", "labeled": false },
+        "axes_labeled": { "θ=0": "→ x", "θ=π/2": "↑ y" }
+      },
+      "ap_representation": "graphical",
+      "format_hint": "Expression: Give the rectangular coordinates of the marked point.",
+      "answer_not_in_visual": true
+    },
+
+    {
+      "id": "APPC-VIS-019",
+      "concept_id": "Pre.3.14",
+      "type": "polar_graph",
+      "title": "Polar Curve — Identify the Type",
+      "description": "A polar curve plotted on a polar plane. The shape is shown (rose, cardioid, limaçon, circle) but the equation is NOT labeled. Student identifies the curve type or matches equation.",
+      "elements": {
+        "polar_grid": { "r_max": 5 },
+        "curve": {
+          "type_pool": ["rose_3_petals", "rose_4_petals", "cardioid", "limaçon_with_loop", "circle"],
+          "style": "solid_black",
+          "label": "none"
+        }
+      },
+      "ap_representation": "graphical",
+      "format_hint": "MC: Which equation matches this polar curve?",
+      "answer_not_in_visual": true
+    },
+
+    {
+      "id": "APPC-VIS-020",
+      "concept_id": "Pre.4.1",
+      "type": "coordinate_plane",
+      "title": "Parametric Curve — Plot Only",
+      "description": "Parametric curve plotted (ellipse, parabola, or line segment). Direction arrow shown on curve. Equation NOT shown. Student eliminates parameter from context clues or given equations.",
+      "elements": {
+        "axes": { "x_range": [-5, 5], "y_range": [-4, 4] },
+        "curve": {
+          "type": "parametric_result",
+          "style": "solid_black",
+          "direction_arrow": true
+        },
+        "t_values": "labeled_at_start_and_end_only",
+        "equation": "not_shown"
+      },
+      "ap_representation": "graphical",
+      "format_hint": "Expression: Eliminate parameter to write y as function of x.",
+      "answer_not_in_visual": true
+    },
+
+    {
+      "id": "APPC-VIS-021",
+      "concept_id": "Pre.4.6",
+      "type": "conic_graph",
+      "title": "Conic Section — Identify and Label",
+      "description": "Conic section shown on coordinate plane. Center, vertices visible but NOT labeled. Axes of symmetry shown as dashed.",
+      "elements": {
+        "axes": { "x_range": [-7, 7], "y_range": [-6, 6] },
+        "conic": {
+          "type_pool": ["ellipse", "hyperbola", "parabola"],
+          "style": "solid_black",
+          "center": "dot_not_labeled",
+          "vertices": "dots_not_labeled",
+          "foci": "not_shown"
+        },
+        "axes_of_symmetry": "dashed_gray"
+      },
+      "ap_representation": "graphical",
+      "format_hint": "Expression: Write the standard form equation of this conic.",
+      "answer_not_in_visual": true
+    },
+
+    {
+      "id": "APPC-VIS-022",
+      "concept_id": "Pre.1.6",
+      "type": "poly_graph",
+      "title": "End Behavior — Graph Showing Both Ends",
+      "description": "Polynomial graph shown with clear behavior at both ends. The arrows at each end are visible. Degree and leading coefficient NOT labeled.",
+      "elements": {
+        "axes": { "x_range": [-5, 5], "y_range": [-10, 12] },
+        "curve": {
+          "style": "solid_black",
+          "both_ends_clearly_shown": true,
+          "arrows_at_ends": true
+        },
+        "local_extrema": "visible_not_labeled"
+      },
+      "ap_representation": "graphical",
+      "format_hint": "Using limit notation: Describe end behavior as x→+∞ and x→-∞.",
+      "answer_not_in_visual": true
+    },
+
+    {
+      "id": "APPC-VIS-023",
+      "concept_id": "Pre.2.4",
+      "type": "exp_graph",
+      "title": "Exponential Decay vs Growth — Two Curves",
+      "description": "Two exponential curves on the same axes — one growth, one decay. NO equations labeled. Student identifies which is which and reads key values.",
+      "elements": {
+        "axes": { "x_range": [-2, 5], "y_range": [0, 16] },
+        "curve_A": { "type": "exponential_growth", "label": "Curve A", "style": "solid_black" },
+        "curve_B": { "type": "exponential_decay", "label": "Curve B", "style": "dashed_blue" },
+        "y_intercepts": { "labeled_as_dots": true, "y_values_not_stated": true },
+        "asymptote": "y=0 dashed gray"
+      },
+      "ap_representation": "graphical",
+      "format_hint": "MC: Which equation could be Curve B? Justify.",
+      "answer_not_in_visual": true
+    },
+
+    {
+      "id": "APPC-VIS-024",
+      "concept_id": "Pre.3.2",
+      "type": "unit_circle",
+      "title": "Unit Circle — All Four Quadrants",
+      "description": "Full unit circle with angles labeled at standard positions (multiples of π/6 and π/4). Coordinates are NOT shown — student must recall from memory.",
+      "elements": {
+        "unit_circle": { "drawn": true },
+        "standard_angles": {
+          "marks": "every π/6 and π/4",
+          "labeled": "angle in radians only"
+        },
+        "coordinates": "NOT_shown"
+      },
+      "ap_representation": "graphical",
+      "format_hint": "Exact: Fill in sin(θ) and cos(θ) for the indicated angle.",
+      "answer_not_in_visual": true
+    },
+
+    {
+      "id": "APPC-VIS-025",
+      "concept_id": "Pre.1.4",
+      "type": "poly_graph",
+      "title": "Polynomial — From Factored Form Setup",
+      "description": "BLANK graph with only axes shown and marked zeros on x-axis. The curve itself is NOT drawn. Student uses zeros and end behavior to sketch or match.",
+      "elements": {
+        "axes": { "x_range": [-5, 5], "y_range": [-15, 12] },
+        "curve": "not_drawn",
+        "x_intercept_marks": { "positions": "given_in_question", "labeled_with_multiplicity": false }
+      },
+      "ap_representation": "graphical",
+      "format_hint": "Graph-match: Which graph matches the polynomial with these zeros and this leading coefficient?",
+      "answer_not_in_visual": true
+    },
+
+    {
+      "id": "APPC-VIS-026",
+      "concept_id": "Pre.2.11",
+      "type": "log_graph",
+      "title": "Function Family Comparison — Exp vs Log",
+      "description": "Two curves on same axes: f(x) = bˣ and its inverse g(x) = log_b(x). Line y=x shown. Student identifies which is which and answers questions about domain/range.",
+      "elements": {
+        "axes": { "x_range": [-3, 6], "y_range": [-3, 6] },
+        "curve_f": { "label": "f", "style": "solid_black" },
+        "curve_g": { "label": "g", "style": "dashed_blue" },
+        "line_y_x": { "style": "gray_dotted" },
+        "labels": "f and g only — no equations"
+      },
+      "ap_representation": "graphical",
+      "format_hint": "MC: Which is the exponential function? What is the domain of g?",
+      "answer_not_in_visual": true
+    },
+
+    {
+      "id": "APPC-VIS-027",
+      "concept_id": "Pre.3.6",
+      "type": "sinusoidal_graph",
+      "title": "FRQ 3 Style — Five Key Points Template",
+      "description": "Blank sinusoidal framework showing the midline and one period boundary. Student must plot five key points (max, min, midline crossings) based on calculated A, B, C, D.",
+      "elements": {
+        "axes": { "x_label": "time", "y_label": "context_quantity" },
+        "midline": { "shown": true, "labeled": "y = D (student fills in)" },
+        "five_key_point_positions": { "x_positions_labeled": true, "y_values_left_blank": true },
+        "curve": "not_drawn — student sketches"
+      },
+      "ap_representation": "graphical",
+      "frq_alignment": "FRQ 3: Modeling Periodic Context Part A",
+      "format_hint": "Graphing: Plot five labeled points and sketch two full cycles.",
+      "answer_not_in_visual": true
+    },
+
+    {
+      "id": "APPC-VIS-028",
+      "concept_id": "Pre.2.3",
+      "type": "function_graph",
+      "title": "ARC — Secant Line on Exponential",
+      "description": "Exponential curve with two points marked (t₁, P₁) and (t₂, P₂). Secant line drawn. Units labeled on axes. ARC value NOT shown.",
+      "elements": {
+        "axes": { "x_label": "Years", "y_label": "Population (thousands)" },
+        "curve": { "type": "exponential_growth", "style": "solid_black" },
+        "points": {
+          "P1": { "labeled": "(t₁, P₁)", "closed_dot": true },
+          "P2": { "labeled": "(t₂, P₂)", "closed_dot": true }
+        },
+        "secant_line": { "shown": true, "slope_value_not_labeled": true }
+      },
+      "ap_representation": "graphical",
+      "frq_alignment": "FRQ 2: Modeling Non-Periodic Part B",
+      "format_hint": "Numeric with units: Calculate the ARC and interpret in context.",
+      "answer_not_in_visual": true
+    }
+
+  ]
+}

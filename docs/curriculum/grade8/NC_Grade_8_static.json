@@ -1,0 +1,383 @@
+{
+  "course": "NC 8th Grade Math",
+  "division": "Contenders",
+  "static_pool_id": "nc_grade_8_static",
+  "total_static_items": 55,
+  "questions": [
+    {
+      "id": "g8_s_ns_1_1_a",
+      "concept_id": "M8.NS.1.1",
+      "stem": "Which of the following is a rational number?",
+      "options": ["A. √2", "B. π", "C. 0.333...", "D. √5"],
+      "correct": "C",
+      "explanation": "0.333... = 1/3, which is a ratio of two integers — rational. The others are irrational.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "g8_s_ns_1_2_a",
+      "concept_id": "M8.NS.1.2",
+      "stem": "Which statement BEST defines an irrational number?",
+      "options": [
+        "A. A number that cannot be written as a fraction",
+        "B. A number that cannot be expressed as a ratio of two integers and has a non-terminating, non-repeating decimal expansion",
+        "C. Any negative number",
+        "D. A number with an infinite decimal expansion"
+      ],
+      "correct": "B",
+      "explanation": "Irrational numbers have non-terminating, non-repeating decimals and cannot be expressed as p/q where p, q are integers and q ≠ 0.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "g8_s_ns_1_2_b",
+      "concept_id": "M8.NS.1.2",
+      "stem": "Which of the following is irrational?",
+      "options": ["A. 4/9", "B. √16", "C. 0.75", "D. √7"],
+      "correct": "D",
+      "explanation": "√7 ≈ 2.6457... — non-terminating, non-repeating. The others simplify to rational numbers.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "g8_s_ns_1_3_a",
+      "concept_id": "M8.NS.1.3",
+      "stem": "Which set correctly classifies all three numbers: -7, √9, and π?",
+      "options": [
+        "A. All rational",
+        "B. All irrational",
+        "C. -7 and √9 are rational; π is irrational",
+        "D. -7 is rational; √9 and π are irrational"
+      ],
+      "correct": "C",
+      "explanation": "−7 = −7/1 (rational); √9 = 3 (rational); π ≈ 3.14159... (irrational).",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "g8_s_ee_2_3_a",
+      "concept_id": "M8.EE.2.3",
+      "stem": "Which equation has NO solution?",
+      "options": [
+        "A. 2x + 3 = 2x + 5",
+        "B. 3x + 1 = 3x + 1",
+        "C. 2x + 4 = 6",
+        "D. x + 2 = 2 + x — wait, re-read options"
+      ],
+      "correct": "A",
+      "explanation": "2x + 3 = 2x + 5 simplifies to 3 = 5, a false statement — no solution.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "g8_s_ee_2_3_b",
+      "concept_id": "M8.EE.2.3",
+      "stem": "Which equation has INFINITELY MANY solutions?",
+      "options": [
+        "A. 4x + 2 = 4x + 5",
+        "B. 3(x + 2) = 3x + 6",
+        "C. 2x + 1 = 3x + 1",
+        "D. 5x − 3 = 5x + 3"
+      ],
+      "correct": "B",
+      "explanation": "3(x + 2) = 3x + 6 simplifies to 3x + 6 = 3x + 6, a true statement for all x — infinitely many solutions.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "g8_s_ee_3_1_a",
+      "concept_id": "M8.EE.3.1",
+      "stem": "On a graph of a system of two linear equations, if the lines are parallel and distinct, the system has:",
+      "options": [
+        "A. Exactly one solution",
+        "B. No solution",
+        "C. Infinitely many solutions",
+        "D. Two solutions"
+      ],
+      "correct": "B",
+      "explanation": "Parallel lines never intersect, so there is no point that satisfies both equations.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "g8_s_ee_3_1_b",
+      "concept_id": "M8.EE.3.1",
+      "stem": "If the graph of a system shows two lines that are identical (overlapping), the system has:",
+      "options": [
+        "A. Exactly one solution",
+        "B. No solution",
+        "C. Infinitely many solutions",
+        "D. No real solutions"
+      ],
+      "correct": "C",
+      "explanation": "Coincident lines share every point — infinitely many solutions.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "g8_s_ee_3_5_a",
+      "concept_id": "M8.EE.3.5",
+      "stem": "Given the system: y = 3x + 2 and y = 3x − 4. What type of solution does this system have?",
+      "options": [
+        "A. One solution",
+        "B. No solution",
+        "C. Infinitely many solutions",
+        "D. Two solutions"
+      ],
+      "correct": "B",
+      "explanation": "Same slope (3), different y-intercepts — parallel lines — no solution.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "g8_s_f_1_1_a",
+      "concept_id": "M8.F.1.1",
+      "stem": "Which set of ordered pairs represents a function?",
+      "options": [
+        "A. {(1,2), (2,3), (1,4)}",
+        "B. {(3,5), (4,5), (5,5)}",
+        "C. {(2,7), (2,8), (2,9)}",
+        "D. {(0,1), (1,0), (0,-1)}"
+      ],
+      "correct": "B",
+      "explanation": "In B, each input (3, 4, 5) maps to exactly one output. The same output (5) is allowed; the same input with different outputs is not.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "g8_s_f_1_1_b",
+      "concept_id": "M8.F.1.1",
+      "stem": "Which statement BEST describes why a vertical line test determines if a graph represents a function?",
+      "options": [
+        "A. A vertical line can only cross a function once because functions have unique outputs for each input",
+        "B. Functions must be straight lines",
+        "C. Vertical lines test for slope",
+        "D. A function must pass through the origin"
+      ],
+      "correct": "A",
+      "explanation": "If a vertical line crosses the graph more than once, one x-value maps to multiple y-values — not a function.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "g8_s_f_2_1_a",
+      "concept_id": "M8.F.2.1",
+      "stem": "Which of the following BEST describes a linear function?",
+      "options": [
+        "A. A function whose graph curves",
+        "B. A function with a constant rate of change represented by a straight line",
+        "C. A function that always passes through the origin",
+        "D. A function with a positive slope"
+      ],
+      "correct": "B",
+      "explanation": "Linear functions have a constant rate of change (slope) and produce a straight-line graph.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "g8_s_f_3_1_a",
+      "concept_id": "M8.F.3.1",
+      "stem": "Function A is represented by the equation y = 2x + 1. Function B is represented by the table: x: 0,1,2,3 | y: 5,8,11,14. Which function has a greater rate of change?",
+      "options": [
+        "A. Function A (slope 2)",
+        "B. Function B (slope 3)",
+        "C. They have equal rates of change",
+        "D. Cannot be determined"
+      ],
+      "correct": "B",
+      "explanation": "Function B: (14−5)/(3−0) = 9/3 = 3, which is greater than Function A's slope of 2.",
+      "three_axis": {"cognitive_demand": "reasoning", "complexity": "high", "context": "real_world"},
+      "dok": 2
+    },
+    {
+      "id": "g8_s_f_3_3_a",
+      "concept_id": "M8.F.3.3",
+      "stem": "A linear model for a ride-share trip is C = 0.85m + 3.50 where C is cost and m is miles. What does the value 3.50 represent?",
+      "options": [
+        "A. The cost per mile",
+        "B. The total cost of the trip",
+        "C. The flat fee charged at the start of every trip",
+        "D. The number of miles traveled"
+      ],
+      "correct": "C",
+      "explanation": "The y-intercept (3.50) is the value of C when m = 0 — the base/flat fee before any miles are traveled.",
+      "three_axis": {"cognitive_demand": "reasoning", "complexity": "high", "context": "real_world"},
+      "dok": 3
+    },
+    {
+      "id": "g8_s_f_3_3_b",
+      "concept_id": "M8.F.3.3",
+      "stem": "Using the same model C = 0.85m + 3.50, what does the value 0.85 represent?",
+      "options": [
+        "A. The total trip cost",
+        "B. The starting fee",
+        "C. The additional cost charged for each mile driven",
+        "D. The maximum distance allowed"
+      ],
+      "correct": "C",
+      "explanation": "The slope (0.85) is the rate of change — cost increases by $0.85 for each additional mile.",
+      "three_axis": {"cognitive_demand": "reasoning", "complexity": "high", "context": "real_world"},
+      "dok": 3
+    },
+    {
+      "id": "g8_s_f_4_1_a",
+      "concept_id": "M8.F.4.1",
+      "stem": "A graph shows a person's distance from home over time. The graph starts at 0, increases steeply, levels off, then decreases back to 0. Which qualitative description BEST matches?",
+      "options": [
+        "A. The person walks fast, stops, then returns home",
+        "B. The person stays home the whole time",
+        "C. The person walks at a constant pace with no stops",
+        "D. The person's speed increases continuously"
+      ],
+      "correct": "A",
+      "explanation": "Steep increase = fast walking away, flat section = stopped, decrease back to 0 = returning home.",
+      "three_axis": {"cognitive_demand": "reasoning", "complexity": "medium", "context": "real_world"},
+      "dok": 2
+    },
+    {
+      "id": "g8_s_geo_1_1_a",
+      "concept_id": "M8.GEO.TRANS.1.1",
+      "stem": "Which of the following is NOT preserved under a rigid transformation?",
+      "options": ["A. Angle measures", "B. Side lengths", "C. Shape", "D. Size of the entire figure after dilation"],
+      "correct": "D",
+      "explanation": "Rigid transformations (translation, reflection, rotation) preserve distance and angle measures. Dilation changes size — but dilation is NOT a rigid transformation.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "g8_s_geo_trans_2_1_a",
+      "concept_id": "M8.GEO.TRANS.2.1",
+      "stem": "Which statement BEST defines congruent figures?",
+      "options": [
+        "A. Figures that have the same shape but different sizes",
+        "B. Figures that can be mapped onto each other using only dilations",
+        "C. Figures that can be mapped onto each other by a sequence of rigid transformations",
+        "D. Figures that have the same area"
+      ],
+      "correct": "C",
+      "explanation": "Congruent figures have identical size and shape; one can be mapped to the other through translations, reflections, and/or rotations.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "g8_s_geo_trans_3_1_a",
+      "concept_id": "M8.GEO.TRANS.3.1",
+      "stem": "A dilation with scale factor k = 0.5 centered at the origin will:",
+      "options": [
+        "A. Enlarge the figure by 50%",
+        "B. Reduce the figure to half its original size",
+        "C. Reflect the figure over the x-axis",
+        "D. Rotate the figure 90°"
+      ],
+      "correct": "B",
+      "explanation": "Scale factor k < 1 shrinks the figure; k = 0.5 reduces each coordinate to half.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "g8_s_geo_trans_4_1_a",
+      "concept_id": "M8.GEO.TRANS.4.1",
+      "stem": "Which sequence of transformations would prove two figures are SIMILAR (but NOT necessarily congruent)?",
+      "options": [
+        "A. Two reflections only",
+        "B. A translation followed by a rotation",
+        "C. A dilation followed by a reflection",
+        "D. A translation followed by another translation"
+      ],
+      "correct": "C",
+      "explanation": "Similarity requires a dilation (plus any rigid motions). Rigid motions alone produce congruence, not merely similarity.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "dok": 2
+    },
+    {
+      "id": "g8_s_geo_pv_1_1_a",
+      "concept_id": "M8.GEO.PV.1.1",
+      "stem": "In a right triangle, the side opposite the right angle is called the:",
+      "options": ["A. Leg", "B. Base", "C. Hypotenuse", "D. Altitude"],
+      "correct": "C",
+      "explanation": "The hypotenuse is always opposite the right angle and is the longest side of a right triangle.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "g8_s_geo_pv_3_1_a",
+      "concept_id": "M8.GEO.PV.3.1",
+      "stem": "Which formula correctly gives the volume of a cylinder with radius r and height h?",
+      "options": ["A. V = πrh", "B. V = 2πr²h", "C. V = πr²h", "D. V = (4/3)πr²h"],
+      "correct": "C",
+      "explanation": "Volume of a cylinder = base area × height = πr² × h.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "g8_s_geo_pv_3_3_a",
+      "concept_id": "M8.GEO.PV.3.3",
+      "stem": "A cone and a cylinder have the same base radius and height. How does the volume of the cone compare to the volume of the cylinder?",
+      "options": [
+        "A. The cone has the same volume",
+        "B. The cone has twice the volume",
+        "C. The cone has one-third the volume",
+        "D. The cone has half the volume"
+      ],
+      "correct": "C",
+      "explanation": "V_cone = (1/3)πr²h = (1/3) × V_cylinder",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "g8_s_geo_pv_3_5_a",
+      "concept_id": "M8.GEO.PV.3.5",
+      "stem": "Which formula gives the volume of a sphere with radius r?",
+      "options": ["A. V = πr³", "B. V = (4/3)πr³", "C. V = 4πr²", "D. V = (2/3)πr³"],
+      "correct": "B",
+      "explanation": "Volume of a sphere = (4/3)πr³",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "dok": 1
+    },
+    {
+      "id": "g8_s_sp_1_2_a",
+      "concept_id": "M8.SP.1.2",
+      "stem": "A scatter plot shows that as study time increases, test scores also increase. This is an example of a:",
+      "options": [
+        "A. Negative association",
+        "B. No association",
+        "C. Positive association",
+        "D. Nonlinear association"
+      ],
+      "correct": "C",
+      "explanation": "When both variables increase together, the association is positive.",
+      "three_axis": {"cognitive_demand": "reasoning", "complexity": "medium", "context": "real_world"},
+      "dok": 2
+    },
+    {
+      "id": "g8_s_sp_2_1_a",
+      "concept_id": "M8.SP.2.1",
+      "stem": "A line of best fit is drawn on a scatter plot. Which statement BEST describes what this line represents?",
+      "options": [
+        "A. A line connecting all the data points",
+        "B. A line that models the general trend of the data",
+        "C. A line that only goes through the highest and lowest data points",
+        "D. A line with a slope of exactly 1"
+      ],
+      "correct": "B",
+      "explanation": "A line of best fit (trend line) captures the general direction and magnitude of the data's linear trend.",
+      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "real_world"},
+      "dok": 2
+    },
+    {
+      "id": "g8_s_sp_2_3_a",
+      "concept_id": "M8.SP.2.3",
+      "stem": "A model predicts test score (y) from study hours (x): y = 8x + 45. What does the y-intercept 45 represent?",
+      "options": [
+        "A. Score improves by 45 points per hour",
+        "B. A student who studies 0 hours is predicted to score 45",
+        "C. Maximum possible score",
+        "D. Average score across all students"
+      ],
+      "correct": "B",
+      "explanation": "The y-intercept is the predicted value of y when x = 0 — the baseline score with no study time.",
+      "three_axis": {"cognitive_demand": "reasoning", "complexity": "high", "context": "real_world"},
+      "dok": 3
+    }
+  ]
+}

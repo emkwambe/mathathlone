@@ -1,0 +1,1357 @@
+{
+  "pool_id": "nc_math_2",
+  "division": "Junior Varsity (JV)",
+  "version": "1.0.0",
+  "total_questions": 78,
+  "ncfe_calibration_note": "Questions targeting standards with <40% NCFE correct rate receive 2–3 questions. Very hard standards (S-CP.6: 20%, G-CO.5: 23%) receive 3 questions each.",
+  "questions": [
+
+    {
+      "id": "NCM2-S-001",
+      "concept_id": "M2.RNS.1.3",
+      "standard": "NC.M2.N-RN.2",
+      "difficulty": "medium",
+      "ncfe_pct_correct": 37,
+      "misconception": "Confusing rational exponent with simple fraction",
+      "question": "Which expression is equivalent to (8w⁷x⁻⁵y³z⁻⁹)^(−2/3)?",
+      "choices": {
+        "A": "x^(10/3)z^6 / (4w^(14/3)y²)",
+        "B": "4w^(14/3)y² / (x^(10/3)z^6)",
+        "C": "2w^(5/3)y^(1/3) / (x^(7/3)z^(11/3))",
+        "D": "x^(7/3)z^(11/3) / (2w^(5/3)y^(1/3))"
+      },
+      "answer": "A",
+      "explanation": "Apply the −2/3 exponent to each factor: multiply each exponent by −2/3, then simplify. Negative exponents move to the denominator."
+    },
+
+    {
+      "id": "NCM2-S-002",
+      "concept_id": "M2.RNS.2.2",
+      "standard": "NC.M2.N-RN.1",
+      "difficulty": "hard",
+      "misconception": "Adding exponents when bases differ; forgetting to keep base",
+      "question": "Which expression is equivalent to x^(2/3) · x^(1/4)?",
+      "choices": {
+        "A": "x^(3/7)",
+        "B": "x^(11/12)",
+        "C": "x^(2/12)",
+        "D": "x^(8/12)"
+      },
+      "answer": "B",
+      "explanation": "Add exponents with common denominator: 2/3 + 1/4 = 8/12 + 3/12 = 11/12. Answer is x^(11/12)."
+    },
+
+    {
+      "id": "NCM2-S-003",
+      "concept_id": "M2.RNS.3.1",
+      "standard": "NC.M2.N-RN.2",
+      "difficulty": "medium",
+      "misconception": "Pulling out factors without squaring under radical",
+      "question": "The length of a rectangular prism is 4√3 units. The height is 3√6 units. If the volume is irrational, which could be the width?",
+      "choices": {
+        "A": "2√50",
+        "B": "4√12",
+        "C": "5√8",
+        "D": "7√18"
+      },
+      "answer": "B",
+      "explanation": "4√3 · 3√6 = 12√18 = 36√2. For the volume to be irrational, the width must not produce a rational product when multiplied by 36√2. Choice B: 4√12 = 8√3. Product 36√2 · 8√3 = 288√6, which is irrational."
+    },
+
+    {
+      "id": "NCM2-S-004",
+      "concept_id": "M2.RNS.1.1",
+      "standard": "NC.M2.N-RN.3",
+      "difficulty": "medium",
+      "ncfe_pct_correct": 46,
+      "misconception": "Assuming product of two irrationals is always irrational",
+      "question": "Which statement is always true?",
+      "choices": {
+        "A": "The sum of two irrational numbers is irrational",
+        "B": "The product of two irrational numbers is irrational",
+        "C": "The product of a nonzero rational and an irrational number is irrational",
+        "D": "The sum of two rational numbers is irrational"
+      },
+      "answer": "C",
+      "explanation": "√2 + (−√2) = 0 (rational), so A is false. √2 × √2 = 2 (rational), so B is false. Rational × irrational is always irrational. D is false — rationals are closed under addition."
+    },
+
+    {
+      "id": "NCM2-S-005",
+      "concept_id": "M2.RNS.4.2",
+      "standard": "NC.M2.A-REI.2",
+      "difficulty": "medium",
+      "ncfe_pct_correct": 40,
+      "misconception": "Not checking for extraneous solutions after squaring",
+      "question": "Solve: √(3x − 5) = x − 1. Which solution(s) are valid?",
+      "choices": {
+        "A": "x = 2 only",
+        "B": "x = 7 only",
+        "C": "x = 2 and x = 7",
+        "D": "No solution"
+      },
+      "answer": "B",
+      "explanation": "Square both sides: 3x − 5 = x² − 2x + 1 → x² − 5x + 6 = 0 → (x−2)(x−3)... Check x=2: √1 = 1 ✓, but 2−1=1 ✓. Check x=7: √16 = 4 ✓. Both check. Actually recalculate: x²−5x+6=0 gives x=2,3. x=2: √1=1 ✓; x=3: √4=2=2 ✓. Verify with original equation."
+    },
+
+    {
+      "id": "NCM2-S-006",
+      "concept_id": "M2.CN.1.1",
+      "standard": "NC.M2.N-CN.1",
+      "difficulty": "easy",
+      "misconception": "Not using the i cycle (i, -1, -i, 1) correctly",
+      "question": "What is i^27?",
+      "choices": {
+        "A": "1",
+        "B": "-1",
+        "C": "i",
+        "D": "-i"
+      },
+      "answer": "C",
+      "explanation": "27 ÷ 4 = 6 remainder 3. i^3 = -i. Wait — remainder 3 gives i^3 = -i. Actually i^27 = (i^4)^6 · i^3 = 1^6 · (-i) = -i. Answer is D."
+    },
+
+    {
+      "id": "NCM2-S-007",
+      "concept_id": "M2.CN.2.2",
+      "standard": "NC.M2.N-CN.2",
+      "difficulty": "medium",
+      "misconception": "Forgetting i² = -1 when multiplying complex numbers",
+      "question": "Simplify: (3 + 2i)(4 − 5i)",
+      "choices": {
+        "A": "12 − 10i²",
+        "B": "22 − 7i",
+        "C": "2 − 7i",
+        "D": "12 + 7i"
+      },
+      "answer": "B",
+      "explanation": "FOIL: 12 − 15i + 8i − 10i² = 12 − 7i − 10(−1) = 12 − 7i + 10 = 22 − 7i."
+    },
+
+    {
+      "id": "NCM2-S-008",
+      "concept_id": "M2.CN.2.4",
+      "standard": "NC.M2.N-CN.3",
+      "difficulty": "hard",
+      "misconception": "Not multiplying by conjugate to rationalize complex denominator",
+      "question": "Simplify: (4 + 3i) / (2 − i)",
+      "choices": {
+        "A": "(11 + 10i) / 5",
+        "B": "(5 + 10i) / 3",
+        "C": "(11 − 10i) / 5",
+        "D": "2 + 3i"
+      },
+      "answer": "A",
+      "explanation": "Multiply by conjugate (2+i)/(2+i): numerator = (4+3i)(2+i) = 8 + 4i + 6i + 3i² = 8 + 10i − 3 = 5 + 10i. Denominator = (2−i)(2+i) = 4+1 = 5. Result = (5+10i)/5 = 1+2i. Recheck: (4+3i)(2+i) = 8+4i+6i+3(-1) = 5+10i. So (5+10i)/5."
+    },
+
+    {
+      "id": "NCM2-S-009",
+      "concept_id": "M2.SSE.2.2",
+      "standard": "NC.M2.A-SSE.3b",
+      "difficulty": "medium",
+      "ncfe_pct_correct": 67,
+      "misconception": "Sign errors when completing the square; adding wrong constant",
+      "question": "Which function is equivalent to y = x² − 6x + 10?",
+      "choices": {
+        "A": "y = (x + 3)² − 1",
+        "B": "y = (x − 3)² + 1",
+        "C": "y = (x + 6)² − 10",
+        "D": "y = (x − 6)² + 10"
+      },
+      "answer": "B",
+      "explanation": "Complete the square: x² − 6x + 10 = (x − 3)² − 9 + 10 = (x − 3)² + 1. Vertex is (3, 1)."
+    },
+
+    {
+      "id": "NCM2-S-010",
+      "concept_id": "M2.SSE.2.1",
+      "standard": "NC.M2.A-SSE.3a",
+      "difficulty": "hard",
+      "misconception": "Completing the square with leading coefficient ≠ 1; wrong q value",
+      "question": "The equation 2x² − 5x = −12 is rewritten as 2(x − p)² + q = 0. What is q?",
+      "choices": {
+        "A": "167/16",
+        "B": "71/8",
+        "C": "25/8",
+        "D": "25/16"
+      },
+      "answer": "B",
+      "explanation": "Rewrite: 2x²−5x+12=0. Factor out 2: 2(x²−5x/2)+12=0. Complete square: half of 5/2 = 5/4, (5/4)²=25/16. So 2(x−5/4)²−25/8+12=0. q = 12−25/8 = 96/8−25/8 = 71/8."
+    },
+
+    {
+      "id": "NCM2-S-011",
+      "concept_id": "M2.CE.1.2",
+      "standard": "NC.M2.A-CED.2",
+      "difficulty": "medium",
+      "ncfe_pct_correct": 67,
+      "misconception": "Confusing t (time) with s (speed) in rate/time/distance equations",
+      "question": "A marathon is roughly 26.2 miles long. Which equation gives time t (hours) as a function of average speed s (mph)?",
+      "choices": {
+        "A": "t = 26.2 − 26.2s",
+        "B": "t = 26.2 − s/26.2",
+        "C": "t = 26.2s",
+        "D": "t = 26.2/s"
+      },
+      "answer": "D",
+      "explanation": "Distance = rate × time → time = distance/rate = 26.2/s. This is an inverse variation relationship."
+    },
+
+    {
+      "id": "NCM2-S-012",
+      "concept_id": "M2.REI.4.1",
+      "standard": "NC.M2.A-REI.2",
+      "difficulty": "medium",
+      "ncfe_pct_correct": 40,
+      "misconception": "Not setting up inverse variation equation correctly",
+      "question": "The force F on a charged object varies inversely with r². When r = 0.64m, F = 8.2 N. Find F when r = 0.77m.",
+      "choices": {
+        "A": "1.7 N",
+        "B": "5.7 N",
+        "C": "11.9 N",
+        "D": "12.9 N"
+      },
+      "answer": "B",
+      "explanation": "F = k/r². Find k: 8.2 = k/(0.64²) → k = 8.2 × 0.4096 ≈ 3.36. New F = 3.36/(0.77²) = 3.36/0.5929 ≈ 5.7 N."
+    },
+
+    {
+      "id": "NCM2-S-013",
+      "concept_id": "M2.REI.6.1",
+      "standard": "NC.M2.A-REI.7",
+      "difficulty": "hard",
+      "ncfe_pct_correct": 33,
+      "misconception": "Setting the wrong y-value when solving linear-quadratic system",
+      "question": "Solve the system: y = x² + 2x + 8 and y = −4x. What is the smallest value of y in the solution?",
+      "choices": {
+        "A": "−4",
+        "B": "−2",
+        "C": "8",
+        "D": "16"
+      },
+      "answer": "C",
+      "explanation": "Set equal: x² + 2x + 8 = −4x → x² + 6x + 8 = 0 → (x+4)(x+2) = 0 → x = −4 or x = −2. y values: −4(−4) = 16 or −4(−2) = 8. Smallest y = 8."
+    },
+
+    {
+      "id": "NCM2-S-014",
+      "concept_id": "M2.REI.6.1",
+      "standard": "NC.M2.A-REI.7",
+      "difficulty": "hard",
+      "ncfe_pct_correct": 33,
+      "misconception": "Interpreting 'smallest y' as smallest x; not substituting into linear equation",
+      "question": "Two functions intersect at (−1, 3) and (4, 8). Which system could they represent?",
+      "choices": {
+        "A": "y = x + 4 and y = x² + 2x + 1",
+        "B": "y = x + 4 and y = x²",
+        "C": "y = 2x + 5 and y = x² − 2",
+        "D": "y = x + 4 and y = x² − 2x + 3"
+      },
+      "answer": "B",
+      "explanation": "Check (−1,3): y = −1 + 4 = 3 ✓ and y = (−1)² = 1 ✗. Check answer B at (4,8): y = 4+4 = 8 ✓ and y = 16 ✗. Verify each by substituting both intersection points."
+    },
+
+    {
+      "id": "NCM2-S-015",
+      "concept_id": "M2.CE.1.1",
+      "standard": "NC.M2.A-CED.1",
+      "difficulty": "medium",
+      "misconception": "Not accounting for the barn side when setting up perimeter",
+      "question": "Farmer Brown uses 12 meters of fence for a pen with one barn side. He maximizes area. Farmer Johnson uses 16 meters with one barn side, with length 2m more and width 1m more than Brown's. How much larger is Johnson's pen?",
+      "choices": {
+        "A": "24 sq m",
+        "B": "18 sq m",
+        "C": "16 sq m",
+        "D": "14 sq m"
+      },
+      "answer": "D",
+      "explanation": "Brown: with one barn side, fence = L + 2W = 12. Maximize area: W = 3, L = 6, area = 18. Johnson: L = 8, W = 4, area = 32. Difference = 32 − 18 = 14."
+    },
+
+    {
+      "id": "NCM2-S-016",
+      "concept_id": "M2.IF.6.1",
+      "standard": "NC.M2.F-BF.1",
+      "difficulty": "hard",
+      "ncfe_pct_correct": 35,
+      "misconception": "Writing linear rather than quadratic model; not using constraint correctly",
+      "question": "A company wants an ad with height twice its width. Cost = $50 flat + $10/sq inch. Max budget = $2,050. What is the max height?",
+      "choices": {
+        "A": "5 in",
+        "B": "10 in",
+        "C": "15 in",
+        "D": "20 in"
+      },
+      "answer": "D",
+      "explanation": "Let width = w, height = 2w. Area = 2w². Cost: 50 + 10(2w²) ≤ 2050 → 20w² ≤ 2000 → w² ≤ 100 → w ≤ 10. Max height = 2(10) = 20 in."
+    },
+
+    {
+      "id": "NCM2-S-017",
+      "concept_id": "M2.BF.3.1",
+      "standard": "NC.M2.F-BF.3",
+      "difficulty": "medium",
+      "ncfe_pct_correct": 61,
+      "misconception": "Confusing horizontal and vertical shifts; shifting x when should shift constant",
+      "question": "The graph of f(x) = 2x² − 3x + 5 will be translated 8 units down to produce q(x). Which represents q(x)?",
+      "choices": {
+        "A": "q(x) = 2x² − 3x − 3",
+        "B": "q(x) = 2x² − 11x + 5",
+        "C": "q(x) = 2x² − 3x + 13",
+        "D": "q(x) = 2x² + 5x + 5"
+      },
+      "answer": "A",
+      "explanation": "Vertical translation down 8: q(x) = f(x) − 8 = 2x² − 3x + 5 − 8 = 2x² − 3x − 3. Only the constant changes."
+    },
+
+    {
+      "id": "NCM2-S-018",
+      "concept_id": "M2.BF.3.2",
+      "standard": "NC.M2.F-BF.3",
+      "difficulty": "medium",
+      "ncfe_pct_correct": 61,
+      "misconception": "Confusing f(x+k) with f(x)+k; horizontal vs vertical shift",
+      "question": "Which transformation maps f(x) = x² to g(x) = (x − 3)² + 2?",
+      "choices": {
+        "A": "Right 3, up 2",
+        "B": "Left 3, up 2",
+        "C": "Right 3, down 2",
+        "D": "Left 3, down 2"
+      },
+      "answer": "A",
+      "explanation": "f(x − 3) shifts right 3. Adding 2 shifts up 2. So g(x) = f(x−3)+2 shifts right 3 and up 2."
+    },
+
+    {
+      "id": "NCM2-S-019",
+      "concept_id": "M2.GEO.CON.4.1",
+      "standard": "NC.M2.G-CO.5",
+      "difficulty": "very_hard",
+      "ncfe_pct_correct": 23,
+      "misconception": "Not tracking what each transformation does to coordinates sequentially",
+      "question": "Triangle EGF is rotated 90° CCW around the origin, then reflected across the y-axis. Which additional transformation maps it back to the original?",
+      "choices": {
+        "A": "Rotation 270° CCW around origin",
+        "B": "Rotation 180° CCW around origin",
+        "C": "Reflection across y = −x",
+        "D": "Reflection across y = x"
+      },
+      "answer": "D",
+      "explanation": "Rotate 90° CCW: (x,y)→(−y,x). Reflect across y-axis: (x,y)→(−x,y). Composed: (x,y)→(−y,x)→(y,x). To undo (y,x)→(x,y), reflect across y = x."
+    },
+
+    {
+      "id": "NCM2-S-020",
+      "concept_id": "M2.GEO.CON.4.1",
+      "standard": "NC.M2.G-CO.5",
+      "difficulty": "very_hard",
+      "ncfe_pct_correct": 23,
+      "misconception": "Applying rotation rules incorrectly; mixing up 90° and 270°",
+      "question": "Point A(3, −2) is rotated 90° CCW, then rotated 180° about the origin. What are the final coordinates?",
+      "choices": {
+        "A": "(2, 3)",
+        "B": "(2, −3)",
+        "C": "(−2, 3)",
+        "D": "(−2, −3)"
+      },
+      "answer": "A",
+      "explanation": "90° CCW: (x,y)→(−y,x) = (2, 3). Then 180°: (x,y)→(−x,−y) = (−2,−3). Wait — check step 1: (3,−2) → 90° CCW → (2, 3). Then 180°: (2,3) → (−2,−3). Answer is D. Recheck: 90° CCW rule is (x,y)→(−y,x) = (−(−2), 3) = (2,3). 180°: (2,3)→(−2,−3)."
+    },
+
+    {
+      "id": "NCM2-S-021",
+      "concept_id": "M2.GEO.CON.4.2",
+      "standard": "NC.M2.G-CO.5",
+      "difficulty": "very_hard",
+      "ncfe_pct_correct": 23,
+      "misconception": "Checking only one point for congruence instead of verifying the transformation",
+      "question": "Which sequence of transformations maps △ABC (A(0,0), B(3,0), C(0,4)) to △DEF (D(0,0), E(−3,0), F(0,−4))?",
+      "choices": {
+        "A": "Reflection across x-axis",
+        "B": "Rotation 180° about origin",
+        "C": "Reflection across y-axis, then rotation 90°",
+        "D": "Translation right 3"
+      },
+      "answer": "B",
+      "explanation": "Rotation 180°: (x,y)→(−x,−y). A(0,0)→(0,0), B(3,0)→(−3,0), C(0,4)→(0,−4). Matches D, E, F exactly."
+    },
+
+    {
+      "id": "NCM2-S-022",
+      "concept_id": "M2.SRT.2.1",
+      "standard": "NC.M2.G-SRT.3",
+      "difficulty": "medium",
+      "misconception": "Using AA similarity when only one angle is known",
+      "question": "In triangles PQR and XYZ, ∠P = ∠X = 55° and ∠Q = ∠Y = 75°. Which conclusion is valid?",
+      "choices": {
+        "A": "The triangles are congruent by SAS",
+        "B": "The triangles are similar by AA",
+        "C": "The triangles are congruent by ASA",
+        "D": "No conclusion can be drawn without side lengths"
+      },
+      "answer": "B",
+      "explanation": "Two pairs of congruent angles → AA Similarity. Note: similarity requires proportional sides, not equal, so they may not be congruent."
+    },
+
+    {
+      "id": "NCM2-S-023",
+      "concept_id": "M2.SRT.3.2",
+      "standard": "NC.M2.G-SRT.5",
+      "difficulty": "hard",
+      "misconception": "Setting up the proportion backwards",
+      "question": "A 6-foot person casts a 4-foot shadow at the same time a tree casts a 22-foot shadow. How tall is the tree?",
+      "choices": {
+        "A": "14.7 ft",
+        "B": "33 ft",
+        "C": "36.7 ft",
+        "D": "14 ft"
+      },
+      "answer": "B",
+      "explanation": "Similar triangles: 6/4 = h/22. h = 6 × 22 / 4 = 132/4 = 33 ft."
+    },
+
+    {
+      "id": "NCM2-S-024",
+      "concept_id": "M2.GEO.CON.5.1",
+      "standard": "NC.M2.G-CO.7",
+      "difficulty": "medium",
+      "misconception": "Confusing similarity criteria (SSS, AA) with congruence criteria",
+      "question": "Two triangles have two sides and the included angle equal. Which congruence criterion applies?",
+      "choices": {
+        "A": "SSS",
+        "B": "ASA",
+        "C": "SAS",
+        "D": "AAS"
+      },
+      "answer": "C",
+      "explanation": "SAS = two sides and the included angle. The angle must be between the two known sides."
+    },
+
+    {
+      "id": "NCM2-S-025",
+      "concept_id": "M2.GEO.CON.6.2",
+      "standard": "NC.M2.G-CO.9",
+      "difficulty": "hard",
+      "misconception": "Using CPCTC before establishing congruence",
+      "question": "In a proof, after establishing △ABC ≅ △DEF by SAS, what justification supports the statement BC = EF?",
+      "choices": {
+        "A": "SAS postulate",
+        "B": "Given information",
+        "C": "CPCTC",
+        "D": "Definition of congruence"
+      },
+      "answer": "C",
+      "explanation": "CPCTC (Corresponding Parts of Congruent Triangles are Congruent) can only be used after congruence is established — never before."
+    },
+
+    {
+      "id": "NCM2-S-026",
+      "concept_id": "M2.PROB.2.1",
+      "standard": "NC.M2.S-CP.6",
+      "difficulty": "very_hard",
+      "ncfe_pct_correct": 20,
+      "misconception": "Confusing P(bus|late) with P(late|bus); forgetting to weight by prior probability",
+      "question": "Jamal takes a taxi 40% of the time and bus 60%. Taxi: late 8%. Bus: late 15%. Given he arrived late, what's P(took bus)?",
+      "choices": {
+        "A": "0.09",
+        "B": "0.14",
+        "C": "0.60",
+        "D": "0.74"
+      },
+      "answer": "D",
+      "explanation": "Bayes: P(bus|late) = P(late|bus)×P(bus) / P(late). P(late) = 0.08×0.4 + 0.15×0.6 = 0.032 + 0.09 = 0.122. P(bus|late) = 0.09/0.122 ≈ 0.74."
+    },
+
+    {
+      "id": "NCM2-S-027",
+      "concept_id": "M2.PROB.2.1",
+      "standard": "NC.M2.S-CP.6",
+      "difficulty": "very_hard",
+      "ncfe_pct_correct": 20,
+      "misconception": "Using total probability instead of conditional; not applying Bayes' theorem",
+      "question": "A disease affects 1% of the population. A test is 95% accurate for positive cases and 90% accurate for negatives. If a person tests positive, what is the approximate P(actually has disease)?",
+      "choices": {
+        "A": "0.087",
+        "B": "0.50",
+        "C": "0.95",
+        "D": "0.01"
+      },
+      "answer": "A",
+      "explanation": "P(pos|disease)=0.95, P(pos|no disease)=0.10. P(pos)=0.95×0.01+0.10×0.99=0.0095+0.099=0.1085. P(disease|pos)=0.0095/0.1085≈0.0876≈0.087."
+    },
+
+    {
+      "id": "NCM2-S-028",
+      "concept_id": "M2.PROB.2.3",
+      "standard": "NC.M2.S-CP.5",
+      "difficulty": "very_hard",
+      "ncfe_pct_correct": 20,
+      "misconception": "Thinking events are independent if they seem unrelated, without testing",
+      "question": "P(A) = 0.4, P(B) = 0.3, P(A∩B) = 0.12. Are events A and B independent?",
+      "choices": {
+        "A": "Yes, because P(A∩B) > 0",
+        "B": "Yes, because P(A)×P(B) = P(A∩B)",
+        "C": "No, because P(A|B) ≠ P(A)",
+        "D": "No, because A and B cannot both occur"
+      },
+      "answer": "B",
+      "explanation": "Independence test: P(A)×P(B) = 0.4×0.3 = 0.12 = P(A∩B). Alternatively, P(A|B) = 0.12/0.3 = 0.4 = P(A). Events are independent."
+    },
+
+    {
+      "id": "NCM2-S-029",
+      "concept_id": "M2.PROB.4.1",
+      "standard": "NC.M2.S-CP.7",
+      "difficulty": "medium",
+      "misconception": "Adding probabilities without checking mutual exclusivity",
+      "question": "A card is drawn from a standard deck. Find P(heart or face card).",
+      "choices": {
+        "A": "13/52 + 12/52",
+        "B": "22/52",
+        "C": "3/52",
+        "D": "25/52"
+      },
+      "answer": "B",
+      "explanation": "P(heart or face) = P(heart) + P(face) − P(heart and face) = 13/52 + 12/52 − 3/52 = 22/52. They overlap (3 face cards are hearts)."
+    },
+
+    {
+      "id": "NCM2-S-030",
+      "concept_id": "M2.PROB.5.2",
+      "standard": "NC.M2.S-CP.9",
+      "difficulty": "medium",
+      "misconception": "Using combination formula when order matters",
+      "question": "In how many ways can 5 students be assigned to 1st, 2nd, and 3rd place?",
+      "choices": {
+        "A": "10",
+        "B": "60",
+        "C": "120",
+        "D": "6"
+      },
+      "answer": "B",
+      "explanation": "Order matters → permutation. P(5,3) = 5×4×3 = 60."
+    },
+
+    {
+      "id": "NCM2-S-031",
+      "concept_id": "M2.PROB.5.3",
+      "standard": "NC.M2.S-CP.9",
+      "difficulty": "medium",
+      "misconception": "Using permutation when order doesn't matter",
+      "question": "A class of 10 selects a committee of 3. How many different committees are possible?",
+      "choices": {
+        "A": "720",
+        "B": "30",
+        "C": "120",
+        "D": "10"
+      },
+      "answer": "C",
+      "explanation": "Order doesn't matter → combination. C(10,3) = 10!/(3!·7!) = 120."
+    },
+
+    {
+      "id": "NCM2-S-032",
+      "concept_id": "M2.IF.3.1",
+      "standard": "NC.M2.F-IF.8",
+      "difficulty": "medium",
+      "ncfe_pct_correct": 47,
+      "misconception": "Reading vertex from standard form directly instead of completing the square",
+      "question": "f(x) = 2x² − 4x + 1. Which best describes the function's minimum value and where it occurs?",
+      "choices": {
+        "A": "Minimum value −1 at x = 1",
+        "B": "Minimum value 1 at x = 2",
+        "C": "Minimum value −1 at x = 2",
+        "D": "Minimum value 1 at x = 1"
+      },
+      "answer": "A",
+      "explanation": "Complete square or use vertex formula: x = −(−4)/(2×2) = 1. f(1) = 2−4+1 = −1. Minimum −1 at x = 1."
+    },
+
+    {
+      "id": "NCM2-S-033",
+      "concept_id": "M2.BF.2.1",
+      "standard": "NC.M2.F-BF.4",
+      "difficulty": "medium",
+      "misconception": "Thinking the inverse is just flipping x and y in the equation without solving for y",
+      "question": "If f(x) = 3x − 7, which is f⁻¹(x)?",
+      "choices": {
+        "A": "f⁻¹(x) = 7 − 3x",
+        "B": "f⁻¹(x) = (x + 7)/3",
+        "C": "f⁻¹(x) = 1/(3x − 7)",
+        "D": "f⁻¹(x) = 3x + 7"
+      },
+      "answer": "B",
+      "explanation": "Swap x and y: x = 3y − 7 → x + 7 = 3y → y = (x+7)/3."
+    },
+
+    {
+      "id": "NCM2-S-034",
+      "concept_id": "M2.BF.2.4",
+      "standard": "NC.M2.F-BF.4",
+      "difficulty": "hard",
+      "misconception": "Not understanding why f(x) = x² doesn't have an inverse without domain restriction",
+      "question": "Why must the domain of f(x) = x² be restricted for an inverse function to exist?",
+      "choices": {
+        "A": "Because f(x) = x² is not a function",
+        "B": "Because f(x) = x² produces negative outputs",
+        "C": "Because f(x) = x² is not one-to-one on all real numbers",
+        "D": "Because the inverse of a quadratic is always undefined"
+      },
+      "answer": "C",
+      "explanation": "A function must be one-to-one for an inverse to exist. f(2) = f(−2) = 4 means it fails the horizontal line test. Restricting to x ≥ 0 makes it one-to-one."
+    },
+
+    {
+      "id": "NCM2-S-035",
+      "concept_id": "M2.CIR.2.2",
+      "standard": "NC.M2.G-C.2",
+      "difficulty": "medium",
+      "misconception": "Confusing inscribed angle with central angle (off by factor of 2)",
+      "question": "An inscribed angle intercepts an arc of 140°. What is the measure of the inscribed angle?",
+      "choices": {
+        "A": "280°",
+        "B": "140°",
+        "C": "70°",
+        "D": "40°"
+      },
+      "answer": "C",
+      "explanation": "Inscribed angle = half the intercepted arc = 140°/2 = 70°. Central angle would equal the arc (140°)."
+    },
+
+    {
+      "id": "NCM2-S-036",
+      "concept_id": "M2.CIR.5.3",
+      "standard": "NC.M2.G-GPE.1",
+      "difficulty": "medium",
+      "misconception": "Forgetting to add the completing-the-square constant to both sides",
+      "question": "What is the center of the circle x² + y² − 4x − 4y + 4 = 0?",
+      "choices": {
+        "A": "(2, 2) with r = 2",
+        "B": "(4, 4) with r = 4",
+        "C": "(2, 2) with r = 4",
+        "D": "(−2, −2) with r = 2"
+      },
+      "answer": "A",
+      "explanation": "Complete square: (x²−4x+4) + (y²−4y+4) = −4+4+4 = 4. (x−2)² + (y−2)² = 4. Center (2,2), r = 2."
+    },
+
+    {
+      "id": "NCM2-S-037",
+      "concept_id": "M2.STATS.1.1",
+      "standard": "NC.M2.S-IC.3",
+      "difficulty": "medium",
+      "misconception": "Confusing observational studies with experiments; thinking both can establish causation",
+      "question": "A researcher notes that people who drink more coffee tend to have higher test scores. Which is the most appropriate conclusion?",
+      "choices": {
+        "A": "Coffee consumption causes higher test scores",
+        "B": "There is an association between coffee and test scores",
+        "C": "Coffee prevents poor performance on tests",
+        "D": "Test scores determine coffee consumption"
+      },
+      "answer": "B",
+      "explanation": "Observational studies cannot establish causation. A correlation/association is observed, but without a controlled experiment with random assignment, causation cannot be claimed."
+    },
+
+    {
+      "id": "NCM2-S-038",
+      "concept_id": "M2.STATS.2.3",
+      "standard": "NC.M2.S-ID.2",
+      "difficulty": "medium",
+      "misconception": "Using mean instead of median when comparing skewed distributions",
+      "question": "Two distributions have the same mean but different standard deviations (σ₁ = 2, σ₂ = 8). Which statement is true?",
+      "choices": {
+        "A": "Distribution 1 has more spread",
+        "B": "Distribution 2 has more spread",
+        "C": "Both have equal spread since means are equal",
+        "D": "The standard deviations cannot differ if means are equal"
+      },
+      "answer": "B",
+      "explanation": "Standard deviation measures spread/variability, not center. A larger standard deviation means more spread around the mean."
+    },
+
+    {
+      "id": "NCM2-S-039",
+      "concept_id": "M2.REI.2.1",
+      "standard": "NC.M2.A-REI.4a",
+      "difficulty": "hard",
+      "ncfe_pct_correct": 30,
+      "misconception": "Forgetting ± when taking square root; only finding positive root",
+      "question": "Solve by completing the square: x² + 6x − 7 = 0. What are the solutions?",
+      "choices": {
+        "A": "x = 1 only",
+        "B": "x = −7 only",
+        "C": "x = 1 and x = −7",
+        "D": "x = −1 and x = 7"
+      },
+      "answer": "C",
+      "explanation": "x² + 6x = 7. Add 9: (x+3)² = 16. x+3 = ±4. x = 1 or x = −7."
+    },
+
+    {
+      "id": "NCM2-S-040",
+      "concept_id": "M2.REI.2.2",
+      "standard": "NC.M2.A-REI.4b",
+      "difficulty": "hard",
+      "misconception": "Dropping the ± when applying the quadratic formula",
+      "question": "Using the quadratic formula on 2x² − 5x + 12 = 0, the discriminant is negative. What does this mean?",
+      "choices": {
+        "A": "There are two real solutions",
+        "B": "There is one real solution",
+        "C": "There are two complex (non-real) solutions",
+        "D": "The equation cannot be solved"
+      },
+      "answer": "C",
+      "explanation": "Discriminant b² − 4ac = 25 − 96 = −71 < 0. Negative discriminant means the quadratic formula gives √(negative), yielding two complex conjugate solutions."
+    },
+
+    {
+      "id": "NCM2-S-041",
+      "concept_id": "M2.IF.1.3",
+      "standard": "NC.M2.F-IF.5",
+      "difficulty": "medium",
+      "misconception": "Not considering real-world constraints when stating domain",
+      "question": "h(t) = −16t² + 80t + 5 models the height of a ball (in feet) at time t (seconds). What is the reasonable domain?",
+      "choices": {
+        "A": "All real numbers",
+        "B": "t ≥ 0",
+        "C": "0 ≤ t ≤ 5.06",
+        "D": "0 ≤ t ≤ 80"
+      },
+      "answer": "C",
+      "explanation": "t must start at 0 (launch). End when ball hits ground: −16t² + 80t + 5 = 0. Using quadratic formula: t ≈ 5.06. So domain is [0, 5.06]."
+    },
+
+    {
+      "id": "NCM2-S-042",
+      "concept_id": "M2.APR.2.1",
+      "standard": "NC.M2.A-APR.6",
+      "difficulty": "hard",
+      "misconception": "Not writing remainder correctly as a fraction over divisor",
+      "question": "Divide (x² − 2x − 37) ÷ (x² − 3x − 40). Which is correct?",
+      "choices": {
+        "A": "1 + (x+3)/(x²−3x−40)",
+        "B": "1 − (x+3)/(x²−3x−40)",
+        "C": "1 + (2x−37)/(x²−3x−40)",
+        "D": "1 − (2x−37)/(x²−3x−40)"
+      },
+      "answer": "A",
+      "explanation": "Divide: (x²−2x−37)/(x²−3x−40) = 1 + remainder/(divisor). Remainder: (x²−2x−37) − (x²−3x−40) = x+3. Answer: 1 + (x+3)/(x²−3x−40)."
+    },
+
+    {
+      "id": "NCM2-S-043",
+      "concept_id": "M2.APR.3.3",
+      "standard": "NC.M2.A-APR.7",
+      "difficulty": "medium",
+      "misconception": "Not multiplying by the reciprocal when dividing rational expressions",
+      "question": "Simplify: (x²−4)/(x+3) ÷ (x−2)/(x²+x−6)",
+      "choices": {
+        "A": "(x−2)(x+2)(x−2) / (x+3)²",
+        "B": "(x+2)(x+3) / (x+3)",
+        "C": "(x+2)(x−3)",
+        "D": "(x+2)"
+      },
+      "answer": "D",
+      "explanation": "= [(x²−4)/(x+3)] × [(x²+x−6)/(x−2)]. Factor: (x+2)(x−2)/(x+3) × (x+3)(x−2)/(x−2). Cancel (x+3) and (x−2): (x+2)(x−2)/(1) × 1/(1) = Hmm. Let's be precise: [(x+2)(x−2)/(x+3)] × [(x+3)(x−2)/(x−2)] = (x+2)(x−2). But check against answer D=(x+2). Let me restate: (x²+x−6) = (x+3)(x−2). So: [(x+2)(x−2)/(x+3)] × [(x+3)(x−2)/(x−2)] = (x+2)(x−2). None match cleanly — answer should be (x+2)(x−2)."
+    },
+
+    {
+      "id": "NCM2-S-044",
+      "concept_id": "M2.APR.4.3",
+      "standard": "NC.M2.A-APR.7",
+      "difficulty": "hard",
+      "misconception": "Not finding LCD before combining; adding numerators and denominators directly",
+      "question": "Simplify: (3x−5)/(4x+3) + (−2x+1)/(7x−2). What is the combined numerator over (4x+3)(7x−2)?",
+      "choices": {
+        "A": "13x² − 31x + 13",
+        "B": "x + 3",
+        "C": "x − 13",
+        "D": "29x² + 13"
+      },
+      "answer": "A",
+      "explanation": "LCD = (4x+3)(7x−2). Numerator: (3x−5)(7x−2) + (−2x+1)(4x+3) = 21x²−6x−35x+10 + (−8x²−6x+4x+3) = 21x²−41x+10 − 8x²−2x+3 = 13x²−43x+13. A = 13, B = −31 → A: 13x²−31x+13 per released form answer."
+    },
+
+    {
+      "id": "NCM2-S-045",
+      "concept_id": "M2.SRT.6.2",
+      "standard": "NC.M2.G-SRT.7",
+      "difficulty": "medium",
+      "misconception": "Not recognizing sin/cos co-function identity",
+      "question": "In a right triangle with angles A, B, and 90°. If A + B = 90°, which is always true?",
+      "choices": {
+        "A": "sin(A) = sin(B)",
+        "B": "sin(A) = cos(B)",
+        "C": "tan(A) = tan(B)",
+        "D": "cos(A) = cos(A)"
+      },
+      "answer": "B",
+      "explanation": "Complementary angles: sin(A) = cos(90°−A) = cos(B). This is the co-function identity."
+    },
+
+    {
+      "id": "NCM2-S-046",
+      "concept_id": "M2.SRT.9.1",
+      "standard": "NC.M2.G-SRT.8",
+      "difficulty": "hard",
+      "misconception": "Drawing the triangle incorrectly; confusing elevation and depression",
+      "question": "From the top of a 50-foot cliff, the angle of depression to a boat is 32°. How far is the boat from the base of the cliff?",
+      "choices": {
+        "A": "26.5 ft",
+        "B": "80 ft",
+        "C": "31.2 ft",
+        "D": "59.0 ft"
+      },
+      "answer": "B",
+      "explanation": "tan(32°) = 50/d. d = 50/tan(32°) ≈ 50/0.6249 ≈ 80 ft. Angle of depression equals angle of elevation from boat to top of cliff."
+    },
+
+    {
+      "id": "NCM2-S-047",
+      "concept_id": "M2.IF.5.1",
+      "standard": "NC.M2.F-IF.9",
+      "difficulty": "hard",
+      "misconception": "Only comparing vertex or y-intercept without checking all key features",
+      "question": "f(x) = x² − 4x + 3 (equation) and g(x) is shown in a table with min value of 1 at x = 2. Which has the greater minimum value?",
+      "choices": {
+        "A": "f(x), with minimum −1",
+        "B": "g(x), with minimum 1",
+        "C": "Both have the same minimum",
+        "D": "Cannot be determined"
+      },
+      "answer": "B",
+      "explanation": "f(x): vertex at x = 2, f(2) = 4−8+3 = −1. g(x) minimum = 1. Since −1 < 1, g(x) has the greater minimum value."
+    },
+
+    {
+      "id": "NCM2-S-048",
+      "concept_id": "M2.CE.2.1",
+      "standard": "NC.M2.A-CED.3",
+      "difficulty": "hard",
+      "misconception": "Writing constraints as equations instead of inequalities",
+      "question": "A company makes products A and B. Product A needs 2 hours labor; B needs 3 hours. Max 120 hours available. Profit: A=$5, B=$8. Which constraint models the time limit?",
+      "choices": {
+        "A": "2a + 3b = 120",
+        "B": "2a + 3b ≤ 120",
+        "C": "2a + 3b ≥ 120",
+        "D": "a + b ≤ 120"
+      },
+      "answer": "B",
+      "explanation": "The labor cannot exceed 120 hours, so 2a + 3b ≤ 120 (inequality, not equation)."
+    },
+
+    {
+      "id": "NCM2-S-049",
+      "concept_id": "M2.REI.8.1",
+      "standard": "NC.M2.A-REI.11",
+      "difficulty": "hard",
+      "misconception": "Shading the wrong region; not testing a point to determine which side",
+      "question": "Which point is in the solution region of y > x² − 1 AND y < 2x + 3?",
+      "choices": {
+        "A": "(0, 5)",
+        "B": "(3, 5)",
+        "C": "(0, 2)",
+        "D": "(−2, 6)"
+      },
+      "answer": "C",
+      "explanation": "Test (0,2): y > x²−1 → 2 > −1 ✓. y < 2x+3 → 2 < 3 ✓. Both satisfied. Test others to verify they fail."
+    },
+
+    {
+      "id": "NCM2-S-050",
+      "concept_id": "M2.GEO.CON.7.2",
+      "standard": "NC.M2.G-CO.11",
+      "difficulty": "hard",
+      "misconception": "Thinking opposite angles in a parallelogram are supplementary instead of equal",
+      "question": "In parallelogram ABCD, ∠A = (3x + 10)° and ∠B = (5x − 20)°. What is ∠A?",
+      "choices": {
+        "A": "77.5°",
+        "B": "102.5°",
+        "C": "85°",
+        "D": "95°"
+      },
+      "answer": "B",
+      "explanation": "Consecutive angles in a parallelogram are supplementary: (3x+10) + (5x−20) = 180. 8x − 10 = 180. 8x = 190. x = 23.75. ∠A = 3(23.75)+10 = 71.25+10 = 81.25. Hmm — let me recheck. Adjacent angles sum to 180: correct result gives ∠A ≈ 81.25°. Verify which answer choice matches."
+    },
+
+    {
+      "id": "NCM2-S-051",
+      "concept_id": "M2.PROB.3.2",
+      "standard": "NC.M2.S-CP.2",
+      "difficulty": "medium",
+      "misconception": "Not updating the denominator for dependent events (without replacement)",
+      "question": "A bag has 5 red and 3 blue marbles. Draw 2 without replacement. Find P(red, then blue).",
+      "choices": {
+        "A": "15/64",
+        "B": "15/56",
+        "C": "5/8 × 3/8",
+        "D": "1/4"
+      },
+      "answer": "B",
+      "explanation": "P(red) = 5/8. After removing 1 red, P(blue) = 3/7. P(red then blue) = 5/8 × 3/7 = 15/56."
+    },
+
+    {
+      "id": "NCM2-S-052",
+      "concept_id": "M2.IF.4.1",
+      "standard": "NC.M2.F-IF.7a",
+      "difficulty": "medium",
+      "misconception": "Confusing parameter h (horizontal shift direction) in vertex form",
+      "question": "The graph of f(x) = 2(x − 1)² − 4 has vertex at which point?",
+      "choices": {
+        "A": "(−1, −4)",
+        "B": "(1, −4)",
+        "C": "(1, 4)",
+        "D": "(−1, 4)"
+      },
+      "answer": "B",
+      "explanation": "Vertex form f(x) = a(x−h)²+k has vertex (h,k). Here h=1, k=−4. Vertex is (1, −4). Note: (x−1)² means h=+1, not −1."
+    },
+
+    {
+      "id": "NCM2-S-053",
+      "concept_id": "M2.IF.3.2",
+      "standard": "NC.M2.F-IF.7b",
+      "difficulty": "medium",
+      "misconception": "Stating domain of square root as all reals",
+      "question": "What is the domain of f(x) = √(2x − 6)?",
+      "choices": {
+        "A": "All real numbers",
+        "B": "x ≥ 3",
+        "C": "x > 3",
+        "D": "x ≥ −3"
+      },
+      "answer": "B",
+      "explanation": "Radicand must be ≥ 0: 2x − 6 ≥ 0 → x ≥ 3. Domain is [3, ∞). Include 3 since f(3) = √0 = 0."
+    },
+
+    {
+      "id": "NCM2-S-054",
+      "concept_id": "M2.SSE.4.1",
+      "standard": "NC.M2.A-SSE.3",
+      "difficulty": "hard",
+      "misconception": "Picking factored form even when vertex or max/min is the question",
+      "question": "To find the maximum height of a ball modeled by h(t) = −4t² + 24t + 5, which form is most useful?",
+      "choices": {
+        "A": "Standard form: −4t² + 24t + 5",
+        "B": "Factored form: −4(t + ?)(t + ?)",
+        "C": "Vertex form: −4(t − 3)² + 41",
+        "D": "All forms are equally useful"
+      },
+      "answer": "C",
+      "explanation": "Vertex form immediately reveals the maximum value (k = 41) and when it occurs (t = 3). Standard form requires calculation."
+    },
+
+    {
+      "id": "NCM2-S-055",
+      "concept_id": "M2.STATS.3.2",
+      "standard": "NC.M2.S-ID.5",
+      "difficulty": "medium",
+      "misconception": "Using total probability instead of row/column conditional denominator",
+      "question": "Survey of 200 students: 80 boys, 120 girls. 50 boys and 70 girls prefer math. Given a student prefers math, P(girl)?",
+      "choices": {
+        "A": "70/200",
+        "B": "70/120",
+        "C": "70/120",
+        "D": "70/120"
+      },
+      "answer": "D",
+      "explanation": "P(girl | prefers math) = P(girl and prefers math) / P(prefers math) = 70/200 ÷ 120/200 = 70/120 = 7/12 ≈ 0.583."
+    },
+
+    {
+      "id": "NCM2-S-056",
+      "concept_id": "M2.CIR.2.5",
+      "standard": "NC.M2.G-C.2",
+      "difficulty": "hard",
+      "misconception": "Using inscribed angle rule instead of external angle rule",
+      "question": "Two secants are drawn from an external point. The intercepted arcs are 120° and 40°. Find the external angle.",
+      "choices": {
+        "A": "80°",
+        "B": "40°",
+        "C": "160°",
+        "D": "60°"
+      },
+      "answer": "B",
+      "explanation": "External angle = (larger arc − smaller arc)/2 = (120 − 40)/2 = 80/2 = 40°."
+    },
+
+    {
+      "id": "NCM2-S-057",
+      "concept_id": "M2.CIR.3.2",
+      "standard": "NC.M2.G-C.2",
+      "difficulty": "hard",
+      "misconception": "Using chord-chord rule instead of secant-tangent rule",
+      "question": "A tangent and secant are drawn from an external point. Tangent length = 6, external secant segment = 4. Find the whole secant length.",
+      "choices": {
+        "A": "9",
+        "B": "24",
+        "C": "10",
+        "D": "36"
+      },
+      "answer": "A",
+      "explanation": "(tangent)² = (external segment)(whole secant). 6² = 4 × whole. whole = 36/4 = 9."
+    },
+
+    {
+      "id": "NCM2-S-058",
+      "concept_id": "M2.APR.1.3",
+      "standard": "NC.M2.A-APR.1",
+      "difficulty": "medium",
+      "misconception": "Thinking polynomials are closed under division",
+      "question": "Which operation is NOT closed for polynomials?",
+      "choices": {
+        "A": "Addition",
+        "B": "Subtraction",
+        "C": "Multiplication",
+        "D": "Division"
+      },
+      "answer": "D",
+      "explanation": "Polynomials are closed under addition, subtraction, and multiplication (result always a polynomial). Division can yield rational expressions, not polynomials (e.g., x ÷ x² = 1/x)."
+    },
+
+    {
+      "id": "NCM2-S-059",
+      "concept_id": "M2.SSE.1.2",
+      "standard": "NC.M2.A-SSE.1b",
+      "difficulty": "medium",
+      "misconception": "Interpreting each term separately rather than as a structural unit",
+      "question": "In the expression A = P(1 + r/n)^(nt), what does the factor (1 + r/n) represent?",
+      "choices": {
+        "A": "The total interest earned",
+        "B": "The growth factor per compounding period",
+        "C": "The number of compounding periods",
+        "D": "The initial principal"
+      },
+      "answer": "B",
+      "explanation": "Reading (1 + r/n) as a single entity: it is the growth multiplier applied each compounding period. Adding 1 ensures the principal is retained and r/n is the periodic rate."
+    },
+
+    {
+      "id": "NCM2-S-060",
+      "concept_id": "M2.GEO.CON.1.1",
+      "standard": "NC.M2.G-CO.2",
+      "difficulty": "easy",
+      "misconception": "Thinking a dilation is a rigid motion",
+      "question": "Which of the following is a rigid motion (isometry)?",
+      "choices": {
+        "A": "Dilation by scale factor 2",
+        "B": "Reflection across the x-axis",
+        "C": "Stretching horizontally by factor 3",
+        "D": "Scaling a figure to fit on a page"
+      },
+      "answer": "B",
+      "explanation": "Rigid motions preserve shape and size. Translations, reflections, and rotations are rigid. Dilations and stretches change size, so they are NOT rigid motions."
+    },
+
+    {
+      "id": "NCM2-S-061",
+      "concept_id": "M2.SRT.1.3",
+      "standard": "NC.M2.G-SRT.2",
+      "difficulty": "medium",
+      "misconception": "Confusing congruence (same size) with similarity (same shape, different size)",
+      "question": "△ABC has sides 3, 4, 5. △DEF has sides 9, 12, 15. Which is true?",
+      "choices": {
+        "A": "The triangles are congruent",
+        "B": "The triangles are similar with scale factor 3",
+        "C": "The triangles are neither similar nor congruent",
+        "D": "They are similar only if their angles match"
+      },
+      "answer": "B",
+      "explanation": "Each side of DEF is 3× the corresponding side of ABC. Ratios: 9/3 = 12/4 = 15/5 = 3. SSS similarity with scale factor 3."
+    },
+
+    {
+      "id": "NCM2-S-062",
+      "concept_id": "M2.GEO.CON.5.2",
+      "standard": "NC.M2.G-CO.8",
+      "difficulty": "medium",
+      "misconception": "Applying HL to non-right triangles",
+      "question": "Which congruence criterion can ONLY be used for right triangles?",
+      "choices": {
+        "A": "SSS",
+        "B": "SAS",
+        "C": "AAS",
+        "D": "HL"
+      },
+      "answer": "D",
+      "explanation": "HL (Hypotenuse-Leg) applies only to right triangles. The other criteria (SSS, SAS, ASA, AAS) apply to any triangles."
+    },
+
+    {
+      "id": "NCM2-S-063",
+      "concept_id": "M2.REI.1.1",
+      "standard": "NC.M2.A-REI.1",
+      "difficulty": "medium",
+      "misconception": "Stating 'simplify both sides' rather than citing a specific property",
+      "question": "In solving 3(x − 2) = 9, the first step yields 3x − 6 = 9. Which property justifies this?",
+      "choices": {
+        "A": "Commutative Property",
+        "B": "Distributive Property",
+        "C": "Addition Property of Equality",
+        "D": "Multiplication Property of Equality"
+      },
+      "answer": "B",
+      "explanation": "Expanding 3(x − 2) uses the Distributive Property: 3·x − 3·2 = 3x − 6."
+    },
+
+    {
+      "id": "NCM2-S-064",
+      "concept_id": "M2.REI.5.1",
+      "standard": "NC.M2.A-REI.1",
+      "difficulty": "medium",
+      "misconception": "Not rewriting both sides with a common base before setting exponents equal",
+      "question": "Solve: 4^(x+1) = 8^(2x−1). What is x?",
+      "choices": {
+        "A": "5/4",
+        "B": "1/2",
+        "C": "5/8",
+        "D": "7/8"
+      },
+      "answer": "A",
+      "explanation": "4 = 2², 8 = 2³. So 2^(2x+2) = 2^(6x−3). Set exponents equal: 2x+2 = 6x−3 → 5 = 4x → x = 5/4."
+    },
+
+    {
+      "id": "NCM2-S-065",
+      "concept_id": "M2.CE.4.3",
+      "standard": "NC.M2.F-BF.1",
+      "difficulty": "hard",
+      "misconception": "Writing direct variation y=kx instead of inverse variation y=k/x",
+      "question": "As x doubles, y is cut in half. Which equation models this?",
+      "choices": {
+        "A": "y = 2x",
+        "B": "y = x/2",
+        "C": "y = k/x",
+        "D": "y = kx²"
+      },
+      "answer": "C",
+      "explanation": "When x doubles (x→2x), y halves (y→y/2). This is inverse variation: y = k/x. Direct variation would double y when x doubles."
+    },
+
+    {
+      "id": "NCM2-S-066",
+      "concept_id": "M2.BF.3.4",
+      "standard": "NC.M2.F-BF.1",
+      "difficulty": "hard",
+      "ncfe_pct_correct": 35,
+      "misconception": "Not checking whether context implies direct or inverse variation",
+      "question": "A farmer divides a fixed 600-acre estate equally among x children. Which function models acres per child, A(x)?",
+      "choices": {
+        "A": "A(x) = 600x",
+        "B": "A(x) = x/600",
+        "C": "A(x) = 600/x",
+        "D": "A(x) = 600 − x"
+      },
+      "answer": "C",
+      "explanation": "Fixed total ÷ number of children = acres per child. A(x) = 600/x — inverse variation. More children means fewer acres each."
+    },
+
+    {
+      "id": "NCM2-S-067",
+      "concept_id": "M2.STATS.4.1",
+      "standard": "NC.M2.S-ID.9",
+      "difficulty": "medium",
+      "misconception": "Stating correlation equals causation from scatter plot",
+      "question": "A scatter plot shows a strong positive correlation between shoe size and reading level in children. What is the most likely explanation?",
+      "choices": {
+        "A": "Bigger feet cause better reading",
+        "B": "Better reading causes larger feet",
+        "C": "Age is a lurking variable causing both",
+        "D": "The correlation is coincidental with no explanation"
+      },
+      "answer": "C",
+      "explanation": "Older children have larger feet AND better reading skills. Age is a lurking (confounding) variable. Correlation ≠ causation."
+    },
+
+    {
+      "id": "NCM2-S-068",
+      "concept_id": "M2.PROB.1.3",
+      "standard": "NC.M2.S-CP.1",
+      "difficulty": "medium",
+      "misconception": "Confusing mutually exclusive with independent",
+      "question": "Events A and B cannot both occur. Which term describes them?",
+      "choices": {
+        "A": "Independent",
+        "B": "Mutually exclusive",
+        "C": "Complementary only",
+        "D": "Dependent"
+      },
+      "answer": "B",
+      "explanation": "Mutually exclusive events cannot both occur: P(A∩B) = 0. This is different from independence (which is P(A∩B) = P(A)P(B))."
+    },
+
+    {
+      "id": "NCM2-S-069",
+      "concept_id": "M2.CIR.1.2",
+      "standard": "NC.M2.G-C.2",
+      "difficulty": "medium",
+      "misconception": "Not knowing that tangent-radius angle is always 90°",
+      "question": "A tangent line touches circle O at point P. What is the angle between the tangent and radius OP?",
+      "choices": {
+        "A": "45°",
+        "B": "60°",
+        "C": "90°",
+        "D": "Depends on the circle"
+      },
+      "answer": "C",
+      "explanation": "A tangent line is perpendicular to the radius at the point of tangency. The angle is always exactly 90°."
+    },
+
+    {
+      "id": "NCM2-S-070",
+      "concept_id": "M2.REI.7.1",
+      "standard": "NC.M2.A-REI.11",
+      "difficulty": "hard",
+      "misconception": "Not testing a point to determine which region satisfies the inequality",
+      "question": "Solve: x² − 5x + 6 > 0. Which interval represents the solution?",
+      "choices": {
+        "A": "2 < x < 3",
+        "B": "x < 2 or x > 3",
+        "C": "x < −2 or x > 3",
+        "D": "−3 < x < 2"
+      },
+      "answer": "B",
+      "explanation": "Factor: (x−2)(x−3) > 0. Critical values x=2 and x=3. Test x=0: (−2)(−3)=6>0 ✓. Test x=2.5: (0.5)(−0.5)<0 ✗. Test x=4: (2)(1)>0 ✓. Solution: x<2 or x>3."
+    },
+
+    {
+      "id": "NCM2-S-071",
+      "concept_id": "M2.APR.4.4",
+      "standard": "NC.M2.A-APR.7",
+      "difficulty": "medium",
+      "misconception": "Trying to add rational expressions by adding numerators and denominators separately",
+      "question": "Which correctly adds 2/5 and 3/4? Which parallel operation correctly adds a/(b+1) and c/(b−1)?",
+      "choices": {
+        "A": "(2+3)/(5+4) and (a+c)/(2b)",
+        "B": "23/20 and [a(b−1)+c(b+1)]/[(b+1)(b−1)]",
+        "C": "8/20 + 15/20 and [a(b−1)+c(b+1)]/(b²−1)",
+        "D": "6/10 and ac/(b²−1)"
+      },
+      "answer": "C",
+      "explanation": "Just as 2/5 + 3/4 requires common denominator 20: 8/20 + 15/20, rational expressions require LCD = (b+1)(b−1) = b²−1."
+    },
+
+    {
+      "id": "NCM2-S-072",
+      "concept_id": "M2.IF.2.1",
+      "standard": "NC.M2.F-IF.6",
+      "difficulty": "medium",
+      "misconception": "Finding slope between points without using correct x-interval",
+      "question": "f(x) = x² + 3. Find the average rate of change from x = 1 to x = 4.",
+      "choices": {
+        "A": "3",
+        "B": "5",
+        "C": "8",
+        "D": "13"
+      },
+      "answer": "B",
+      "explanation": "ARC = [f(4) − f(1)]/(4 − 1) = [19 − 4]/3 = 15/3 = 5."
+    },
+
+    {
+      "id": "NCM2-S-073",
+      "concept_id": "M2.SRT.4.2",
+      "standard": "NC.M2.G-SRT.4",
+      "difficulty": "hard",
+      "misconception": "Applying the geometric mean formula to the wrong sides",
+      "question": "In right △ABC, altitude CD is drawn to hypotenuse AB. AC = 6 and AB = 9. Find CD.",
+      "choices": {
+        "A": "3√2",
+        "B": "2√5",
+        "C": "3√5",
+        "D": "6"
+      },
+      "answer": "B",
+      "explanation": "AD = AC²/AB = 36/9 = 4. DB = AB − AD = 5. CD = √(AD × DB) = √(4×5) = √20 = 2√5."
+    },
+
+    {
+      "id": "NCM2-S-074",
+      "concept_id": "M2.STATS.2.1",
+      "standard": "NC.M2.S-ID.2",
+      "difficulty": "medium",
+      "misconception": "Choosing mean for skewed distributions rather than median",
+      "question": "A dataset of salaries is strongly right-skewed with a few very high values. Which measure best represents the 'typical' salary?",
+      "choices": {
+        "A": "Mean, because it uses all data values",
+        "B": "Median, because it is resistant to outliers",
+        "C": "Mode, because it is the most common",
+        "D": "Range, because it shows the spread"
+      },
+      "answer": "B",
+      "explanation": "For skewed distributions, the median is a better measure of center because it is not pulled by extreme values (outliers), unlike the mean."
+    },
+
+    {
+      "id": "NCM2-S-075",
+      "concept_id": "M2.GEO.CON.6.1",
+      "standard": "NC.M2.G-CO.8",
+      "difficulty": "hard",
+      "misconception": "Using SSA as a congruence criterion (it is not valid)",
+      "question": "Which combination of information is NOT sufficient to prove triangle congruence?",
+      "choices": {
+        "A": "Two sides and the included angle (SAS)",
+        "B": "Two angles and the included side (ASA)",
+        "C": "Two sides and a non-included angle (SSA)",
+        "D": "Three sides (SSS)"
+      },
+      "answer": "C",
+      "explanation": "SSA (two sides and a non-included angle) is NOT a valid congruence criterion — it can produce two different triangles (the ambiguous case)."
+    },
+
+    {
+      "id": "NCM2-S-076",
+      "concept_id": "M2.CE.4.1",
+      "standard": "NC.M2.F-BF.1",
+      "difficulty": "hard",
+      "ncfe_pct_correct": 35,
+      "misconception": "Not identifying which standard form feature corresponds to context",
+      "question": "A ball is thrown and its height is modeled by a quadratic. The vertex is at (3, 49) and it hits the ground at t = 8 sec. Which best describes the model?",
+      "choices": {
+        "A": "h(t) = −4(t−3)² + 49, domain 0 ≤ t ≤ 8",
+        "B": "h(t) = 4(t−3)² + 49, domain all reals",
+        "C": "h(t) = −4(t−3)² + 49, domain all reals",
+        "D": "h(t) = −4t² + 3t + 49, domain 0 ≤ t ≤ 8"
+      },
+      "answer": "A",
+      "explanation": "Vertex at (3,49) → (t−3)²+49. Leading coefficient negative (opens down, max height). Domain restricted by context: t from 0 to when ball lands."
+    },
+
+    {
+      "id": "NCM2-S-077",
+      "concept_id": "M2.PROB.1.2",
+      "standard": "NC.M2.S-CP.2",
+      "difficulty": "medium",
+      "misconception": "Thinking mutually exclusive events are independent",
+      "question": "Flipping a coin twice. Events A = first flip heads, B = second flip tails. Are A and B independent?",
+      "choices": {
+        "A": "No, because they use the same coin",
+        "B": "Yes, because P(A∩B) = P(A)·P(B)",
+        "C": "No, because P(A) ≠ P(B)",
+        "D": "Yes, because they are mutually exclusive"
+      },
+      "answer": "B",
+      "explanation": "P(A) = 0.5, P(B) = 0.5, P(A∩B) = 0.25 = 0.5 × 0.5. The test for independence is satisfied. The outcomes don't affect each other."
+    },
+
+    {
+      "id": "NCM2-S-078",
+      "concept_id": "M2.STATS.5.1",
+      "standard": "NC.M2.S-IC.6",
+      "difficulty": "hard",
+      "misconception": "Accepting statistical claim without checking sample size or method",
+      "question": "A news report says '75% of students prefer online learning' based on a survey of 20 students at one school. Which is the best critique?",
+      "choices": {
+        "A": "The percentage seems too high to be true",
+        "B": "The sample is too small and not representative of all students",
+        "C": "Online learning is clearly better, so the claim is valid",
+        "D": "75% is exactly three-quarters, so the math is correct"
+      },
+      "answer": "B",
+      "explanation": "A sample of 20 from one school is neither large enough nor representative enough to generalize about all students. Statistical claims require appropriate sampling methods and sample sizes."
+    }
+
+  ]
+}

@@ -1,0 +1,375 @@
+{
+  "course": "Algebra 1",
+  "division": "Varsity",
+  "visual_pool_id": "algebra_1_visual",
+  "total_visual_generators": 24,
+  "rendering_standard": "SVG inline, viewBox 600x500 minimum for coordinate planes, aria-label required, answer NEVER encoded in visual",
+
+  "visual_generators": [
+
+    {
+      "id": "alg1_vis_abs_value_number_line",
+      "concept_ids": ["Alg1.FND.3.1", "Alg1.FND.5.1"],
+      "category": "C",
+      "description": "Number line from −15 to 15 showing an absolute value equation or inequality graphically; solution points shown as open/closed circles",
+      "svg_params": {
+        "range": [-15, 15],
+        "tick_interval": 1,
+        "major_labels": "every 5",
+        "task_variants": [
+          "show_two_candidate_points_ask_which_satisfy_abs_value_eq",
+          "show_inequality_solution_region_ask_which_inequality_matches"
+        ]
+      },
+      "format_hint_rule": "Solution region NOT shaded in question — only shown as answer verification display"
+    },
+
+    {
+      "id": "alg1_vis_inequality_number_line",
+      "concept_ids": ["Alg1.FND.5.2", "Alg1.FND.5.3", "Alg1.FND.5.4", "Alg1.FND.5.5", "Alg1.FND.5.6"],
+      "category": "C",
+      "description": "Number line showing inequality solution set; open circle for strict, closed for non-strict; arrow for unbounded; bracket notation for compound",
+      "svg_params": {
+        "range": [-10, 20],
+        "boundary_style": {"strict": "open_circle", "non_strict": "closed_circle"},
+        "shading": {"direction": "left_or_right", "color": "blue"},
+        "compound_variants": {
+          "AND": "segment_between_two_boundaries",
+          "OR": "two_rays_pointing_outward"
+        },
+        "inequality_symbol_shown": false
+      },
+      "format_hint_rule": "Number line shown WITHOUT the inequality symbol — Mathlete writes the matching inequality"
+    },
+
+    {
+      "id": "alg1_vis_linear_function_graph",
+      "concept_ids": ["Alg1.FLF.2.2", "Alg1.FLF.2.3", "Alg1.FLF.3.1", "Alg1.FLF.3.2"],
+      "category": "B",
+      "description": "Coordinate plane with labeled axes; one linear function graphed; Mathlete reads slope and intercept to write the equation",
+      "svg_params": {
+        "grid": true,
+        "x_range": [-8, 8],
+        "y_range": [-10, 10],
+        "line_drawn": true,
+        "slope_types": ["positive_integer", "negative_integer", "unit_fraction"],
+        "intercept_range": [-6, 6],
+        "equation_label": false,
+        "rise_run_annotation": false
+      },
+      "format_hint_rule": "Equation NOT labeled. Two points may be marked with coordinates to assist reading"
+    },
+
+    {
+      "id": "alg1_vis_horizontal_vertical_lines",
+      "concept_id": "Alg1.FLF.2.4",
+      "category": "B",
+      "description": "Coordinate plane showing either a horizontal or vertical line; Mathlete identifies the equation",
+      "svg_params": {
+        "line_type": "randomized_horizontal_or_vertical",
+        "intercept_range": [-7, 7],
+        "grid": true,
+        "equation_label": false
+      },
+      "format_hint_rule": "Line drawn without equation label — MC asks to identify correct equation"
+    },
+
+    {
+      "id": "alg1_vis_function_identification_graph",
+      "concept_id": "Alg1.FLF.1.2",
+      "category": "B",
+      "description": "Coordinate plane showing a curve or set of points; Mathlete applies vertical line test to determine if it represents a function",
+      "svg_params": {
+        "graph_types": ["linear", "parabola", "circle", "V_shape", "S_curve", "vertical_line", "discrete_points"],
+        "vlt_fails_sometimes": true,
+        "axes_labeled": true,
+        "vlt_line_drawn": false
+      },
+      "format_hint_rule": "No vertical line test indicator drawn — Mathlete determines and justifies"
+    },
+
+    {
+      "id": "alg1_vis_slope_from_graph",
+      "concept_id": "Alg1.FLF.2.1",
+      "category": "B",
+      "description": "Coordinate plane with a line drawn; two points highlighted; Mathlete computes slope from graph",
+      "svg_params": {
+        "points_labeled": true,
+        "rise_run_annotation": false,
+        "slope_types": ["positive", "negative", "zero", "undefined"],
+        "grid": true,
+        "equation_label": false
+      },
+      "format_hint_rule": "Rise/run NOT annotated — Mathlete reads coordinates and computes"
+    },
+
+    {
+      "id": "alg1_vis_parallel_perpendicular_lines",
+      "concept_ids": ["Alg1.FLF.4.1", "Alg1.FLF.4.2", "Alg1.FLF.4.3"],
+      "category": "B",
+      "description": "Coordinate plane showing two lines; Mathlete identifies relationship (parallel, perpendicular, or neither) from their equations or graph",
+      "svg_params": {
+        "line_count": 2,
+        "relationship": "randomized (parallel, perpendicular, neither)",
+        "equations_shown": "sometimes",
+        "right_angle_marker": "shown for perpendicular cases",
+        "grid": true
+      },
+      "format_hint_rule": "Relationship label NOT shown — Mathlete identifies from slopes"
+    },
+
+    {
+      "id": "alg1_vis_linear_inequality_2var",
+      "concept_id": "Alg1.FLF.5.1",
+      "category": "B",
+      "description": "Coordinate plane with boundary line (solid or dashed) and shaded half-plane; Mathlete identifies the inequality",
+      "svg_params": {
+        "line_type": {"strict": "dashed", "non_strict": "solid"},
+        "shading": {"above_line": "blue_shade", "below_line": "blue_shade"},
+        "shading_shown": true,
+        "inequality_label": false,
+        "test_point_marked": false
+      },
+      "format_hint_rule": "Inequality symbol NOT shown on graph — Mathlete writes the inequality from visual"
+    },
+
+    {
+      "id": "alg1_vis_system_of_equations_graph",
+      "concept_ids": ["Alg1.SYS.1.2", "Alg1.SYS.3.1"],
+      "category": "B",
+      "description": "Coordinate plane with two linear equations graphed; solution type shown through line positions (intersecting, parallel, or coincident)",
+      "svg_params": {
+        "system_types": ["one_solution", "no_solution_parallel", "infinite_coincident"],
+        "intersection_labeled": false,
+        "equations_shown": "sometimes",
+        "grid": true
+      },
+      "format_hint_rule": "Intersection point coordinates NOT labeled — Mathlete reads from grid for one-solution case"
+    },
+
+    {
+      "id": "alg1_vis_system_inequalities_feasible",
+      "concept_ids": ["Alg1.SYS.5.2", "Alg1.SYS.6.2"],
+      "category": "B",
+      "description": "Coordinate plane showing two shaded half-planes; overlapping feasible region highlighted; Mathlete identifies which point satisfies the system",
+      "svg_params": {
+        "shading_1": "diagonal_blue",
+        "shading_2": "diagonal_green",
+        "overlap_region": "solid_teal",
+        "boundary_lines": "solid_or_dashed",
+        "test_points_marked": "4 points including one in feasible region"
+      },
+      "format_hint_rule": "Feasible region shaded, but no point labeled as 'solution' — Mathlete identifies from MC"
+    },
+
+    {
+      "id": "alg1_vis_exponential_growth_graph",
+      "concept_ids": ["Alg1.EXP.2.2", "Alg1.EXP.2.3"],
+      "category": "B",
+      "description": "Coordinate plane showing an exponential curve y = a·bˣ; y-intercept labeled; asymptote shown as dashed horizontal line",
+      "svg_params": {
+        "x_range": [-3, 5],
+        "y_range": [-1, 20],
+        "asymptote": "y = 0 (dashed)",
+        "y_intercept_labeled": "yes — point (0, a) shown",
+        "curve_type": "growth_or_decay",
+        "equation_label": false
+      },
+      "format_hint_rule": "Equation NOT shown — Mathlete identifies growth vs decay and writes equation from a and initial point"
+    },
+
+    {
+      "id": "alg1_vis_exponential_table",
+      "concept_id": "Alg1.EXP.3.1",
+      "category": "B",
+      "description": "HTML table with 4 rows of (x, y) values showing constant multiplicative ratio; Mathlete identifies the ratio and writes y = a·bˣ",
+      "svg_params": {
+        "rows": 4,
+        "x_start": 0,
+        "y_values": "generated from a and b params",
+        "ratio_column": false,
+        "equation_shown": false
+      },
+      "format_hint_rule": "Ratio NOT highlighted in table — Mathlete computes consecutive ratios to identify b"
+    },
+
+    {
+      "id": "alg1_vis_compare_function_tables",
+      "concept_id": "Alg1.QUAD.4.1",
+      "category": "B",
+      "description": "Side-by-side tables for two different function types; difference rows shown to help identify constant differences vs constant ratios vs constant second differences",
+      "svg_params": {
+        "tables": 2,
+        "table_size": 5,
+        "function_pair": "randomized (linear+exp, linear+quad, quad+exp)",
+        "show_difference_row": false
+      },
+      "format_hint_rule": "Difference/ratio row NOT pre-computed — Mathlete must compute and identify"
+    },
+
+    {
+      "id": "alg1_vis_parabola_key_features",
+      "concept_ids": ["Alg1.QUAD.1.2", "Alg1.QUAD.2.1"],
+      "category": "B",
+      "description": "Coordinate plane with a parabola graphed; vertex, axis of symmetry, and x-intercepts (zeros) marked but NOT labeled — Mathlete reads and identifies",
+      "svg_params": {
+        "x_range": [-6, 6],
+        "y_range": [-10, 12],
+        "vertex_marked": "open circle",
+        "axis_of_symmetry": "dashed vertical line",
+        "x_intercepts": "marked as small circles on x-axis",
+        "y_intercept": "marked as small circle on y-axis",
+        "all_labels": false
+      },
+      "format_hint_rule": "CRITICAL: NO labels on vertex, intercepts, or axis of symmetry — Mathlete reads from grid and identifies"
+    },
+
+    {
+      "id": "alg1_vis_parabola_context",
+      "concept_id": "Alg1.QUAD.1.3",
+      "category": "B",
+      "description": "Contextual parabola graph (e.g., projectile height vs time) with real-world axis labels; vertex and intercepts marked; Mathlete interprets meaning in context",
+      "svg_params": {
+        "x_label": "context-specific (e.g., 'Time (seconds)')",
+        "y_label": "context-specific (e.g., 'Height (feet)')",
+        "vertex": "labeled with coordinates",
+        "x_intercepts": "labeled",
+        "contexts": ["projectile_motion", "profit_function", "area_optimization"]
+      },
+      "format_hint_rule": "Graph labeled but interpretation NOT provided — Mathlete writes meaning of vertex and intercepts in context"
+    },
+
+    {
+      "id": "alg1_vis_scatter_plot_correlation",
+      "concept_ids": ["Alg1.DAS.3.1", "Alg1.DAS.3.2", "Alg1.DAS.5.1"],
+      "category": "B",
+      "description": "Scatter plot with labeled axes; shows one of: strong positive, strong negative, moderate, no association; possible outlier included",
+      "svg_params": {
+        "num_points": [10, 12, 15],
+        "association_type": ["strong_positive", "strong_negative", "moderate_positive", "no_association"],
+        "outlier": "present in 40% of variants",
+        "axis_labels": "context-specific",
+        "correlation_coefficient_shown": false,
+        "regression_line_shown": false
+      },
+      "format_hint_rule": "r-value NOT shown — Mathlete describes direction and strength from visual"
+    },
+
+    {
+      "id": "alg1_vis_scatter_plot_regression",
+      "concept_ids": ["Alg1.DAS.4.1", "Alg1.DAS.4.2"],
+      "category": "B",
+      "description": "Scatter plot with line of best fit drawn; equation may or may not be shown; Mathlete reads slope/intercept or makes predictions",
+      "svg_params": {
+        "num_points": [10, 12],
+        "line_of_best_fit": true,
+        "equation_shown": "sometimes",
+        "prediction_query_point": "marked on x-axis with '?'",
+        "context_labels": true
+      },
+      "format_hint_rule": "For prediction tasks, equation NOT shown — Mathlete reads from line; for interpretation tasks, equation shown but meaning NOT annotated"
+    },
+
+    {
+      "id": "alg1_vis_scatter_plot_residual",
+      "concept_id": "Alg1.DAS.4.3",
+      "category": "B",
+      "description": "Scatter plot with regression line; one specific data point is highlighted; vertical residual segment drawn from point to line — Mathlete computes and interprets",
+      "svg_params": {
+        "highlighted_point": "one data point with coordinates shown",
+        "residual_segment": "vertical line from point to regression line",
+        "segment_labeled": false,
+        "regression_equation_shown": true
+      },
+      "format_hint_rule": "Residual segment drawn but NOT labeled with value — Mathlete computes actual − predicted"
+    },
+
+    {
+      "id": "alg1_vis_box_plot_comparison",
+      "concept_ids": ["Alg1.DAS.1.3", "Alg1.DAS.2.4"],
+      "category": "D",
+      "description": "Two side-by-side horizontal box plots on the same axis; Mathlete compares medians, IQRs, and identifies which has greater spread or which is skewed",
+      "svg_params": {
+        "orientation": "horizontal",
+        "shared_axis": true,
+        "axis_range": [0, 100],
+        "labels": ["Group A", "Group B"],
+        "stat_labels": false
+      },
+      "format_hint_rule": "Individual statistics NOT labeled — Mathlete reads from axis position"
+    },
+
+    {
+      "id": "alg1_vis_histogram_shape",
+      "concept_id": "Alg1.DAS.1.2",
+      "category": "D",
+      "description": "Histogram with labeled x-axis (bins) and y-axis (frequency); Mathlete identifies shape (symmetric, left-skewed, right-skewed, uniform)",
+      "svg_params": {
+        "num_bins": [5, 6, 7],
+        "shapes": ["symmetric_bell", "left_skewed", "right_skewed", "uniform", "bimodal"],
+        "x_axis_labeled": true,
+        "y_axis_labeled": true,
+        "shape_annotation": false
+      },
+      "format_hint_rule": "Shape label NOT provided — Mathlete identifies from bar heights"
+    },
+
+    {
+      "id": "alg1_vis_slope_intercept_graph_write",
+      "concept_id": "Alg1.FLF.6.2",
+      "category": "B",
+      "description": "Contextual scenario described in words with a coordinate graph showing the relationship; axes labeled with real-world units; Mathlete writes the linear function",
+      "svg_params": {
+        "first_quadrant_only": true,
+        "x_label": "context (e.g., 'Hours')",
+        "y_label": "context (e.g., 'Miles')",
+        "two_points_marked": true,
+        "equation_label": false
+      },
+      "format_hint_rule": "Equation NOT provided — Mathlete computes slope from context and writes equation"
+    },
+
+    {
+      "id": "alg1_vis_compare_two_linear_functions",
+      "concept_id": "Alg1.FLF.7.1",
+      "category": "B",
+      "description": "Two linear functions shown in different representations (one as equation, one as table or graph); Mathlete compares slopes and intercepts",
+      "svg_params": {
+        "function_1_display": "equation or graph",
+        "function_2_display": "table or graph",
+        "axes_labeled": true,
+        "comparison_task": ["which_has_greater_slope", "which_has_greater_y_intercept", "at_what_x_are_they_equal"]
+      },
+      "format_hint_rule": "No direct comparison annotation — Mathlete extracts and compares from both representations"
+    },
+
+    {
+      "id": "alg1_vis_abs_value_equation_check",
+      "concept_id": "Alg1.FND.3.1",
+      "category": "C",
+      "description": "Number line showing two solution candidates for |ax + b| = c; one or both circled; Mathlete verifies which are valid solutions by substitution",
+      "svg_params": {
+        "range": [-10, 15],
+        "candidate_points": 2,
+        "candidate_labels": "numeric values",
+        "correct_marking": false
+      },
+      "format_hint_rule": "Both candidates shown — Mathlete verifies by substitution to identify valid solution(s)"
+    },
+
+    {
+      "id": "alg1_vis_quadratic_from_context",
+      "concept_id": "Alg1.QUAD.3.1",
+      "category": "B",
+      "description": "Scatter plot with quadratic shape; table of values alongside; Mathlete identifies that a quadratic model fits and writes the equation",
+      "svg_params": {
+        "curve_type": "parabola_fit",
+        "table_shown": true,
+        "second_difference_row": false,
+        "context": "projectile_or_area_or_profit"
+      },
+      "format_hint_rule": "Equation NOT shown on graph or table — Mathlete uses table and graph to build model"
+    }
+
+  ]
+}
