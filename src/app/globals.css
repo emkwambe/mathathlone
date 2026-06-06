@@ -1,9 +1,11 @@
+/* KaTeX math rendering — MUST be the first rule.
+   CSS spec (and Turbopack's strict parser) requires every @import to
+   precede any other rule, including the @tailwind directives below. */
+@import 'katex/dist/katex.min.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* KaTeX math rendering */
-@import 'katex/dist/katex.min.css';
 
 /* Base styles */
 @layer base {
