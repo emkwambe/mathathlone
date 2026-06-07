@@ -1,451 +1,194 @@
 """
 MathAthlone Generator Quality Evaluator
-========================================
-Uses Claude API to independently verify generator outputs.
+Calls sample-generators.ts via npx tsx, then evaluates with Claude API.
 
 Usage:
-  python generator_evaluator.py --course G7 --samples 20 --output report.json
-
-Requirements:
-  pip install anthropic subprocess json pathlib
-
-Pipeline:
-  1. Calls each generator via Node.js wrapper
-  2. Sends (question, answer, answer_type) to Claude for verification
-  3. Produces structured audit report
+  python scripts/generator_evaluator.py --course G7 --samples 5
+  python scripts/generator_evaluator.py --course G7 --samples 10 --output docs/audits/G7_audit.md
 """
 
-import subprocess
-import json
-import time
-import argparse
-import os
+import subprocess, json, time, argparse, os, sys
 from pathlib import Path
-from typing import Any
 
-# ── Configuration ──────────────────────────────────────────────────────────────
-
-REPO_PATH = r"C:\Users\HP\Documents\mathathlone-app"
-ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
-
-# Generator prefixes per course
-COURSE_PREFIXES = {
-    "G6":   "g6_",
-    "G7":   "g7_",
-    "G8":   "g8_",
-    "ALG1": "alg1_",
-    "MF":   "mf_",
-    "NCM3": "m3_",
-    "NCM1": "",  # legacy — no prefix
+REPO = Path(r"C:\Users\HP\Documents\mathathlone-app")
+API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
+PREFIXES = {
+    "G6":"g6_", "G7":"g7_", "G8":"g8_",
+    "ALG1":"alg1_", "MF":"mf_", "NCM3":"m3_"
 }
 
-# ── Node.js wrapper script (written to disk temporarily) ──────────────────────
-
-NODE_RUNNER = """
-// generator-runner.js
-// Calls a single generator N times at each difficulty and returns JSON
-
-const path = require('path');
-
-// We need ts-node or the compiled output
-// This assumes generators.ts has been compiled or we use tsx
-async function main() {
-  const args = JSON.parse(process.argv[2]);
-  const { generatorType, samples, difficulties } = args;
-  
-  // Dynamic import of generators
-  // Adjust path if using compiled JS
-  const { GENERATORS } = require('./src/lib/competition/generators');
-  
-  const fn = GENERATORS[generatorType];
-  if (!fn) {
-    console.log(JSON.stringify({ error: `Generator not found: ${generatorType}` }));
-    process.exit(1);
-  }
-  
-  const results = [];
-  for (const difficulty of difficulties) {
-    for (let i = 0; i < samples; i++) {
-      try {
-        const q = fn(difficulty);
-        results.push({
-          generator_type: generatorType,
-          difficulty,
-          question: q.question,
-          answer: String(q.answer),
-          answer_type: q.answer_type,
-          concept_name: q.concept_name,
-          solution_steps: q.solution_steps || [],
-        });
-      } catch (e) {
-        results.push({
-          generator_type: generatorType,
-          difficulty,
-          error: e.message,
-        });
-      }
-    }
-  }
-  console.log(JSON.stringify(results));
-}
-
-main().catch(e => {
-  console.log(JSON.stringify({ error: e.message }));
-  process.exit(1);
-});
-"""
-
-# ── Claude evaluation prompt ───────────────────────────────────────────────────
-
-EVALUATOR_SYSTEM = """You are a mathematics education quality auditor.
-You will be given a math question, the generator's answer, and the declared answer_type.
-Your job is to:
-1. Independently solve the question using correct mathematics
-2. Verify whether the generator's answer is correct
-3. Check if the answer format matches the answer_type
-4. Assess the difficulty level appropriateness
-5. Flag any issues with the question text itself
-
-Respond ONLY with valid JSON. No explanation outside the JSON.
-"""
-
-EVALUATOR_PROMPT = """Evaluate this generator output:
-
-Question: {question}
-Generator's Answer: {answer}
-Answer Type: {answer_type}
-Declared Difficulty: {difficulty}
-Course: {course}
-Concept: {concept_name}
-Solution Steps: {solution_steps}
-
-Respond with this exact JSON structure:
-{{
-  "my_answer": "your independent computed answer",
-  "is_correct": true/false,
-  "correctness_confidence": "high/medium/low",
-  "format_matches_type": true/false,
-  "format_issue": "description or null",
-  "difficulty_appropriate": true/false,
-  "difficulty_issue": "description or null",
-  "question_quality": "good/minor_issue/major_issue",
-  "question_issue": "description or null",
-  "grade_appropriate": true/false,
-  "notes": "any additional observations or null"
-}}
-"""
-
-# ── Core evaluation functions ──────────────────────────────────────────────────
-
-def call_generator(generator_type: str, samples: int, difficulties: list) -> list:
-    """Call a TypeScript generator via Node.js and return samples."""
-    
-    # Write the runner script
-    runner_path = Path(REPO_PATH) / "scripts" / "generator-runner.js"
-    runner_path.parent.mkdir(exist_ok=True)
-    runner_path.write_text(NODE_RUNNER)
-    
-    args = json.dumps({
-        "generatorType": generator_type,
-        "samples": samples,
-        "difficulties": difficulties
-    })
-    
+def sample_generators(prefix: str, spd: int) -> list:
+    """Run the TypeScript sampler and return all samples as a list."""
+    script = str(REPO / "scripts" / "sample-generators.ts")
+    cmd = f"npx tsx {script} {prefix} {spd}"
+    # encoding='utf-8' with errors='replace' so the sampler's Unicode
+    # output (math symbols, smart quotes, etc.) doesn't crash the script
+    # on a Windows console whose default codepage isn't UTF-8.
+    r = subprocess.run(cmd, cwd=str(REPO), capture_output=True,
+                       encoding='utf-8', errors='replace',
+                       timeout=120, shell=True)
+    if r.returncode != 0:
+        print(f"  Sampler error: {r.stderr[:200]}")
+        return []
     try:
-        result = subprocess.run(
-            ["node", str(runner_path), args],
-            cwd=REPO_PATH,
-            capture_output=True,
-            text=True,
-            timeout=30
-        )
-        if result.returncode != 0:
-            return [{"error": result.stderr}]
-        return json.loads(result.stdout)
+        return json.loads(r.stdout.strip())
     except Exception as e:
-        return [{"error": str(e)}]
+        print(f"  JSON parse error: {e} | output: {r.stdout[:100]}")
+        return []
 
+SYSTEM = """You are a mathematics education quality auditor.
+Given a math question and the generator's answer, independently solve it.
+Respond ONLY with valid JSON — no markdown, no text outside JSON."""
 
-def evaluate_with_claude(sample: dict, course: str) -> dict:
-    """Send a generator sample to Claude for mathematical verification."""
+def evaluate(sample: dict, course: str) -> dict:
     import anthropic
-    
-    client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
-    
-    prompt = EVALUATOR_PROMPT.format(
-        question=sample.get("question", ""),
-        answer=sample.get("answer", ""),
-        answer_type=sample.get("answer_type", ""),
-        difficulty=sample.get("difficulty", ""),
-        course=course,
-        concept_name=sample.get("concept_name", ""),
-        solution_steps="\n".join(sample.get("solution_steps", []))
-    )
-    
+    client = anthropic.Anthropic(api_key=API_KEY)
+    prompt = f"""Evaluate this math generator output:
+
+Question: {sample.get('question','')}
+Generator answer: {sample.get('answer','')}
+Answer type: {sample.get('answer_type','')}
+Difficulty (1-4): {sample.get('difficulty','')}
+Course: {course}
+Concept: {sample.get('concept_name','')}
+
+Return exactly this JSON (no other text):
+{{
+  "my_answer": "<your computed answer>",
+  "is_correct": true,
+  "confidence": "high",
+  "format_ok": true,
+  "format_note": null,
+  "quality": "good",
+  "quality_note": null
+}}"""
     try:
-        response = client.messages.create(
-            model="claude-sonnet-4-20250514",
-            max_tokens=1000,
-            system=EVALUATOR_SYSTEM,
-            messages=[{"role": "user", "content": prompt}]
+        resp = client.messages.create(
+            model="claude-sonnet-4-20250514", max_tokens=300,
+            system=SYSTEM,
+            messages=[{"role":"user","content":prompt}]
         )
-        
-        raw = response.content[0].text.strip()
-        # Strip markdown if present
-        raw = raw.replace("```json", "").replace("```", "").strip()
-        evaluation = json.loads(raw)
-        evaluation["sample"] = sample
-        return evaluation
-        
+        raw = resp.content[0].text.strip().replace("```json","").replace("```","").strip()
+        ev = json.loads(raw)
+        ev["sample"] = sample
+        return ev
     except Exception as e:
-        return {
-            "error": str(e),
-            "sample": sample
-        }
+        return {"error": str(e), "sample": sample}
 
-
-def evaluate_course(course: str, samples_per_difficulty: int = 10) -> dict:
-    """Evaluate all generators for a course."""
+def evaluate_course(course: str, spd: int) -> dict:
+    prefix = PREFIXES[course]
+    print(f"\nSampling {course} generators (prefix={prefix}, {spd} samples/difficulty)...")
+    samples = sample_generators(prefix, spd)
     
-    prefix = COURSE_PREFIXES.get(course, "")
-    difficulties = [1, 2, 3, 4]
-    results = {
-        "course": course,
-        "generators": {},
-        "summary": {
-            "total_samples": 0,
-            "correct": 0,
-            "wrong": 0,
-            "format_issues": 0,
-            "difficulty_issues": 0,
-            "question_issues": 0,
-            "errors": 0,
-            "generators_with_errors": [],
-            "generators_needing_review": []
-        }
+    # Group by generator_type
+    by_gen: dict = {}
+    for s in samples:
+        gt = s.get("generator_type","?")
+        by_gen.setdefault(gt, []).append(s)
+    
+    print(f"{course}: {len(by_gen)} generators, {len(samples)} total samples")
+    
+    report = {
+        "course": course, "generators": {},
+        "summary": {"total":0,"correct":0,"wrong":0,
+                    "format_issues":0,"errors":0,"needs_review":[]}
     }
     
-    # Get all generator types for this course from the GENERATORS map
-    # This requires calling Node.js to list them
-    list_script = f"""
-const {{ GENERATORS }} = require('./src/lib/competition/generators');
-const prefix = '{prefix}';
-const types = Object.keys(GENERATORS).filter(k => k.startsWith(prefix));
-console.log(JSON.stringify(types));
-"""
-    list_path = Path(REPO_PATH) / "scripts" / "list-generators.js"
-    list_path.write_text(list_script)
-    
-    try:
-        result = subprocess.run(
-            ["node", str(list_path)],
-            cwd=REPO_PATH,
-            capture_output=True,
-            text=True,
-            timeout=10
-        )
-        generator_types = json.loads(result.stdout)
-    except:
-        generator_types = []
-    
-    print(f"\n{course}: Found {len(generator_types)} generators")
-    
-    for gen_type in generator_types:
-        print(f"  Testing {gen_type}...", end=" ")
+    for gt, slist in by_gen.items():
+        print(f"  Evaluating {gt} ({len(slist)} samples)... ", end="", flush=True)
+        gd = {"evaluations":[],"issues":[],"needs_review":False,"accuracy":""}
+        correct = total = 0
         
-        # Generate samples
-        samples = call_generator(gen_type, samples_per_difficulty, difficulties)
-        gen_results = {
-            "samples": [],
-            "error_rate": 0,
-            "wrong_answer_rate": 0,
-            "format_issue_rate": 0,
-            "needs_review": False,
-            "issues": []
-        }
-        
-        correct_count = 0
-        total_count = 0
-        
-        for sample in samples:
-            if "error" in sample:
-                gen_results["issues"].append(f"Generation error: {sample['error']}")
-                results["summary"]["errors"] += 1
+        for s in slist:
+            if "error" in s:
+                gd["issues"].append(f"Gen error d{s.get('difficulty','?')}: {s['error']}")
+                report["summary"]["errors"] += 1
                 continue
-            
-            # Evaluate with Claude
-            evaluation = evaluate_with_claude(sample, course)
-            time.sleep(0.5)  # Rate limiting
-            
-            gen_results["samples"].append(evaluation)
-            total_count += 1
-            results["summary"]["total_samples"] += 1
-            
-            if "error" in evaluation:
-                results["summary"]["errors"] += 1
+            ev = evaluate(s, course)
+            time.sleep(0.25)
+            gd["evaluations"].append(ev)
+            total += 1
+            report["summary"]["total"] += 1
+            if "error" in ev:
+                report["summary"]["errors"] += 1
                 continue
-            
-            if evaluation.get("is_correct"):
-                correct_count += 1
-                results["summary"]["correct"] += 1
+            if ev.get("is_correct"):
+                correct += 1
+                report["summary"]["correct"] += 1
             else:
-                results["summary"]["wrong"] += 1
-                gen_results["issues"].append(
-                    f"Wrong answer at difficulty {sample['difficulty']}: "
-                    f"Q='{sample['question']}' "
-                    f"Generator='{sample['answer']}' "
-                    f"Claude='{evaluation.get('my_answer')}'"
+                report["summary"]["wrong"] += 1
+                gd["issues"].append(
+                    f"WRONG d{s.get('difficulty','?')}: "
+                    f"Q='{s.get('question','')[:55]}' "
+                    f"Gen='{s.get('answer','')[:25]}' "
+                    f"Claude='{ev.get('my_answer','?')[:25]}'"
                 )
-            
-            if not evaluation.get("format_matches_type"):
-                results["summary"]["format_issues"] += 1
-                gen_results["issues"].append(
-                    f"Format mismatch: {evaluation.get('format_issue')}"
-                )
-            
-            if not evaluation.get("difficulty_appropriate"):
-                results["summary"]["difficulty_issues"] += 1
-            
-            if evaluation.get("question_quality") != "good":
-                results["summary"]["question_issues"] += 1
+            if not ev.get("format_ok"):
+                report["summary"]["format_issues"] += 1
+                gd["issues"].append(f"FORMAT: {ev.get('format_note','')}")
         
-        if total_count > 0:
-            wrong_rate = (total_count - correct_count) / total_count
-            gen_results["wrong_answer_rate"] = round(wrong_rate, 3)
-            gen_results["needs_review"] = wrong_rate > 0.05  # >5% wrong triggers review
-            
-            if gen_results["needs_review"]:
-                results["summary"]["generators_needing_review"].append(gen_type)
-        
-        results["generators"][gen_type] = gen_results
-        status = "✅" if not gen_results["needs_review"] else "❌ REVIEW"
-        print(f"{status} ({correct_count}/{total_count} correct)")
+        if total > 0:
+            wr = (total - correct) / total
+            gd["accuracy"] = f"{correct}/{total}"
+            gd["wrong_rate"] = round(wr, 3)
+            gd["needs_review"] = wr > 0.05
+            if gd["needs_review"]:
+                report["summary"]["needs_review"].append(gt)
+            print(f"{correct}/{total} {'✅' if not gd['needs_review'] else '❌ REVIEW'}")
+        else:
+            print("no valid samples")
+        report["generators"][gt] = gd
     
-    # Final summary
-    total = results["summary"]["total_samples"]
-    if total > 0:
-        results["summary"]["accuracy_pct"] = round(
-            results["summary"]["correct"] / total * 100, 1
-        )
-    
-    return results
+    s = report["summary"]
+    if s["total"] > 0:
+        s["accuracy_pct"] = round(s["correct"]/s["total"]*100, 1)
+    return report
 
-
-def generate_report(results: dict, output_path: str):
-    """Generate a markdown audit report from evaluation results."""
-    
+def write_report(data: dict, path: str):
+    s = data["summary"]
     lines = [
-        f"# Generator Quality Audit Report — {results['course']}",
-        f"**Generated:** {time.strftime('%Y-%m-%d %H:%M')}",
-        "",
-        "## Summary",
-        "",
-        f"| Metric | Value |",
-        f"|---|---|",
-        f"| Total samples evaluated | {results['summary']['total_samples']} |",
-        f"| Overall accuracy | {results['summary'].get('accuracy_pct', 0)}% |",
-        f"| Wrong answers found | {results['summary']['wrong']} |",
-        f"| Format issues | {results['summary']['format_issues']} |",
-        f"| Generators needing review | {len(results['summary']['generators_needing_review'])} |",
-        "",
+        f"# Generator Audit — {data['course']}",
+        f"**Date:** {time.strftime('%Y-%m-%d %H:%M')}\n",
+        "## Summary\n",
+        "| Metric | Value |", "|---|---|",
+        f"| Generators tested | {len(data['generators'])} |",
+        f"| Total evaluations | {s['total']} |",
+        f"| Overall accuracy | {s.get('accuracy_pct','N/A')}% |",
+        f"| Wrong answers | {s['wrong']} |",
+        f"| Format issues | {s['format_issues']} |",
+        f"| Needs review | {len(s['needs_review'])} |\n",
     ]
-    
-    if results['summary']['generators_needing_review']:
-        lines += [
-            "## ❌ Generators Requiring Immediate Review",
-            "",
-        ]
-        for gen in results['summary']['generators_needing_review']:
-            gen_data = results['generators'].get(gen, {})
-            lines.append(f"### {gen} ({gen_data.get('wrong_answer_rate', 0)*100:.1f}% wrong)")
-            for issue in gen_data.get("issues", [])[:5]:
+    if s["needs_review"]:
+        lines += ["## ❌ Generators Requiring Review\n"]
+        for gt in s["needs_review"]:
+            gd = data["generators"][gt]
+            lines.append(f"### `{gt}` — {gd.get('accuracy','?')} correct")
+            for issue in gd["issues"][:8]:
                 lines.append(f"- {issue}")
             lines.append("")
-    
-    lines += [
-        "## All Generator Results",
-        "",
-        "| Generator | Samples | Accuracy | Format OK | Status |",
-        "|---|---|---|---|---|",
-    ]
-    
-    for gen_type, gen_data in results['generators'].items():
-        total = len(gen_data.get("samples", []))
-        correct = sum(1 for s in gen_data.get("samples", []) 
-                     if s.get("is_correct"))
-        acc = f"{correct}/{total}" if total > 0 else "0/0"
-        fmt_ok = sum(1 for s in gen_data.get("samples", [])
-                    if s.get("format_matches_type"))
-        fmt = f"{fmt_ok}/{total}"
-        status = "✅" if not gen_data.get("needs_review") else "❌ Review"
-        lines.append(f"| {gen_type} | {total} | {acc} | {fmt} | {status} |")
-    
-    lines += [
-        "",
-        "## Sample Wrong Answers (for debugging)",
-        "",
-    ]
-    
-    for gen_type, gen_data in results['generators'].items():
-        wrong = [s for s in gen_data.get("samples", [])
-                if not s.get("is_correct") and "sample" in s]
-        if wrong:
-            lines.append(f"### {gen_type}")
-            for w in wrong[:3]:
-                sample = w.get("sample", {})
-                lines += [
-                    f"- **Q:** {sample.get('question', '')}",
-                    f"  **Generator:** `{sample.get('answer', '')}`",
-                    f"  **Claude:** `{w.get('my_answer', '')}`",
-                    f"  **Difficulty:** {sample.get('difficulty', '')}",
-                    "",
-                ]
-    
-    content = "\n".join(lines)
-    Path(output_path).write_text(content, encoding="utf-8")
-    print(f"\nReport written to: {output_path}")
-
-
-# ── CLI entry point ────────────────────────────────────────────────────────────
+    lines += ["## All Results\n",
+              "| Generator | Accuracy | Wrong% | Status |",
+              "|---|---|---|---|"]
+    for gt, gd in data["generators"].items():
+        wr = f"{int(gd.get('wrong_rate',0)*100)}%"
+        status = "✅" if not gd["needs_review"] else "❌ Review"
+        lines.append(f"| `{gt}` | {gd.get('accuracy','?')} | {wr} | {status} |")
+    Path(path).parent.mkdir(parents=True, exist_ok=True)
+    Path(path).write_text("\n".join(lines), encoding="utf-8")
+    print(f"\nReport saved: {path}")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="MathAthlone Generator Evaluator")
-    parser.add_argument("--course", required=True, 
-                       choices=list(COURSE_PREFIXES.keys()),
-                       help="Course to evaluate")
-    parser.add_argument("--samples", type=int, default=10,
-                       help="Samples per generator per difficulty (default: 10)")
-    parser.add_argument("--output", default="generator_audit_report.md",
-                       help="Output report path")
-    parser.add_argument("--json-output", default=None,
-                       help="Also save raw JSON results")
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--course", required=True, choices=list(PREFIXES))
+    parser.add_argument("--samples", type=int, default=5,
+                        help="Samples per generator per difficulty (default 5)")
+    parser.add_argument("--output", default=None)
     args = parser.parse_args()
-    
-    print(f"MathAthlone Generator Evaluator")
-    print(f"Course: {args.course} | Samples per difficulty: {args.samples}")
-    print(f"API Key: {'✅ Set' if ANTHROPIC_API_KEY else '❌ NOT SET — export ANTHROPIC_API_KEY'}")
-    
-    if not ANTHROPIC_API_KEY:
-        print("ERROR: Set ANTHROPIC_API_KEY environment variable first")
-        exit(1)
-    
-    results = evaluate_course(args.course, args.samples)
-    
-    if args.json_output:
-        Path(args.json_output).write_text(
-            json.dumps(results, indent=2), encoding="utf-8"
-        )
-    
-    generate_report(results, args.output)
-    
-    # Print quick summary
-    print(f"\n{'='*50}")
-    print(f"AUDIT COMPLETE — {args.course}")
-    print(f"  Accuracy: {results['summary'].get('accuracy_pct', 0)}%")
-    print(f"  Wrong answers: {results['summary']['wrong']}")
-    print(f"  Generators needing review: "
-          f"{len(results['summary']['generators_needing_review'])}")
-    if results['summary']['generators_needing_review']:
-        for g in results['summary']['generators_needing_review']:
-            print(f"    ❌ {g}")
-
+    if not API_KEY:
+        print("ERROR: set ANTHROPIC_API_KEY env var"); sys.exit(1)
+    print(f"MathAthlone Generator Evaluator | Course={args.course} | Samples/diff={args.samples}")
+    data = evaluate_course(args.course, args.samples)
+    out = args.output or str(REPO/"docs"/"audits"/f"{args.course}_audit.md")
+    write_report(data, out)
+    s = data["summary"]
+    print(f"\nDONE — Accuracy={s.get('accuracy_pct','N/A')}% | Wrong={s['wrong']} | Review={s['needs_review'] or 'none'}")

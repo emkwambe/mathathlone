@@ -98,6 +98,17 @@ export interface GeneratedQuestion {
   difficulty: DifficultyLevel;
   concept_id: string;
   generator_type: string;
+  /**
+   * External-tooling aliases. The pipeline (question-delivery,
+   * heat_questions schema) uses `correct_answer` / `question_text` —
+   * those remain canonical. `answer` and `question` are duplicate-
+   * value mirrors so test scripts, REPLs, and curriculum-evaluator
+   * tools that read the friendlier names get the value instead of
+   * `undefined`. g7Wrap (and a backfill loop in GENERATORS init)
+   * populates them on every generator output.
+   */
+  answer?: string;
+  question?: string;
 }
 
 // -----------------------------------------------------------------------------
@@ -1813,6 +1824,12 @@ function g7Wrap(
     difficulty,
     concept_id,
     generator_type,
+    // External-tooling aliases — same values as correct_answer / question_text.
+    // Pipeline code reads correct_answer / question_text; test scripts and
+    // REPLs that follow the user's { question, answer, ... } shape get the
+    // populated value here instead of `undefined`.
+    answer: q.answer,
+    question: q.question,
   };
 }
 
@@ -7503,10 +7520,24 @@ export const GENERATORS: Record<string, (difficulty: DifficultyLevel) => Generat
 // Helper to get all generator types
 export const GENERATOR_TYPES = Object.keys(GENERATORS);
 
+/**
+ * Ensure `answer` and `question` aliases are populated on every generator
+ * output. The g7Wrap-based generators set these themselves; the legacy
+ * NCM1 generators (which build the GeneratedQuestion shape inline) don't.
+ * This shim guarantees external tooling never sees `undefined` regardless
+ * of which generator was invoked.
+ */
+function ensureAliases(q: GeneratedQuestion): GeneratedQuestion {
+  if (q.answer === undefined) q.answer = q.correct_answer;
+  if (q.question === undefined) q.question = q.question_text || q.question_latex;
+  return q;
+}
+
 // Generate by type
 export function generateQuestion(type: string, difficulty: DifficultyLevel): GeneratedQuestion | null {
   const gen = GENERATORS[type];
-  return gen ? gen(difficulty) : null;
+  if (!gen) return null;
+  return ensureAliases(gen(difficulty));
 }
 
 // Generate batch for Heat
