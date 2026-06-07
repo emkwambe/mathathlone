@@ -5358,6 +5358,874 @@ export function generate_m3_confidence_interval(difficulty: DifficultyLevel): Ge
 }
 
 // =============================================================================
+// =============================================================================
+// MATH FUNDAMENTALS — CROSS-DIVISION POOL (pool: math_fundamentals)
+// =============================================================================
+// =============================================================================
+// MF is the only pool flagged `cross_division_eligible = TRUE`. Generators
+// here serve Mathletes from Grade 6 through Grade 10, so parameter ranges
+// widen with difficulty to cover that span. All generators wrapped via
+// g7Wrap() (helper is pool-agnostic) into the existing pipeline shape.
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BATCH 1: Number Basics & Arithmetic (MF)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// 1. MF.ANT.1.1 — Absolute Value
+export function generate_mf_absolute_value(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Grade-6 easy → integers in [-20, 20]; harder → multi-digit + decimals.
+  const useDecimal = difficulty >= 2 && Math.random() < 0.4;
+  if (useDecimal) {
+    const sign = Math.random() < 0.5 ? -1 : 1;
+    const n = +(sign * (randomInt(1, 50) + randomInt(0, 99) / 100)).toFixed(2);
+    return g7Wrap(difficulty, 'mf_absolute_value', 'MF.ANT.1.1', 'Absolute Value', {
+      question: `Find: |${n}|`,
+      answer: Math.abs(n).toFixed(2),
+      solution_steps: [
+        `The absolute value of a number is its distance from 0 on the number line.`,
+        `|${n}| = ${Math.abs(n).toFixed(2)}.`,
+      ],
+      answer_type: 'decimal',
+    });
+  }
+  const range = difficulty === 1 ? 25 : difficulty === 2 ? 100 : 500;
+  const n = randomNonZeroInt(-range, range);
+  return g7Wrap(difficulty, 'mf_absolute_value', 'MF.ANT.1.1', 'Absolute Value', {
+    question: `Find: |${n}|`,
+    answer: String(Math.abs(n)),
+    solution_steps: [
+      `The absolute value of a number is its distance from 0 on the number line.`,
+      `|${n}| = ${Math.abs(n)}.`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// 2. MF.ANT.1.2 — Add / Subtract Integers
+export function generate_mf_integer_add_subtract(difficulty: DifficultyLevel): GeneratedQuestion {
+  const range = difficulty === 1 ? 20 : difficulty === 2 ? 60 : 200;
+  let a: number, b: number, result: number;
+  const op = Math.random() < 0.5 ? '+' : '-';
+  for (let tries = 0; tries < 8; tries++) {
+    a = randomNonZeroInt(-range, range);
+    b = randomNonZeroInt(-range, range);
+    result = op === '+' ? a + b : a - b;
+    if (result !== 0) break;                         // avoid trivial zero
+  }
+  a = a!; b = b!; result = result!;
+  const bDisplay = b < 0 ? `(${b})` : String(b);
+  return g7Wrap(difficulty, 'mf_integer_add_subtract', 'MF.ANT.1.2', 'Adding/Subtracting Integers', {
+    question: `Evaluate: ${a} ${op} ${bDisplay}`,
+    answer: String(result),
+    solution_steps: op === '+'
+      ? [
+          `Add the two signed integers.`,
+          `${a} + ${bDisplay} = ${result}.`,
+        ]
+      : [
+          `Subtract by adding the opposite: ${a} − ${bDisplay} = ${a} + ${(-b) < 0 ? `(${-b})` : -b}.`,
+          `Result: ${result}.`,
+        ],
+    answer_type: 'integer',
+  });
+}
+
+// 3. MF.ANT.2.1 — Multiply / Divide Integers
+export function generate_mf_integer_multiply_divide(difficulty: DifficultyLevel): GeneratedQuestion {
+  const useDiv = Math.random() < 0.5;
+  const range = difficulty === 1 ? 10 : difficulty === 2 ? 15 : 20;
+  if (useDiv) {
+    // Build a clean quotient: c = a × b, then ask c ÷ a.
+    const a = randomNonZeroInt(2, range);
+    const sign = Math.random() < 0.5 ? -1 : 1;
+    const b = sign * randomNonZeroInt(2, range);
+    const c = a * b;
+    const aDisplay = a < 0 ? `(${a})` : String(a);
+    return g7Wrap(difficulty, 'mf_integer_multiply_divide', 'MF.ANT.2.1', 'Multiplying/Dividing Integers', {
+      question: `Evaluate: ${c} ÷ ${aDisplay}`,
+      answer: String(b),
+      solution_steps: [
+        `Divide the magnitudes, then apply the sign rule.`,
+        `${c} ÷ ${a} = ${b}.`,
+      ],
+      answer_type: 'integer',
+    });
+  }
+  const a = randomNonZeroInt(-range, range);
+  const b = randomNonZeroInt(-range, range);
+  const aDisplay = a < 0 ? `(${a})` : String(a);
+  const bDisplay = b < 0 ? `(${b})` : String(b);
+  return g7Wrap(difficulty, 'mf_integer_multiply_divide', 'MF.ANT.2.1', 'Multiplying/Dividing Integers', {
+    question: `Evaluate: ${aDisplay} × ${bDisplay}`,
+    answer: String(a * b),
+    solution_steps: [
+      `Multiply the magnitudes: ${Math.abs(a)} × ${Math.abs(b)} = ${Math.abs(a * b)}.`,
+      `Apply the sign rule (same signs → positive, different signs → negative).`,
+      `Result: ${a * b}.`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// 4. MF.FDP.2.1 — Add / Subtract Fractions (Unlike Denominators)
+export function generate_mf_fraction_add_subtract(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Pick denominators with a non-trivial LCM but small enough to be quick.
+  const denPool = difficulty === 1 ? [2, 3, 4, 5, 6] : [3, 4, 5, 6, 8, 9, 10, 12];
+  let d1 = denPool[randomInt(0, denPool.length - 1)]!;
+  let d2 = denPool[randomInt(0, denPool.length - 1)]!;
+  while (d1 === d2) d2 = denPool[randomInt(0, denPool.length - 1)]!;
+  const n1 = randomNonZeroInt(1, d1 - 1);
+  const n2 = randomNonZeroInt(1, d2 - 1);
+  const op = Math.random() < 0.5 ? '+' : '-';
+  const a = g7Rat(op === '+' ? 1 : 1 * n1, d1);
+  void a;
+  const r1 = g7Rat(n1, d1);
+  const r2 = g7Rat(n2, d2);
+  const result = op === '+' ? g7RatAdd(r1, r2) : g7RatSub(r1, r2);
+  if (result.num === 0) return generate_mf_fraction_add_subtract(difficulty);
+  const lcm = d1 * d2 / gcd(d1, d2);
+  return g7Wrap(difficulty, 'mf_fraction_add_subtract', 'MF.FDP.2.1', 'Adding/Subtracting Fractions', {
+    question: `Evaluate: ${n1}/${d1} ${op} ${n2}/${d2}`,
+    answer: g7FmtRat(result),
+    solution_steps: [
+      `Common denominator (LCM of ${d1} and ${d2}): ${lcm}.`,
+      `Rewrite: ${n1 * (lcm / d1)}/${lcm} ${op} ${n2 * (lcm / d2)}/${lcm}.`,
+      `${op === '+' ? 'Add' : 'Subtract'} numerators: ${op === '+' ? n1 * (lcm / d1) + n2 * (lcm / d2) : n1 * (lcm / d1) - n2 * (lcm / d2)}/${lcm}.`,
+      `Simplify: ${g7FmtRat(result)}.`,
+    ],
+    answer_type: 'decimal_or_fraction',
+  });
+}
+
+// 5. MF.FDP.2.2 — Multiply / Divide Fractions
+export function generate_mf_fraction_multiply_divide(difficulty: DifficultyLevel): GeneratedQuestion {
+  const denPool = difficulty === 1 ? [2, 3, 4, 5] : [3, 4, 5, 6, 7, 8, 9];
+  const d1 = denPool[randomInt(0, denPool.length - 1)]!;
+  const d2 = denPool[randomInt(0, denPool.length - 1)]!;
+  const n1 = randomNonZeroInt(1, d1 + 2);
+  const n2 = randomNonZeroInt(1, d2 + 2);
+  const useDiv = Math.random() < 0.5;
+  const r1 = g7Rat(n1, d1);
+  const r2 = g7Rat(n2, d2);
+  if (useDiv && r2.num === 0) return generate_mf_fraction_multiply_divide(difficulty);
+  const result = useDiv ? g7RatDiv(r1, r2) : g7RatMul(r1, r2);
+  if (result.num === 0) return generate_mf_fraction_multiply_divide(difficulty);
+  return g7Wrap(difficulty, 'mf_fraction_multiply_divide', 'MF.FDP.2.2', 'Multiplying/Dividing Fractions', {
+    question: `Evaluate: ${n1}/${d1} ${useDiv ? '÷' : '×'} ${n2}/${d2}`,
+    answer: g7FmtRat(result),
+    solution_steps: useDiv
+      ? [
+          `Multiply by the reciprocal of ${n2}/${d2} (which is ${d2}/${n2}).`,
+          `${n1}/${d1} × ${d2}/${n2} = ${n1 * d2}/${d1 * n2}.`,
+          `Simplify: ${g7FmtRat(result)}.`,
+        ]
+      : [
+          `Multiply numerators and denominators across.`,
+          `${n1}/${d1} × ${n2}/${d2} = ${n1 * n2}/${d1 * d2}.`,
+          `Simplify: ${g7FmtRat(result)}.`,
+        ],
+    answer_type: 'decimal_or_fraction',
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BATCH 2: Decimals, Percents & Ratios (MF)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// 6. MF.FDP.3.1 — Decimal Operations
+export function generate_mf_decimal_operations(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Random op + two decimals with at most 2 decimal places to keep results clean.
+  const ops = ['+', '-', '×', '÷'] as const;
+  const op = ops[randomInt(0, ops.length - 1)]!;
+  // Use cents-scale arithmetic to avoid floating-point drift.
+  const aHundredths = randomNonZeroInt(difficulty === 1 ? 50 : 100, difficulty === 1 ? 999 : 9999);
+  const bHundredths = randomNonZeroInt(difficulty === 1 ? 10 : 50, difficulty === 1 ? 250 : 2000);
+  const a = aHundredths / 100;
+  const b = bHundredths / 100;
+  let result: number;
+  let steps: string[];
+  if (op === '+') {
+    result = (aHundredths + bHundredths) / 100;
+    steps = [`Align decimal points and add.`, `${a.toFixed(2)} + ${b.toFixed(2)} = ${result.toFixed(2)}.`];
+  } else if (op === '-') {
+    result = (aHundredths - bHundredths) / 100;
+    steps = [`Align decimal points and subtract.`, `${a.toFixed(2)} − ${b.toFixed(2)} = ${result.toFixed(2)}.`];
+  } else if (op === '×') {
+    // For multiply, use 1-decimal-place operands so result stays at 2 decimal places.
+    const a1 = randomInt(2, difficulty === 1 ? 30 : 90) / 10;
+    const b1 = randomInt(2, difficulty === 1 ? 30 : 90) / 10;
+    result = +(a1 * b1).toFixed(2);
+    return g7Wrap(difficulty, 'mf_decimal_operations', 'MF.FDP.3.1', 'Decimal Operations', {
+      question: `Evaluate: ${a1.toFixed(1)} × ${b1.toFixed(1)}`,
+      answer: result.toFixed(2),
+      solution_steps: [
+        `Multiply as if integers: ${a1 * 10} × ${b1 * 10} = ${a1 * 10 * b1 * 10}.`,
+        `Account for 2 total decimal places.`,
+        `Result: ${result.toFixed(2)}.`,
+      ],
+      answer_type: 'decimal',
+    });
+  } else {
+    // For divide, build a clean quotient.
+    const quotient = randomInt(2, 12);
+    const divisor = randomInt(2, 9);
+    const dividend = +(quotient * divisor).toFixed(2);
+    return g7Wrap(difficulty, 'mf_decimal_operations', 'MF.FDP.3.1', 'Decimal Operations', {
+      question: `Evaluate: ${dividend.toFixed(2)} ÷ ${divisor}`,
+      answer: quotient.toFixed(2),
+      solution_steps: [
+        `${dividend.toFixed(2)} ÷ ${divisor} = ${quotient.toFixed(2)}.`,
+      ],
+      answer_type: 'decimal',
+    });
+  }
+  return g7Wrap(difficulty, 'mf_decimal_operations', 'MF.FDP.3.1', 'Decimal Operations', {
+    question: `Evaluate: ${a.toFixed(2)} ${op} ${b.toFixed(2)}`,
+    answer: result.toFixed(2),
+    solution_steps: steps,
+    answer_type: 'decimal',
+  });
+}
+
+// 7. MF.FDP.4.1 — Percent of a Number
+export function generate_mf_percent_of_number(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Force a clean result with a 2-decimal answer.
+  const pct = [5, 10, 15, 20, 25, 30, 40, 50, 60, 75, 80][randomInt(0, 10)]!;
+  const base = randomInt(difficulty === 1 ? 20 : 50, difficulty === 1 ? 200 : 1000);
+  const result = +(base * pct / 100).toFixed(2);
+  return g7Wrap(difficulty, 'mf_percent_of_number', 'MF.FDP.4.1', 'Percent of a Number', {
+    question: `What is ${pct}% of ${base}? Round to 2 decimal places.`,
+    answer: result.toFixed(2),
+    solution_steps: [
+      `Convert ${pct}% to a decimal: ${(pct / 100).toFixed(2)}.`,
+      `Multiply: ${(pct / 100).toFixed(2)} × ${base} = ${result.toFixed(2)}.`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// 8. MF.RPBA.2.1 — Percent Change
+export function generate_mf_percent_change(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Build a clean integer percent change by picking percent first.
+  const pct = [10, 15, 20, 25, 30, 40, 50][randomInt(0, 6)]!;
+  const original = randomInt(2, 12) * 10;                   // 20..120
+  const direction: 'increase' | 'decrease' = Math.random() < 0.5 ? 'increase' : 'decrease';
+  const delta = +(original * pct / 100).toFixed(2);
+  const newVal = direction === 'increase'
+    ? +(original + delta).toFixed(2)
+    : +(original - delta).toFixed(2);
+  return g7Wrap(difficulty, 'mf_percent_change', 'MF.RPBA.2.1', 'Percent Change', {
+    question: `A value changed from ${original} to ${newVal}. What is the percent ${direction}?`,
+    answer: String(pct),
+    solution_steps: [
+      `Find the change: |${newVal} − ${original}| = ${delta}.`,
+      `Divide by the original: ${delta} ÷ ${original} = ${(delta / original).toFixed(4)}.`,
+      `Convert to a percent: ${pct}%.`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// 9. MF.RPBA.1.1 — Unit Rate from a Ratio
+export function generate_mf_ratio_unit_rate(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Build a clean integer rate. Total = k × x.
+  const contexts: Array<{ subj: string; verb: string; unit: string; per: string }> = [
+    { subj: 'A printer outputs', verb: 'pages in', unit: 'pages',  per: 'minute' },
+    { subj: 'A car drives',      verb: 'miles in', unit: 'miles',  per: 'hour'   },
+    { subj: 'Apples cost',       verb: 'dollars for', unit: 'dollars', per: 'pound' },
+    { subj: 'A pipe fills',      verb: 'gallons in', unit: 'gallons', per: 'minute' },
+  ];
+  const ctx = contexts[randomInt(0, contexts.length - 1)]!;
+  const k = difficulty === 1 ? randomInt(2, 8) : randomInt(3, 25);
+  const x = randomInt(2, difficulty === 1 ? 5 : 12);
+  const total = k * x;
+  return g7Wrap(difficulty, 'mf_ratio_unit_rate', 'MF.RPBA.1.1', 'Unit Rate from a Ratio', {
+    question: `${ctx.subj} ${total} ${ctx.verb} ${x} ${ctx.per}${x === 1 ? '' : 's'}. What is the unit rate in ${ctx.unit} per ${ctx.per}?`,
+    answer: String(k),
+    solution_steps: [
+      `Unit rate = total ÷ units.`,
+      `${total} ÷ ${x} = ${k}.`,
+      `Answer: ${k} ${ctx.unit} per ${ctx.per}.`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// 10. MF.RPBA.1.2 — Solve a Proportion
+export function generate_mf_proportion_solve(difficulty: DifficultyLevel): GeneratedQuestion {
+  // a/b = c/x  →  x = b·c/a, ensure x is a clean integer.
+  const k = randomInt(2, difficulty === 1 ? 6 : 12);          // hidden constant of proportionality
+  const a = randomInt(2, 5);
+  const b = a * k;
+  const c = a * randomInt(2, difficulty === 1 ? 5 : 9);
+  const x = c * k;
+  return g7Wrap(difficulty, 'mf_proportion_solve', 'MF.RPBA.1.2', 'Solve a Proportion', {
+    question: `Solve for x:  ${a}/${b} = ${c}/x`,
+    answer: String(x),
+    solution_steps: [
+      `Cross-multiply: ${a} · x = ${b} · ${c}.`,
+      `${a}x = ${b * c}.`,
+      `Divide by ${a}: x = ${x}.`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BATCH 3: Algebraic Reasoning (MF)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// 11. MF.AP.1.1 — Evaluate an Algebraic Expression
+export function generate_mf_evaluate_expression(difficulty: DifficultyLevel): GeneratedQuestion {
+  const range = difficulty === 1 ? 8 : difficulty === 2 ? 15 : 25;
+  const x = randomNonZeroInt(-range, range);
+  const a = randomNonZeroInt(-9, 9);
+  const b = randomInt(-15, 15);
+  const useQuadratic = difficulty >= 2 && Math.random() < 0.4;
+  if (useQuadratic) {
+    const result = x * x + a * x + b;
+    return g7Wrap(difficulty, 'mf_evaluate_expression', 'MF.AP.1.1', 'Evaluating Algebraic Expressions', {
+      question: `Evaluate x² ${a >= 0 ? '+' : '-'} ${Math.abs(a)}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)} when x = ${x}.`,
+      answer: String(result),
+      solution_steps: [
+        `Substitute x = ${x}: (${x})² ${a >= 0 ? '+' : '-'} ${Math.abs(a)}(${x}) ${b >= 0 ? '+' : '-'} ${Math.abs(b)}.`,
+        `= ${x * x} ${a >= 0 ? '+' : '-'} ${Math.abs(a * x)} ${b >= 0 ? '+' : '-'} ${Math.abs(b)}.`,
+        `= ${result}.`,
+      ],
+      answer_type: 'integer_or_decimal',
+    });
+  }
+  const result = a * x + b;
+  return g7Wrap(difficulty, 'mf_evaluate_expression', 'MF.AP.1.1', 'Evaluating Algebraic Expressions', {
+    question: `Evaluate ${a}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)} when x = ${x}.`,
+    answer: String(result),
+    solution_steps: [
+      `Substitute x = ${x}: ${a}(${x}) ${b >= 0 ? '+' : '-'} ${Math.abs(b)}.`,
+      `= ${a * x} ${b >= 0 ? '+' : '-'} ${Math.abs(b)}.`,
+      `= ${result}.`,
+    ],
+    answer_type: 'integer_or_decimal',
+  });
+}
+
+// 12. MF.AP.2.1 — Simplify by Combining Like Terms
+export function generate_mf_simplify_expression(difficulty: DifficultyLevel): GeneratedQuestion {
+  const a1 = randomNonZeroInt(-9, 9);
+  const a2 = randomNonZeroInt(-9, 9);
+  const b1 = randomInt(-12, 12);
+  const b2 = randomInt(-12, 12);
+  const aSum = a1 + a2;
+  const bSum = b1 + b2;
+  if (aSum === 0 && bSum === 0) return generate_mf_simplify_expression(difficulty);
+  const e1 = g7FmtLinear(a1, b1);
+  const e2 = g7FmtLinear(a2, b2);
+  return g7Wrap(difficulty, 'mf_simplify_expression', 'MF.AP.2.1', 'Combining Like Terms', {
+    question: `Simplify by combining like terms:  (${e1}) + (${e2})`,
+    answer: g7FmtLinear(aSum, bSum),
+    solution_steps: [
+      `Drop the parentheses: ${e1} + ${e2}.`,
+      `Combine x-terms: ${a1}x + ${a2}x = ${aSum}x.`,
+      `Combine constants: ${b1} + ${b2} = ${bSum}.`,
+      `Result: ${g7FmtLinear(aSum, bSum)}.`,
+    ],
+    answer_type: 'expression',
+  });
+}
+
+// 13. MF.AP.4.1 — Solve a One-Step Equation
+export function generate_mf_solve_one_step_equation(difficulty: DifficultyLevel): GeneratedQuestion {
+  const useMul = Math.random() < 0.5;
+  if (useMul) {
+    // ax = c
+    const a = randomNonZeroInt(2, difficulty === 1 ? 6 : 12);
+    const x = randomNonZeroInt(-15, 15);
+    const c = a * x;
+    return g7Wrap(difficulty, 'mf_solve_one_step_equation', 'MF.AP.4.1', 'One-Step Equations', {
+      question: `Solve for x:  ${a}x = ${c}`,
+      answer: String(x),
+      solution_steps: [
+        `Divide both sides by ${a}.`,
+        `x = ${c} / ${a} = ${x}.`,
+      ],
+      answer_type: 'integer',
+    });
+  }
+  // x + a = c  or  x - a = c
+  const sub = Math.random() < 0.5;
+  const a = randomNonZeroInt(1, difficulty === 1 ? 20 : 40);
+  const x = randomNonZeroInt(-20, 20);
+  const c = sub ? x - a : x + a;
+  const opShown = sub ? '-' : '+';
+  const inverse = sub ? `Add ${a}` : `Subtract ${a}`;
+  return g7Wrap(difficulty, 'mf_solve_one_step_equation', 'MF.AP.4.1', 'One-Step Equations', {
+    question: `Solve for x:  x ${opShown} ${a} = ${c}`,
+    answer: String(x),
+    solution_steps: [
+      `${inverse} from both sides to isolate x.`,
+      `x = ${c} ${sub ? '+' : '-'} ${a} = ${x}.`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// 14. MF.AP.4.2 — Solve a Two-Step Equation
+export function generate_mf_solve_two_step_equation(difficulty: DifficultyLevel): GeneratedQuestion {
+  const a = randomNonZeroInt(2, difficulty === 1 ? 8 : 15);
+  const x = randomNonZeroInt(-12, 12);
+  const b = randomInt(-15, 15);
+  const c = a * x + b;
+  return g7Wrap(difficulty, 'mf_solve_two_step_equation', 'MF.AP.4.2', 'Two-Step Equations', {
+    question: `Solve for x:  ${a}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)} = ${c}`,
+    answer: String(x),
+    solution_steps: [
+      b !== 0
+        ? `Subtract ${b >= 0 ? b : `(${b})`} from both sides: ${a}x = ${c - b}.`
+        : `${a}x = ${c}.`,
+      `Divide both sides by ${a}: x = ${x}.`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// 15. MF.AP.3.1 — Write an Algebraic Expression from a Verbal Description
+export function generate_mf_write_expression(difficulty: DifficultyLevel): GeneratedQuestion {
+  const a = randomInt(2, 9);
+  const b = randomInt(2, 12);
+  const templates: Array<{ phrase: string; answer: string; steps: string[] }> = [
+    {
+      phrase: `${a} more than a number n`,
+      answer: `n + ${a}`,
+      steps: [`"More than" → addition.`, `n + ${a}`],
+    },
+    {
+      phrase: `${a} less than a number x`,
+      answer: `x - ${a}`,
+      steps: [`"Less than" reverses the order: x − ${a}`, `Result: x - ${a}`],
+    },
+    {
+      phrase: `the product of ${a} and a number y`,
+      answer: `${a}y`,
+      steps: [`"Product" → multiplication.`, `${a} × y = ${a}y`],
+    },
+    {
+      phrase: `a number n divided by ${a}`,
+      answer: `n/${a}`,
+      steps: [`"Divided by" → division.`, `n ÷ ${a} = n/${a}`],
+    },
+    {
+      phrase: `${a} times a number n increased by ${b}`,
+      answer: `${a}n + ${b}`,
+      steps: [`"${a} times n" → ${a}n.`, `"Increased by ${b}" → ${a}n + ${b}.`],
+    },
+    {
+      phrase: `the difference of a number x and ${a}, divided by ${b}`,
+      answer: `(x - ${a})/${b}`,
+      steps: [`"Difference" → x − ${a}.`, `"Divided by ${b}" → (x − ${a})/${b}.`],
+    },
+  ];
+  const t = templates[randomInt(0, templates.length - 1)]!;
+  return g7Wrap(difficulty, 'mf_write_expression', 'MF.AP.3.1', 'Writing Algebraic Expressions', {
+    question: `Translate into an algebraic expression: ${t.phrase}.`,
+    answer: t.answer,
+    solution_steps: t.steps,
+    answer_type: 'expression',
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BATCH 4: Geometry (MF)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// 16. MF.GEO.1.1 — Area of a Rectangle or Triangle
+export function generate_mf_area_rectangle_triangle(difficulty: DifficultyLevel): GeneratedQuestion {
+  const useTriangle = Math.random() < 0.5;
+  const range = difficulty === 1 ? 12 : difficulty === 2 ? 20 : 35;
+  if (useTriangle) {
+    // Force even base × height so area is an integer.
+    let base = randomInt(3, range);
+    const height = randomInt(2, range);
+    if ((base * height) % 2 !== 0) base += 1;
+    const area = (base * height) / 2;
+    return g7Wrap(difficulty, 'mf_area_rectangle_triangle', 'MF.GEO.1.1', 'Area of Rectangle / Triangle', {
+      question: `Find the area of a triangle with base ${base} cm and height ${height} cm.`,
+      answer: String(area),
+      solution_steps: [
+        `Area of a triangle = ½ × base × height.`,
+        `= ½ × ${base} × ${height} = ${area} cm².`,
+      ],
+      answer_type: 'integer',
+    });
+  }
+  const l = randomInt(3, range);
+  const w = randomInt(2, range);
+  return g7Wrap(difficulty, 'mf_area_rectangle_triangle', 'MF.GEO.1.1', 'Area of Rectangle / Triangle', {
+    question: `Find the area of a rectangle with length ${l} cm and width ${w} cm.`,
+    answer: String(l * w),
+    solution_steps: [
+      `Area of a rectangle = length × width.`,
+      `= ${l} × ${w} = ${l * w} cm².`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// 17. MF.GEO.1.2 — Perimeter of a Polygon
+export function generate_mf_perimeter(difficulty: DifficultyLevel): GeneratedQuestion {
+  const shapes = (['rectangle', 'triangle', 'pentagon'] as const);
+  const shape = shapes[randomInt(0, shapes.length - 1)]!;
+  const max = difficulty === 1 ? 15 : difficulty === 2 ? 30 : 50;
+  if (shape === 'rectangle') {
+    const l = randomInt(3, max);
+    const w = randomInt(3, max);
+    const p = 2 * (l + w);
+    return g7Wrap(difficulty, 'mf_perimeter', 'MF.GEO.1.2', 'Perimeter of a Polygon', {
+      question: `Find the perimeter of a rectangle with length ${l} cm and width ${w} cm.`,
+      answer: String(p),
+      solution_steps: [
+        `Perimeter of a rectangle = 2(l + w).`,
+        `= 2(${l} + ${w}) = 2 × ${l + w} = ${p} cm.`,
+      ],
+      answer_type: 'integer',
+    });
+  }
+  if (shape === 'triangle') {
+    const a = randomInt(3, max);
+    const b = randomInt(3, max);
+    const c = randomInt(3, max);
+    return g7Wrap(difficulty, 'mf_perimeter', 'MF.GEO.1.2', 'Perimeter of a Polygon', {
+      question: `Find the perimeter of a triangle with side lengths ${a} cm, ${b} cm, and ${c} cm.`,
+      answer: String(a + b + c),
+      solution_steps: [
+        `Perimeter = sum of all sides.`,
+        `= ${a} + ${b} + ${c} = ${a + b + c} cm.`,
+      ],
+      answer_type: 'integer',
+    });
+  }
+  // regular pentagon
+  const s = randomInt(3, max);
+  return g7Wrap(difficulty, 'mf_perimeter', 'MF.GEO.1.2', 'Perimeter of a Polygon', {
+    question: `Find the perimeter of a regular pentagon with side length ${s} cm.`,
+    answer: String(5 * s),
+    solution_steps: [
+      `A regular pentagon has 5 equal sides.`,
+      `Perimeter = 5 × ${s} = ${5 * s} cm.`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// 18. MF.GEO.3.2 — Pythagorean Theorem
+export function generate_mf_pythagorean_theorem(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Pythagorean triples produce integer answers (avoid irrational radicals).
+  const triples: Array<[number, number, number]> = [
+    [3, 4, 5], [5, 12, 13], [6, 8, 10], [8, 15, 17], [7, 24, 25], [9, 12, 15], [9, 40, 41], [20, 21, 29],
+  ];
+  const [a, b, c] = triples[randomInt(0, triples.length - 1)]!;
+  const findHypotenuse = Math.random() < 0.5;
+  if (findHypotenuse) {
+    return g7Wrap(difficulty, 'mf_pythagorean_theorem', 'MF.GEO.3.2', 'Pythagorean Theorem', {
+      question: `A right triangle has legs ${a} and ${b}. Find the length of the hypotenuse.`,
+      answer: String(c),
+      solution_steps: [
+        `Pythagorean theorem: a² + b² = c².`,
+        `${a}² + ${b}² = ${a * a + b * b}.`,
+        `c = √${a * a + b * b} = ${c}.`,
+      ],
+      answer_type: 'integer',
+    });
+  }
+  // Find the missing leg
+  const missingIsA = Math.random() < 0.5;
+  const knownLeg = missingIsA ? b : a;
+  const missing = missingIsA ? a : b;
+  return g7Wrap(difficulty, 'mf_pythagorean_theorem', 'MF.GEO.3.2', 'Pythagorean Theorem', {
+    question: `A right triangle has hypotenuse ${c} and one leg ${knownLeg}. Find the length of the other leg.`,
+    answer: String(missing),
+    solution_steps: [
+      `Pythagorean theorem: leg² + ${knownLeg}² = ${c}².`,
+      `leg² = ${c * c} − ${knownLeg * knownLeg} = ${c * c - knownLeg * knownLeg}.`,
+      `leg = √${c * c - knownLeg * knownLeg} = ${missing}.`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// 19. MF.GEO.2.2 — Angle Relationships
+export function generate_mf_angle_relationships(difficulty: DifficultyLevel): GeneratedQuestion {
+  const relationships = [
+    { kind: 'supplementary', total: 180,  rule: 'sum to 180°' },
+    { kind: 'complementary', total: 90,   rule: 'sum to 90°'  },
+    { kind: 'vertical',      total: null as number | null, rule: 'are equal' },
+  ] as const;
+  const rel = relationships[randomInt(0, 2)]!;
+  if (rel.kind === 'vertical') {
+    const a = randomInt(15, 165);
+    return g7Wrap(difficulty, 'mf_angle_relationships', 'MF.GEO.2.2', 'Angle Relationships', {
+      question: `Two vertical angles are formed by intersecting lines. One angle measures ${a}°. What is the measure of the other?`,
+      answer: String(a),
+      solution_steps: [
+        `Vertical angles ${rel.rule}.`,
+        `Therefore the other angle is ${a}°.`,
+      ],
+      answer_type: 'integer',
+    });
+  }
+  const total = rel.total!;
+  const lo = rel.kind === 'complementary' ? 10 : 20;
+  const a = randomInt(lo, total - lo);
+  const b = total - a;
+  return g7Wrap(difficulty, 'mf_angle_relationships', 'MF.GEO.2.2', 'Angle Relationships', {
+    question: `Two angles are ${rel.kind}. One measures ${a}°. Find the measure of the other.`,
+    answer: String(b),
+    solution_steps: [
+      `${rel.kind.charAt(0).toUpperCase() + rel.kind.slice(1)} angles ${rel.rule}.`,
+      `${total} − ${a} = ${b}°.`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// 20. MF.GEO.4.1 — Volume of a Rectangular Prism
+export function generate_mf_volume_rectangular_prism(difficulty: DifficultyLevel): GeneratedQuestion {
+  const max = difficulty === 1 ? 8 : difficulty === 2 ? 12 : 20;
+  const l = randomInt(2, max);
+  const w = randomInt(2, max);
+  const h = randomInt(2, max);
+  const V = l * w * h;
+  return g7Wrap(difficulty, 'mf_volume_rectangular_prism', 'MF.GEO.4.1', 'Volume of a Rectangular Prism', {
+    question: `Find the volume of a rectangular prism with length ${l} cm, width ${w} cm, and height ${h} cm.`,
+    answer: String(V),
+    solution_steps: [
+      `Volume = length × width × height.`,
+      `= ${l} × ${w} × ${h} = ${V} cm³.`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BATCH 5: Data, Statistics & Sets (MF)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// 21. MF.S.1.1 — Mean / Median / Mode
+export function generate_mf_mean_median_mode(difficulty: DifficultyLevel): GeneratedQuestion {
+  const size = difficulty === 1 ? 5 : difficulty === 2 ? 7 : 9;
+  const range = difficulty === 1 ? 20 : 50;
+  // Build a data set with at least one repeated value so mode is well-defined.
+  const values: number[] = [];
+  const repeat = randomInt(2, Math.min(8, range));
+  values.push(repeat, repeat);
+  while (values.length < size) values.push(randomInt(1, range));
+  // Sort for median / mode display.
+  values.sort((a, b) => a - b);
+  const ask = (['mean', 'median', 'mode'] as const)[randomInt(0, 2)]!;
+  if (ask === 'mean') {
+    const sum = values.reduce((s, v) => s + v, 0);
+    const mean = +(sum / values.length).toFixed(2);
+    return g7Wrap(difficulty, 'mf_mean_median_mode', 'MF.S.1.1', 'Mean, Median, Mode', {
+      question: `Find the MEAN of: ${values.join(', ')}\n\nRound to 2 decimal places if needed.`,
+      answer: mean.toFixed(2),
+      solution_steps: [
+        `Sum the values: ${values.join(' + ')} = ${sum}.`,
+        `Divide by the count (${values.length}): ${sum} / ${values.length} = ${mean.toFixed(2)}.`,
+      ],
+      answer_type: 'decimal',
+    });
+  }
+  if (ask === 'median') {
+    const mid = Math.floor(values.length / 2);
+    const median = values.length % 2 === 1
+      ? values[mid]!
+      : +((values[mid - 1]! + values[mid]!) / 2).toFixed(2);
+    return g7Wrap(difficulty, 'mf_mean_median_mode', 'MF.S.1.1', 'Mean, Median, Mode', {
+      question: `Find the MEDIAN of: ${values.join(', ')}`,
+      answer: String(median),
+      solution_steps: [
+        `Sort the values: ${values.join(', ')}.`,
+        values.length % 2 === 1
+          ? `Middle value (position ${mid + 1}): ${median}.`
+          : `Average of the two middle values: (${values[mid - 1]} + ${values[mid]}) / 2 = ${median}.`,
+      ],
+      answer_type: 'decimal',
+    });
+  }
+  // mode — the value we forced to repeat is the mode (or a mode).
+  return g7Wrap(difficulty, 'mf_mean_median_mode', 'MF.S.1.1', 'Mean, Median, Mode', {
+    question: `Find the MODE of: ${values.join(', ')}`,
+    answer: String(repeat),
+    solution_steps: [
+      `Mode = the value that appears most frequently.`,
+      `${repeat} appears more than once; no other value does.`,
+      `Mode = ${repeat}.`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// 22. MF.S.2.1 — Range / IQR
+export function generate_mf_range_iqr(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Use 7 values for clean Q1/Q3 positions (Q1 = 2nd, median = 4th, Q3 = 6th).
+  const values: number[] = [];
+  const seen = new Set<number>();
+  while (values.length < 7) {
+    const v = randomInt(1, difficulty === 1 ? 25 : 60);
+    if (!seen.has(v)) {
+      seen.add(v);
+      values.push(v);
+    }
+  }
+  values.sort((a, b) => a - b);
+  const range = values[6]! - values[0]!;
+  const Q1 = values[1]!;
+  const Q3 = values[5]!;
+  const IQR = Q3 - Q1;
+  const askIQR = Math.random() < 0.5;
+  if (askIQR) {
+    return g7Wrap(difficulty, 'mf_range_iqr', 'MF.S.2.1', 'Range and IQR', {
+      question: `Find the IQR (interquartile range) of: ${values.join(', ')}`,
+      answer: String(IQR),
+      solution_steps: [
+        `With 7 values, Q1 is the 2nd value and Q3 is the 6th.`,
+        `Q1 = ${Q1}, Q3 = ${Q3}.`,
+        `IQR = Q3 − Q1 = ${Q3} − ${Q1} = ${IQR}.`,
+      ],
+      answer_type: 'integer',
+    });
+  }
+  return g7Wrap(difficulty, 'mf_range_iqr', 'MF.S.2.1', 'Range and IQR', {
+    question: `Find the RANGE of: ${values.join(', ')}`,
+    answer: String(range),
+    solution_steps: [
+      `Range = max − min.`,
+      `${values[6]} − ${values[0]} = ${range}.`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// 23. MF.RAD.1.1 — Basic Probability
+export function generate_mf_probability_basic(difficulty: DifficultyLevel): GeneratedQuestion {
+  const exp = (['dice', 'coin', 'marbles', 'spinner'] as const)[randomInt(0, 3)]!;
+  if (exp === 'dice') {
+    const targets: Array<{ desc: string; favorable: number; total: number }> = [
+      { desc: 'rolling an even number',  favorable: 3, total: 6 },
+      { desc: 'rolling a number > 4',    favorable: 2, total: 6 },
+      { desc: 'rolling a multiple of 3', favorable: 2, total: 6 },
+      { desc: 'rolling a prime',         favorable: 3, total: 6 },
+    ];
+    const t = targets[randomInt(0, targets.length - 1)]!;
+    const [rn, rd] = simplifyFraction(t.favorable, t.total);
+    return g7Wrap(difficulty, 'mf_probability_basic', 'MF.RAD.1.1', 'Basic Probability', {
+      question: `What is the probability of ${t.desc} on a fair six-sided die?`,
+      answer: `${rn}/${rd}`,
+      solution_steps: [
+        `Favorable outcomes: ${t.favorable}.`,
+        `Total outcomes: ${t.total}.`,
+        `P = ${t.favorable}/${t.total} = ${rn}/${rd}.`,
+      ],
+      answer_type: 'fraction',
+    });
+  }
+  if (exp === 'coin') {
+    return g7Wrap(difficulty, 'mf_probability_basic', 'MF.RAD.1.1', 'Basic Probability', {
+      question: `What is the probability of flipping heads on a fair coin?`,
+      answer: '1/2',
+      solution_steps: [
+        `Favorable outcomes: 1 (heads).`,
+        `Total outcomes: 2 (heads, tails).`,
+        `P = 1/2.`,
+      ],
+      answer_type: 'fraction',
+    });
+  }
+  if (exp === 'marbles') {
+    const red = randomInt(2, 8);
+    const blue = randomInt(2, 8);
+    const green = randomInt(1, 5);
+    const total = red + blue + green;
+    const colors: Array<['red' | 'blue' | 'green', number]> = [['red', red], ['blue', blue], ['green', green]];
+    const pick = colors[randomInt(0, 2)]!;
+    const [rn, rd] = simplifyFraction(pick[1], total);
+    return g7Wrap(difficulty, 'mf_probability_basic', 'MF.RAD.1.1', 'Basic Probability', {
+      question: `A bag contains ${red} red, ${blue} blue, and ${green} green marbles. What is the probability of drawing a ${pick[0]} marble?`,
+      answer: `${rn}/${rd}`,
+      solution_steps: [
+        `Total marbles: ${red} + ${blue} + ${green} = ${total}.`,
+        `Favorable: ${pick[1]} ${pick[0]} marbles.`,
+        `P = ${pick[1]}/${total} = ${rn}/${rd}.`,
+      ],
+      answer_type: 'fraction',
+    });
+  }
+  // spinner
+  const sectors = [4, 5, 6, 8][randomInt(0, 3)]!;
+  const favorable = randomInt(1, sectors - 1);
+  const [rn, rd] = simplifyFraction(favorable, sectors);
+  return g7Wrap(difficulty, 'mf_probability_basic', 'MF.RAD.1.1', 'Basic Probability', {
+    question: `A spinner has ${sectors} equal sectors. ${favorable} ${favorable === 1 ? 'is' : 'are'} shaded. What is the probability of landing on a shaded sector?`,
+    answer: `${rn}/${rd}`,
+    solution_steps: [
+      `Favorable: ${favorable}, Total: ${sectors}.`,
+      `P = ${favorable}/${sectors} = ${rn}/${rd}.`,
+    ],
+    answer_type: 'fraction',
+  });
+}
+
+// 24. MF.ER.1.1 — Evaluate Integer Exponents
+export function generate_mf_exponent_evaluate(difficulty: DifficultyLevel): GeneratedQuestion {
+  const base = randomInt(2, difficulty === 1 ? 6 : 12);
+  const exp = randomInt(0, difficulty === 1 ? 3 : 6);
+  const negativeBase = difficulty >= 2 && Math.random() < 0.3;
+  const finalBase = negativeBase ? -base : base;
+  const result = Math.pow(finalBase, exp);
+  const display = negativeBase ? `(-${base})` : String(base);
+  return g7Wrap(difficulty, 'mf_exponent_evaluate', 'MF.ER.1.1', 'Evaluating Integer Exponents', {
+    question: `Evaluate: ${display}^${exp}`,
+    answer: String(result),
+    solution_steps: exp === 0
+      ? [`Any non-zero base raised to the 0 power equals 1.`, `${display}^0 = 1.`]
+      : [
+          `Multiply ${display} by itself ${exp} times.`,
+          `${Array(exp).fill(display).join(' × ')} = ${result}.`,
+        ],
+    answer_type: 'integer',
+  });
+}
+
+// 25. MF.ER.2.1 — Square Root / Cube Root of Perfect Powers
+export function generate_mf_square_cube_root(difficulty: DifficultyLevel): GeneratedQuestion {
+  const squareBases = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+  const cubeBases = [1, 2, 3, 4, 5, 6, 7, 8];
+  const useCube = difficulty >= 2 && Math.random() < 0.4;
+  if (useCube) {
+    const k = cubeBases[randomInt(0, cubeBases.length - 1)]!;
+    const n = k * k * k;
+    return g7Wrap(difficulty, 'mf_square_cube_root', 'MF.ER.2.1', 'Square and Cube Roots', {
+      question: `Find: ∛${n}`,
+      answer: String(k),
+      solution_steps: [
+        `Find the integer whose cube is ${n}.`,
+        `${k}³ = ${n}, so ∛${n} = ${k}.`,
+      ],
+      answer_type: 'integer',
+    });
+  }
+  const k = squareBases[randomInt(0, squareBases.length - 1)]!;
+  const n = k * k;
+  return g7Wrap(difficulty, 'mf_square_cube_root', 'MF.ER.2.1', 'Square and Cube Roots', {
+    question: `Find: √${n}`,
+    answer: String(k),
+    solution_steps: [
+      `Find the non-negative integer whose square is ${n}.`,
+      `${k}² = ${n}, so √${n} = ${k}.`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// =============================================================================
 // GENERATOR REGISTRY - ALL 54 GENERATORS
 // =============================================================================
 
@@ -5559,6 +6427,38 @@ export const GENERATORS: Record<string, (difficulty: DifficultyLevel) => Generat
   m3_law_of_sines:                generate_m3_law_of_sines,
   m3_normal_distribution:         generate_m3_normal_distribution,
   m3_confidence_interval:         generate_m3_confidence_interval,
+
+  // ─── MATH FUNDAMENTALS (Cross-division pool) ───────────────────────────────
+  // BATCH 1: Number Basics & Arithmetic (5)
+  mf_absolute_value:              generate_mf_absolute_value,
+  mf_integer_add_subtract:        generate_mf_integer_add_subtract,
+  mf_integer_multiply_divide:     generate_mf_integer_multiply_divide,
+  mf_fraction_add_subtract:       generate_mf_fraction_add_subtract,
+  mf_fraction_multiply_divide:    generate_mf_fraction_multiply_divide,
+  // BATCH 2: Decimals, Percents & Ratios (5)
+  mf_decimal_operations:          generate_mf_decimal_operations,
+  mf_percent_of_number:           generate_mf_percent_of_number,
+  mf_percent_change:              generate_mf_percent_change,
+  mf_ratio_unit_rate:             generate_mf_ratio_unit_rate,
+  mf_proportion_solve:            generate_mf_proportion_solve,
+  // BATCH 3: Algebraic Reasoning (5)
+  mf_evaluate_expression:         generate_mf_evaluate_expression,
+  mf_simplify_expression:         generate_mf_simplify_expression,
+  mf_solve_one_step_equation:     generate_mf_solve_one_step_equation,
+  mf_solve_two_step_equation:     generate_mf_solve_two_step_equation,
+  mf_write_expression:            generate_mf_write_expression,
+  // BATCH 4: Geometry (5)
+  mf_area_rectangle_triangle:     generate_mf_area_rectangle_triangle,
+  mf_perimeter:                   generate_mf_perimeter,
+  mf_pythagorean_theorem:         generate_mf_pythagorean_theorem,
+  mf_angle_relationships:         generate_mf_angle_relationships,
+  mf_volume_rectangular_prism:    generate_mf_volume_rectangular_prism,
+  // BATCH 5: Data, Statistics & Sets (5)
+  mf_mean_median_mode:            generate_mf_mean_median_mode,
+  mf_range_iqr:                   generate_mf_range_iqr,
+  mf_probability_basic:           generate_mf_probability_basic,
+  mf_exponent_evaluate:           generate_mf_exponent_evaluate,
+  mf_square_cube_root:            generate_mf_square_cube_root,
 };
 
 // Helper to get all generator types
