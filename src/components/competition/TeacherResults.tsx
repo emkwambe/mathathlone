@@ -186,6 +186,13 @@ export default function TeacherResults({ heatId, heatCode, integrityLevel }: Tea
   const [primaryTopicName, setPrimaryTopicName] = useState<string | null>(null);
   const [topicsCovered, setTopicsCovered] = useState<string[]>([]);
   const [conceptsCount, setConceptsCount] = useState<number>(0);
+  // Migration 032 — assessment mode flags + per-student letter grades.
+  const [isAssessment, setIsAssessment] = useState<boolean>(false);
+  const [resultsReleased, setResultsReleased] = useState<boolean>(true);
+  const [heatType, setHeatType] = useState<string | null>(null);
+  const [gradeBands, setGradeBands] = useState<{ A: number; B: number; C: number; D: number } | null>(null);
+  const [letterGradeByAthlete, setLetterGradeByAthlete] = useState<Map<string, 'A' | 'B' | 'C' | 'D' | 'F'>>(new Map());
+  const [releasing, setReleasing] = useState<boolean>(false);
 
   // ── Load everything ─────────────────────────────────────────────────────
   useEffect(() => {
@@ -198,7 +205,8 @@ export default function TeacherResults({ heatId, heatCode, integrityLevel }: Tea
           supabase
             .from('heats')
             .select(`
-              question_count, created_at,
+              question_count, created_at, type,
+              is_assessment, results_released, grade_bands,
               unit_topic:unit_topic_id (
                 id, name,
                 course:course_id ( id, name )
@@ -220,7 +228,7 @@ export default function TeacherResults({ heatId, heatCode, integrityLevel }: Tea
             )
             .eq('heat_id', heatId)
             .order('rank_in_heat', { ascending: true, nullsFirst: false }),
-          supabase.from('heat_awards').select('athlete_id, award_level').eq('heat_id', heatId),
+          supabase.from('heat_awards').select('athlete_id, award_level, letter_grade').eq('heat_id', heatId),
         ]);
 
         if (cancelled) return;
@@ -237,6 +245,18 @@ export default function TeacherResults({ heatId, heatCode, integrityLevel }: Tea
         const ut = heatMeta?.unit_topic;
         setCourseName(ut?.course?.name ?? null);
         setPrimaryTopicName(ut?.name ?? null);
+        // Migration 032 — assessment mode + grade bands.
+        setIsAssessment(!!heatMeta?.is_assessment);
+        setResultsReleased(heatMeta?.results_released !== false);
+        setHeatType(heatMeta?.type ?? null);
+        setGradeBands(heatMeta?.grade_bands ?? null);
+
+        // Letter-grade map (keyed by athlete_id) for the gradebook + distribution.
+        const grades = new Map<string, 'A' | 'B' | 'C' | 'D' | 'F'>();
+        for (const a of ((awardsResult.data ?? []) as any[])) {
+          if (a.letter_grade) grades.set(a.athlete_id, a.letter_grade as 'A' | 'B' | 'C' | 'D' | 'F');
+        }
+        setLetterGradeByAthlete(grades);
 
         const awardsMap = new Map<string, AwardLevel>(
           ((awardsResult.data ?? []) as any[]).map((a) => [a.athlete_id, a.award_level])
@@ -385,8 +405,9 @@ export default function TeacherResults({ heatId, heatCode, integrityLevel }: Tea
   const flaggedCount = rows.filter((r) => r.is_flagged).length;
 
   // ── CSV export ──────────────────────────────────────────────────────────
+  // Assessment heats add letter_grade + grade_band columns to the export.
   const handleExport = useCallback(() => {
-    const header = [
+    const baseHeader = [
       'Rank',
       'Mathlete',
       'Grade',
@@ -400,37 +421,76 @@ export default function TeacherResults({ heatId, heatCode, integrityLevel }: Tea
       'Flagged',
       'Focus violations',
     ];
+    const header = isAssessment
+      ? [...baseHeader, 'Letter Grade', 'Grade Bands']
+      : baseHeader;
+    const bandsLabel = gradeBands
+      ? `A=${gradeBands.A}+ B=${gradeBands.B}+ C=${gradeBands.C}+ D=${gradeBands.D}+`
+      : '';
     const lines = [header.map(csvEscape).join(',')];
     for (const r of rows) {
-      lines.push(
-        [
-          r.rank_in_heat ?? '',
-          r.display_name,
-          r.grade_level ?? '',
-          Math.round(r.cta_score ?? 0),
-          Math.round(r.accuracy_score ?? 0),
-          r.questions_correct,
-          r.questions_attempted,
-          r.total_time_ms,
-          r.ranking_points_earned,
-          AWARD_META[r.award_level].label,
-          r.is_flagged ? 'yes' : 'no',
-          r.focus_violation_count,
-        ]
-          .map(csvEscape)
-          .join(',')
-      );
+      const base = [
+        r.rank_in_heat ?? '',
+        r.display_name,
+        r.grade_level ?? '',
+        Math.round(r.cta_score ?? 0),
+        Math.round(r.accuracy_score ?? 0),
+        r.questions_correct,
+        r.questions_attempted,
+        r.total_time_ms,
+        r.ranking_points_earned,
+        AWARD_META[r.award_level].label,
+        r.is_flagged ? 'yes' : 'no',
+        r.focus_violation_count,
+      ];
+      const row = isAssessment
+        ? [...base, letterGradeByAthlete.get(r.athlete_id) ?? '', bandsLabel]
+        : base;
+      lines.push(row.map(csvEscape).join(','));
     }
     const blob = new Blob([lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `heat-${heatCode}-results.csv`;
+    const suffix = isAssessment ? 'gradebook' : 'results';
+    a.download = `heat-${heatCode}-${suffix}.csv`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-  }, [rows, heatCode]);
+  }, [rows, heatCode, isAssessment, gradeBands, letterGradeByAthlete]);
+
+  // ── Release Results (Test mode) ─────────────────────────────────────────
+  // Flips heats.results_released to TRUE so students can finally see their
+  // grade card. No-op for non-test heats. Disabled while in-flight.
+  const handleReleaseResults = useCallback(async () => {
+    if (releasing || resultsReleased) return;
+    setReleasing(true);
+    try {
+      const { error: upErr } = await supabase
+        .from('heats')
+        .update({ results_released: true })
+        .eq('id', heatId);
+      if (upErr) {
+        setError(`Failed to release results: ${upErr.message}`);
+        return;
+      }
+      setResultsReleased(true);
+    } finally {
+      setReleasing(false);
+    }
+  }, [releasing, resultsReleased, heatId, supabase]);
+
+  // ── Grade distribution (assessment heats only) ──────────────────────────
+  const gradeDistribution = useMemo(() => {
+    if (!isAssessment) return null;
+    const counts: Record<'A' | 'B' | 'C' | 'D' | 'F', number> = { A: 0, B: 0, C: 0, D: 0, F: 0 };
+    for (const r of rows) {
+      const g = letterGradeByAthlete.get(r.athlete_id);
+      if (g) counts[g] += 1;
+    }
+    return counts;
+  }, [isAssessment, rows, letterGradeByAthlete]);
 
   const drillRow = drillId ? rows.find((r) => r.id === drillId) ?? null : null;
   const drillSubs = drillId ? submissionsByPart.get(drillId) ?? [] : [];
@@ -498,14 +558,27 @@ export default function TeacherResults({ heatId, heatCode, integrityLevel }: Tea
               </span>
             </p>
           </div>
-          <button
-            type="button"
-            onClick={handleExport}
-            className="inline-flex items-center justify-center gap-2 px-4 py-3 min-h-[44px] rounded-xl bg-white/10 border border-white/20 text-white text-sm hover:bg-white/20 transition-colors"
-          >
-            <Download className="w-4 h-4" />
-            Export CSV
-          </button>
+          <div className="flex flex-col sm:flex-row gap-2">
+            {isAssessment && heatType === 'test' && !resultsReleased && (
+              <button
+                type="button"
+                onClick={handleReleaseResults}
+                disabled={releasing}
+                className="inline-flex items-center justify-center gap-2 px-4 py-3 min-h-[44px] rounded-xl bg-amber-400 text-amber-950 text-sm font-semibold hover:bg-amber-300 disabled:opacity-50 transition-colors"
+                title="Make results visible to students"
+              >
+                {releasing ? 'Releasing…' : 'Release Results'}
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={handleExport}
+              className="inline-flex items-center justify-center gap-2 px-4 py-3 min-h-[44px] rounded-xl bg-white/10 border border-white/20 text-white text-sm hover:bg-white/20 transition-colors"
+            >
+              <Download className="w-4 h-4" />
+              {isAssessment ? 'Gradebook CSV' : 'Export CSV'}
+            </button>
+          </div>
         </div>
 
         {/* Overview stats — CTA framework (docs/CTA_SCORING_FRAMEWORK.md) */}
@@ -525,11 +598,43 @@ export default function TeacherResults({ heatId, heatCode, integrityLevel }: Tea
           />
         </div>
 
-        {/* Award distribution */}
+        {/* Distribution — Award (competition) OR Grade (assessment) */}
         <div className="bg-white/10 backdrop-blur-lg border border-white/15 rounded-2xl p-5 mb-6">
           <p className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-3">
-            Award distribution
+            {isAssessment ? 'Grade distribution' : 'Award distribution'}
           </p>
+          {isAssessment && gradeDistribution ? (
+            <div className="flex flex-wrap items-center gap-3">
+              {(['A', 'B', 'C', 'D', 'F'] as const).map((g) => {
+                const count = gradeDistribution[g];
+                const color =
+                  g === 'A' ? 'text-emerald-700 bg-emerald-100' :
+                  g === 'B' ? 'text-sky-700 bg-sky-100' :
+                  g === 'C' ? 'text-amber-700 bg-amber-100' :
+                  g === 'D' ? 'text-orange-700 bg-orange-100' :
+                              'text-red-700 bg-red-100';
+                return (
+                  <div
+                    key={g}
+                    className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-bold ${color}`}
+                  >
+                    <span className="text-lg leading-none">{g}</span>
+                    <span>{count}</span>
+                  </div>
+                );
+              })}
+              {gradeBands && (
+                <span className="text-[11px] text-white/50 ml-2">
+                  (cutoffs: A≥{gradeBands.A}, B≥{gradeBands.B}, C≥{gradeBands.C}, D≥{gradeBands.D})
+                </span>
+              )}
+              {!resultsReleased && (
+                <span className="text-[11px] text-amber-300 ml-1 font-semibold uppercase tracking-wider">
+                  · Not yet released to students
+                </span>
+              )}
+            </div>
+          ) : (
           <div className="flex flex-wrap items-center gap-3">
             {AWARD_ORDER.map((level) => {
               const count = awardDistribution[level];
@@ -552,6 +657,7 @@ export default function TeacherResults({ heatId, heatCode, integrityLevel }: Tea
               </div>
             )}
           </div>
+          )}
         </div>
 
         {/* Concept mastery */}

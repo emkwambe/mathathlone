@@ -91,6 +91,8 @@ interface ParticipationRow {
 interface AwardRow {
   athlete_id: string;
   award_level: AwardLevel;
+  /** Migration 032 — populated for assessment heats; null otherwise. */
+  letter_grade?: LetterGrade | null;
   raw_score: number | null;
   accuracy_pct: number | null;
   percentile: number | null;
@@ -135,6 +137,16 @@ interface HeatMeta {
   division: { id: string; name: string; code: string } | null;
   unit_topic: { id: string; name: string; code: string } | null;
   course: { id: string; name: string } | null;
+  // Migration 032 — assessment mode flags
+  is_assessment: boolean;
+  results_released: boolean;
+}
+
+type LetterGrade = 'A' | 'B' | 'C' | 'D' | 'F';
+
+interface AssessmentAward {
+  letter_grade: LetterGrade | null;
+  is_assessment: boolean;
 }
 
 // -----------------------------------------------------------------------------
@@ -323,6 +335,7 @@ export default function StudentResults({
               .select(
                 `
                 code, question_count, duration_seconds, type, created_at,
+                is_assessment, results_released,
                 division:division_id ( id, name, code ),
                 unit_topic:unit_topic_id ( id, name, code ),
                 course:unit_topic_id ( courses ( id, name ) )
@@ -382,6 +395,9 @@ export default function StudentResults({
           division: h?.division ?? null,
           unit_topic: h?.unit_topic ?? null,
           course: h?.course?.courses ?? null,
+          // Migration 032 — fall back to false/true so legacy rows still render.
+          is_assessment: !!h?.is_assessment,
+          results_released: h?.results_released !== false,
         };
         setHeatMeta(hm);
 
@@ -490,6 +506,12 @@ export default function StudentResults({
   const meta = AWARD_META[myAwardLevel];
   const competitionLevel = integrityToCompetitionLevel(integrityLevel);
   const identity = profile ? resolveIdentity(profile, competitionLevel) : null;
+  // Assessment-mode rendering flags. Pull letter_grade from the heat_award
+  // row written by scoring-service (Phase 2).
+  const isAssessment = heatMeta?.is_assessment === true;
+  const resultsReleased = heatMeta?.results_released !== false;
+  const myLetterGrade: LetterGrade | null =
+    ((me?.award as { letter_grade?: LetterGrade | null } | null | undefined)?.letter_grade) ?? null;
 
   const myRank = me?.rank_in_heat ?? null;
   const myPercentile = me?.percentile ?? null;
@@ -691,6 +713,82 @@ export default function StudentResults({
         </div>
 
         {/* ── Personal summary card ────────────────────────────────────── */}
+        {isAssessment && !resultsReleased ? (
+          // Test mode, results gated until teacher hits "Release Results".
+          <div className="relative rounded-3xl border-4 border-amber-300 bg-amber-50 p-6 md:p-8 mb-6 shadow-2xl text-center">
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-amber-200 text-amber-800 mb-3">
+              <Clock className="w-10 h-10" />
+            </div>
+            <h2 className="text-2xl md:text-3xl font-bold text-amber-900 mb-1">
+              Results pending
+            </h2>
+            <p className="text-amber-800 text-sm md:text-base">
+              Your teacher will release results soon.
+            </p>
+            <p className="text-amber-700/80 text-xs mt-3">
+              You completed {me.questions_attempted ?? 0} of {heatMeta?.question_count ?? 0} questions.
+            </p>
+          </div>
+        ) : isAssessment && myLetterGrade ? (
+          // Assessment mode, results released — grade card replaces the
+          // trophy/award badge. Rank/percentile/share are intentionally
+          // hidden (no leaderboard in assessment mode).
+          <div className="relative rounded-3xl border-4 border-indigo-300 bg-indigo-50 p-6 md:p-8 mb-6 shadow-2xl">
+            <div className="flex flex-col md:flex-row md:items-center gap-6">
+              <div className="text-center md:text-left flex flex-col items-center md:items-start">
+                <p className="text-xs uppercase tracking-[0.3em] text-indigo-600 mb-1">
+                  Grade
+                </p>
+                <span className="text-6xl md:text-7xl font-extrabold text-indigo-900 leading-none">
+                  {myLetterGrade}
+                </span>
+                <span className="mt-2 text-indigo-700 text-sm font-medium">
+                  CTA {Math.round(me.cta_score ?? 0)}/100
+                </span>
+                {me.is_flagged && (
+                  <span className="mt-2 inline-flex items-center gap-1 text-[10px] font-semibold text-red-700 bg-red-100 border border-red-300 rounded-full px-2 py-0.5">
+                    Flagged — pending review
+                  </span>
+                )}
+              </div>
+              <div className="flex-1 min-w-0">
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
+                  {identity?.display_name ?? me.users?.display_name ?? 'Mathlete'}
+                </h2>
+                {identity?.subtitle && (
+                  <p className="text-gray-600 text-sm">{identity.subtitle}</p>
+                )}
+                <p className="text-gray-700 text-sm mt-2">
+                  Your assessment result. Results are private — no leaderboard.
+                </p>
+              </div>
+            </div>
+            {/* Stats tiles — same content as competition but without
+                rank/streak gamification cues. */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6">
+              <StatTile
+                label="Accuracy"
+                value={`${Math.round(me.accuracy_score ?? 0)}%`}
+                icon={<Target className="w-4 h-4" />}
+              />
+              <StatTile label="Time" value={formatTime(me.total_time_ms ?? 0)} icon={<Clock className="w-4 h-4" />} />
+              <StatTile
+                label="Correct"
+                value={`${me.questions_correct ?? 0}/${me.questions_attempted ?? 0}`}
+                icon={<Check className="w-4 h-4" />}
+              />
+              <StatTile
+                label="Concepts mastered"
+                value={
+                  conceptMastery.total > 0
+                    ? `${conceptMastery.mastered}/${conceptMastery.total}`
+                    : '—'
+                }
+                icon={<TrendingUp className="w-4 h-4" />}
+              />
+            </div>
+          </div>
+        ) : (
         <div
           className={`relative rounded-3xl border-4 ${meta.borderClass} ${meta.bgClass} p-6 md:p-8 mb-6 shadow-2xl`}
         >
@@ -783,8 +881,10 @@ export default function StudentResults({
             )}
           </div>
         </div>
+        )}
 
-        {/* ── Leaderboard ─────────────────────────────────────────────── */}
+        {/* ── Leaderboard (hidden for assessment heats) ───────────────── */}
+        {!isAssessment && (
         <div className="bg-white/10 backdrop-blur-lg border border-white/15 rounded-2xl overflow-hidden mb-6">
           <div className="px-5 py-4 border-b border-white/10">
             <h2 className="text-sm font-semibold text-white/70 uppercase tracking-wider">
@@ -851,6 +951,7 @@ export default function StudentResults({
             </ul>
           )}
         </div>
+        )}
 
         {/* Back to dashboard */}
         <div className="text-center mb-6">

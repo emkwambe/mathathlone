@@ -29,6 +29,34 @@ export type AwardLevel =
 
 export type MedalType = 'gold' | 'silver' | 'bronze';
 
+export type LetterGrade = 'A' | 'B' | 'C' | 'D' | 'F';
+
+// GradeBands + DEFAULT_GRADE_BANDS live in heat-service.ts — re-import so
+// the scoring code references the same shape and the barrel index.ts
+// doesn't see two competing exports.
+import { DEFAULT_GRADE_BANDS, type GradeBands } from './heat-service';
+export { DEFAULT_GRADE_BANDS };
+export type { GradeBands };
+
+/**
+ * Map a CTA score (0-100) to a letter grade using the supplied band cutoffs.
+ * Anything below D becomes F. Defensive — if a band is missing, falls back
+ * to the standard 90/80/70/60 thresholds.
+ */
+function letterForScore(cta: number, bands: GradeBands | null | undefined): LetterGrade {
+  const b: GradeBands = {
+    A: bands?.A ?? DEFAULT_GRADE_BANDS.A,
+    B: bands?.B ?? DEFAULT_GRADE_BANDS.B,
+    C: bands?.C ?? DEFAULT_GRADE_BANDS.C,
+    D: bands?.D ?? DEFAULT_GRADE_BANDS.D,
+  };
+  if (cta >= b.A) return 'A';
+  if (cta >= b.B) return 'B';
+  if (cta >= b.C) return 'C';
+  if (cta >= b.D) return 'D';
+  return 'F';
+}
+
 export interface ParticipantScore {
   participation_id: string;
   athlete_id: string;
@@ -44,6 +72,8 @@ export interface ParticipantScore {
   percentile: number;             // 0-100
   award_level: AwardLevel;
   medal: MedalType | null;
+  /** Letter grade derived from cta_score + grade_bands. Only populated for assessment heats. */
+  letter_grade: LetterGrade | null;
 }
 
 // -----------------------------------------------------------------------------
@@ -98,10 +128,12 @@ export async function calculateHeatResults(
   supabase: SupabaseClient,
   heatId: string
 ): Promise<ParticipantScore[]> {
-  // 1. Heat config (duration drives the time score normalization)
+  // 1. Heat config (duration drives the time score normalization; the
+  // assessment-mode columns drive letter-grade calculation and the
+  // results-released gate downstream).
   const { data: heat, error: heatError } = await supabase
     .from('heats')
-    .select('id, duration_seconds, division_id, question_count')
+    .select('id, duration_seconds, division_id, question_count, is_assessment, grade_bands')
     .eq('id', heatId)
     .single();
 
@@ -112,6 +144,8 @@ export async function calculateHeatResults(
   const durationMs = Math.max(1, (heat.duration_seconds ?? 900) * 1000);
   const totalQuestions = Math.max(1, heat.question_count ?? 1);
   const divisionId: string | null = heat.division_id ?? null;
+  const isAssessment: boolean = (heat as { is_assessment?: boolean }).is_assessment ?? false;
+  const gradeBands: GradeBands = (heat as { grade_bands?: GradeBands | null }).grade_bands ?? DEFAULT_GRADE_BANDS;
 
   // 2. Load all participations
   const { data: participations, error: pError } = await supabase
@@ -286,6 +320,10 @@ export async function calculateHeatResults(
         : round2(((totalParticipants - rank) / (totalParticipants - 1)) * 100);
     const awardLevel = awardLevelFor(percentile, s.accuracy_score, rank);
     const medal = medalForRank(rank);
+    // Assessment heats compute a letter grade from CTA + the configured
+    // grade_bands. Competition heats leave letter_grade as null so the
+    // existing trophy/medal UX is untouched.
+    const letterGrade = isAssessment ? letterForScore(s.cta_score, gradeBands) : null;
     return {
       participation_id: s.participation_id,
       athlete_id: s.athlete_id,
@@ -301,6 +339,7 @@ export async function calculateHeatResults(
       percentile,
       award_level: awardLevel,
       medal,
+      letter_grade: letterGrade,
     };
   });
 
@@ -346,6 +385,10 @@ export async function calculateHeatResults(
     accuracy_pct: r.accuracy_score,
     percentile: r.percentile,
     award_level: r.award_level,
+    // Migration 032 columns. letter_grade is NULL for competition heats;
+    // is_assessment lets a single result-page render branch off the row.
+    letter_grade: r.letter_grade,
+    is_assessment: isAssessment,
   }));
 
   if (awardRows.length > 0) {

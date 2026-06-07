@@ -522,6 +522,7 @@ export default function HeatLobbyPage() {
         participationId={myParticipation.id}
         durationSeconds={heat.duration_seconds}
         integrityLevel={heat.integrity_level ?? 'practice'}
+        isAssessment={(heat as { is_assessment?: boolean }).is_assessment ?? false}
       />
     );
   }

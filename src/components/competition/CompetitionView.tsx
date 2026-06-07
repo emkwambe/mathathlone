@@ -90,6 +90,12 @@ interface CompetitionViewProps {
   participationId: string;
   durationSeconds: number;
   integrityLevel: string;        // 'practice' | 'school' | 'district' | ...
+  /**
+   * True when the heat is Quiz/Test mode. Assessment heats hide the
+   * streak counter, suppress the +pts feedback animation, and otherwise
+   * keep gameplay identical (CTA still computed internally).
+   */
+  isAssessment?: boolean;
   /** Stays false here; teachers see TeacherMonitor instead. */
   isTeacher?: boolean;
 }
@@ -240,6 +246,7 @@ export default function CompetitionView({
   participationId,
   durationSeconds,
   integrityLevel,
+  isAssessment = false,
 }: CompetitionViewProps) {
   const supabase = useMemo(() => createClient(), []);
 
@@ -896,7 +903,8 @@ export default function CompetitionView({
               <span className="font-semibold">
                 Q {currentIndex + 1}/{questions.length}
               </span>
-              {streak >= 2 && (
+              {/* Assessment mode hides the streak chip — gamification off. */}
+              {!isAssessment && streak >= 2 && (
                 <span className="inline-flex items-center gap-1 text-amber-300 text-xs font-semibold bg-amber-400/10 border border-amber-400/30 rounded-full px-2 py-0.5">
                   <Flame className="w-3 h-3" />
                   {streak}x streak
@@ -982,13 +990,16 @@ export default function CompetitionView({
         </div>
       </div>
 
-      {/* Feedback overlay */}
+      {/* Feedback overlay — assessment mode suppresses the +pts animation
+          but still shows a minimal correct/incorrect chip so the student
+          gets immediate feedback. */}
       {feedback && (
         <FeedbackOverlay
           isCorrect={feedback.isCorrect}
           pointsEarned={feedback.pointsEarned}
           timeBonus={feedback.timeBonus}
           correctAnswer={feedback.correctAnswer}
+          hidePoints={isAssessment}
         />
       )}
 
@@ -1156,11 +1167,14 @@ function FeedbackOverlay({
   pointsEarned,
   timeBonus,
   correctAnswer,
+  hidePoints = false,
 }: {
   isCorrect: boolean;
   pointsEarned: number;
   timeBonus: number;
   correctAnswer?: string;
+  /** Assessment mode hides the +pts animation. The chip stays so the student gets immediate correct/incorrect feedback. */
+  hidePoints?: boolean;
 }) {
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/40 backdrop-blur-sm pointer-events-none">
@@ -1186,14 +1200,16 @@ function FeedbackOverlay({
           {isCorrect ? 'Correct!' : 'Not quite.'}
         </h3>
         {isCorrect ? (
-          <p className="text-base md:text-lg font-semibold">
-            +{pointsEarned} pts
-            {timeBonus > 0 && (
-              <span className="text-emerald-700 text-sm font-medium ml-2">
-                ({timeBonus} time bonus)
-              </span>
-            )}
-          </p>
+          hidePoints ? null : (
+            <p className="text-base md:text-lg font-semibold">
+              +{pointsEarned} pts
+              {timeBonus > 0 && (
+                <span className="text-emerald-700 text-sm font-medium ml-2">
+                  ({timeBonus} time bonus)
+                </span>
+              )}
+            </p>
+          )
         ) : (
           correctAnswer && (
             <p className="text-base md:text-lg">
