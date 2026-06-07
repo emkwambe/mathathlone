@@ -4460,6 +4460,904 @@ export function generate_alg1_quadratic_formula(difficulty: DifficultyLevel): Ge
 }
 
 // =============================================================================
+// =============================================================================
+// NC MATH 3 — VARSITY+ DIVISION (pool: nc_math_3)
+// =============================================================================
+// =============================================================================
+// All generators use the `m3_` prefix. Wrapped via g7Wrap() so each plugs
+// into the existing question-delivery pipeline. M3 covers polynomial,
+// rational, radical, exponential/log, trig, and inference-style stats —
+// curated pools used where the math benefits from clean, deterministic
+// outputs (trig values, log bases, complex-number products, etc.).
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BATCH 1: Functions & Inverses
+// ─────────────────────────────────────────────────────────────────────────────
+
+// 1. M3.FNI.1.1 — Evaluate a Function
+export function generate_m3_evaluate_function(difficulty: DifficultyLevel): GeneratedQuestion {
+  const a = randomNonZeroInt(-4, 4);
+  const b = randomNonZeroInt(-8, 8);
+  const c = randomInt(-10, 10);
+  const x = randomNonZeroInt(-5, 6);
+  const form = difficulty === 1 ? 'linear' : difficulty === 2 ? 'quadratic' : 'cubic';
+  if (form === 'linear') {
+    const result = a * x + b;
+    return g7Wrap(difficulty, 'm3_evaluate_function', 'M3.FNI.1.1', 'Evaluating a Function', {
+      question: `If f(x) = ${a}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)}, find f(${x}).`,
+      answer: String(result),
+      solution_steps: [
+        `Substitute x = ${x}: ${a}(${x}) ${b >= 0 ? '+' : '-'} ${Math.abs(b)}`,
+        `= ${a * x} ${b >= 0 ? '+' : '-'} ${Math.abs(b)}`,
+        `= ${result}`,
+      ],
+      answer_type: 'integer_or_decimal',
+    });
+  }
+  if (form === 'quadratic') {
+    const result = a * x * x + b * x + c;
+    return g7Wrap(difficulty, 'm3_evaluate_function', 'M3.FNI.1.1', 'Evaluating a Function', {
+      question: `If f(x) = ${a}x² ${b >= 0 ? '+' : '-'} ${Math.abs(b)}x ${c >= 0 ? '+' : '-'} ${Math.abs(c)}, find f(${x}).`,
+      answer: String(result),
+      solution_steps: [
+        `Substitute x = ${x}: ${a}(${x})² ${b >= 0 ? '+' : '-'} ${Math.abs(b)}(${x}) ${c >= 0 ? '+' : '-'} ${Math.abs(c)}`,
+        `= ${a * x * x} ${b >= 0 ? '+' : '-'} ${Math.abs(b * x)} ${c >= 0 ? '+' : '-'} ${Math.abs(c)}`,
+        `= ${result}`,
+      ],
+      answer_type: 'integer_or_decimal',
+    });
+  }
+  // cubic
+  const result = x * x * x + a * x;
+  return g7Wrap(difficulty, 'm3_evaluate_function', 'M3.FNI.1.1', 'Evaluating a Function', {
+    question: `If f(x) = x³ ${a >= 0 ? '+' : '-'} ${Math.abs(a)}x, find f(${x}).`,
+    answer: String(result),
+    solution_steps: [
+      `Substitute x = ${x}: (${x})³ ${a >= 0 ? '+' : '-'} ${Math.abs(a)}(${x})`,
+      `= ${x * x * x} ${a >= 0 ? '+' : '-'} ${Math.abs(a * x)}`,
+      `= ${result}`,
+    ],
+    answer_type: 'integer_or_decimal',
+  });
+}
+
+// 2. M3.FNI.1.2 — Composition of Functions
+export function generate_m3_compose_functions(difficulty: DifficultyLevel): GeneratedQuestion {
+  // f(g(a)) — evaluate numerically. f and g both linear keeps arithmetic clean.
+  const fA = randomNonZeroInt(-4, 4);
+  const fB = randomInt(-8, 8);
+  const gA = randomNonZeroInt(-4, 4);
+  const gB = randomInt(-8, 8);
+  const x = randomNonZeroInt(-4, 4);
+  const gOfX = gA * x + gB;
+  const fOfGOfX = fA * gOfX + fB;
+  const fmt = (a: number, b: number): string => {
+    const aPart = a === 1 ? 'x' : a === -1 ? '-x' : `${a}x`;
+    return b === 0 ? aPart : `${aPart} ${b >= 0 ? '+' : '-'} ${Math.abs(b)}`;
+  };
+  return g7Wrap(difficulty, 'm3_compose_functions', 'M3.FNI.1.2', 'Composition of Functions', {
+    question: `If f(x) = ${fmt(fA, fB)} and g(x) = ${fmt(gA, gB)}, find f(g(${x})).`,
+    answer: String(fOfGOfX),
+    solution_steps: [
+      `First find g(${x}): ${gA}(${x}) ${gB >= 0 ? '+' : '-'} ${Math.abs(gB)} = ${gOfX}`,
+      `Then find f(g(${x})) = f(${gOfX}): ${fA}(${gOfX}) ${fB >= 0 ? '+' : '-'} ${Math.abs(fB)}`,
+      `= ${fA * gOfX} ${fB >= 0 ? '+' : '-'} ${Math.abs(fB)}`,
+      `= ${fOfGOfX}`,
+    ],
+    answer_type: 'integer_or_decimal',
+  });
+}
+
+// 3. M3.FNI.1.3 — Find an Inverse Function
+export function generate_m3_inverse_function(difficulty: DifficultyLevel): GeneratedQuestion {
+  // f(x) = mx + b   →   f⁻¹(x) = (x - b)/m
+  const m = randomNonZeroInt(2, 6);
+  const b = randomInt(-10, 10);
+  const mPart = m === 1 ? 'x' : `${m}x`;
+  const fStr = b === 0 ? `y = ${mPart}` : `y = ${mPart} ${b >= 0 ? '+' : '-'} ${Math.abs(b)}`;
+  const fXStr = b === 0 ? `${mPart}` : `${mPart} ${b >= 0 ? '+' : '-'} ${Math.abs(b)}`;
+  const bSign = b >= 0 ? '-' : '+';
+  const answer = `f⁻¹(x) = (x ${bSign} ${Math.abs(b)})/${m}`;
+  return g7Wrap(difficulty, 'm3_inverse_function', 'M3.FNI.1.3', 'Inverse Functions', {
+    question: `Find the inverse of f(x) = ${fXStr}. Write your answer in the form f⁻¹(x) = ...`,
+    answer,
+    solution_steps: [
+      `Replace f(x) with y: ${fStr}`,
+      `Swap x and y: x = ${m}y ${b >= 0 ? '+' : '-'} ${Math.abs(b)}`,
+      `${b >= 0 ? 'Subtract' : 'Add'} ${Math.abs(b)}: x ${bSign} ${Math.abs(b)} = ${m}y`,
+      `Divide by ${m}: y = (x ${bSign} ${Math.abs(b)})/${m}`,
+      `So f⁻¹(x) = (x ${bSign} ${Math.abs(b)})/${m}`,
+    ],
+    answer_type: 'equation',
+  });
+}
+
+// 4. M3.FNI.1.4 — Domain and Range
+export function generate_m3_domain_range(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Curated function pool with well-known domain restrictions.
+  const items: Array<{
+    func: string;
+    ask: 'domain' | 'range';
+    answer: string;
+    steps: string[];
+  }> = [
+    {
+      func: `f(x) = √(x - 4)`,
+      ask: 'domain',
+      answer: 'x ≥ 4',
+      steps: [
+        `Radicand must be non-negative: x − 4 ≥ 0.`,
+        `Solve: x ≥ 4.`,
+        `Domain: x ≥ 4.`,
+      ],
+    },
+    {
+      func: `f(x) = 1/(x - 3)`,
+      ask: 'domain',
+      answer: 'x ≠ 3',
+      steps: [
+        `Denominator must be non-zero: x − 3 ≠ 0.`,
+        `Solve: x ≠ 3.`,
+        `Domain: all reals except 3.`,
+      ],
+    },
+    {
+      func: `f(x) = x² + 2`,
+      ask: 'range',
+      answer: 'y ≥ 2',
+      steps: [
+        `x² ≥ 0 for all real x, so x² + 2 ≥ 2.`,
+        `Range: y ≥ 2.`,
+      ],
+    },
+    {
+      func: `f(x) = -x² + 5`,
+      ask: 'range',
+      answer: 'y ≤ 5',
+      steps: [
+        `-x² ≤ 0 for all real x, so -x² + 5 ≤ 5.`,
+        `Range: y ≤ 5.`,
+      ],
+    },
+    {
+      func: `f(x) = |x| - 3`,
+      ask: 'range',
+      answer: 'y ≥ -3',
+      steps: [
+        `|x| ≥ 0 for all x, so |x| − 3 ≥ -3.`,
+        `Range: y ≥ -3.`,
+      ],
+    },
+    {
+      func: `f(x) = √(9 - x)`,
+      ask: 'domain',
+      answer: 'x ≤ 9',
+      steps: [
+        `Radicand must be non-negative: 9 − x ≥ 0.`,
+        `Solve: x ≤ 9.`,
+        `Domain: x ≤ 9.`,
+      ],
+    },
+  ];
+  const it = items[randomInt(0, items.length - 1)]!;
+  return g7Wrap(difficulty, 'm3_domain_range', 'M3.FNI.1.4', 'Domain and Range', {
+    question: `State the ${it.ask} of ${it.func}.`,
+    answer: it.answer,
+    solution_steps: it.steps,
+    answer_type: 'text',
+  });
+}
+
+// 5. M3.FNI.1.5 — Describe a Function Transformation
+export function generate_m3_transformation_describe(difficulty: DifficultyLevel): GeneratedQuestion {
+  // g(x) = a · f(x − h) + k. Pick ONE non-identity transformation per question
+  // so the description is unambiguous.
+  const kinds = (['horizontal_shift', 'vertical_shift', 'vertical_stretch', 'reflection'] as const);
+  const kind = kinds[randomInt(0, 3)]!;
+  if (kind === 'horizontal_shift') {
+    const h = randomNonZeroInt(-5, 5);
+    const dir = h > 0 ? 'right' : 'left';
+    return g7Wrap(difficulty, 'm3_transformation_describe', 'M3.FNI.1.5', 'Function Transformations', {
+      question: `g(x) = f(x ${h >= 0 ? '-' : '+'} ${Math.abs(h)})\n\nDescribe how the graph of g compares to the graph of f.`,
+      answer: `horizontal shift ${dir} ${Math.abs(h)}`,
+      solution_steps: [
+        `Form is f(x − h) with h = ${h}.`,
+        `Replacing x with x − ${h} shifts the graph horizontally by ${h}.`,
+        `Since h is ${h > 0 ? 'positive' : 'negative'}, the shift is to the ${dir} by ${Math.abs(h)}.`,
+      ],
+      answer_type: 'text',
+    });
+  }
+  if (kind === 'vertical_shift') {
+    const k = randomNonZeroInt(-6, 6);
+    const dir = k > 0 ? 'up' : 'down';
+    return g7Wrap(difficulty, 'm3_transformation_describe', 'M3.FNI.1.5', 'Function Transformations', {
+      question: `g(x) = f(x) ${k >= 0 ? '+' : '-'} ${Math.abs(k)}\n\nDescribe how the graph of g compares to the graph of f.`,
+      answer: `vertical shift ${dir} ${Math.abs(k)}`,
+      solution_steps: [
+        `Form is f(x) + k with k = ${k}.`,
+        `Adding k shifts the graph vertically.`,
+        `Since k is ${k > 0 ? 'positive' : 'negative'}, the shift is ${dir} by ${Math.abs(k)}.`,
+      ],
+      answer_type: 'text',
+    });
+  }
+  if (kind === 'vertical_stretch') {
+    const a = [2, 3, 4][randomInt(0, 2)]!;
+    return g7Wrap(difficulty, 'm3_transformation_describe', 'M3.FNI.1.5', 'Function Transformations', {
+      question: `g(x) = ${a}·f(x)\n\nDescribe how the graph of g compares to the graph of f.`,
+      answer: `vertical stretch by ${a}`,
+      solution_steps: [
+        `Form is a·f(x) with a = ${a} > 1.`,
+        `Multiplying f(x) by ${a} stretches the graph vertically by a factor of ${a}.`,
+      ],
+      answer_type: 'text',
+    });
+  }
+  // reflection
+  return g7Wrap(difficulty, 'm3_transformation_describe', 'M3.FNI.1.5', 'Function Transformations', {
+    question: `g(x) = -f(x)\n\nDescribe how the graph of g compares to the graph of f.`,
+    answer: 'reflection across the x-axis',
+    solution_steps: [
+      `Form is -f(x).`,
+      `Negating f(x) flips the graph over the x-axis.`,
+    ],
+    answer_type: 'text',
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BATCH 2: Exponential & Logarithmic (M3)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// 6. M3.EL.1.1 — Evaluate an Exponential Function
+export function generate_m3_evaluate_exponential(difficulty: DifficultyLevel): GeneratedQuestion {
+  // a · b^x with integer answer for clarity (small bases + non-negative x).
+  const a = randomInt(2, 6);
+  const b = [2, 3, 4, 5][randomInt(0, 3)]!;
+  const x = randomInt(0, difficulty === 1 ? 3 : 5);
+  const result = a * Math.pow(b, x);
+  return g7Wrap(difficulty, 'm3_evaluate_exponential', 'M3.EL.1.1', 'Evaluating Exponential Functions', {
+    question: `If f(x) = ${a} · ${b}^x, find f(${x}).`,
+    answer: String(result),
+    solution_steps: [
+      `Substitute x = ${x}: ${a} · ${b}^${x}`,
+      `${b}^${x} = ${Math.pow(b, x)}`,
+      `${a} × ${Math.pow(b, x)} = ${result}`,
+    ],
+    answer_type: 'integer_or_decimal',
+  });
+}
+
+// 7. M3.EL.1.2 — Solve an Exponential Equation
+export function generate_m3_solve_exponential_eq(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Curated bases + answers so the solve uses logarithms cleanly.
+  // b^x = c → x = log_b(c) = ln(c)/ln(b).
+  const items: Array<{ b: number; c: number }> = [
+    { b: 2,  c: 10 },
+    { b: 3,  c: 15 },
+    { b: 5,  c: 20 },
+    { b: 2,  c: 50 },
+    { b: 4,  c: 30 },
+    { b: 7,  c: 25 },
+    { b: 10, c: 5  },
+    { b: 6,  c: 100 },
+  ];
+  const it = items[randomInt(0, items.length - 1)]!;
+  const x = +(Math.log(it.c) / Math.log(it.b)).toFixed(3);
+  return g7Wrap(difficulty, 'm3_solve_exponential_eq', 'M3.EL.1.2', 'Solving Exponential Equations', {
+    question: `Solve ${it.b}^x = ${it.c}. Round your answer to 3 decimal places.`,
+    answer: x.toFixed(3),
+    solution_steps: [
+      `Take ln of both sides: x · ln(${it.b}) = ln(${it.c})`,
+      `Solve for x: x = ln(${it.c}) / ln(${it.b})`,
+      `x ≈ ${Math.log(it.c).toFixed(4)} / ${Math.log(it.b).toFixed(4)}`,
+      `x ≈ ${x.toFixed(3)}`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// 8. M3.EL.2.1 — Evaluate a Logarithm (Perfect Powers)
+export function generate_m3_evaluate_logarithm(difficulty: DifficultyLevel): GeneratedQuestion {
+  // log_b(b^n) = n. Curated (base, exponent) pairs to keep math clean.
+  const items: Array<{ base: number; exp: number }> = [
+    { base: 2,  exp: 3 },   // log_2(8)   = 3
+    { base: 2,  exp: 5 },   // log_2(32)  = 5
+    { base: 3,  exp: 2 },   // log_3(9)   = 2
+    { base: 3,  exp: 4 },   // log_3(81)  = 4
+    { base: 4,  exp: 3 },   // log_4(64)  = 3
+    { base: 5,  exp: 2 },   // log_5(25)  = 2
+    { base: 5,  exp: 3 },   // log_5(125) = 3
+    { base: 10, exp: 2 },   // log_10(100) = 2
+    { base: 10, exp: 3 },   // log_10(1000)= 3
+    { base: 2,  exp: 0 },   // log_2(1) = 0
+    { base: 7,  exp: 2 },   // log_7(49) = 2
+  ];
+  const it = items[randomInt(0, items.length - 1)]!;
+  const arg = Math.pow(it.base, it.exp);
+  return g7Wrap(difficulty, 'm3_evaluate_logarithm', 'M3.EL.2.1', 'Evaluating Logarithms', {
+    question: `Evaluate: log₍${it.base}₎(${arg})`,
+    answer: String(it.exp),
+    solution_steps: [
+      `Recognize that ${it.base}^${it.exp} = ${arg}.`,
+      `By the definition of a logarithm, log₍${it.base}₎(${arg}) = ${it.exp}.`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// 9. M3.EL.2.2 — Expand or Condense a Log Expression
+export function generate_m3_expand_condense_log(difficulty: DifficultyLevel): GeneratedQuestion {
+  const kind = (['expand_product', 'expand_quotient', 'condense_sum', 'expand_power'] as const)[randomInt(0, 3)]!;
+  if (kind === 'expand_product') {
+    return g7Wrap(difficulty, 'm3_expand_condense_log', 'M3.EL.2.2', 'Logarithm Properties', {
+      question: `Expand using log properties: log(xy)`,
+      answer: 'log(x) + log(y)',
+      solution_steps: [
+        `Product rule: log(MN) = log(M) + log(N).`,
+        `log(xy) = log(x) + log(y).`,
+      ],
+      answer_type: 'expression',
+    });
+  }
+  if (kind === 'expand_quotient') {
+    return g7Wrap(difficulty, 'm3_expand_condense_log', 'M3.EL.2.2', 'Logarithm Properties', {
+      question: `Expand using log properties: log(x/y)`,
+      answer: 'log(x) - log(y)',
+      solution_steps: [
+        `Quotient rule: log(M/N) = log(M) − log(N).`,
+        `log(x/y) = log(x) − log(y).`,
+      ],
+      answer_type: 'expression',
+    });
+  }
+  if (kind === 'condense_sum') {
+    return g7Wrap(difficulty, 'm3_expand_condense_log', 'M3.EL.2.2', 'Logarithm Properties', {
+      question: `Condense into a single logarithm: log(3) + log(x)`,
+      answer: 'log(3x)',
+      solution_steps: [
+        `Product rule (reverse direction): log(M) + log(N) = log(MN).`,
+        `log(3) + log(x) = log(3x).`,
+      ],
+      answer_type: 'expression',
+    });
+  }
+  // expand_power
+  const n = randomInt(2, 5);
+  return g7Wrap(difficulty, 'm3_expand_condense_log', 'M3.EL.2.2', 'Logarithm Properties', {
+    question: `Expand using log properties: log(x^${n})`,
+    answer: `${n}·log(x)`,
+    solution_steps: [
+      `Power rule: log(M^p) = p · log(M).`,
+      `log(x^${n}) = ${n} · log(x).`,
+    ],
+    answer_type: 'expression',
+  });
+}
+
+// 10. M3.EL.3.1 — Exponential Growth or Decay Model
+export function generate_m3_exponential_growth_decay(difficulty: DifficultyLevel): GeneratedQuestion {
+  // A = P · b^t.  Use whole-number P, common base, integer t for clean answer.
+  const P = [100, 200, 500, 1000][randomInt(0, 3)]!;
+  const isGrowth = Math.random() < 0.6;
+  const b = isGrowth
+    ? [1.05, 1.10, 1.20, 1.50, 2][randomInt(0, 4)]!
+    : [0.50, 0.80, 0.90, 0.95][randomInt(0, 3)]!;
+  const t = randomInt(2, 6);
+  const A = +(P * Math.pow(b, t)).toFixed(2);
+  const ratePct = isGrowth ? (b - 1) * 100 : (1 - b) * 100;
+  return g7Wrap(difficulty, 'm3_exponential_growth_decay', 'M3.EL.3.1', 'Exponential Growth/Decay', {
+    question: `A quantity ${isGrowth ? 'grows' : 'decays'} by ${ratePct}% per year. The initial amount is ${P}. Find the amount after ${t} years using A = P·b^t. Round to 2 decimal places.`,
+    answer: A.toFixed(2),
+    solution_steps: [
+      isGrowth
+        ? `Growth factor b = 1 + ${ratePct / 100} = ${b}.`
+        : `Decay factor b = 1 − ${ratePct / 100} = ${b}.`,
+      `A = ${P} · ${b}^${t} = ${P} · ${Math.pow(b, t).toFixed(4)}`,
+      `A ≈ ${A.toFixed(2)}`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BATCH 3: Polynomial Functions (M3)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// 11. M3.POL.1.1 — Polynomial End Behavior
+export function generate_m3_polynomial_end_behavior(difficulty: DifficultyLevel): GeneratedQuestion {
+  const degree = (['even', 'odd'] as const)[randomInt(0, 1)]!;
+  const leadingPositive = Math.random() < 0.5;
+  // Curate the human-readable form of the polynomial so the leading term is unambiguous.
+  const deg = degree === 'even' ? [2, 4][randomInt(0, 1)]! : [3, 5][randomInt(0, 1)]!;
+  const lc = leadingPositive ? [1, 2, 3][randomInt(0, 2)]! : [-1, -2, -3][randomInt(0, 2)]!;
+  const lcDisplay = lc === 1 ? '' : lc === -1 ? '-' : `${lc}`;
+  const fStr = `f(x) = ${lcDisplay}x^${deg} + ...`;
+  // End-behavior canonical answer in plain language.
+  let answer: string;
+  let why: string;
+  if (degree === 'even') {
+    answer = leadingPositive ? 'up and up' : 'down and down';
+    why = leadingPositive
+      ? `Even degree with positive leading coefficient → both ends rise.`
+      : `Even degree with negative leading coefficient → both ends fall.`;
+  } else {
+    answer = leadingPositive ? 'down and up' : 'up and down';
+    why = leadingPositive
+      ? `Odd degree with positive leading coefficient → left end falls, right end rises.`
+      : `Odd degree with negative leading coefficient → left end rises, right end falls.`;
+  }
+  return g7Wrap(difficulty, 'm3_polynomial_end_behavior', 'M3.POL.1.1', 'Polynomial End Behavior', {
+    question: `${fStr}\n\nDescribe the end behavior of f. Enter exactly one of: "up and up", "down and down", "down and up", or "up and down" (left-end behavior, right-end behavior).`,
+    answer,
+    solution_steps: [
+      `Degree: ${deg} (${degree}).`,
+      `Leading coefficient: ${lc} (${leadingPositive ? 'positive' : 'negative'}).`,
+      why,
+      `Answer: ${answer}.`,
+    ],
+    answer_type: 'text',
+  });
+}
+
+// 12. M3.POL.1.2 — Zeros of a Polynomial (from factored form)
+export function generate_m3_polynomial_zeros(difficulty: DifficultyLevel): GeneratedQuestion {
+  // (x - r1)(x - r2)(x - r3) — zeros are r1, r2, r3.
+  const r1 = randomNonZeroInt(-6, 6);
+  let r2 = randomNonZeroInt(-6, 6);
+  while (r2 === r1) r2 = randomNonZeroInt(-6, 6);
+  let r3 = randomNonZeroInt(-6, 6);
+  while (r3 === r1 || r3 === r2) r3 = randomNonZeroInt(-6, 6);
+  const roots = [r1, r2, r3].sort((a, b) => a - b);
+  const factorStr = (r: number): string => `(x ${r >= 0 ? '-' : '+'} ${Math.abs(r)})`;
+  return g7Wrap(difficulty, 'm3_polynomial_zeros', 'M3.POL.1.2', 'Zeros of a Polynomial', {
+    question: `Find all zeros of f(x) = ${factorStr(r1)}${factorStr(r2)}${factorStr(r3)}. Enter the zeros separated by commas in increasing order, e.g. "-3, 1, 4".`,
+    answer: roots.join(', '),
+    solution_steps: [
+      `Set each factor equal to zero:`,
+      `  ${factorStr(r1)} = 0 → x = ${r1}`,
+      `  ${factorStr(r2)} = 0 → x = ${r2}`,
+      `  ${factorStr(r3)} = 0 → x = ${r3}`,
+      `Zeros (in increasing order): ${roots.join(', ')}`,
+    ],
+    answer_type: 'text',
+  });
+}
+
+// 13. M3.POL.2.1 — Factor a Cubic Polynomial via Grouping
+export function generate_m3_factor_polynomial(difficulty: DifficultyLevel): GeneratedQuestion {
+  // ax³ + ax² + bx + b = a x² (x + 1) + b (x + 1) = (a x² + b)(x + 1) — too rigid
+  // Use form x³ + ax² + bx + ab → x²(x + a) + b(x + a) = (x² + b)(x + a)
+  const a = randomNonZeroInt(-5, 5);
+  const b = randomNonZeroInt(-5, 5);
+  // Polynomial: x³ + a x² + b x + a b
+  const c2 = a;
+  const c1 = b;
+  const c0 = a * b;
+  const polyStr = `x³ ${c2 >= 0 ? '+' : '-'} ${Math.abs(c2)}x² ${c1 >= 0 ? '+' : '-'} ${Math.abs(c1)}x ${c0 >= 0 ? '+' : '-'} ${Math.abs(c0)}`;
+  const answer = `(x ${a >= 0 ? '+' : '-'} ${Math.abs(a)})(x² ${b >= 0 ? '+' : '-'} ${Math.abs(b)})`;
+  return g7Wrap(difficulty, 'm3_factor_polynomial', 'M3.POL.2.1', 'Factoring Polynomials by Grouping', {
+    question: `Factor by grouping: ${polyStr}`,
+    answer,
+    solution_steps: [
+      `Group the first two and last two terms: (x³ ${c2 >= 0 ? '+' : '-'} ${Math.abs(c2)}x²) + (${c1 >= 0 ? '' : '-'}${Math.abs(c1)}x ${c0 >= 0 ? '+' : '-'} ${Math.abs(c0)})`,
+      `Factor each group: x²(x ${a >= 0 ? '+' : '-'} ${Math.abs(a)}) ${b >= 0 ? '+' : '-'} ${Math.abs(b)}(x ${a >= 0 ? '+' : '-'} ${Math.abs(a)})`,
+      `Factor out the common binomial (x ${a >= 0 ? '+' : '-'} ${Math.abs(a)}):`,
+      `Result: ${answer}`,
+    ],
+    answer_type: 'expression',
+  });
+}
+
+// 14. M3.POL.2.2 — Polynomial Division (Synthetic)
+export function generate_m3_divide_polynomial(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Divide a cubic by (x - r) where r is a known root → quotient is a quadratic.
+  // Choose quotient first: x² + p x + q, divisor (x - r). Dividend = (x²+px+q)(x-r).
+  const r = randomNonZeroInt(-4, 4);
+  const p = randomNonZeroInt(-5, 5);
+  const q = randomNonZeroInt(-8, 8);
+  // (x² + px + q)(x - r) = x³ + (p - r)x² + (q - p·r)x + (-r·q)
+  const a2 = p - r;
+  const a1 = q - p * r;
+  const a0 = -r * q;
+  const dividend = `x³ ${a2 >= 0 ? '+' : '-'} ${Math.abs(a2)}x² ${a1 >= 0 ? '+' : '-'} ${Math.abs(a1)}x ${a0 >= 0 ? '+' : '-'} ${Math.abs(a0)}`;
+  const divisor = `(x ${r >= 0 ? '-' : '+'} ${Math.abs(r)})`;
+  const quotient = `x² ${p >= 0 ? '+' : '-'} ${Math.abs(p)}x ${q >= 0 ? '+' : '-'} ${Math.abs(q)}`;
+  return g7Wrap(difficulty, 'm3_divide_polynomial', 'M3.POL.2.2', 'Polynomial Division', {
+    question: `Divide using synthetic or long division: (${dividend}) ÷ ${divisor}\n\nEnter the quotient (the remainder is 0).`,
+    answer: quotient,
+    solution_steps: [
+      `Use synthetic division with r = ${r}.`,
+      `Bring down the leading coefficient (1), multiply by ${r}, add to next coefficient.`,
+      `Coefficients of quotient: 1, ${p}, ${q}; remainder = 0.`,
+      `Quotient: ${quotient}`,
+    ],
+    answer_type: 'expression',
+  });
+}
+
+// 15. M3.POL.2.3 — Rational Root Theorem (Possible Roots)
+export function generate_m3_rational_root_theorem(difficulty: DifficultyLevel): GeneratedQuestion {
+  // List possible rational roots p/q where p | constant and q | leading coefficient.
+  const items: Array<{ poly: string; lead: number; constant: number; ps: number[]; qs: number[] }> = [
+    { poly: 'x³ + 2x² − 5x + 6',  lead: 1, constant: 6,  ps: [1, 2, 3, 6],      qs: [1] },
+    { poly: '2x³ − 3x² + x − 4',  lead: 2, constant: 4,  ps: [1, 2, 4],         qs: [1, 2] },
+    { poly: 'x⁴ − 5x² + 4',       lead: 1, constant: 4,  ps: [1, 2, 4],         qs: [1] },
+    { poly: '3x³ + 2x² − 5x + 2', lead: 3, constant: 2,  ps: [1, 2],            qs: [1, 3] },
+    { poly: 'x³ − 7x + 6',        lead: 1, constant: 6,  ps: [1, 2, 3, 6],      qs: [1] },
+  ];
+  const it = items[randomInt(0, items.length - 1)]!;
+  // Build the set of possible roots (±p/q), simplify and dedupe.
+  const set = new Set<string>();
+  for (const p of it.ps) {
+    for (const q of it.qs) {
+      const [num, den] = simplifyFraction(p, q);
+      const v = den === 1 ? `${num}` : `${num}/${den}`;
+      set.add(v);
+      set.add(`-${v}`);
+    }
+  }
+  // Sort by absolute value, integers first then fractions.
+  const sorted = Array.from(set).sort((a, b) => Math.abs(parseFloat(a)) - Math.abs(parseFloat(b)) || a.localeCompare(b));
+  const answer = sorted.join(', ');
+  return g7Wrap(difficulty, 'm3_rational_root_theorem', 'M3.POL.2.3', 'Rational Root Theorem', {
+    question: `Use the Rational Root Theorem to list all POSSIBLE rational roots of:\n\nf(x) = ${it.poly}\n\nEnter the roots separated by commas (use ± in writing or list both signs explicitly).`,
+    answer,
+    solution_steps: [
+      `Identify p = factors of the constant (${it.constant}): ±${it.ps.join(', ±')}.`,
+      `Identify q = factors of the leading coefficient (${it.lead}): ±${it.qs.join(', ±')}.`,
+      `Possible rational roots are ±p/q (all combinations, simplified, deduplicated).`,
+      `List: ${answer}`,
+    ],
+    answer_type: 'text',
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BATCH 4: Rational & Radical Functions, Complex Numbers (M3)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// 16. M3.RAT.1.1 — Simplify a Rational Expression
+export function generate_m3_simplify_rational_expr(difficulty: DifficultyLevel): GeneratedQuestion {
+  // (x² + (a+b)x + ab) / (x + a) = x + b  when (x + a) is a factor of numerator.
+  const a = randomNonZeroInt(-7, 7);
+  let b = randomNonZeroInt(-7, 7);
+  while (a === b) b = randomNonZeroInt(-7, 7);
+  const sumAB = a + b;
+  const prodAB = a * b;
+  const num = `x² ${sumAB >= 0 ? '+' : '-'} ${Math.abs(sumAB)}x ${prodAB >= 0 ? '+' : '-'} ${Math.abs(prodAB)}`;
+  const den = `x ${a >= 0 ? '+' : '-'} ${Math.abs(a)}`;
+  const answer = b >= 0 ? `x + ${b}` : `x - ${Math.abs(b)}`;
+  return g7Wrap(difficulty, 'm3_simplify_rational_expr', 'M3.RAT.1.1', 'Simplifying Rational Expressions', {
+    question: `Simplify the rational expression:\n\n(${num}) / (${den})`,
+    answer,
+    solution_steps: [
+      `Factor the numerator: (x ${a >= 0 ? '+' : '-'} ${Math.abs(a)})(x ${b >= 0 ? '+' : '-'} ${Math.abs(b)})`,
+      `Cancel the common factor (x ${a >= 0 ? '+' : '-'} ${Math.abs(a)}).`,
+      `Result: ${answer} (where x ≠ ${-a})`,
+    ],
+    answer_type: 'expression',
+  });
+}
+
+// 17. M3.RAT.2.1 — Solve a Rational Equation
+export function generate_m3_solve_rational_eq(difficulty: DifficultyLevel): GeneratedQuestion {
+  // x/a = b/c  →  x = a·b/c. Pick a, b, c so x is an integer.
+  const c = randomNonZeroInt(2, 7);
+  const x = randomNonZeroInt(-10, 10);
+  const a = c * randomNonZeroInt(2, 5);              // a is a multiple of c
+  const b = x * c / a * c;                            // ensure clean rational, fallback
+  // Easier: just choose x, a, c and back-compute b
+  const aClean = randomNonZeroInt(2, 6);
+  const bClean = x * c / aClean;
+  if (!Number.isInteger(bClean)) {
+    // re-roll with clean numerics: set b = x*c/aClean made integer by choosing aClean | (x*c)
+    return generate_m3_solve_rational_eq(difficulty);
+  }
+  return g7Wrap(difficulty, 'm3_solve_rational_eq', 'M3.RAT.2.1', 'Solving Rational Equations', {
+    question: `Solve for x:  x/${aClean} = ${bClean}/${c}`,
+    answer: String(x),
+    solution_steps: [
+      `Cross-multiply: x · ${c} = ${aClean} · ${bClean}`,
+      `${c}x = ${aClean * bClean}`,
+      `x = ${aClean * bClean} / ${c} = ${x}`,
+    ],
+    answer_type: 'decimal_or_fraction',
+  });
+}
+
+// 18. M3.RAD.1.1 — Simplify a Radical Expression
+export function generate_m3_simplify_radical_expr(difficulty: DifficultyLevel): GeneratedQuestion {
+  // √(k² · n) → k√n where n is square-free.
+  const k = randomInt(2, 6);
+  const n = [2, 3, 5, 6, 7, 10, 11, 13, 14, 15][randomInt(0, 9)]!;
+  const radicand = k * k * n;
+  return g7Wrap(difficulty, 'm3_simplify_radical_expr', 'M3.RAD.1.1', 'Simplifying Radicals', {
+    question: `Simplify: √${radicand}`,
+    answer: `${k}√${n}`,
+    solution_steps: [
+      `Factor the radicand: ${radicand} = ${k * k} · ${n}.`,
+      `√${radicand} = √(${k}² · ${n}) = ${k} · √${n}.`,
+      `Result: ${k}√${n}.`,
+    ],
+    answer_type: 'expression',
+  });
+}
+
+// 19. M3.RAD.2.1 — Solve a Radical Equation
+export function generate_m3_solve_radical_eq(difficulty: DifficultyLevel): GeneratedQuestion {
+  // √(ax + b) = c  →  ax + b = c²  →  x = (c² − b)/a, with x in domain.
+  const c = randomInt(2, 8);
+  const a = randomNonZeroInt(1, 4);
+  const x = randomInt(1, 12);
+  const b = c * c - a * x;                            // back-solve
+  if (a * x + b < 0) return generate_m3_solve_radical_eq(difficulty);
+  return g7Wrap(difficulty, 'm3_solve_radical_eq', 'M3.RAD.2.1', 'Solving Radical Equations', {
+    question: `Solve for x:  √(${a}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)}) = ${c}`,
+    answer: String(x),
+    solution_steps: [
+      `Square both sides: ${a}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)} = ${c * c}.`,
+      `Subtract ${b} from both sides: ${a}x = ${c * c - b}.`,
+      `Divide by ${a}: x = ${x}.`,
+      `Check: √(${a}·${x} ${b >= 0 ? '+' : '-'} ${Math.abs(b)}) = √${c * c} = ${c} ✓`,
+    ],
+    answer_type: 'decimal_or_fraction',
+  });
+}
+
+// 20. M3.CIR.1.1 — Operations with Complex Numbers
+export function generate_m3_complex_numbers(difficulty: DifficultyLevel): GeneratedQuestion {
+  const a = randomNonZeroInt(-7, 7);
+  const b = randomNonZeroInt(-7, 7);
+  const c = randomNonZeroInt(-7, 7);
+  const d = randomNonZeroInt(-7, 7);
+  const op = (['add', 'subtract', 'multiply'] as const)[randomInt(0, 2)]!;
+  const fmt = (re: number, im: number): string => {
+    if (im === 0) return `${re}`;
+    if (re === 0) return im === 1 ? 'i' : im === -1 ? '-i' : `${im}i`;
+    const imPart = Math.abs(im) === 1 ? '' : `${Math.abs(im)}`;
+    return `${re} ${im >= 0 ? '+' : '-'} ${imPart}i`;
+  };
+  if (op === 'add') {
+    return g7Wrap(difficulty, 'm3_complex_numbers', 'M3.CIR.1.1', 'Complex Number Operations', {
+      question: `Simplify: (${fmt(a, b)}) + (${fmt(c, d)})`,
+      answer: fmt(a + c, b + d),
+      solution_steps: [
+        `Add real parts: ${a} + ${c} = ${a + c}.`,
+        `Add imaginary parts: ${b} + ${d} = ${b + d}.`,
+        `Result: ${fmt(a + c, b + d)}.`,
+      ],
+      answer_type: 'expression',
+    });
+  }
+  if (op === 'subtract') {
+    return g7Wrap(difficulty, 'm3_complex_numbers', 'M3.CIR.1.1', 'Complex Number Operations', {
+      question: `Simplify: (${fmt(a, b)}) − (${fmt(c, d)})`,
+      answer: fmt(a - c, b - d),
+      solution_steps: [
+        `Subtract real parts: ${a} − ${c} = ${a - c}.`,
+        `Subtract imaginary parts: ${b} − ${d} = ${b - d}.`,
+        `Result: ${fmt(a - c, b - d)}.`,
+      ],
+      answer_type: 'expression',
+    });
+  }
+  // multiply: (a + bi)(c + di) = (ac - bd) + (ad + bc)i
+  const re = a * c - b * d;
+  const im = a * d + b * c;
+  return g7Wrap(difficulty, 'm3_complex_numbers', 'M3.CIR.1.1', 'Complex Number Operations', {
+    question: `Simplify: (${fmt(a, b)})(${fmt(c, d)})`,
+    answer: fmt(re, im),
+    solution_steps: [
+      `FOIL: ${a}·${c} + ${a}·${d}i + ${b}·${c}i + ${b}·${d}·i²`,
+      `Use i² = -1: ${a * c} + ${a * d}i + ${b * c}i − ${b * d}`,
+      `Combine real parts: ${a * c} − ${b * d} = ${re}.`,
+      `Combine imaginary parts: ${a * d} + ${b * c} = ${im}.`,
+      `Result: ${fmt(re, im)}.`,
+    ],
+    answer_type: 'expression',
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BATCH 5: Trigonometry & Statistics (M3)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// 21. M3.TRIG.1.1 — Unit Circle Values
+export function generate_m3_unit_circle_values(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Curated standard angles; answers stored in exact form.
+  const items: Array<{ angle: string; sin: string; cos: string; tan: string }> = [
+    { angle: '0',     sin: '0',    cos: '1',    tan: '0'         },
+    { angle: 'π/6',   sin: '1/2',  cos: '√3/2', tan: '√3/3'      },
+    { angle: 'π/4',   sin: '√2/2', cos: '√2/2', tan: '1'         },
+    { angle: 'π/3',   sin: '√3/2', cos: '1/2',  tan: '√3'        },
+    { angle: 'π/2',   sin: '1',    cos: '0',    tan: 'undefined' },
+    { angle: '2π/3',  sin: '√3/2', cos: '-1/2', tan: '-√3'       },
+    { angle: '3π/4',  sin: '√2/2', cos: '-√2/2',tan: '-1'        },
+    { angle: '5π/6',  sin: '1/2',  cos: '-√3/2',tan: '-√3/3'     },
+    { angle: 'π',     sin: '0',    cos: '-1',   tan: '0'         },
+    { angle: '7π/6',  sin: '-1/2', cos: '-√3/2',tan: '√3/3'      },
+    { angle: '3π/2',  sin: '-1',   cos: '0',    tan: 'undefined' },
+  ];
+  const it = items[randomInt(0, items.length - 1)]!;
+  const trig = (['sin', 'cos', 'tan'] as const)[randomInt(0, 2)]!;
+  const answer = trig === 'sin' ? it.sin : trig === 'cos' ? it.cos : it.tan;
+  return g7Wrap(difficulty, 'm3_unit_circle_values', 'M3.TRIG.1.1', 'Unit Circle Values', {
+    question: `Evaluate: ${trig}(${it.angle})`,
+    answer,
+    solution_steps: [
+      `Use the unit-circle definition for ${trig} at angle ${it.angle}.`,
+      `${trig}(${it.angle}) = ${answer}.`,
+    ],
+    answer_type: 'text',
+  });
+}
+
+// 22. M3.TRIG.2.1 — Solve a Trig Equation on [0, 2π)
+export function generate_m3_trig_equation_solve(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Curated equations with known solutions on [0, 2π).
+  const items: Array<{ equation: string; answer: string; steps: string[] }> = [
+    {
+      equation: 'sin(x) = 1/2',
+      answer: 'π/6, 5π/6',
+      steps: [
+        `sin is 1/2 in the first and second quadrants.`,
+        `Reference angle is π/6.`,
+        `Solutions on [0, 2π): π/6 and 5π/6.`,
+      ],
+    },
+    {
+      equation: 'cos(x) = 1/2',
+      answer: 'π/3, 5π/3',
+      steps: [
+        `cos is 1/2 in the first and fourth quadrants.`,
+        `Reference angle is π/3.`,
+        `Solutions on [0, 2π): π/3 and 5π/3.`,
+      ],
+    },
+    {
+      equation: 'cos(x) = 0',
+      answer: 'π/2, 3π/2',
+      steps: [
+        `cos is 0 at the top and bottom of the unit circle.`,
+        `Solutions on [0, 2π): π/2 and 3π/2.`,
+      ],
+    },
+    {
+      equation: 'sin(x) = 0',
+      answer: '0, π',
+      steps: [
+        `sin is 0 on the x-axis.`,
+        `Solutions on [0, 2π): 0 and π.`,
+      ],
+    },
+    {
+      equation: 'tan(x) = 1',
+      answer: 'π/4, 5π/4',
+      steps: [
+        `tan = 1 when sin = cos, in quadrants I and III.`,
+        `Solutions on [0, 2π): π/4 and 5π/4.`,
+      ],
+    },
+    {
+      equation: 'sin(x) = -1/2',
+      answer: '7π/6, 11π/6',
+      steps: [
+        `sin is negative in quadrants III and IV.`,
+        `Reference angle is π/6.`,
+        `Solutions on [0, 2π): 7π/6 and 11π/6.`,
+      ],
+    },
+  ];
+  const it = items[randomInt(0, items.length - 1)]!;
+  return g7Wrap(difficulty, 'm3_trig_equation_solve', 'M3.TRIG.2.1', 'Solving Trigonometric Equations', {
+    question: `Solve on [0, 2π):  ${it.equation}\n\nEnter the solutions separated by commas, in increasing order.`,
+    answer: it.answer,
+    solution_steps: it.steps,
+    answer_type: 'text',
+  });
+}
+
+// 23. M3.TRIG.3.1 — Law of Sines (Find a Missing Side)
+export function generate_m3_law_of_sines(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Use known angles whose sines are exact, then back-compute side ratios.
+  const A = [30, 45, 60][randomInt(0, 2)]!;
+  const B = [30, 45, 60][randomInt(0, 2)]!;
+  if (A + B >= 170) return generate_m3_law_of_sines(difficulty);   // ensure C > 10°
+  const a = randomInt(5, 20);                                       // side opposite A
+  const sinA = Math.sin(A * Math.PI / 180);
+  const sinB = Math.sin(B * Math.PI / 180);
+  const b = +(a * sinB / sinA).toFixed(2);                          // side opposite B
+  return g7Wrap(difficulty, 'm3_law_of_sines', 'M3.TRIG.3.1', 'Law of Sines', {
+    question: `In a triangle, angle A = ${A}° (opposite side a = ${a}) and angle B = ${B}°. Find side b (opposite angle B). Round to 2 decimal places.`,
+    answer: b.toFixed(2),
+    solution_steps: [
+      `Law of Sines: a / sin(A) = b / sin(B).`,
+      `Solve for b: b = a · sin(B) / sin(A).`,
+      `b = ${a} · sin(${B}°) / sin(${A}°) = ${a} · ${sinB.toFixed(4)} / ${sinA.toFixed(4)}.`,
+      `b ≈ ${b.toFixed(2)}.`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// 24. M3.PS.1.1 — Empirical Rule (Normal Distribution Percentages)
+export function generate_m3_normal_distribution(difficulty: DifficultyLevel): GeneratedQuestion {
+  // 68 – 95 – 99.7 rule percentages for z-score windows.
+  const items: Array<{ window: string; pct: string; steps: string[] }> = [
+    {
+      window: 'within 1 standard deviation of the mean',
+      pct: '68',
+      steps: [`The empirical (68–95–99.7) rule: about 68% of values lie within ±1 SD.`],
+    },
+    {
+      window: 'within 2 standard deviations of the mean',
+      pct: '95',
+      steps: [`The empirical rule: about 95% of values lie within ±2 SD.`],
+    },
+    {
+      window: 'within 3 standard deviations of the mean',
+      pct: '99.7',
+      steps: [`The empirical rule: about 99.7% of values lie within ±3 SD.`],
+    },
+    {
+      window: 'between 1 and 2 standard deviations above the mean',
+      pct: '13.5',
+      steps: [
+        `Total between ±2 SD is 95%; between ±1 SD is 68%.`,
+        `Outside ±1 SD but within ±2 SD = 95% − 68% = 27%.`,
+        `Symmetry: one side is 27% / 2 = 13.5%.`,
+      ],
+    },
+    {
+      window: 'more than 2 standard deviations from the mean',
+      pct: '5',
+      steps: [
+        `Within ±2 SD = 95%, so outside ±2 SD = 100% − 95% = 5%.`,
+      ],
+    },
+    {
+      window: 'more than 1 standard deviation above the mean',
+      pct: '16',
+      steps: [
+        `Within ±1 SD = 68%, so outside = 32%. Each tail is 32% / 2 = 16%.`,
+      ],
+    },
+  ];
+  const it = items[randomInt(0, items.length - 1)]!;
+  return g7Wrap(difficulty, 'm3_normal_distribution', 'M3.PS.1.1', 'Empirical Rule (Normal Distribution)', {
+    question: `For a normal distribution, what percent of values fall ${it.window}? Enter the percent value (e.g., 68 for 68%).`,
+    answer: it.pct,
+    solution_steps: it.steps,
+    answer_type: 'decimal',
+  });
+}
+
+// 25. M3.PS.2.1 — Confidence Interval
+export function generate_m3_confidence_interval(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Compute a 95% CI for a mean using z* = 1.96 and a sample standard error.
+  const xbar = randomInt(40, 80);
+  const sigma = randomInt(4, 12);
+  const n = [25, 36, 49, 64, 100][randomInt(0, 4)]!;
+  const se = sigma / Math.sqrt(n);
+  const moe = +(1.96 * se).toFixed(2);
+  const lo = +(xbar - moe).toFixed(2);
+  const hi = +(xbar + moe).toFixed(2);
+  return g7Wrap(difficulty, 'm3_confidence_interval', 'M3.PS.2.1', 'Confidence Interval', {
+    question: `A sample of size n = ${n} has mean x̄ = ${xbar} and population standard deviation σ = ${sigma}. Construct a 95% confidence interval for the population mean. Use z* = 1.96. Enter the interval as (lower, upper), rounded to 2 decimal places.`,
+    answer: `(${lo.toFixed(2)}, ${hi.toFixed(2)})`,
+    solution_steps: [
+      `Standard error: SE = σ / √n = ${sigma} / √${n} ≈ ${se.toFixed(4)}.`,
+      `Margin of error: MOE = 1.96 · SE ≈ ${moe.toFixed(2)}.`,
+      `Interval: x̄ ± MOE = ${xbar} ± ${moe.toFixed(2)}.`,
+      `CI ≈ (${lo.toFixed(2)}, ${hi.toFixed(2)}).`,
+    ],
+    answer_type: 'interval',
+  });
+}
+
+// =============================================================================
 // GENERATOR REGISTRY - ALL 54 GENERATORS
 // =============================================================================
 
@@ -4629,6 +5527,38 @@ export const GENERATORS: Record<string, (difficulty: DifficultyLevel) => Generat
   alg1_multiply_polynomials:      generate_alg1_multiply_polynomials,
   alg1_factor_trinomial:          generate_alg1_factor_trinomial,
   alg1_quadratic_formula:         generate_alg1_quadratic_formula,
+
+  // ─── NC MATH 3 (Varsity+ division) ─────────────────────────────────────────
+  // BATCH 1: Functions & Inverses (5)
+  m3_evaluate_function:           generate_m3_evaluate_function,
+  m3_compose_functions:           generate_m3_compose_functions,
+  m3_inverse_function:            generate_m3_inverse_function,
+  m3_domain_range:                generate_m3_domain_range,
+  m3_transformation_describe:     generate_m3_transformation_describe,
+  // BATCH 2: Exponential & Logarithmic (5)
+  m3_evaluate_exponential:        generate_m3_evaluate_exponential,
+  m3_solve_exponential_eq:        generate_m3_solve_exponential_eq,
+  m3_evaluate_logarithm:          generate_m3_evaluate_logarithm,
+  m3_expand_condense_log:         generate_m3_expand_condense_log,
+  m3_exponential_growth_decay:    generate_m3_exponential_growth_decay,
+  // BATCH 3: Polynomial Functions (5)
+  m3_polynomial_end_behavior:     generate_m3_polynomial_end_behavior,
+  m3_polynomial_zeros:            generate_m3_polynomial_zeros,
+  m3_factor_polynomial:           generate_m3_factor_polynomial,
+  m3_divide_polynomial:           generate_m3_divide_polynomial,
+  m3_rational_root_theorem:       generate_m3_rational_root_theorem,
+  // BATCH 4: Rational, Radical, Complex (5)
+  m3_simplify_rational_expr:      generate_m3_simplify_rational_expr,
+  m3_solve_rational_eq:           generate_m3_solve_rational_eq,
+  m3_simplify_radical_expr:       generate_m3_simplify_radical_expr,
+  m3_solve_radical_eq:            generate_m3_solve_radical_eq,
+  m3_complex_numbers:             generate_m3_complex_numbers,
+  // BATCH 5: Trigonometry & Statistics (5)
+  m3_unit_circle_values:          generate_m3_unit_circle_values,
+  m3_trig_equation_solve:         generate_m3_trig_equation_solve,
+  m3_law_of_sines:                generate_m3_law_of_sines,
+  m3_normal_distribution:         generate_m3_normal_distribution,
+  m3_confidence_interval:         generate_m3_confidence_interval,
 };
 
 // Helper to get all generator types
