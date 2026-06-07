@@ -52,7 +52,12 @@ import {
 // TYPES
 // -----------------------------------------------------------------------------
 
-type DifficultyTier = 'bronze' | 'silver' | 'gold' | 'platinum';
+// Heat preset keys. Replaces the legacy Bronze/Silver/Gold/Platinum tiers.
+// Each preset bundles a depth range with default question count and
+// duration — selecting a preset auto-populates the manual override sliders
+// in Step 5. Variable name `difficulty` retained throughout the form so
+// the rename stays minimally invasive.
+type DifficultyTier = 'warmup' | 'standard' | 'challenge' | 'championship';
 
 interface DivisionRow {
   id: string;
@@ -67,7 +72,15 @@ interface CourseRow {
   id: string;
   name: string;
   code: string;
+  /** False → course exists but no generators are seeded yet ("Coming Soon"). */
+  available?: boolean;
 }
+
+// FIX 3 — Courses that exist in the catalog but have 0 active generators.
+// Surfaced as grayed-out "Coming Soon" tiles instead of being hidden so
+// teachers can see the roadmap. Update this set when those pools are
+// implemented in src/lib/competition/generators.ts.
+const COURSES_WITHOUT_GENERATORS = new Set<string>(['NCM2', 'ALG2', 'APPC']);
 
 interface UnitTopicRow {
   id: string;
@@ -146,11 +159,45 @@ const HEAT_TYPE_MIX: Record<
   official:     { fr_ratio: 0.4, mc_ratio: 0.6, mc_visual_share: 0.5 },
 };
 
-const DIFFICULTY_TIERS: Record<DifficultyTier, { label: string; depthMin: number; depthMax: number; pill: string; accent: string }> = {
-  bronze:   { label: 'Bronze',   depthMin: 1, depthMax: 2, pill: 'text-amber-700 bg-amber-50 border-amber-200',   accent: 'text-amber-700 border-amber-400 bg-amber-50' },
-  silver:   { label: 'Silver',   depthMin: 2, depthMax: 3, pill: 'text-slate-700 bg-slate-50 border-slate-200',    accent: 'text-slate-700 border-slate-400 bg-slate-50' },
-  gold:     { label: 'Gold',     depthMin: 3, depthMax: 4, pill: 'text-yellow-700 bg-yellow-50 border-yellow-200', accent: 'text-yellow-700 border-yellow-400 bg-yellow-50' },
-  platinum: { label: 'Platinum', depthMin: 4, depthMax: 4, pill: 'text-indigo-700 bg-indigo-50 border-indigo-200', accent: 'text-indigo-700 border-indigo-400 bg-indigo-50' },
+// Heat presets — each one drives BOTH the depth range and the default
+// question count + duration. Selecting a preset auto-populates the manual
+// override sliders in Step 5; teachers can override after.
+const DIFFICULTY_TIERS: Record<
+  DifficultyTier,
+  { label: string; depthMin: number; depthMax: number; questions: number; minutes: number; desc: string; accent: string; pill: string }
+> = {
+  warmup: {
+    label: 'Warm-Up',
+    depthMin: 1, depthMax: 2,
+    questions: 10, minutes: 10,
+    desc: '10 Q · 10 min · gentle entry',
+    pill:   'text-emerald-700 bg-emerald-50 border-emerald-200',
+    accent: 'text-emerald-700 border-emerald-400 bg-emerald-50',
+  },
+  standard: {
+    label: 'Standard',
+    depthMin: 1, depthMax: 3,
+    questions: 15, minutes: 20,
+    desc: '15 Q · 20 min · balanced',
+    pill:   'text-sky-700 bg-sky-50 border-sky-200',
+    accent: 'text-sky-700 border-sky-400 bg-sky-50',
+  },
+  challenge: {
+    label: 'Challenge',
+    depthMin: 2, depthMax: 4,
+    questions: 20, minutes: 25,
+    desc: '20 Q · 25 min · stretch',
+    pill:   'text-amber-700 bg-amber-50 border-amber-200',
+    accent: 'text-amber-700 border-amber-400 bg-amber-50',
+  },
+  championship: {
+    label: 'Championship',
+    depthMin: 3, depthMax: 4,
+    questions: 25, minutes: 30,
+    desc: '25 Q · 30 min · high stakes',
+    pill:   'text-indigo-700 bg-indigo-50 border-indigo-200',
+    accent: 'text-indigo-700 border-indigo-400 bg-indigo-50',
+  },
 };
 
 const INTEGRITY_LEVELS: Record<IntegrityLevel, { label: string; icon: React.ReactNode; desc: string; config: IntegrityConfig }> = {
@@ -281,11 +328,11 @@ export default function CreateHeatPage() {
   const [selectedUnitTopic, setSelectedUnitTopic] = useState<UnitTopicRow | 'mixed' | null>(null);
 
   // ── Heat config state ───────────────────────────────────────────────────
-  const [difficulty, setDifficulty] = useState<DifficultyTier>('silver');
+  const [difficulty, setDifficulty] = useState<DifficultyTier>('standard');
   const [heatType, setHeatType] = useState<HeatType>('sprint');
   const [integrityLevel, setIntegrityLevel] = useState<IntegrityLevel>('practice');
-  const [questionCount, setQuestionCount] = useState<number>(HEAT_TYPE_META.sprint.questions);
-  const [durationMinutes, setDurationMinutes] = useState<number>(HEAT_TYPE_META.sprint.minutes);
+  const [questionCount, setQuestionCount] = useState<number>(DIFFICULTY_TIERS.standard.questions);
+  const [durationMinutes, setDurationMinutes] = useState<number>(DIFFICULTY_TIERS.standard.minutes);
 
   // ── UI state ────────────────────────────────────────────────────────────
   const [loadingCurriculum, setLoadingCurriculum] = useState(true);
@@ -395,11 +442,17 @@ export default function CreateHeatPage() {
         return;
       }
 
-      const rows = (data ?? []) as CourseRow[];
+      // Tag each course with availability (FIX 3). Unavailable courses stay
+      // in the list but are rendered as disabled "Coming Soon" tiles.
+      const rows: CourseRow[] = (data ?? []).map((c: any) => ({
+        ...(c as CourseRow),
+        available: !COURSES_WITHOUT_GENERATORS.has(c.code),
+      }));
 
       setCourses(rows);
-      // Auto-select if only one course
-      setSelectedCourse(rows.length === 1 ? rows[0] : rows[0] ?? null);
+      // Auto-select the first AVAILABLE course (skip Coming-Soon entries).
+      const firstAvailable = rows.find((c) => c.available !== false) ?? null;
+      setSelectedCourse(firstAvailable);
       setLoadingCourses(false);
     }
     loadCourses();
@@ -443,12 +496,16 @@ export default function CreateHeatPage() {
     };
   }, [selectedCourse, supabase]);
 
-  // ── Keep questionCount/durationMinutes synced with the chosen preset ───
+  // ── Preset → auto-set question count + duration ────────────────────────
+  // The 4 heat presets (Warm-Up / Standard / Challenge / Championship) own
+  // the default question count and duration. Teachers can still override
+  // via the Step 5 sliders below — those edits stick because this effect
+  // only fires when `difficulty` itself changes.
   useEffect(() => {
-    const preset = HEAT_TYPE_META[heatType];
+    const preset = DIFFICULTY_TIERS[difficulty];
     setQuestionCount(preset.questions);
     setDurationMinutes(preset.minutes);
-  }, [heatType]);
+  }, [difficulty]);
 
   // ── Derived state ───────────────────────────────────────────────────────
   const currentIntegrity = INTEGRITY_LEVELS[integrityLevel];
@@ -640,19 +697,29 @@ export default function CreateHeatPage() {
             <div className="flex flex-wrap gap-2">
               {courses.map((c) => {
                 const isSelected = selectedCourse?.id === c.id;
+                const isAvailable = c.available !== false;
                 return (
                   <button
                     key={c.id}
                     type="button"
-                    onClick={() => setSelectedCourse(c)}
-                    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border-2 text-sm font-medium transition-all ${
-                      isSelected
+                    onClick={() => isAvailable && setSelectedCourse(c)}
+                    disabled={!isAvailable}
+                    title={isAvailable ? undefined : 'Coming Soon — generators for this course are not yet implemented.'}
+                    className={`relative flex items-center gap-2 px-4 py-2.5 rounded-xl border-2 text-sm font-medium transition-all ${
+                      !isAvailable
+                        ? 'border-gray-100 bg-gray-50 text-gray-400 cursor-not-allowed'
+                        : isSelected
                         ? 'border-indigo-500 bg-indigo-50 text-indigo-900'
                         : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'
                     }`}
                   >
                     <BookOpen className="w-4 h-4" />
                     {c.name}
+                    {!isAvailable && (
+                      <span className="ml-1 text-[9px] font-bold uppercase tracking-wider text-gray-400 bg-gray-100 border border-gray-200 rounded-full px-1.5 py-0.5">
+                        Coming Soon
+                      </span>
+                    )}
                   </button>
                 );
               })}
@@ -709,10 +776,15 @@ export default function CreateHeatPage() {
           )}
         </SectionCard>
 
-        {/* ── Step 4: Difficulty ──────────────────────────────────────── */}
-        <SectionCard step={4} title="Difficulty" hint="Sets the depth range for question generation." locked={!selectedUnitTopic}>
+        {/* ── Step 4: Heat Preset (replaces legacy Bronze/Silver/Gold/Platinum tiers) */}
+        <SectionCard
+          step={4}
+          title="Heat Preset"
+          hint="Picks the depth range, default question count, and duration. Override the count and duration in Step 5 if you want."
+          locked={!selectedUnitTopic}
+        >
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {(Object.entries(DIFFICULTY_TIERS) as [DifficultyTier, typeof DIFFICULTY_TIERS[DifficultyTier]][]).map(([key, tier]) => {
+            {(Object.entries(DIFFICULTY_TIERS) as [DifficultyTier, typeof DIFFICULTY_TIERS[DifficultyTier]][]).map(([key, preset]) => {
               const isSelected = difficulty === key;
               return (
                 <button
@@ -720,12 +792,13 @@ export default function CreateHeatPage() {
                   type="button"
                   onClick={() => setDifficulty(key)}
                   className={`p-4 rounded-xl border-2 text-center font-semibold transition-all ${
-                    isSelected ? `${tier.accent}` : 'border-gray-200 text-gray-400 hover:border-gray-300'
+                    isSelected ? `${preset.accent}` : 'border-gray-200 text-gray-400 hover:border-gray-300'
                   }`}
                 >
-                  <p className="text-sm">{tier.label}</p>
-                  <p className="text-[11px] font-normal opacity-70 mt-0.5">
-                    Depth {tier.depthMin}{tier.depthMin !== tier.depthMax ? `–${tier.depthMax}` : ''}
+                  <p className="text-sm">{preset.label}</p>
+                  <p className="text-[11px] font-normal opacity-70 mt-0.5">{preset.desc}</p>
+                  <p className="text-[10px] font-normal opacity-60 mt-1">
+                    Depth {preset.depthMin}{preset.depthMin !== preset.depthMax ? `–${preset.depthMax}` : ''}
                   </p>
                 </button>
               );

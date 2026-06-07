@@ -181,6 +181,11 @@ export default function TeacherResults({ heatId, heatCode, integrityLevel }: Tea
   const [drillId, setDrillId] = useState<string | null>(null);
   const [questionCount, setQuestionCount] = useState(0);
   const [createdAt, setCreatedAt] = useState<string | null>(null);
+  // FIX 4 — header meta: course + topics covered + distinct concepts count.
+  const [courseName, setCourseName] = useState<string | null>(null);
+  const [primaryTopicName, setPrimaryTopicName] = useState<string | null>(null);
+  const [topicsCovered, setTopicsCovered] = useState<string[]>([]);
+  const [conceptsCount, setConceptsCount] = useState<number>(0);
 
   // ── Load everything ─────────────────────────────────────────────────────
   useEffect(() => {
@@ -192,7 +197,13 @@ export default function TeacherResults({ heatId, heatCode, integrityLevel }: Tea
         const [heatResult, participationsResult, awardsResult] = await Promise.all([
           supabase
             .from('heats')
-            .select('question_count, created_at')
+            .select(`
+              question_count, created_at,
+              unit_topic:unit_topic_id (
+                id, name,
+                course:course_id ( id, name )
+              )
+            `)
             .eq('id', heatId)
             .maybeSingle(),
           supabase
@@ -220,6 +231,12 @@ export default function TeacherResults({ heatId, heatCode, integrityLevel }: Tea
 
         setQuestionCount(heatResult.data?.question_count ?? 0);
         setCreatedAt(heatResult.data?.created_at ?? null);
+        // FIX 4 — header meta. Pull course name (via unit_topic→course) and
+        // the single-topic name (when the heat targeted one topic).
+        const heatMeta: any = heatResult.data;
+        const ut = heatMeta?.unit_topic;
+        setCourseName(ut?.course?.name ?? null);
+        setPrimaryTopicName(ut?.name ?? null);
 
         const awardsMap = new Map<string, AwardLevel>(
           ((awardsResult.data ?? []) as any[]).map((a) => [a.athlete_id, a.award_level])
@@ -301,6 +318,37 @@ export default function TeacherResults({ heatId, heatCode, integrityLevel }: Tea
 
           // Concept mastery aggregation
           setConceptBuckets(buildConceptBuckets(subs));
+
+          // FIX 4 — Topics covered + distinct concept count.
+          // Dedupe by question_id first so a question that 10 students each
+          // attempted only counts once.
+          const seenQuestions = new Set<string>();
+          const topicCounts = new Map<string, number>();
+          const conceptKeys = new Set<string>();
+          for (const s of subs) {
+            const q = s.heat_questions;
+            if (!q || !q.id || seenQuestions.has(q.id)) continue;
+            seenQuestions.add(q.id);
+            const concept = q.question_generators?.atomic_concepts;
+            const topicName = concept?.unit_topics?.name;
+            if (topicName) {
+              topicCounts.set(topicName, (topicCounts.get(topicName) ?? 0) + 1);
+            }
+            if (concept?.lesson_number) conceptKeys.add(concept.lesson_number);
+            else if ((q.solution_steps as any)?.kind === 'visual') {
+              const k = (q.solution_steps as any)?.generator_key
+                ?? (q.solution_steps as any)?.concept_name
+                ?? 'visual';
+              conceptKeys.add(`visual:${k}`);
+            } else if ((q.solution_steps as any)?.kind === 'static') {
+              conceptKeys.add(`static:${q.id}`);
+            }
+          }
+          const ranked = Array.from(topicCounts.entries())
+            .sort((a, b) => b[1] - a[1])
+            .map(([name]) => name);
+          setTopicsCovered(ranked);
+          setConceptsCount(conceptKeys.size);
         }
       } catch (err: any) {
         if (!cancelled) setError(err?.message ?? 'Failed to load results');
@@ -411,23 +459,40 @@ export default function TeacherResults({ heatId, heatCode, integrityLevel }: Tea
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-950 via-indigo-900 to-purple-900 px-4 py-8 md:py-10">
       <div className="max-w-5xl mx-auto">
-        {/* Header */}
+        {/* Header — FIX 4: course + topics + concept count + integrity */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-6">
-          <div>
+          <div className="min-w-0">
             <p className="text-xs text-indigo-300 uppercase tracking-[0.3em] mb-1">Results</p>
             <h1 className="text-2xl md:text-3xl font-bold text-white">
               Heat <span className="font-mono">{heatCode}</span>
             </h1>
-            <p className="text-indigo-200 text-sm mt-1 flex items-center gap-1.5 flex-wrap">
+            {/* Date · course */}
+            {(formatHeatDate(createdAt) || courseName) && (
+              <p className="text-indigo-200 text-sm mt-1">
+                {[formatHeatDate(createdAt), courseName].filter(Boolean).join(' · ')}
+              </p>
+            )}
+            {/* Topics: <primary topic> OR <top 3 covered> */}
+            <p className="text-indigo-300/80 text-xs mt-1">
+              Topics:{' '}
+              <span className="text-indigo-100">
+                {primaryTopicName
+                  ?? (topicsCovered.length === 0
+                    ? 'Mixed'
+                    : topicsCovered.length <= 3
+                    ? topicsCovered.join(', ')
+                    : `Mixed (${topicsCovered.slice(0, 3).join(', ')}, …)`)}
+              </span>
+            </p>
+            {/* n concepts · integrity */}
+            <p className="text-indigo-300/70 text-xs mt-0.5 flex items-center gap-1.5 flex-wrap">
               <Crown className="w-3.5 h-3.5 text-amber-300" />
-              {formatHeatDate(createdAt) && (
+              {conceptsCount > 0 && (
                 <>
-                  <span>{formatHeatDate(createdAt)}</span>
+                  <span>{conceptsCount} concept{conceptsCount === 1 ? '' : 's'}</span>
                   <span aria-hidden>·</span>
                 </>
               )}
-              <span>Class summary</span>
-              <span aria-hidden>·</span>
               <span>
                 integrity <span className="capitalize">{integrityLevel}</span>
               </span>

@@ -247,6 +247,46 @@ function renderMath(input: string): { __html: string } {
   return { __html: html };
 }
 
+// FIX 5 — For MC questions, resolve the full option text from a single
+// letter answer (e.g. 'B') using the `options` array stored on
+// heat_questions.solution_steps. Options arrive as either legacy strings
+// ("A) text") or new-shape objects ({ key, text }); handle both.
+function resolveMCOptionText(
+  letter: string,
+  options: unknown
+): string | null {
+  if (!Array.isArray(options) || options.length === 0) return null;
+  const L = letter.trim().toUpperCase();
+  // Try object-shape lookup first ({ key, text })
+  for (const opt of options) {
+    if (opt && typeof opt === 'object' && 'key' in opt && 'text' in opt) {
+      const o = opt as { key: unknown; text: unknown };
+      if (typeof o.key === 'string' && o.key.toUpperCase() === L && typeof o.text === 'string') {
+        return o.text;
+      }
+    }
+  }
+  // Positional fallback: index 0 → 'A', 1 → 'B', etc.
+  const idx = L.charCodeAt(0) - 'A'.charCodeAt(0);
+  if (idx < 0 || idx >= options.length) return null;
+  const opt = options[idx];
+  if (typeof opt === 'string') {
+    // Legacy "A) text" form — strip the prefix when present.
+    return opt.replace(/^\s*[A-D]\s*[).:]\s*/, '').trim() || opt;
+  }
+  if (opt && typeof opt === 'object' && 'text' in opt && typeof (opt as any).text === 'string') {
+    return (opt as { text: string }).text;
+  }
+  return null;
+}
+
+// True iff `value` is a single A-D letter (after trim/uppercase).
+function isMCLetter(value: string | null | undefined): boolean {
+  if (!value) return false;
+  const v = value.trim().toUpperCase();
+  return v.length === 1 && v >= 'A' && v <= 'D';
+}
+
 // -----------------------------------------------------------------------------
 // MAIN COMPONENT
 // -----------------------------------------------------------------------------
@@ -468,6 +508,24 @@ export default function StudentResults({
     return best;
   }, [submissions]);
 
+  // FIX 4 — Topics covered for the results header. Dedupes by question_id
+  // (so multi-attempt submissions only count once) and ranks topics by
+  // question count so we can show the top 3 in mixed Heats.
+  const topicsCovered = useMemo(() => {
+    const seenQuestions = new Set<string>();
+    const counts = new Map<string, number>();
+    for (const s of submissions) {
+      const q = s.heat_questions;
+      if (!q || !q.id || seenQuestions.has(q.id)) continue;
+      seenQuestions.add(q.id);
+      const topicName = q.question_generators?.atomic_concepts?.unit_topics?.name;
+      if (topicName) counts.set(topicName, (counts.get(topicName) ?? 0) + 1);
+    }
+    return Array.from(counts.entries())
+      .sort((a, b) => b[1] - a[1])
+      .map(([name]) => name);
+  }, [submissions]);
+
   // Concept-mastery summary (CTA framework, docs/CTA_SCORING_FRAMEWORK.md).
   // Buckets submissions by the linked atomic_concept (or unit_topic / visual /
   // static fallback) and counts a concept as MASTERED when ≥80% of attempts
@@ -591,15 +649,43 @@ export default function StudentResults({
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-950 via-indigo-900 to-purple-900 px-4 py-8 md:py-10">
       <div className="max-w-3xl mx-auto">
-        {/* Header */}
+        {/* Header — FIX 4: course + topics + concept count + integrity */}
         <div className="text-center mb-6">
           <p className="text-xs text-indigo-300 uppercase tracking-[0.3em] mb-2">
             Heat {heatMeta?.code ?? heatCode} · Complete
           </p>
           <h1 className="text-2xl md:text-3xl font-bold text-white">Your Results</h1>
-          {formatHeatDate(heatMeta?.created_at) && (
+          {(formatHeatDate(heatMeta?.created_at) || heatMeta?.course?.name) && (
             <p className="text-indigo-300/80 text-xs mt-1.5">
-              {formatHeatDate(heatMeta?.created_at)}
+              {[formatHeatDate(heatMeta?.created_at), heatMeta?.course?.name]
+                .filter(Boolean)
+                .join(' · ')}
+            </p>
+          )}
+          <p className="text-indigo-300/70 text-xs mt-1">
+            Topics:{' '}
+            <span className="text-indigo-100">
+              {heatMeta?.unit_topic?.name
+                ?? (topicsCovered.length === 0
+                  ? 'Mixed'
+                  : topicsCovered.length <= 3
+                  ? topicsCovered.join(', ')
+                  : `Mixed (${topicsCovered.slice(0, 3).join(', ')}, …)`)}
+            </span>
+          </p>
+          {(conceptMastery.total > 0 || integrityLevel) && (
+            <p className="text-indigo-300/60 text-[11px] mt-0.5">
+              {conceptMastery.total > 0 && (
+                <span>
+                  {conceptMastery.total} concept{conceptMastery.total === 1 ? '' : 's'}
+                </span>
+              )}
+              {conceptMastery.total > 0 && integrityLevel && <span aria-hidden> · </span>}
+              {integrityLevel && (
+                <span>
+                  integrity <span className="capitalize">{integrityLevel}</span>
+                </span>
+              )}
             </p>
           )}
         </div>
@@ -806,6 +892,19 @@ export default function StudentResults({
                   const isSvg =
                     typeof q?.question_text === 'string' &&
                     q.question_text.trim().startsWith('<svg');
+                  // FIX 5 — resolve the full option text for MC answers so the
+                  // student sees "Correct: B — <option text>" not just the
+                  // bare letter.
+                  const correctLetter = q?.correct_answer ?? '';
+                  const isMC = isMCLetter(correctLetter);
+                  const correctOptionText = isMC
+                    ? resolveMCOptionText(correctLetter, (q?.solution_steps as any)?.options)
+                    : null;
+                  const submittedLetter = s.submitted_answer ?? '';
+                  const submittedIsMC = isMC && isMCLetter(submittedLetter);
+                  const submittedOptionText = submittedIsMC
+                    ? resolveMCOptionText(submittedLetter, (q?.solution_steps as any)?.options)
+                    : null;
                   return (
                     <li key={s.id} className="px-5 py-3 flex items-start gap-3">
                       <span
@@ -831,19 +930,29 @@ export default function StudentResults({
                             <span
                               className="text-white font-mono"
                               dangerouslySetInnerHTML={renderMath(
-                                s.submitted_answer ?? '—'
+                                submittedLetter || '—'
                               )}
                             />
+                            {submittedOptionText && (
+                              <span
+                                className="text-white/70 ml-1"
+                                dangerouslySetInnerHTML={renderMath(`— ${submittedOptionText}`)}
+                              />
+                            )}
                           </span>
                           {!correct && (
                             <span className="text-emerald-300/90">
-                              Answer:{' '}
+                              Correct:{' '}
                               <span
                                 className="font-mono"
-                                dangerouslySetInnerHTML={renderMath(
-                                  q?.correct_answer ?? ''
-                                )}
+                                dangerouslySetInnerHTML={renderMath(correctLetter)}
                               />
+                              {correctOptionText && (
+                                <span
+                                  className="ml-1"
+                                  dangerouslySetInnerHTML={renderMath(`— ${correctOptionText}`)}
+                                />
+                              )}
                             </span>
                           )}
                           {correct && (

@@ -12,7 +12,7 @@
 
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   AlertCircle,
   Clock,
@@ -89,6 +89,10 @@ export default function TeacherMonitor({
   const [ending, setEnding] = useState(false);
   const [endError, setEndError] = useState<string | null>(null);
   const [confirmEnd, setConfirmEnd] = useState(false);
+  // FIX 1 guard: ensure the timer-zero auto-end only fires once per mount.
+  // Without this, a re-render after secondsRemaining settles at 0 (e.g. a
+  // realtime tick) could re-enter the effect and call endHeat a second time.
+  const autoEndFiredRef = useRef<boolean>(false);
 
   // ── Initial load ────────────────────────────────────────────────────────
   useEffect(() => {
@@ -170,11 +174,36 @@ export default function TeacherMonitor({
     return () => clearTimeout(t);
   }, [secondsRemaining]);
 
-  // Auto-end Heat when timer hits zero (teacher-driven by design)
+  // FIX 1 — Auto-end Heat when the timer hits zero.
+  // The teacher view promises "The Heat ends automatically when the timer
+  // reaches zero" — actually honor that. Guarded by autoEndFiredRef so it
+  // runs at most once, and gated on the live heat status being 'active'
+  // (skip the call entirely if the teacher already ended early, or the
+  // server has already advanced status).
   useEffect(() => {
     if (secondsRemaining > 0) return;
     if (ending) return;
-    void handleEnd(true);
+    if (autoEndFiredRef.current) return;
+    autoEndFiredRef.current = true;
+    (async () => {
+      try {
+        const { data: heatRow } = await supabase
+          .from('heats')
+          .select('status')
+          .eq('id', heatId)
+          .maybeSingle();
+        const status = (heatRow as { status: string } | null)?.status;
+        if (status !== 'active' && status !== 'in_progress') {
+          // Heat already advanced beyond active — nothing to do.
+          return;
+        }
+        await handleEnd(true);
+      } catch (err) {
+        console.warn('[TeacherMonitor] auto-end on timer-zero failed:', err);
+        // Allow a manual retry by un-latching the ref.
+        autoEndFiredRef.current = false;
+      }
+    })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [secondsRemaining]);
 
