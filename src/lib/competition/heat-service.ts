@@ -23,7 +23,32 @@ import { generateAndInsertQuestions } from './question-delivery';
 // TYPES
 // -----------------------------------------------------------------------------
 
-export type HeatType = 'official' | 'practice' | 'sprint' | 'target' | 'championship';
+export type HeatType =
+  | 'official'
+  | 'practice'
+  | 'sprint'
+  | 'target'
+  | 'championship'
+  // Assessment modes added in migration 032. is_assessment=TRUE is what the
+  // app actually keys off, but storing the mode in `type` keeps a single
+  // source of truth for the gameplay format.
+  | 'quiz'
+  | 'test';
+
+export type QuestionProfile = 'warmup' | 'standard' | 'challenge' | 'deep';
+
+/**
+ * Customizable grade band cutoffs (CTA score → letter). The defaults mirror
+ * a standard 90/80/70/60 split. Teachers can tweak per-Heat in a future UI.
+ */
+export interface GradeBands {
+  A: number;
+  B: number;
+  C: number;
+  D: number;
+}
+
+export const DEFAULT_GRADE_BANDS: GradeBands = { A: 90, B: 80, C: 70, D: 60 };
 
 export type HeatStatus =
   | 'scheduled'
@@ -50,9 +75,31 @@ export type HeatScope = 'class' | 'school' | 'global';
 export interface CreateHeatParams {
   division_id: string;
   unit_topic_id: string | null;           // null = "Mixed" across all topics
-  depth_min: number;                      // 1=Bronze, 2=Silver, 3=Gold, 4=Platinum
+  /**
+   * Explicit list of atomic_concepts.id selected via the topic/concept
+   * tree. Overrides unit_topic_id when present. Empty/null = use
+   * unit_topic_id (legacy single-topic path).
+   */
+  concept_ids?: string[] | null;
+  depth_min: number;                      // legacy depth — still written for back-compat
   depth_max: number;
+  /**
+   * 3-axis profile (warmup / standard / challenge / deep). When provided,
+   * question-delivery filters generators by 3-axis tags and ignores the
+   * depth_min/depth_max args (it derives an effective depth range from
+   * the profile instead).
+   */
+  question_profile?: QuestionProfile;
   type: HeatType;
+  /** TRUE for Quiz and Test modes. Drives no-leaderboard / grade-card UX. */
+  is_assessment?: boolean;
+  /**
+   * FALSE for Test heats until the teacher clicks "Release Results".
+   * Defaults to TRUE for every other mode.
+   */
+  results_released?: boolean;
+  /** Grade-band cutoffs for assessment heats. Defaults to DEFAULT_GRADE_BANDS. */
+  grade_bands?: GradeBands;
   integrity_level: IntegrityLevel;
   question_count: number;
   duration_seconds: number;
@@ -107,6 +154,12 @@ export interface Heat {
   is_global: boolean | null;
   division_code: string | null;
   auto_scheduled: boolean | null;
+  // Added in migration 032 — assessment mode + profile + concept multi-select.
+  is_assessment: boolean | null;
+  results_released: boolean | null;
+  question_profile: QuestionProfile | null;
+  concept_ids: string[] | null;
+  grade_bands: GradeBands | null;
   created_at: string;
   updated_at: string;
 }
@@ -264,6 +317,12 @@ export async function createHeat(
     code = generateHeatCode();
   }
 
+  // Quiz/Test modes are assessments. Test heats start with results gated
+  // until the teacher clicks "Release Results"; everything else releases
+  // immediately.
+  const isAssessment = params.is_assessment ?? (params.type === 'quiz' || params.type === 'test');
+  const resultsReleased = params.results_released ?? (params.type !== 'test');
+
   const insertPayload = {
     code,
     topic_id: topicId,                                    // legacy FK satisfied
@@ -286,6 +345,12 @@ export async function createHeat(
     is_global: false,
     division_code: divisionCode,
     auto_scheduled: false,
+    // Heat design overhaul (migration 032)
+    is_assessment: isAssessment,
+    results_released: resultsReleased,
+    question_profile: params.question_profile ?? 'standard',
+    concept_ids: params.concept_ids && params.concept_ids.length > 0 ? params.concept_ids : null,
+    grade_bands: params.grade_bands ?? DEFAULT_GRADE_BANDS,
   };
 
   const { data: heat, error: insertError } = await supabase
@@ -306,6 +371,8 @@ export async function createHeat(
     await generateAndInsertQuestions(supabase, {
       heatId: heat.id,
       unitTopicId: params.unit_topic_id,
+      conceptIds: params.concept_ids ?? null,
+      profile: params.question_profile,
       depthMin: params.depth_min,
       depthMax: params.depth_max,
       questionCount: params.question_count,

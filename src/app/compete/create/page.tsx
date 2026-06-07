@@ -1,16 +1,22 @@
 // =============================================================================
-// MathAthlone — Create Heat Page (Sprint 2)
+// MathAthlone — Create Heat Page (Heat Design Overhaul)
 // =============================================================================
-// Division-first drill-down wizard. Calls heat-service.createHeat() which
-// also generates and inserts heat_questions via question-delivery.
+// Full redesign per the Heat Design Overhaul spec:
 //
-// Step 1: Division   (5 cards — divisions without a curriculum row are greyed)
-// Step 2: Course     (auto-selected for MVP — only NC Math 1)
-// Step 3: Unit Topic (8 topics + Mixed)
-// Step 4: Difficulty (Bronze / Silver / Gold / Platinum)
-// Step 5: Heat Type  (Sprint / Target / Practice / Championship)
-// Step 6: Integrity  (Practice → National)
-// Step 7: Summary    → Create Heat → redirect to /compete/[code]
+//   Step 1: Division          (auto-detected from teacher profile)
+//   Step 2: Course             (filtered by grade_band, Coming-Soon badge)
+//   Step 3: Topics & Concepts  (multi-select tree with indeterminate state)
+//   Step 4: Heat Mode          (Competition: Sprint|Target|Practice|Champ
+//                                 + Assessment: Quiz|Test)
+//   Step 5: Question Profile   (Warm-Up | Standard | Challenge | Deep)
+//   Step 6: Fine-tune          (count, duration, integrity)
+//   Step 7: Review & Launch
+//
+// The mode drives FR/MC ratio + integrity defaults + leaderboard visibility
+// (Assessment hides leaderboard, locks Focus Mode, gates results for Test).
+// The profile drives 3-axis filtering in question-delivery.ts.
+//
+// Teacher's last selection persists to localStorage.
 // =============================================================================
 
 'use client';
@@ -19,25 +25,25 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   AlertTriangle,
-  Award,
   BookOpen,
   Check,
+  ChevronDown,
   ChevronRight,
+  Clipboard,
   Clock,
   Eye,
+  FileText,
   Flame,
   GraduationCap,
   Layers,
   Loader2,
-  Lock,
+  Minus,
   Shield,
   ShieldAlert,
   ShieldCheck,
   Sparkles,
   Target,
   Trophy,
-  UserCheck,
-  Video,
 } from 'lucide-react';
 
 import { createClient } from '@/lib/supabase/client';
@@ -46,18 +52,12 @@ import {
   createHeat,
   type HeatType,
   type IntegrityLevel,
+  type QuestionProfile,
 } from '@/lib/competition/heat-service';
 
 // -----------------------------------------------------------------------------
 // TYPES
 // -----------------------------------------------------------------------------
-
-// Heat preset keys. Replaces the legacy Bronze/Silver/Gold/Platinum tiers.
-// Each preset bundles a depth range with default question count and
-// duration — selecting a preset auto-populates the manual override sliders
-// in Step 5. Variable name `difficulty` retained throughout the form so
-// the rename stays minimally invasive.
-type DifficultyTier = 'warmup' | 'standard' | 'challenge' | 'championship';
 
 interface DivisionRow {
   id: string;
@@ -65,7 +65,7 @@ interface DivisionRow {
   code: string;
   grade_min: number;
   grade_max: number;
-  available: boolean;     // derived from division_curricula
+  available: boolean;
 }
 
 interface CourseRow {
@@ -76,17 +76,18 @@ interface CourseRow {
   available?: boolean;
 }
 
-// FIX 3 — Courses that exist in the catalog but have 0 active generators.
-// Surfaced as grayed-out "Coming Soon" tiles instead of being hidden so
-// teachers can see the roadmap. Update this set when those pools are
-// implemented in src/lib/competition/generators.ts.
-const COURSES_WITHOUT_GENERATORS = new Set<string>(['NCM2', 'ALG2', 'APPC']);
-
 interface UnitTopicRow {
   id: string;
   name: string;
   code: string;
   display_order: number;
+}
+
+interface ConceptRow {
+  id: string;
+  name: string;
+  lesson_number: string;
+  unit_topic_id: string;
 }
 
 interface IntegrityConfig {
@@ -112,126 +113,196 @@ const DIVISION_ICONS: Record<string, React.ReactNode> = {
   SV:  <GraduationCap className="w-6 h-6" />,
 };
 
-// Division code → eligible course grade_bands. Replaces the legacy
-// division_curricula JOIN (which only had NCM1 linked). Add new bands here
-// as more courses get seeded.
+// Division → eligible course grade_bands.
 const DIVISION_GRADE_BANDS: Record<string, string[]> = {
-  JR:  [],                                  // Grades 3-4 — no courses yet
-  INT: ['6'],                               // Grades 5-6
-  ADV: ['7', '8'],                          // Grades 7-8
-  JV:  ['8-9', '9-10'],                     // Grades 9-10
-  SV:  ['10-11', '11-12'],                  // Grades 11-12
+  JR:  [],
+  INT: ['6'],
+  ADV: ['7', '8'],
+  JV:  ['8-9', '9-10'],
+  SV:  ['10-11', '11-12'],
 };
 
-// Foundation is cross-division and keyed by course code rather than
-// grade_band. The DB division code for Foundation may vary; covers the
-// common shorthands.
 const DIVISION_COURSE_CODES: Record<string, string[]> = {
   FOUND: ['MF'],
   F:     ['MF'],
 };
 
-const HEAT_TYPE_META: Record<HeatType, { label: string; icon: React.ReactNode; questions: number; minutes: number; desc: string }> = {
-  sprint:       { label: 'Sprint',       icon: <Flame className="w-5 h-5" />,  questions: 20, minutes: 15, desc: '15 min · 20 questions · fast-paced' },
-  target:       { label: 'Target',       icon: <Target className="w-5 h-5" />, questions: 10, minutes: 20, desc: '20 min · 10 questions · deeper problems' },
-  practice:     { label: 'Practice',     icon: <Clock className="w-5 h-5" />,  questions: 15, minutes: 30, desc: '30 min · 15 questions · low pressure' },
-  championship: { label: 'Championship', icon: <Trophy className="w-5 h-5" />, questions: 25, minutes: 25, desc: '25 min · 25 questions · high stakes' },
-  official:     { label: 'Official',     icon: <Award className="w-5 h-5" />,  questions: 20, minutes: 20, desc: 'Standard official format' },
-};
-
-// Picker-visible heat types only. 'official' is internal (used by legacy data).
-const HEAT_TYPE_OPTIONS: HeatType[] = ['sprint', 'target', 'practice', 'championship'];
+// Courses without seeded generators — surfaced as Coming Soon.
+const COURSES_WITHOUT_GENERATORS = new Set<string>(['NCM2', 'ALG2', 'APPC']);
 
 /**
- * FR/MC mix per heat type, mirroring HEAT_PRESETS in question-service.ts.
- * Championship raises FR to 50% (harder Heat → stronger Content signal);
- * Practice lowers FR to 30% to ease cognitive load; Sprint + Target use the
- * standard 40/60 baseline. See docs/CTA_SCORING_FRAMEWORK.md.
+ * Heat Mode — the unified picker that replaces the legacy heatType +
+ * difficulty pair. Two categories:
+ *   • COMPETITION — leaderboard visible, streak bonus active, instant results
+ *   • ASSESSMENT  — gradeable, private results, no leaderboard/streak
+ *
+ * `default_count` and `default_minutes` populate the Step 6 sliders so the
+ * teacher can fine-tune. `fr_ratio` / `mc_ratio` drive question-delivery.
+ * `is_assessment` flips downstream gameplay/results behavior.
  */
-const HEAT_TYPE_MIX: Record<
-  HeatType,
-  { fr_ratio: number; mc_ratio: number; mc_visual_share: number }
-> = {
-  sprint:       { fr_ratio: 0.4, mc_ratio: 0.6, mc_visual_share: 0.5 },
-  target:       { fr_ratio: 0.4, mc_ratio: 0.6, mc_visual_share: 0.5 },
-  practice:     { fr_ratio: 0.3, mc_ratio: 0.7, mc_visual_share: 0.5 },
-  championship: { fr_ratio: 0.5, mc_ratio: 0.5, mc_visual_share: 0.5 },
-  official:     { fr_ratio: 0.4, mc_ratio: 0.6, mc_visual_share: 0.5 },
+type HeatModeMeta = {
+  label: string;
+  icon: React.ReactNode;
+  default_count: number;
+  default_minutes: number;
+  desc: string;
+  fr_ratio: number;
+  mc_ratio: number;
+  mc_visual_share: number;
+  is_assessment: boolean;
+  /** When non-null, the mode forces a specific integrity level. */
+  locked_integrity: IntegrityLevel | null;
+  category: 'competition' | 'assessment';
 };
 
-// Heat presets — each one drives BOTH the depth range and the default
-// question count + duration. Selecting a preset auto-populates the manual
-// override sliders in Step 5; teachers can override after.
-const DIFFICULTY_TIERS: Record<
-  DifficultyTier,
-  { label: string; depthMin: number; depthMax: number; questions: number; minutes: number; desc: string; accent: string; pill: string }
-> = {
-  warmup: {
-    label: 'Warm-Up',
-    depthMin: 1, depthMax: 2,
-    questions: 10, minutes: 10,
-    desc: '10 Q · 10 min · gentle entry',
-    pill:   'text-emerald-700 bg-emerald-50 border-emerald-200',
-    accent: 'text-emerald-700 border-emerald-400 bg-emerald-50',
+const HEAT_MODES: Record<HeatType, HeatModeMeta> = {
+  // ── Competition modes ───────────────────────────────────────────────────
+  sprint: {
+    label: 'Sprint',  icon: <Flame className="w-5 h-5" />,
+    default_count: 20, default_minutes: 15,
+    desc: '15 min · 20 Q · fast-paced',
+    fr_ratio: 0.4, mc_ratio: 0.6, mc_visual_share: 0.5,
+    is_assessment: false, locked_integrity: null, category: 'competition',
   },
-  standard: {
-    label: 'Standard',
-    depthMin: 1, depthMax: 3,
-    questions: 15, minutes: 20,
-    desc: '15 Q · 20 min · balanced',
-    pill:   'text-sky-700 bg-sky-50 border-sky-200',
-    accent: 'text-sky-700 border-sky-400 bg-sky-50',
+  target: {
+    label: 'Target',  icon: <Target className="w-5 h-5" />,
+    default_count: 10, default_minutes: 20,
+    desc: '20 min · 10 Q · deeper problems',
+    fr_ratio: 0.4, mc_ratio: 0.6, mc_visual_share: 0.5,
+    is_assessment: false, locked_integrity: null, category: 'competition',
   },
-  challenge: {
-    label: 'Challenge',
-    depthMin: 2, depthMax: 4,
-    questions: 20, minutes: 25,
-    desc: '20 Q · 25 min · stretch',
-    pill:   'text-amber-700 bg-amber-50 border-amber-200',
-    accent: 'text-amber-700 border-amber-400 bg-amber-50',
+  practice: {
+    label: 'Practice', icon: <Clock className="w-5 h-5" />,
+    default_count: 15, default_minutes: 30,
+    desc: '30 min · 15 Q · no ranking',
+    fr_ratio: 0.3, mc_ratio: 0.7, mc_visual_share: 0.5,
+    is_assessment: false, locked_integrity: null, category: 'competition',
   },
   championship: {
-    label: 'Championship',
-    depthMin: 3, depthMax: 4,
-    questions: 25, minutes: 30,
-    desc: '25 Q · 30 min · high stakes',
-    pill:   'text-indigo-700 bg-indigo-50 border-indigo-200',
-    accent: 'text-indigo-700 border-indigo-400 bg-indigo-50',
+    label: 'Championship', icon: <Trophy className="w-5 h-5" />,
+    default_count: 25, default_minutes: 25,
+    desc: '25 min · 25 Q · high stakes',
+    fr_ratio: 0.5, mc_ratio: 0.5, mc_visual_share: 0.5,
+    is_assessment: false, locked_integrity: null, category: 'competition',
+  },
+  // 'official' is kept for legacy data — not shown in the picker.
+  official: {
+    label: 'Official', icon: <Trophy className="w-5 h-5" />,
+    default_count: 20, default_minutes: 20,
+    desc: 'Standard official format',
+    fr_ratio: 0.4, mc_ratio: 0.6, mc_visual_share: 0.5,
+    is_assessment: false, locked_integrity: null, category: 'competition',
+  },
+  // ── Assessment modes ────────────────────────────────────────────────────
+  quiz: {
+    label: 'Quiz',    icon: <Clipboard className="w-5 h-5" />,
+    default_count: 10, default_minutes: 20,
+    desc: '20 min · 10 Q · gradeable',
+    fr_ratio: 0.5, mc_ratio: 0.5, mc_visual_share: 0.5,
+    is_assessment: true, locked_integrity: 'school', category: 'assessment',
+  },
+  test: {
+    label: 'Test',    icon: <FileText className="w-5 h-5" />,
+    default_count: 25, default_minutes: 45,
+    desc: '45 min · 25 Q · formal',
+    fr_ratio: 0.6, mc_ratio: 0.4, mc_visual_share: 0.5,
+    is_assessment: true, locked_integrity: 'district', category: 'assessment',
   },
 };
 
-const INTEGRITY_LEVELS: Record<IntegrityLevel, { label: string; icon: React.ReactNode; desc: string; config: IntegrityConfig }> = {
+const COMPETITION_MODES: HeatType[] = ['sprint', 'target', 'practice', 'championship'];
+const ASSESSMENT_MODES: HeatType[] = ['quiz', 'test'];
+
+/**
+ * Question Profile — 3-axis selection. Maps to existing DB tag values:
+ *   warmup    → procedural + low
+ *   standard  → application + medium
+ *   challenge → reasoning   + medium
+ *   deep      → reasoning   + high
+ *
+ * `depth_min` / `depth_max` are the fallback for NCM1 (NULL 3-axis tags).
+ */
+const QUESTION_PROFILES: Record<
+  QuestionProfile,
+  { label: string; emoji: string; cog: string; complex: string; ctx: string; tooltip: string; depth_min: number; depth_max: number }
+> = {
+  warmup: {
+    label: 'Warm-Up', emoji: '🌱',
+    cog: 'Recall', complex: 'Single-step', ctx: 'Abstract',
+    tooltip: 'Quick recall — definitions, basic facts, single operations',
+    depth_min: 1, depth_max: 2,
+  },
+  standard: {
+    label: 'Standard', emoji: '📐',
+    cog: 'Application', complex: 'Mixed steps', ctx: 'Mixed context',
+    tooltip: 'Apply skills — straightforward problems, some context',
+    depth_min: 2, depth_max: 3,
+  },
+  challenge: {
+    label: 'Challenge', emoji: '⚡',
+    cog: 'Analysis', complex: 'Multi-step', ctx: 'Mixed context',
+    tooltip: 'Analyze — multi-step reasoning, non-routine problems',
+    depth_min: 3, depth_max: 4,
+  },
+  deep: {
+    label: 'Deep', emoji: '🔬',
+    cog: 'Synthesis', complex: 'Multi-concept', ctx: 'Real-world',
+    tooltip: 'Synthesize — combine concepts, authentic scenarios',
+    depth_min: 4, depth_max: 4,
+  },
+};
+
+const COMPETITION_INTEGRITY_LEVELS: Record<
+  Extract<IntegrityLevel, 'practice' | 'school' | 'district'>,
+  { label: string; icon: React.ReactNode; desc: string; config: IntegrityConfig }
+> = {
   practice: {
     label: 'Practice', icon: <Shield className="w-5 h-5" />,
     desc: 'Classroom practice with light logging',
     config: { focus_mode_enabled: false, fullscreen_required: false, copy_paste_blocked: false, anomaly_detection: false, teacher_attestation_required: false, lockdown_browser_required: false, recording_required: false, synchronized_start: false },
   },
   school: {
-    label: 'School League', icon: <ShieldCheck className="w-5 h-5" />,
-    desc: 'Internal school competition with Focus Mode',
+    label: 'Classroom', icon: <ShieldCheck className="w-5 h-5" />,
+    desc: 'Classroom with Focus Mode on',
     config: { focus_mode_enabled: true,  fullscreen_required: false, copy_paste_blocked: false, anomaly_detection: false, teacher_attestation_required: false, lockdown_browser_required: false, recording_required: false, synchronized_start: false },
   },
   district: {
-    label: 'District League', icon: <ShieldAlert className="w-5 h-5" />,
-    desc: 'District competition requiring review',
+    label: 'School',   icon: <ShieldAlert className="w-5 h-5" />,
+    desc: 'School-wide with stricter monitoring',
     config: { focus_mode_enabled: true,  fullscreen_required: true,  copy_paste_blocked: true,  anomaly_detection: true,  teacher_attestation_required: false, lockdown_browser_required: false, recording_required: false, synchronized_start: false },
   },
-  regional: {
-    label: 'Regional Qualifier', icon: <Eye className="w-5 h-5" />,
-    desc: 'Regional competition with teacher attestation',
-    config: { focus_mode_enabled: true,  fullscreen_required: true,  copy_paste_blocked: true,  anomaly_detection: true,  teacher_attestation_required: true,  lockdown_browser_required: false, recording_required: false, synchronized_start: true },
-  },
-  state: {
-    label: 'State Championship', icon: <Lock className="w-5 h-5" />,
-    desc: 'State competition with lockdown browser',
-    config: { focus_mode_enabled: true,  fullscreen_required: true,  copy_paste_blocked: true,  anomaly_detection: true,  teacher_attestation_required: true,  lockdown_browser_required: true,  recording_required: false, synchronized_start: true },
-  },
-  national: {
-    label: 'National Finals', icon: <Video className="w-5 h-5" />,
-    desc: 'National competition with full proctoring',
-    config: { focus_mode_enabled: true,  fullscreen_required: true,  copy_paste_blocked: true,  anomaly_detection: true,  teacher_attestation_required: true,  lockdown_browser_required: true,  recording_required: true,  synchronized_start: true },
-  },
 };
+
+// localStorage key for the teacher's last selection.
+const LAST_SELECTION_KEY = 'mathathlone:createHeat:last';
+
+interface LastSelection {
+  divisionCode?: string;
+  courseId?: string;
+  mode?: HeatType;
+  profile?: QuestionProfile;
+  questionCount?: number;
+  durationMinutes?: number;
+}
+
+function loadLastSelection(): LastSelection {
+  if (typeof window === 'undefined') return {};
+  try {
+    const raw = window.localStorage.getItem(LAST_SELECTION_KEY);
+    return raw ? (JSON.parse(raw) as LastSelection) : {};
+  } catch {
+    return {};
+  }
+}
+
+function saveLastSelection(sel: LastSelection): void {
+  if (typeof window === 'undefined') return;
+  try {
+    window.localStorage.setItem(LAST_SELECTION_KEY, JSON.stringify(sel));
+  } catch {
+    /* ignore quota errors */
+  }
+}
 
 // -----------------------------------------------------------------------------
 // HELPER COMPONENTS
@@ -268,30 +339,93 @@ function SectionCard({
   );
 }
 
-function IntegrityBadges({ config }: { config: IntegrityConfig }) {
-  const badges = [
-    { on: config.focus_mode_enabled,             label: 'Focus Mode',  icon: <Eye className="w-3 h-3" /> },
-    { on: config.fullscreen_required,            label: 'Fullscreen',  icon: <Lock className="w-3 h-3" /> },
-    { on: config.copy_paste_blocked,             label: 'Copy Block',  icon: <ShieldAlert className="w-3 h-3" /> },
-    { on: config.anomaly_detection,              label: 'Anomaly',     icon: <ShieldAlert className="w-3 h-3" /> },
-    { on: config.teacher_attestation_required,   label: 'Attestation', icon: <UserCheck className="w-3 h-3" /> },
-    { on: config.lockdown_browser_required,      label: 'Lockdown',    icon: <Lock className="w-3 h-3" /> },
-    { on: config.recording_required,             label: 'Recording',   icon: <Video className="w-3 h-3" /> },
-  ];
-  const active = badges.filter((b) => b.on);
-  if (active.length === 0) {
-    return <span className="text-xs text-gray-400 italic">No restrictions — trust-based</span>;
-  }
+// ── Topic / Concept tree ────────────────────────────────────────────────────
+
+interface TreeNodeProps {
+  topic: UnitTopicRow;
+  concepts: ConceptRow[];
+  expanded: boolean;
+  selectedConceptIds: Set<string>;
+  onToggleExpand: () => void;
+  onToggleConcept: (conceptId: string) => void;
+  onToggleTopic: (topicId: string) => void;
+}
+
+function TopicTreeNode({
+  topic,
+  concepts,
+  expanded,
+  selectedConceptIds,
+  onToggleExpand,
+  onToggleConcept,
+  onToggleTopic,
+}: TreeNodeProps) {
+  const selectedInTopic = concepts.filter((c) => selectedConceptIds.has(c.id)).length;
+  const allSelected = concepts.length > 0 && selectedInTopic === concepts.length;
+  const someSelected = selectedInTopic > 0 && !allSelected;
   return (
-    <div className="flex flex-wrap gap-1.5">
-      {active.map((b) => (
-        <span
-          key={b.label}
-          className="inline-flex items-center gap-1 text-xs font-medium text-indigo-700 bg-indigo-50 border border-indigo-200 rounded-full px-2 py-0.5"
+    <div className="border border-gray-200 rounded-lg overflow-hidden">
+      {/* Topic header row */}
+      <div className="flex items-center gap-2 px-3 py-2 bg-gray-50">
+        <button
+          type="button"
+          onClick={onToggleExpand}
+          className="p-1 rounded hover:bg-gray-200 text-gray-500"
+          aria-label={expanded ? 'Collapse' : 'Expand'}
         >
-          {b.icon} {b.label}
+          {expanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+        </button>
+        <label className="flex items-center gap-2 flex-1 cursor-pointer select-none">
+          <span
+            role="checkbox"
+            aria-checked={allSelected ? 'true' : someSelected ? 'mixed' : 'false'}
+            onClick={(e) => {
+              e.preventDefault();
+              onToggleTopic(topic.id);
+            }}
+            className={`inline-flex items-center justify-center w-4 h-4 rounded border ${
+              allSelected
+                ? 'bg-indigo-600 border-indigo-600 text-white'
+                : someSelected
+                ? 'bg-indigo-100 border-indigo-400 text-indigo-700'
+                : 'bg-white border-gray-300'
+            }`}
+          >
+            {allSelected && <Check className="w-3 h-3" />}
+            {someSelected && <Minus className="w-3 h-3" />}
+          </span>
+          <span className="text-sm font-medium text-gray-800">{topic.name}</span>
+        </label>
+        <span className="text-xs text-gray-400">
+          {selectedInTopic} / {concepts.length}
         </span>
-      ))}
+      </div>
+      {/* Concept list (expanded) */}
+      {expanded && (
+        <div className="px-3 py-2 space-y-1 bg-white">
+          {concepts.length === 0 ? (
+            <p className="text-xs text-gray-400 italic py-1">No concepts in this topic yet.</p>
+          ) : (
+            concepts.map((c) => {
+              const isSelected = selectedConceptIds.has(c.id);
+              return (
+                <label
+                  key={c.id}
+                  className="flex items-center gap-2 px-2 py-1 rounded hover:bg-gray-50 cursor-pointer select-none"
+                >
+                  <input
+                    type="checkbox"
+                    checked={isSelected}
+                    onChange={() => onToggleConcept(c.id)}
+                    className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                  />
+                  <span className="text-sm text-gray-700">{c.name}</span>
+                </label>
+              );
+            })
+          )}
+        </div>
+      )}
     </div>
   );
 }
@@ -305,8 +439,7 @@ export default function CreateHeatPage() {
   const supabase = useMemo(() => createClient(), []);
   const { profile, loading: authLoading, isAuthenticated, hasRole } = useAuth();
 
-  // Auth gate — only teachers, school_admins, and platform_admins can create
-  // Heats. Redirect everyone else.
+  // Auth gate — only teachers/admins can create Heats.
   useEffect(() => {
     if (authLoading) return;
     if (!isAuthenticated) {
@@ -322,26 +455,37 @@ export default function CreateHeatPage() {
   const [divisions, setDivisions] = useState<DivisionRow[]>([]);
   const [courses, setCourses] = useState<CourseRow[]>([]);
   const [unitTopics, setUnitTopics] = useState<UnitTopicRow[]>([]);
+  const [concepts, setConcepts] = useState<ConceptRow[]>([]);
 
   const [selectedDivision, setSelectedDivision] = useState<DivisionRow | null>(null);
   const [selectedCourse, setSelectedCourse] = useState<CourseRow | null>(null);
-  const [selectedUnitTopic, setSelectedUnitTopic] = useState<UnitTopicRow | 'mixed' | null>(null);
+  const [selectedConceptIds, setSelectedConceptIds] = useState<Set<string>>(new Set());
+  const [expandedTopics, setExpandedTopics] = useState<Set<string>>(new Set());
 
   // ── Heat config state ───────────────────────────────────────────────────
-  const [difficulty, setDifficulty] = useState<DifficultyTier>('standard');
-  const [heatType, setHeatType] = useState<HeatType>('sprint');
-  const [integrityLevel, setIntegrityLevel] = useState<IntegrityLevel>('practice');
-  const [questionCount, setQuestionCount] = useState<number>(DIFFICULTY_TIERS.standard.questions);
-  const [durationMinutes, setDurationMinutes] = useState<number>(DIFFICULTY_TIERS.standard.minutes);
+  const lastSel = useMemo(loadLastSelection, []);
+  const [mode, setMode] = useState<HeatType>(lastSel.mode ?? 'sprint');
+  const [questionProfile, setQuestionProfile] = useState<QuestionProfile>(
+    lastSel.profile ?? 'standard'
+  );
+  const [integrityLevel, setIntegrityLevel] = useState<IntegrityLevel>(
+    HEAT_MODES.sprint.locked_integrity ?? 'practice'
+  );
+  const [questionCount, setQuestionCount] = useState<number>(
+    lastSel.questionCount ?? HEAT_MODES.sprint.default_count
+  );
+  const [durationMinutes, setDurationMinutes] = useState<number>(
+    lastSel.durationMinutes ?? HEAT_MODES.sprint.default_minutes
+  );
 
   // ── UI state ────────────────────────────────────────────────────────────
   const [loadingCurriculum, setLoadingCurriculum] = useState(true);
   const [loadingCourses, setLoadingCourses] = useState(false);
-  const [loadingUnitTopics, setLoadingUnitTopics] = useState(false);
+  const [loadingConcepts, setLoadingConcepts] = useState(false);
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // ── Load divisions + availability ───────────────────────────────────────
+  // ── Load divisions ──────────────────────────────────────────────────────
   useEffect(() => {
     let cancelled = false;
     async function loadDivisions() {
@@ -353,45 +497,44 @@ export default function CreateHeatPage() {
           .order('grade_min', { ascending: true }),
         supabase.from('division_curricula').select('division_id'),
       ]);
-
       if (cancelled) return;
-
       if (divResult.error) {
         setError(`Couldn't load divisions: ${divResult.error.message}`);
         setLoadingCurriculum(false);
         return;
       }
-
-      const availableIds = new Set<string>(
-        (dcResult.data ?? []).map((row: any) => row.division_id)
-      );
-
+      const linked = new Set<string>((dcResult.data ?? []).map((r: any) => r.division_id));
       const rows: DivisionRow[] = (divResult.data ?? []).map((d: any) => ({
         id: d.id,
         name: d.name,
         code: d.code,
         grade_min: d.grade_min,
         grade_max: d.grade_max,
-        available: availableIds.has(d.id),
+        available:
+          (DIVISION_GRADE_BANDS[d.code]?.length ?? 0) > 0
+            || (DIVISION_COURSE_CODES[d.code]?.length ?? 0) > 0
+            || linked.has(d.id),
       }));
       setDivisions(rows);
 
-      // Default selection: JV if available, else first available, else first overall
-      const defaultRow =
-        rows.find((r) => r.code === 'JV' && r.available) ??
-        rows.find((r) => r.available) ??
-        null;
-      if (defaultRow) setSelectedDivision(defaultRow);
-
+      // Auto-select: last-used (when still available) → teacher's grade
+      // band → first available.
+      const teacherGrade = profile?.grade_level ?? null;
+      const last = rows.find((r) => r.code === lastSel.divisionCode && r.available) ?? null;
+      const byGrade = teacherGrade
+        ? rows.find((r) => r.available && teacherGrade >= r.grade_min && teacherGrade <= r.grade_max) ?? null
+        : null;
+      const firstAvail = rows.find((r) => r.available) ?? null;
+      setSelectedDivision(last ?? byGrade ?? firstAvail);
       setLoadingCurriculum(false);
     }
     loadDivisions();
     return () => {
       cancelled = true;
     };
-  }, [supabase]);
+  }, [supabase, profile?.grade_level, lastSel.divisionCode]);
 
-  // ── Load courses for the selected division ──────────────────────────────
+  // ── Load courses ────────────────────────────────────────────────────────
   useEffect(() => {
     if (!selectedDivision) {
       setCourses([]);
@@ -401,11 +544,8 @@ export default function CreateHeatPage() {
     let cancelled = false;
     async function loadCourses() {
       setLoadingCourses(true);
-      // Query courses directly by grade_band (and explicit course codes for
-      // cross-division pools like math_fundamentals). Replaces the legacy
-      // division_curricula JOIN which only had NCM1 wired up.
       const divisionCode = selectedDivision!.code;
-      const gradeBands  = DIVISION_GRADE_BANDS[divisionCode]  ?? [];
+      const gradeBands = DIVISION_GRADE_BANDS[divisionCode] ?? [];
       const courseCodes = DIVISION_COURSE_CODES[divisionCode] ?? [];
 
       if (gradeBands.length === 0 && courseCodes.length === 0) {
@@ -422,9 +562,7 @@ export default function CreateHeatPage() {
         .order('display_order', { ascending: true });
 
       if (gradeBands.length > 0 && courseCodes.length > 0) {
-        query = query.or(
-          `grade_band.in.(${gradeBands.join(',')}),code.in.(${courseCodes.join(',')})`
-        );
+        query = query.or(`grade_band.in.(${gradeBands.join(',')}),code.in.(${courseCodes.join(',')})`);
       } else if (gradeBands.length > 0) {
         query = query.in('grade_band', gradeBands);
       } else {
@@ -432,129 +570,248 @@ export default function CreateHeatPage() {
       }
 
       const { data, error: cErr } = await query;
-
       if (cancelled) return;
-
       if (cErr) {
         setError(`Couldn't load courses: ${cErr.message}`);
         setCourses([]);
         setLoadingCourses(false);
         return;
       }
-
-      // Tag each course with availability (FIX 3). Unavailable courses stay
-      // in the list but are rendered as disabled "Coming Soon" tiles.
       const rows: CourseRow[] = (data ?? []).map((c: any) => ({
         ...(c as CourseRow),
         available: !COURSES_WITHOUT_GENERATORS.has(c.code),
       }));
-
       setCourses(rows);
-      // Auto-select the first AVAILABLE course (skip Coming-Soon entries).
-      const firstAvailable = rows.find((c) => c.available !== false) ?? null;
-      setSelectedCourse(firstAvailable);
+
+      // Auto-select: last-used (when still in list and available) → first available.
+      const last = rows.find((c) => c.id === lastSel.courseId && c.available !== false) ?? null;
+      const firstAvail = rows.find((c) => c.available !== false) ?? null;
+      setSelectedCourse(last ?? firstAvail);
       setLoadingCourses(false);
     }
     loadCourses();
     return () => {
       cancelled = true;
     };
-  }, [selectedDivision, supabase]);
+  }, [selectedDivision, supabase, lastSel.courseId]);
 
-  // ── Load unit topics for the selected course ────────────────────────────
+  // ── Load unit_topics + atomic_concepts for the selected course ─────────
   useEffect(() => {
     if (!selectedCourse) {
       setUnitTopics([]);
-      setSelectedUnitTopic(null);
+      setConcepts([]);
+      setSelectedConceptIds(new Set());
+      setExpandedTopics(new Set());
       return;
     }
     let cancelled = false;
-    async function loadUnits() {
-      setLoadingUnitTopics(true);
+    async function loadTree() {
+      setLoadingConcepts(true);
       const courseId = selectedCourse!.id;
-      const { data, error: uErr } = await supabase
+      const { data: topics, error: uErr } = await supabase
         .from('unit_topics')
         .select('id, name, code, display_order')
         .eq('course_id', courseId)
         .order('display_order', { ascending: true });
-
       if (cancelled) return;
-
       if (uErr) {
         setError(`Couldn't load unit topics: ${uErr.message}`);
         setUnitTopics([]);
-        setLoadingUnitTopics(false);
+        setConcepts([]);
+        setLoadingConcepts(false);
         return;
       }
-      setUnitTopics((data as UnitTopicRow[]) ?? []);
-      setSelectedUnitTopic('mixed');         // Default to Mixed for breadth
-      setLoadingUnitTopics(false);
+      const topicRows = (topics as UnitTopicRow[]) ?? [];
+      setUnitTopics(topicRows);
+
+      const topicIds = topicRows.map((t) => t.id);
+      if (topicIds.length === 0) {
+        setConcepts([]);
+        setSelectedConceptIds(new Set());
+        setExpandedTopics(new Set());
+        setLoadingConcepts(false);
+        return;
+      }
+
+      const { data: cs, error: cErr } = await supabase
+        .from('atomic_concepts')
+        .select('id, name, lesson_number, unit_topic_id')
+        .in('unit_topic_id', topicIds)
+        .order('lesson_number', { ascending: true });
+      if (cancelled) return;
+      if (cErr) {
+        setError(`Couldn't load concepts: ${cErr.message}`);
+        setConcepts([]);
+        setLoadingConcepts(false);
+        return;
+      }
+      const conceptRows = (cs as ConceptRow[]) ?? [];
+      setConcepts(conceptRows);
+      // Default: SELECT ALL concepts so the teacher can launch quickly.
+      setSelectedConceptIds(new Set(conceptRows.map((c) => c.id)));
+      // Expand the first topic so the tree isn't a wall of collapsed cards.
+      setExpandedTopics(topicRows.length > 0 ? new Set([topicRows[0]!.id]) : new Set());
+      setLoadingConcepts(false);
     }
-    loadUnits();
+    loadTree();
     return () => {
       cancelled = true;
     };
   }, [selectedCourse, supabase]);
 
-  // ── Preset → auto-set question count + duration ────────────────────────
-  // The 4 heat presets (Warm-Up / Standard / Challenge / Championship) own
-  // the default question count and duration. Teachers can still override
-  // via the Step 5 sliders below — those edits stick because this effect
-  // only fires when `difficulty` itself changes.
+  // ── When mode changes, repopulate count/duration + locked integrity ─────
   useEffect(() => {
-    const preset = DIFFICULTY_TIERS[difficulty];
-    setQuestionCount(preset.questions);
-    setDurationMinutes(preset.minutes);
-  }, [difficulty]);
+    const meta = HEAT_MODES[mode];
+    setQuestionCount(meta.default_count);
+    setDurationMinutes(meta.default_minutes);
+    if (meta.locked_integrity) {
+      setIntegrityLevel(meta.locked_integrity);
+    }
+  }, [mode]);
+
+  // ── Tree manipulation helpers ───────────────────────────────────────────
+  const conceptsByTopic = useMemo(() => {
+    const map = new Map<string, ConceptRow[]>();
+    for (const c of concepts) {
+      const arr = map.get(c.unit_topic_id) ?? [];
+      arr.push(c);
+      map.set(c.unit_topic_id, arr);
+    }
+    return map;
+  }, [concepts]);
+
+  const toggleConcept = useCallback((conceptId: string) => {
+    setSelectedConceptIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(conceptId)) next.delete(conceptId);
+      else next.add(conceptId);
+      return next;
+    });
+  }, []);
+
+  const toggleTopic = useCallback(
+    (topicId: string) => {
+      const topicConcepts = conceptsByTopic.get(topicId) ?? [];
+      setSelectedConceptIds((prev) => {
+        const next = new Set(prev);
+        const allInTopicSelected = topicConcepts.every((c) => next.has(c.id));
+        if (allInTopicSelected) {
+          for (const c of topicConcepts) next.delete(c.id);
+        } else {
+          for (const c of topicConcepts) next.add(c.id);
+        }
+        return next;
+      });
+    },
+    [conceptsByTopic]
+  );
+
+  const toggleExpand = useCallback((topicId: string) => {
+    setExpandedTopics((prev) => {
+      const next = new Set(prev);
+      if (next.has(topicId)) next.delete(topicId);
+      else next.add(topicId);
+      return next;
+    });
+  }, []);
+
+  const selectAllConcepts = useCallback(() => {
+    setSelectedConceptIds(new Set(concepts.map((c) => c.id)));
+  }, [concepts]);
+
+  const clearAllConcepts = useCallback(() => {
+    setSelectedConceptIds(new Set());
+  }, []);
 
   // ── Derived state ───────────────────────────────────────────────────────
-  const currentIntegrity = INTEGRITY_LEVELS[integrityLevel];
-  const currentDifficulty = DIFFICULTY_TIERS[difficulty];
+  const currentMode = HEAT_MODES[mode];
+  const currentProfile = QUESTION_PROFILES[questionProfile];
+  const totalConcepts = concepts.length;
+  const selectedCount = selectedConceptIds.size;
+  const minConcepts = 3;
+  const enoughConcepts = selectedCount >= minConcepts;
+  const integrityOptions = currentMode.locked_integrity
+    ? [currentMode.locked_integrity as keyof typeof COMPETITION_INTEGRITY_LEVELS]
+    : (['practice', 'school', 'district'] as Array<keyof typeof COMPETITION_INTEGRITY_LEVELS>);
+  const currentIntegrityCfg = COMPETITION_INTEGRITY_LEVELS[
+    integrityLevel as keyof typeof COMPETITION_INTEGRITY_LEVELS
+  ];
+
   const stepsComplete =
-    !!selectedDivision && !!selectedCourse && !!selectedUnitTopic && !!difficulty &&
-    !!heatType && !!integrityLevel && questionCount >= 5 && durationMinutes >= 5;
+    !!selectedDivision &&
+    !!selectedCourse &&
+    selectedCourse.available !== false &&
+    enoughConcepts &&
+    !!mode &&
+    !!questionProfile &&
+    questionCount >= 5 &&
+    durationMinutes >= 5;
+
+  // Selected-topic summary for the review card.
+  const selectedTopicSummary = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const c of concepts) {
+      if (!selectedConceptIds.has(c.id)) continue;
+      map.set(c.unit_topic_id, (map.get(c.unit_topic_id) ?? 0) + 1);
+    }
+    return unitTopics
+      .filter((t) => (map.get(t.id) ?? 0) > 0)
+      .map((t) => ({ name: t.name, count: map.get(t.id)! }));
+  }, [concepts, selectedConceptIds, unitTopics]);
 
   // ── Create handler ──────────────────────────────────────────────────────
   const handleCreate = useCallback(async () => {
-    if (!selectedDivision || !selectedCourse || !selectedUnitTopic) {
-      setError('Please complete every step before creating the Heat.');
+    if (!selectedDivision || !selectedCourse) {
+      setError('Pick a division and course before creating the Heat.');
       return;
     }
-
+    if (!enoughConcepts) {
+      setError(`Select at least ${minConcepts} concepts to create a Heat.`);
+      return;
+    }
     setError(null);
     setCreating(true);
-
     try {
-      const mix = HEAT_TYPE_MIX[heatType];
+      const conceptIdsArr = Array.from(selectedConceptIds);
+      const profileMeta = QUESTION_PROFILES[questionProfile];
+
       const heat = await createHeat(supabase, {
         division_id: selectedDivision.id,
-        unit_topic_id:
-          selectedUnitTopic === 'mixed' ? null : selectedUnitTopic.id,
-        depth_min: currentDifficulty.depthMin,
-        depth_max: currentDifficulty.depthMax,
-        type: heatType,
+        // unit_topic_id stays null when conceptIds is the multi-select path —
+        // the question-delivery pipeline uses conceptIds when present.
+        unit_topic_id: null,
+        concept_ids: conceptIdsArr,
+        depth_min: profileMeta.depth_min,
+        depth_max: profileMeta.depth_max,
+        question_profile: questionProfile,
+        type: mode,
+        is_assessment: currentMode.is_assessment,
+        results_released: mode !== 'test',     // Test starts gated
         integrity_level: integrityLevel,
         question_count: questionCount,
         duration_seconds: durationMinutes * 60,
         school_id: profile?.school_id ?? null,
         scope: 'class',
-        // CTA framework mix — see HEAT_TYPE_MIX above.
-        fr_ratio: mix.fr_ratio,
-        mc_ratio: mix.mc_ratio,
-        mc_visual_share: mix.mc_visual_share,
-        requires_attestation: currentIntegrity.config.teacher_attestation_required,
-        lockdown_required: currentIntegrity.config.lockdown_browser_required,
-        synchronized_start_at: currentIntegrity.config.synchronized_start
-          ? new Date(Date.now() + 5 * 60 * 1000).toISOString()
-          : null,
+        fr_ratio: currentMode.fr_ratio,
+        mc_ratio: currentMode.mc_ratio,
+        mc_visual_share: currentMode.mc_visual_share,
+        requires_attestation: false,
+        lockdown_required: false,
+        synchronized_start_at: null,
       });
 
-      // BUG 0 fix: give Supabase a moment to fully commit the heats row +
-      // heat_questions inserts and propagate to read replicas / refresh RLS
-      // policies before we redirect. Without this short delay the lobby
-      // page sometimes lands before the row is visible and falls into the
-      // retry loop (or, before the retry loop existed, span forever).
-      console.log('[CreateHeat] heat created — waiting 500ms before redirect', { code: heat.code });
+      // Persist the selection for next time.
+      saveLastSelection({
+        divisionCode: selectedDivision.code,
+        courseId: selectedCourse.id,
+        mode,
+        profile: questionProfile,
+        questionCount,
+        durationMinutes,
+      });
+
+      // BUG 0 fix retained — 500ms wait before redirect so the heats row +
+      // heat_questions inserts propagate to the read replica.
       await new Promise((r) => setTimeout(r, 500));
       router.push(`/compete/${heat.code}`);
     } catch (err: any) {
@@ -566,14 +823,15 @@ export default function CreateHeatPage() {
   }, [
     selectedDivision,
     selectedCourse,
-    selectedUnitTopic,
-    currentDifficulty,
-    heatType,
+    enoughConcepts,
+    selectedConceptIds,
+    questionProfile,
+    mode,
+    currentMode,
     integrityLevel,
     questionCount,
     durationMinutes,
     profile?.school_id,
-    currentIntegrity,
     supabase,
     router,
   ]);
@@ -589,7 +847,7 @@ export default function CreateHeatPage() {
       </div>
     );
   }
-  if (!isAuthenticated) return null;          // redirect handled by effect
+  if (!isAuthenticated) return null;
 
   // ── Render ──────────────────────────────────────────────────────────────
   return (
@@ -602,11 +860,11 @@ export default function CreateHeatPage() {
             Create a Heat
           </h1>
           <p className="text-gray-500 mt-1">
-            Set up a new competition for your Mathletes — division-first, curriculum-aligned.
+            Multi-select topics, pick a mode + question profile, fine-tune, launch.
           </p>
         </div>
 
-        {/* Error */}
+        {/* Error banner */}
         {error && (
           <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3">
             <AlertTriangle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
@@ -618,52 +876,39 @@ export default function CreateHeatPage() {
         )}
 
         {/* ── Step 1: Division ─────────────────────────────────────────── */}
-        <SectionCard step={1} title="Choose a Division" hint="Mathletes compete within their division for fair grade-banded matchups.">
+        <SectionCard step={1} title="Choose a Division" hint="Mathletes compete within their division.">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
             {divisions.map((d) => {
               const isSelected = selectedDivision?.id === d.id;
-              const isAvailable = d.available;
               return (
                 <button
                   key={d.id}
                   type="button"
-                  onClick={() => isAvailable && setSelectedDivision(d)}
-                  disabled={!isAvailable}
+                  onClick={() => d.available && setSelectedDivision(d)}
+                  disabled={!d.available}
                   className={`relative p-4 rounded-xl border-2 text-center transition-all ${
-                    !isAvailable
+                    !d.available
                       ? 'border-gray-100 bg-gray-50 cursor-not-allowed'
                       : isSelected
                       ? 'border-indigo-500 bg-indigo-50'
                       : 'border-gray-200 bg-white hover:border-gray-300'
                   }`}
                 >
-                  <div
-                    className={`mx-auto mb-2 flex justify-center ${
-                      !isAvailable
-                        ? 'text-gray-300'
-                        : isSelected
-                        ? 'text-indigo-600'
-                        : 'text-gray-500'
-                    }`}
-                  >
+                  <div className={`mx-auto mb-2 flex justify-center ${!d.available ? 'text-gray-300' : isSelected ? 'text-indigo-600' : 'text-gray-500'}`}>
                     {DIVISION_ICONS[d.code] ?? <GraduationCap className="w-6 h-6" />}
                   </div>
-                  <p
-                    className={`font-semibold text-sm ${
-                      !isAvailable ? 'text-gray-400' : isSelected ? 'text-indigo-900' : 'text-gray-700'
-                    }`}
-                  >
+                  <p className={`font-semibold text-sm ${!d.available ? 'text-gray-400' : isSelected ? 'text-indigo-900' : 'text-gray-700'}`}>
                     {d.name}
                   </p>
                   <p className="text-[11px] text-gray-400 mt-0.5">
                     Grades {d.grade_min}–{d.grade_max}
                   </p>
-                  {!isAvailable && (
+                  {!d.available && (
                     <span className="absolute top-1.5 right-1.5 text-[9px] font-bold uppercase tracking-wider text-gray-400 bg-gray-100 border border-gray-200 rounded-full px-1.5 py-0.5">
                       Soon
                     </span>
                   )}
-                  {isSelected && isAvailable && (
+                  {isSelected && d.available && (
                     <Check className="absolute top-1.5 right-1.5 w-4 h-4 text-indigo-600" />
                   )}
                 </button>
@@ -672,7 +917,7 @@ export default function CreateHeatPage() {
           </div>
         </SectionCard>
 
-        {/* ── Step 2: Course (auto-selected when 1) ────────────────────── */}
+        {/* ── Step 2: Course ───────────────────────────────────────────── */}
         <SectionCard
           step={2}
           title="Course"
@@ -690,9 +935,7 @@ export default function CreateHeatPage() {
               <Loader2 className="w-4 h-4 animate-spin" /> Loading courses…
             </div>
           ) : courses.length === 0 ? (
-            <p className="text-sm text-gray-500 italic">
-              No course is linked to this division yet. Pick a different division.
-            </p>
+            <p className="text-sm text-gray-500 italic">No course is linked to this division yet.</p>
           ) : (
             <div className="flex flex-wrap gap-2">
               {courses.map((c) => {
@@ -727,113 +970,186 @@ export default function CreateHeatPage() {
           )}
         </SectionCard>
 
-        {/* ── Step 3: Unit Topic ──────────────────────────────────────── */}
+        {/* ── Step 3: Topics & Concepts (tree) ─────────────────────────── */}
         <SectionCard
           step={3}
-          title="Pick a Unit Topic"
-          hint='Or choose "Mixed" to pull questions from every topic in the course.'
+          title="Topics & Concepts"
+          hint={`Select the concepts to draw from. Minimum ${minConcepts}.`}
           locked={!selectedCourse}
         >
-          {loadingUnitTopics ? (
+          {loadingConcepts ? (
             <div className="text-sm text-gray-400 flex items-center gap-2">
-              <Loader2 className="w-4 h-4 animate-spin" /> Loading topics…
+              <Loader2 className="w-4 h-4 animate-spin" /> Loading concept tree…
             </div>
+          ) : unitTopics.length === 0 ? (
+            <p className="text-sm text-gray-500 italic">No topics seeded for this course yet.</p>
           ) : (
-            <div className="flex flex-wrap gap-2">
-              {/* Mixed first */}
-              <button
-                type="button"
-                onClick={() => setSelectedUnitTopic('mixed')}
-                className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium border-2 transition-all ${
-                  selectedUnitTopic === 'mixed'
-                    ? 'border-indigo-500 bg-indigo-50 text-indigo-900'
-                    : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'
-                }`}
-              >
-                <Sparkles className="w-4 h-4" />
-                Mixed (all topics)
-              </button>
-              {unitTopics.map((t) => {
-                const isSelected =
-                  selectedUnitTopic !== 'mixed' && selectedUnitTopic?.id === t.id;
+            <>
+              {/* Toolbar */}
+              <div className="flex items-center justify-between mb-3">
+                <p className="text-xs text-gray-500">
+                  <span className={enoughConcepts ? 'text-gray-700 font-medium' : 'text-amber-700 font-medium'}>
+                    {selectedCount}
+                  </span>{' '}
+                  of {totalConcepts} concepts selected
+                  {!enoughConcepts && (
+                    <span className="ml-1 text-amber-700">
+                      (need at least {minConcepts})
+                    </span>
+                  )}
+                </p>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={selectAllConcepts}
+                    className="text-xs text-indigo-600 hover:underline"
+                  >
+                    Select all
+                  </button>
+                  <span className="text-gray-300 text-xs">·</span>
+                  <button
+                    type="button"
+                    onClick={clearAllConcepts}
+                    className="text-xs text-gray-500 hover:underline"
+                  >
+                    Clear
+                  </button>
+                </div>
+              </div>
+              {/* Tree */}
+              <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
+                {unitTopics.map((t) => (
+                  <TopicTreeNode
+                    key={t.id}
+                    topic={t}
+                    concepts={conceptsByTopic.get(t.id) ?? []}
+                    expanded={expandedTopics.has(t.id)}
+                    selectedConceptIds={selectedConceptIds}
+                    onToggleExpand={() => toggleExpand(t.id)}
+                    onToggleConcept={toggleConcept}
+                    onToggleTopic={toggleTopic}
+                  />
+                ))}
+              </div>
+            </>
+          )}
+        </SectionCard>
+
+        {/* ── Step 4: Heat Mode ────────────────────────────────────────── */}
+        <SectionCard
+          step={4}
+          title="Heat Mode"
+          hint="Competition modes show a leaderboard; Assessment modes hide it and show letter grades."
+          locked={!enoughConcepts}
+        >
+          {/* Competition section */}
+          <div className="mb-5">
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-gray-500 mb-2 flex items-center gap-1.5">
+              <Trophy className="w-3.5 h-3.5 text-amber-500" />
+              Competition
+            </p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {COMPETITION_MODES.map((key) => {
+                const meta = HEAT_MODES[key];
+                const isSelected = mode === key;
                 return (
                   <button
-                    key={t.id}
+                    key={key}
                     type="button"
-                    onClick={() => setSelectedUnitTopic(t)}
-                    className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium border-2 transition-all ${
-                      isSelected
-                        ? 'border-indigo-500 bg-indigo-50 text-indigo-900'
-                        : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300'
+                    onClick={() => setMode(key)}
+                    className={`p-4 rounded-xl border-2 text-center transition-all ${
+                      isSelected ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200 bg-white hover:border-gray-300'
                     }`}
                   >
-                    <Layers className="w-4 h-4" />
-                    {t.name}
+                    <div className={`mx-auto mb-2 flex justify-center ${isSelected ? 'text-indigo-600' : 'text-gray-400'}`}>
+                      {meta.icon}
+                    </div>
+                    <p className={`font-semibold text-sm ${isSelected ? 'text-indigo-900' : 'text-gray-700'}`}>
+                      {meta.label}
+                    </p>
+                    <p className="text-[11px] text-gray-400 mt-0.5">{meta.desc}</p>
                   </button>
                 );
               })}
             </div>
-          )}
-        </SectionCard>
-
-        {/* ── Step 4: Heat Preset (replaces legacy Bronze/Silver/Gold/Platinum tiers) */}
-        <SectionCard
-          step={4}
-          title="Heat Preset"
-          hint="Picks the depth range, default question count, and duration. Override the count and duration in Step 5 if you want."
-          locked={!selectedUnitTopic}
-        >
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {(Object.entries(DIFFICULTY_TIERS) as [DifficultyTier, typeof DIFFICULTY_TIERS[DifficultyTier]][]).map(([key, preset]) => {
-              const isSelected = difficulty === key;
-              return (
-                <button
-                  key={key}
-                  type="button"
-                  onClick={() => setDifficulty(key)}
-                  className={`p-4 rounded-xl border-2 text-center font-semibold transition-all ${
-                    isSelected ? `${preset.accent}` : 'border-gray-200 text-gray-400 hover:border-gray-300'
-                  }`}
-                >
-                  <p className="text-sm">{preset.label}</p>
-                  <p className="text-[11px] font-normal opacity-70 mt-0.5">{preset.desc}</p>
-                  <p className="text-[10px] font-normal opacity-60 mt-1">
-                    Depth {preset.depthMin}{preset.depthMin !== preset.depthMax ? `–${preset.depthMax}` : ''}
-                  </p>
-                </button>
-              );
-            })}
+          </div>
+          {/* Assessment section */}
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-gray-500 mb-2 flex items-center gap-1.5">
+              <Clipboard className="w-3.5 h-3.5 text-sky-600" />
+              Assessment
+            </p>
+            <div className="grid grid-cols-2 gap-3">
+              {ASSESSMENT_MODES.map((key) => {
+                const meta = HEAT_MODES[key];
+                const isSelected = mode === key;
+                return (
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() => setMode(key)}
+                    className={`p-4 rounded-xl border-2 text-left transition-all ${
+                      isSelected ? 'border-sky-500 bg-sky-50' : 'border-gray-200 bg-white hover:border-gray-300'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className={isSelected ? 'text-sky-600' : 'text-gray-400'}>{meta.icon}</span>
+                      <span className={`font-semibold text-sm ${isSelected ? 'text-sky-900' : 'text-gray-700'}`}>
+                        {meta.label}
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-gray-500 leading-snug">{meta.desc}</p>
+                    <p className="text-[10px] text-gray-400 mt-1">
+                      No leaderboard · grade card · Focus Mode {key === 'test' ? 'locked' : 'on'}
+                    </p>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </SectionCard>
 
-        {/* ── Step 5: Heat Type ───────────────────────────────────────── */}
-        <SectionCard step={5} title="Heat Type" hint="Each preset has a default question count and duration — tweak below." locked={!selectedUnitTopic}>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
-            {HEAT_TYPE_OPTIONS.map((key) => {
-              const meta = HEAT_TYPE_META[key];
-              const isSelected = heatType === key;
+        {/* ── Step 5: Question Profile ─────────────────────────────────── */}
+        <SectionCard
+          step={5}
+          title="Question Profile"
+          hint="Drives the 3-axis filter (cognitive demand × complexity × context)."
+          locked={!enoughConcepts}
+        >
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {(Object.entries(QUESTION_PROFILES) as [QuestionProfile, typeof QUESTION_PROFILES[QuestionProfile]][]).map(([key, p]) => {
+              const isSelected = questionProfile === key;
               return (
                 <button
                   key={key}
                   type="button"
-                  onClick={() => setHeatType(key)}
+                  onClick={() => setQuestionProfile(key)}
+                  title={p.tooltip}
                   className={`p-4 rounded-xl border-2 text-center transition-all ${
                     isSelected ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200 bg-white hover:border-gray-300'
                   }`}
                 >
-                  <div className={`mx-auto mb-2 flex justify-center ${isSelected ? 'text-indigo-600' : 'text-gray-400'}`}>
-                    {meta.icon}
-                  </div>
+                  <div className="text-2xl mb-1">{p.emoji}</div>
                   <p className={`font-semibold text-sm ${isSelected ? 'text-indigo-900' : 'text-gray-700'}`}>
-                    {meta.label}
+                    {p.label}
                   </p>
-                  <p className="text-[11px] text-gray-400 mt-0.5">{meta.desc}</p>
+                  <p className="text-[11px] text-gray-500 mt-0.5">{p.cog}</p>
+                  <p className="text-[10px] text-gray-400">{p.complex}</p>
+                  <p className="text-[10px] text-gray-400">{p.ctx}</p>
                 </button>
               );
             })}
           </div>
+        </SectionCard>
 
-          <div className="grid grid-cols-2 gap-4">
+        {/* ── Step 6: Fine-tune ───────────────────────────────────────── */}
+        <SectionCard
+          step={6}
+          title="Fine-Tune (optional)"
+          hint="Override question count, duration, and integrity if needed."
+          locked={!enoughConcepts}
+        >
+          <div className="grid grid-cols-2 gap-4 mb-4">
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1">Questions (5–50)</label>
               <input
@@ -841,9 +1157,7 @@ export default function CreateHeatPage() {
                 min={5}
                 max={50}
                 value={questionCount}
-                onChange={(e) =>
-                  setQuestionCount(Math.min(50, Math.max(5, Number(e.target.value) || 5)))
-                }
+                onChange={(e) => setQuestionCount(Math.min(50, Math.max(5, Number(e.target.value) || 5)))}
                 className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-400"
               />
             </div>
@@ -855,9 +1169,7 @@ export default function CreateHeatPage() {
                   min={5}
                   max={60}
                   value={durationMinutes}
-                  onChange={(e) =>
-                    setDurationMinutes(Math.min(60, Math.max(5, Number(e.target.value) || 5)))
-                  }
+                  onChange={(e) => setDurationMinutes(Math.min(60, Math.max(5, Number(e.target.value) || 5)))}
                   className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm focus:border-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-400 pr-12"
                 />
                 <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">
@@ -866,64 +1178,83 @@ export default function CreateHeatPage() {
               </div>
             </div>
           </div>
+          {/* Integrity (Competition only — Assessment is locked) */}
+          <div>
+            <label className="block text-xs font-medium text-gray-600 mb-2">
+              Integrity Level
+              {currentMode.locked_integrity && (
+                <span className="ml-2 text-[10px] uppercase tracking-wider text-gray-400">
+                  · Locked by mode
+                </span>
+              )}
+            </label>
+            <div className="grid grid-cols-3 gap-2">
+              {integrityOptions.map((key) => {
+                const cfg = COMPETITION_INTEGRITY_LEVELS[key];
+                const isSelected = integrityLevel === key;
+                const isLocked = !!currentMode.locked_integrity;
+                return (
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() => !isLocked && setIntegrityLevel(key)}
+                    disabled={isLocked && !isSelected}
+                    className={`flex items-center gap-2 px-3 py-2.5 rounded-lg border-2 text-left transition-all ${
+                      isSelected
+                        ? 'border-indigo-500 bg-indigo-50'
+                        : 'border-gray-200 bg-white hover:border-gray-300'
+                    } ${isLocked && !isSelected ? 'opacity-40 cursor-not-allowed' : ''}`}
+                  >
+                    <span className={isSelected ? 'text-indigo-600' : 'text-gray-400'}>{cfg.icon}</span>
+                    <div className="min-w-0 flex-1">
+                      <p className={`text-sm font-medium ${isSelected ? 'text-indigo-900' : 'text-gray-700'}`}>
+                        {cfg.label}
+                      </p>
+                      <p className="text-[10px] text-gray-400 truncate">{cfg.desc}</p>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </SectionCard>
 
-        {/* ── Step 6: Integrity ───────────────────────────────────────── */}
-        <SectionCard step={6} title="Integrity Level" hint="Higher stakes activate stricter monitoring." locked={!selectedUnitTopic}>
-          <div className="space-y-2 mb-4">
-            {(Object.entries(INTEGRITY_LEVELS) as [IntegrityLevel, typeof INTEGRITY_LEVELS[IntegrityLevel]][]).map(([key, level]) => {
-              const isSelected = integrityLevel === key;
-              return (
-                <button
-                  key={key}
-                  type="button"
-                  onClick={() => setIntegrityLevel(key)}
-                  className={`w-full flex items-center gap-4 p-3.5 rounded-xl border-2 text-left transition-all ${
-                    isSelected ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200 bg-white hover:border-gray-300'
-                  }`}
-                >
-                  <div className={isSelected ? 'text-indigo-600' : 'text-gray-400'}>{level.icon}</div>
-                  <div className="flex-1 min-w-0">
-                    <p className={`font-semibold text-sm ${isSelected ? 'text-indigo-900' : 'text-gray-700'}`}>
-                      {level.label}
-                    </p>
-                    <p className="text-xs text-gray-400">{level.desc}</p>
-                  </div>
-                  {isSelected && <Check className="w-5 h-5 text-indigo-600 flex-shrink-0" />}
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="p-3 rounded-lg bg-gray-50">
-            <p className="text-xs text-gray-400 mb-2 font-medium">What Mathletes will see:</p>
-            <IntegrityBadges config={currentIntegrity.config} />
-          </div>
-        </SectionCard>
-
-        {/* ── Step 7: Summary + Create ─────────────────────────────────── */}
-        <SectionCard step={7} title="Review &amp; Launch">
-          <div className="grid grid-cols-2 gap-3 mb-5">
-            <SummaryCell label="Division" value={selectedDivision?.name ?? '—'} />
-            <SummaryCell label="Course" value={selectedCourse?.name ?? '—'} />
-            <SummaryCell
-              label="Unit Topic"
+        {/* ── Step 7: Review & Launch ─────────────────────────────────── */}
+        <SectionCard step={7} title="Review &amp; Launch" locked={!stepsComplete}>
+          <div className="rounded-xl bg-gray-50 border border-gray-200 p-4 mb-4 space-y-2 text-sm">
+            <SummaryRow label="Division" value={selectedDivision?.name ?? '—'} />
+            <SummaryRow label="Course" value={selectedCourse?.name ?? '—'} />
+            <SummaryRow
+              label="Topics"
               value={
-                selectedUnitTopic === 'mixed'
-                  ? 'Mixed (all topics)'
-                  : selectedUnitTopic?.name ?? '—'
+                selectedTopicSummary.length === 0
+                  ? '—'
+                  : selectedTopicSummary
+                      .map((t) => `${t.name} (${t.count})`)
+                      .join(', ')
               }
             />
-            <SummaryCell label="Difficulty" value={`${DIFFICULTY_TIERS[difficulty].label} (depth ${currentDifficulty.depthMin}${currentDifficulty.depthMin !== currentDifficulty.depthMax ? `–${currentDifficulty.depthMax}` : ''})`} />
-            <SummaryCell label="Type" value={HEAT_TYPE_META[heatType].label} />
-            <SummaryCell label="Format" value={`${questionCount} Q · ${durationMinutes} min`} />
-          </div>
-
-          <div className="rounded-lg bg-indigo-50 border border-indigo-100 p-3 mb-6">
-            <p className="text-xs text-indigo-700 mb-1 font-semibold">
-              Integrity: {currentIntegrity.label}
-            </p>
-            <IntegrityBadges config={currentIntegrity.config} />
+            <SummaryRow label="Concepts" value={`${selectedCount} selected`} />
+            <SummaryRow
+              label="Mode"
+              value={`${currentMode.label} (${currentMode.category === 'assessment' ? 'Assessment' : 'Competition'})`}
+            />
+            <SummaryRow label="Profile" value={`${currentProfile.label} — ${currentProfile.cog} · ${currentProfile.complex} · ${currentProfile.ctx}`} />
+            <SummaryRow label="Format" value={`${questionCount} Q · ${durationMinutes} min`} />
+            <SummaryRow
+              label="FR / MC"
+              value={`${Math.round(currentMode.fr_ratio * 100)}% / ${Math.round(currentMode.mc_ratio * 100)}%`}
+            />
+            <SummaryRow
+              label="Integrity"
+              value={`${currentIntegrityCfg?.label ?? integrityLevel}${currentIntegrityCfg?.config.focus_mode_enabled ? ' · Focus Mode on' : ''}`}
+            />
+            {currentMode.is_assessment && (
+              <SummaryRow
+                label="Grading"
+                value="A=90+  B=80+  C=70+  D=60+  F=<60"
+              />
+            )}
           </div>
 
           <div className="flex gap-3">
@@ -966,14 +1297,16 @@ export default function CreateHeatPage() {
 }
 
 // -----------------------------------------------------------------------------
-// SMALL HELPERS
+// SUB-COMPONENTS
 // -----------------------------------------------------------------------------
 
-function SummaryCell({ label, value }: { label: string; value: string }) {
+function SummaryRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-lg bg-gray-50 border border-gray-100 p-3">
-      <p className="text-[11px] uppercase tracking-wider text-gray-400 font-medium">{label}</p>
-      <p className="text-sm font-semibold text-gray-900 mt-0.5 break-words">{value}</p>
+    <div className="flex items-start gap-3">
+      <span className="text-[11px] uppercase tracking-wider text-gray-400 font-medium w-20 flex-shrink-0 mt-0.5">
+        {label}
+      </span>
+      <span className="text-sm text-gray-900 break-words flex-1">{value}</span>
     </div>
   );
 }
