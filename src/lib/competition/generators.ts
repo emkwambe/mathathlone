@@ -35,6 +35,7 @@ export type AnswerType =
   | 'integer_or_text'
   | 'text_or_fraction'
   | 'decimal_or_fraction_or_percent'
+  | 'percent'
   | 'decimal_or_text'
   | 'fraction_or_decimal'
   | 'integer_or_decimal';
@@ -69,6 +70,7 @@ export const ANSWER_TYPE_HINTS: Record<AnswerType, string> = {
   integer_or_fraction:              'Enter a whole number or fraction, e.g. 6 or 5/3',
   integer_or_decimal:               'Enter a whole number or decimal, e.g. 4 or 2.5',
   decimal_or_fraction_or_percent:   'Enter a decimal, fraction, or percent, e.g. 0.5 or 1/2 or 50%',
+  percent:                          'Enter as a percent with %, e.g. 25%',
   decimal_or_text:                  'Enter a number or short answer',
   integer_or_text:                  'Enter a number or short answer',
   text_or_fraction:                 'Enter a short answer or fraction',
@@ -2117,7 +2119,7 @@ export function generate_g7_proportional_solve(difficulty: DifficultyLevel): Gen
     // To keep the answer integer, newInput must be a multiple of known2.
     // Cross-multiply: known1/known2 = answer/newInput → answer = known1 × newInput / known2.
     newInput = known2 * m;
-    answer = (known1 * newInput) / known2;
+    answer = Math.round((known1 * newInput) / known2 * 10000) / 10000;
   } else {
     // Forward: newInput in known1's units; answer in known2's units.
     newInput = base * m;
@@ -2218,13 +2220,13 @@ export function generate_g7_percent_change(difficulty: DifficultyLevel): Generat
   if (askPercent) {
     return g7Wrap(difficulty, 'g7_percent_change', 'M7.RP.3.3', 'Percent Increase or Decrease', {
       question: `A value changed from ${original} to ${newVal}. What is the percent ${direction}?`,
-      answer: String(pct),
+      answer: `${pct}%`,
       solution_steps: [
         `Find the change: |${newVal} − ${original}| = ${delta}`,
         `Divide by the original: ${delta} ÷ ${original} = ${(delta / original).toFixed(4)}`,
         `Convert to percent: ${pct}%`,
       ],
-      answer_type: 'decimal',
+      answer_type: 'percent',
     });
   }
   return g7Wrap(difficulty, 'g7_percent_change', 'M7.RP.3.3', 'Percent Increase or Decrease', {
@@ -2372,7 +2374,7 @@ export function generate_g7_solve_distrib_like_terms(difficulty: DifficultyLevel
   const lhsConst = k * b;
   const e = lhsCoef * x + lhsConst;
   const innerSign = b < 0 ? '-' : '+';
-  const inner = `${a}x ${innerSign} ${Math.abs(b)}`;
+  const inner = b === 0 ? `${a}x` : `${a}x ${innerSign} ${Math.abs(b)}`;
   const tail = `${d > 0 ? '+ ' : '- '}${Math.abs(d)}x`;
   return g7Wrap(difficulty, 'g7_solve_distrib_like_terms', 'M7.EE.2.2', 'Solving Linear Equations (Distribute + Like Terms)', {
     question: `Solve for x: ${k}(${inner}) ${tail} = ${e}`,
