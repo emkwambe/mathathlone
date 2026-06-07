@@ -102,7 +102,14 @@ export function subscribeToHeat(
 ): RealtimeChannel {
   const suffix = opts.channelSuffix ? `:${opts.channelSuffix}` : '';
   const channelName = `heat:${heatId}${suffix}:${shortRandomId()}`;
-  const channel = supabase.channel(channelName);
+  // FIX 3 — Enable presence on the channel so Supabase Realtime sends
+  // keepalive frames tied to the heat. Some networks aggressively kill
+  // idle WebSockets after 30-60s of silence; presence acts as a steady
+  // "still here" beacon and reduces drop frequency. The key only needs
+  // to be unique per heat — using heatId keeps the presence list scoped.
+  const channel = supabase.channel(channelName, {
+    config: { presence: { key: heatId } },
+  });
 
   // ── ALL .on(...) registrations MUST happen before .subscribe() ──────────
   // supabase-realtime-js rejects postgres_changes handlers added after the
@@ -255,12 +262,15 @@ export function useHeatRealtime(heatId: string | null | undefined): {
     };
     document.addEventListener('visibilitychange', onVisibility);
 
-    // Periodic heartbeat (every 30s) — covers the case where the tab is
-    // foreground but the connection has silently dropped.
+    // FIX 3 — Periodic heartbeat. Threshold lowered from 60s → 20s so a
+    // dropped channel is detected and rebuilt within one interval tick
+    // instead of two. Interval stays at 30s to avoid hammering the
+    // server, but combined with the lower threshold the worst-case
+    // detection window drops from ~90s to ~50s.
     const heartbeat = window.setInterval(() => {
       const silentMs = Date.now() - lastEventAtRef.current;
-      if (silentMs > 60_000 && channelRef.current) {
-        console.warn('[useHeatRealtime] no events in 60s, resubscribing');
+      if (silentMs > 20_000 && channelRef.current) {
+        console.warn('[useHeatRealtime] no events in 20s, resubscribing');
         supabase.removeChannel(channelRef.current);
         channelRef.current = null;
         subscribe();

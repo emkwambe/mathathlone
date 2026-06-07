@@ -174,18 +174,24 @@ export default function TeacherMonitor({
     return () => clearTimeout(t);
   }, [secondsRemaining]);
 
-  // FIX 1 — Auto-end Heat when the timer hits zero.
-  // The teacher view promises "The Heat ends automatically when the timer
-  // reaches zero" — actually honor that. Guarded by autoEndFiredRef so it
-  // runs at most once, and gated on the live heat status being 'active'
-  // (skip the call entirely if the teacher already ended early, or the
-  // server has already advanced status).
+  // FIX 1 — Polling-based timer auto-end (no Realtime dependency).
+  //
+  // The client-side countdown is authoritative for "the timer hit zero". We
+  // intentionally do NOT wait for any Realtime signal — Supabase's WS
+  // channel drops every 30-60s on some networks, and any event-based path
+  // would miss the trigger when the drop happens around 0:00.
+  //
+  // Sequence: when secondsRemaining first reaches 0, latch the ref and arm
+  // a 3-second setTimeout. The 3s grace gives any in-flight student
+  // submissions a moment to land before scoring kicks in. After 3s we
+  // confirm the heat is still 'active' / 'in_progress' (in case the
+  // teacher already ended early) and call endHeat unconditionally.
   useEffect(() => {
     if (secondsRemaining > 0) return;
     if (ending) return;
     if (autoEndFiredRef.current) return;
     autoEndFiredRef.current = true;
-    (async () => {
+    const timeoutId = window.setTimeout(async () => {
       try {
         const { data: heatRow } = await supabase
           .from('heats')
@@ -199,11 +205,12 @@ export default function TeacherMonitor({
         }
         await handleEnd(true);
       } catch (err) {
-        console.warn('[TeacherMonitor] auto-end on timer-zero failed:', err);
-        // Allow a manual retry by un-latching the ref.
+        console.warn('[TeacherMonitor] timer-zero auto-end failed:', err);
+        // Allow a retry on the next opportunity (e.g. all-finished poll).
         autoEndFiredRef.current = false;
       }
-    })();
+    }, 3000);
+    return () => window.clearTimeout(timeoutId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [secondsRemaining]);
 
@@ -240,6 +247,51 @@ export default function TeacherMonitor({
     },
     [ending, heatId, supabase]
   );
+
+  // FIX 2 — Polling-based all-finished auto-end (no Realtime dependency).
+  //
+  // The Realtime path in useHeatParticipants already calls endHeat when all
+  // participations flip to 'finished', but Supabase drops the WS channel
+  // every 30-60s on some networks and that signal can be missed. This poll
+  // is the safety net: every 10 seconds we read heat_participations
+  // directly, confirm everyone is finished AND the heat is still active,
+  // and end it ourselves. Latches autoEndFiredRef so it can't double-fire
+  // alongside the Realtime path or the timer-zero path.
+  useEffect(() => {
+    const interval = window.setInterval(async () => {
+      if (autoEndFiredRef.current) return;
+      if (ending) return;
+      try {
+        const { data: parts } = await supabase
+          .from('heat_participations')
+          .select('status')
+          .eq('heat_id', heatId);
+        if (!parts || parts.length === 0) return;
+        const allFinished = parts.every(
+          (p: { status: string | null }) => p.status === 'finished'
+        );
+        if (!allFinished) return;
+
+        const { data: heatRow } = await supabase
+          .from('heats')
+          .select('status')
+          .eq('id', heatId)
+          .maybeSingle();
+        const status = (heatRow as { status: string } | null)?.status;
+        if (status !== 'active' && status !== 'in_progress') {
+          // Heat already past active — stop polling implicitly by latching.
+          autoEndFiredRef.current = true;
+          return;
+        }
+        autoEndFiredRef.current = true;
+        await handleEnd(true);
+      } catch (err) {
+        console.warn('[TeacherMonitor] all-finished poll failed:', err);
+        // Don't latch on transient error — next tick will retry.
+      }
+    }, 10_000);
+    return () => window.clearInterval(interval);
+  }, [ending, heatId, supabase, handleEnd]);
 
   // ── Timer color ─────────────────────────────────────────────────────────
   const totalSeconds = durationSeconds;
