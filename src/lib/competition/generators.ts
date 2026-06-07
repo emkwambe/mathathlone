@@ -6226,6 +6226,1002 @@ export function generate_mf_square_cube_root(difficulty: DifficultyLevel): Gener
 }
 
 // =============================================================================
+// =============================================================================
+// NC GRADE 6 — RISING STARS DIVISION (pool: nc_grade_6)
+// =============================================================================
+// =============================================================================
+// All generators use the `g6_` prefix. Wrapped via g7Wrap() so each plugs
+// into the existing question-delivery pipeline. Params follow the spec in
+// docs/curriculum/grade6/NC_Grade_6_generators.json.
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BATCH 1: NS — Decimal & Fraction Operations
+// ─────────────────────────────────────────────────────────────────────────────
+
+// 1. M6.NS.1.1 — Add / Subtract Multi-Digit Decimals
+export function generate_g6_ns_add_sub_decimals(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Use cents-or-thousandths-scale integer arithmetic to avoid FP drift.
+  const decimalPlaces = difficulty === 1 ? 1 : difficulty === 2 ? 2 : 3;
+  const scale = Math.pow(10, decimalPlaces);
+  const digitMax = difficulty === 1 ? 99 : difficulty === 2 ? 999 : 9999;
+  const a = randomInt(Math.floor(digitMax / 10), digitMax);
+  const b = randomInt(Math.floor(digitMax / 10), digitMax);
+  const op = Math.random() < 0.5 ? 'add' : 'subtract';
+  const [larger, smaller] = a >= b ? [a, b] : [b, a];
+  const aDec = (op === 'subtract' ? larger : a) / scale;
+  const bDec = (op === 'subtract' ? smaller : b) / scale;
+  const resultRaw = op === 'add' ? a + b : larger - smaller;
+  const result = resultRaw / scale;
+  return g7Wrap(difficulty, 'g6_ns_add_sub_decimals', 'M6.NS.1.1', 'Adding/Subtracting Decimals', {
+    question: `Evaluate: ${aDec.toFixed(decimalPlaces)} ${op === 'add' ? '+' : '-'} ${bDec.toFixed(decimalPlaces)}`,
+    answer: result.toFixed(decimalPlaces),
+    solution_steps: [
+      `Align the decimal points.`,
+      op === 'add'
+        ? `Add: ${aDec.toFixed(decimalPlaces)} + ${bDec.toFixed(decimalPlaces)} = ${result.toFixed(decimalPlaces)}.`
+        : `Subtract: ${aDec.toFixed(decimalPlaces)} − ${bDec.toFixed(decimalPlaces)} = ${result.toFixed(decimalPlaces)}.`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// 2. M6.NS.1.2 — Multiply Multi-Digit Decimals
+export function generate_g6_ns_multiply_decimals(difficulty: DifficultyLevel): GeneratedQuestion {
+  // factor1 and factor2 each have 1 or 2 decimal places. Combined ≤ 4 total digits.
+  const p1 = difficulty === 1 ? 1 : randomInt(1, 2);
+  const p2 = difficulty === 1 ? 1 : randomInt(1, 2);
+  const aRaw = randomInt(11, difficulty === 1 ? 49 : 99);
+  const bRaw = randomInt(11, difficulty === 1 ? 49 : 99);
+  const a = aRaw / Math.pow(10, p1);
+  const b = bRaw / Math.pow(10, p2);
+  const productRaw = aRaw * bRaw;
+  const product = productRaw / Math.pow(10, p1 + p2);
+  return g7Wrap(difficulty, 'g6_ns_multiply_decimals', 'M6.NS.1.2', 'Multiplying Decimals', {
+    question: `Evaluate: ${a.toFixed(p1)} × ${b.toFixed(p2)}`,
+    answer: product.toFixed(p1 + p2),
+    solution_steps: [
+      `Multiply as if integers: ${aRaw} × ${bRaw} = ${productRaw}.`,
+      `Total decimal places in the factors: ${p1 + p2}.`,
+      `Place the decimal point: ${product.toFixed(p1 + p2)}.`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// 3. M6.NS.1.3 — Long Division of Whole Numbers
+export function generate_g6_ns_long_division_whole(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Build a clean quotient first so the answer is an exact decimal.
+  const divisor = randomInt(difficulty === 1 ? 2 : 11, difficulty === 1 ? 9 : 25);
+  const quotient = randomInt(difficulty === 1 ? 5 : 20, difficulty === 1 ? 50 : 400);
+  const dividend = divisor * quotient;
+  return g7Wrap(difficulty, 'g6_ns_long_division_whole', 'M6.NS.1.3', 'Long Division of Whole Numbers', {
+    question: `Evaluate: ${dividend} ÷ ${divisor}`,
+    answer: String(quotient),
+    solution_steps: [
+      `Set up long division.`,
+      `${dividend} ÷ ${divisor} = ${quotient} (remainder 0).`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// 4. M6.NS.1.4 — Divide Decimals (decimal ÷ whole or decimal ÷ decimal)
+export function generate_g6_ns_divide_decimals(difficulty: DifficultyLevel): GeneratedQuestion {
+  const divisorIsDecimal = difficulty >= 2 && Math.random() < 0.5;
+  // Build a clean quotient with 1-2 decimal places.
+  const quotientPlaces = 1;
+  const quotient = randomInt(10, 90) / 10;             // 1.0 .. 9.0 (tenths)
+  if (divisorIsDecimal) {
+    const divisor = randomInt(2, 9) / 10;              // 0.2 .. 0.9
+    const dividend = +(quotient * divisor).toFixed(2);
+    return g7Wrap(difficulty, 'g6_ns_divide_decimals', 'M6.NS.1.4', 'Dividing Decimals', {
+      question: `Evaluate: ${dividend.toFixed(2)} ÷ ${divisor.toFixed(1)}`,
+      answer: quotient.toFixed(quotientPlaces),
+      solution_steps: [
+        `Multiply both numbers by 10 to remove the decimal from the divisor.`,
+        `${dividend.toFixed(2)} ÷ ${divisor.toFixed(1)} = ${dividend * 10} ÷ ${divisor * 10} = ${quotient.toFixed(quotientPlaces)}.`,
+      ],
+      answer_type: 'decimal',
+    });
+  }
+  const divisor = randomInt(2, 9);
+  const dividend = +(quotient * divisor).toFixed(2);
+  return g7Wrap(difficulty, 'g6_ns_divide_decimals', 'M6.NS.1.4', 'Dividing Decimals', {
+    question: `Evaluate: ${dividend.toFixed(2)} ÷ ${divisor}`,
+    answer: quotient.toFixed(quotientPlaces),
+    solution_steps: [
+      `Bring the decimal point straight up into the quotient.`,
+      `${dividend.toFixed(2)} ÷ ${divisor} = ${quotient.toFixed(quotientPlaces)}.`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// 5. M6.NS.2.2 — Divide Fractions (Invert and Multiply)
+export function generate_g6_ns_divide_fractions(difficulty: DifficultyLevel): GeneratedQuestion {
+  const denPool = [2, 3, 4, 5, 6, 8, 10];
+  const n1 = randomInt(1, 8);
+  const d1 = denPool[randomInt(0, denPool.length - 1)]!;
+  const n2 = randomInt(1, 8);
+  const d2 = denPool[randomInt(0, denPool.length - 1)]!;
+  const r1 = g7Rat(n1, d1);
+  const r2 = g7Rat(n2, d2);
+  if (r2.num === 0) return generate_g6_ns_divide_fractions(difficulty);
+  const result = g7RatDiv(r1, r2);
+  if (result.num === 0) return generate_g6_ns_divide_fractions(difficulty);
+  return g7Wrap(difficulty, 'g6_ns_divide_fractions', 'M6.NS.2.2', 'Dividing Fractions', {
+    question: `Evaluate: ${n1}/${d1} ÷ ${n2}/${d2}`,
+    answer: g7FmtRat(result),
+    solution_steps: [
+      `Invert the second fraction and multiply.`,
+      `${n1}/${d1} × ${d2}/${n2} = ${n1 * d2}/${d1 * n2}.`,
+      `Simplify: ${g7FmtRat(result)}.`,
+    ],
+    answer_type: 'fraction',
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BATCH 2: NS — Word Problem, GCF/LCM, Absolute Value (G6)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// 6. M6.NS.2.3 — Fraction Division Word Problem
+export function generate_g6_ns_fraction_division_word(difficulty: DifficultyLevel): GeneratedQuestion {
+  // "How many a/b in c/d?" → c/d ÷ a/b. Pool a/b and c/d so the answer is clean.
+  const scenarios = [
+    { setup: (cup: string, sv: string) => `A recipe uses ${cup} cup servings. How many servings can be made from ${sv} cup${sv === '1' ? '' : 's'} of mixture?`, container: 'mixture' },
+    { setup: (cup: string, sv: string) => `A ribbon is ${sv} foot${sv === '1' ? '' : 's'} long. How many ${cup}-foot pieces can be cut from it?`, container: 'ribbon' },
+  ];
+  // Use unit fractions for the divisor; the dividend is a multiple-of-unit fraction.
+  const divisorDen = [2, 3, 4, 5, 6, 8][randomInt(0, 5)]!;
+  const dividendNum = randomInt(2, 6);                  // produces clean integer answer if dividendNum ≥ 2
+  const result = g7RatDiv(g7Rat(dividendNum, divisorDen), g7Rat(1, divisorDen));
+  if (result.num === 0) return generate_g6_ns_fraction_division_word(difficulty);
+  const sc = scenarios[randomInt(0, scenarios.length - 1)]!;
+  return g7Wrap(difficulty, 'g6_ns_fraction_division_word', 'M6.NS.2.3', 'Fraction Division Word Problems', {
+    question: sc.setup(`1/${divisorDen}`, `${dividendNum}/${divisorDen}`),
+    answer: g7FmtRat(result),
+    solution_steps: [
+      `Set up: ${dividendNum}/${divisorDen} ÷ 1/${divisorDen}.`,
+      `Invert and multiply: ${dividendNum}/${divisorDen} × ${divisorDen}/1 = ${dividendNum * divisorDen}/${divisorDen}.`,
+      `Simplify: ${g7FmtRat(result)}.`,
+    ],
+    answer_type: 'fraction',
+  });
+}
+
+// 7. M6.NS.3.1 — Find Greatest Common Factor (GCF)
+export function generate_g6_ns_find_gcf(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Construct a, b so gcd(a, b) = g, then test the student.
+  const g = randomInt(2, difficulty === 1 ? 12 : 24);
+  let m: number, n: number;
+  do {
+    m = randomInt(2, 12);
+    n = randomInt(2, 12);
+  } while (gcd(m, n) !== 1 || m === n);
+  const a = g * m;
+  const b = g * n;
+  return g7Wrap(difficulty, 'g6_ns_find_gcf', 'M6.NS.3.1', 'Finding the GCF', {
+    question: `Find the Greatest Common Factor (GCF) of ${a} and ${b}.`,
+    answer: String(g),
+    solution_steps: [
+      `${a} = ${g} × ${m},  ${b} = ${g} × ${n}.`,
+      `Since gcd(${m}, ${n}) = 1, the GCF is ${g}.`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// 8. M6.NS.3.2 — Find Least Common Multiple (LCM)
+export function generate_g6_ns_find_lcm(difficulty: DifficultyLevel): GeneratedQuestion {
+  const pairs: Array<[number, number]> = [
+    [3, 4], [4, 6], [3, 5], [6, 8], [4, 10], [5, 6],
+    [6, 9], [2, 7], [3, 8], [4, 9], [6, 10], [8, 12],
+  ];
+  const [a, b] = pairs[randomInt(0, pairs.length - 1)]!;
+  const lcm = (a * b) / gcd(a, b);
+  return g7Wrap(difficulty, 'g6_ns_find_lcm', 'M6.NS.3.2', 'Finding the LCM', {
+    question: `Find the Least Common Multiple (LCM) of ${a} and ${b}.`,
+    answer: String(lcm),
+    solution_steps: [
+      `LCM(a, b) = (a × b) / gcd(a, b).`,
+      `gcd(${a}, ${b}) = ${gcd(a, b)}.`,
+      `LCM = (${a} × ${b}) / ${gcd(a, b)} = ${lcm}.`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// 9. M6.NS.3.3 — Rewrite a Sum Using the Distributive Property and GCF
+export function generate_g6_ns_gcf_rewrite_expression(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Build a + b where gcd(a, b) = g > 1. Answer is "g(a/g + b/g)".
+  const g = [2, 3, 4, 5, 6, 7, 8, 9, 10][randomInt(0, 8)]!;
+  let p: number, q: number;
+  do {
+    p = randomInt(2, 12);
+    q = randomInt(2, 12);
+  } while (gcd(p, q) !== 1 || p === q);
+  const a = g * p;
+  const b = g * q;
+  return g7Wrap(difficulty, 'g6_ns_gcf_rewrite_expression', 'M6.NS.3.3', 'Distributive Property with GCF', {
+    question: `Rewrite ${a} + ${b} as a product using the GCF.`,
+    answer: `${g}(${p} + ${q})`,
+    solution_steps: [
+      `Find the GCF of ${a} and ${b}: ${g}.`,
+      `Factor it out: ${a} + ${b} = ${g}·${p} + ${g}·${q} = ${g}(${p} + ${q}).`,
+    ],
+    answer_type: 'text',
+  });
+}
+
+// 10. M6.NS.4.4 — Compute Absolute Value
+export function generate_g6_ns_compute_absolute_value(difficulty: DifficultyLevel): GeneratedQuestion {
+  const variants = (['negative_integer', 'positive_integer', 'negative_decimal', 'negative_fraction'] as const);
+  const kind = variants[randomInt(0, 3)]!;
+  if (kind === 'positive_integer') {
+    const n = randomInt(2, 50);
+    return g7Wrap(difficulty, 'g6_ns_compute_absolute_value', 'M6.NS.4.4', 'Computing Absolute Value', {
+      question: `Find: |${n}|`,
+      answer: String(n),
+      solution_steps: [`The absolute value of ${n} is its distance from 0: ${n}.`],
+      answer_type: 'decimal',
+    });
+  }
+  if (kind === 'negative_integer') {
+    const n = -randomInt(2, 50);
+    return g7Wrap(difficulty, 'g6_ns_compute_absolute_value', 'M6.NS.4.4', 'Computing Absolute Value', {
+      question: `Find: |${n}|`,
+      answer: String(Math.abs(n)),
+      solution_steps: [`Distance from 0 is ${Math.abs(n)}; absolute value is non-negative.`],
+      answer_type: 'decimal',
+    });
+  }
+  if (kind === 'negative_decimal') {
+    const n = -(randomInt(1, 50) + randomInt(1, 9) / 10);
+    const abs = +(-n).toFixed(1);
+    return g7Wrap(difficulty, 'g6_ns_compute_absolute_value', 'M6.NS.4.4', 'Computing Absolute Value', {
+      question: `Find: |${n.toFixed(1)}|`,
+      answer: abs.toFixed(1),
+      solution_steps: [`|${n.toFixed(1)}| = ${abs.toFixed(1)} (distance from 0).`],
+      answer_type: 'decimal',
+    });
+  }
+  // negative_fraction
+  const num = randomInt(1, 9);
+  const den = [2, 3, 4, 5, 6, 8][randomInt(0, 5)]!;
+  return g7Wrap(difficulty, 'g6_ns_compute_absolute_value', 'M6.NS.4.4', 'Computing Absolute Value', {
+    question: `Find: |-${num}/${den}|`,
+    answer: `${num}/${den}`,
+    solution_steps: [`|-${num}/${den}| = ${num}/${den} (distance from 0).`],
+    answer_type: 'decimal',
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BATCH 3: NS Compare/Distance, RP Rates & Ratios (G6)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// 11. M6.NS.4.5 — Compare and Order Rational Numbers
+export function generate_g6_ns_compare_order_rationals(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Curated value pools per difficulty so the ordering is unambiguous.
+  // JSON spec uses 'MC'; we ask the student to enter the values in order
+  // from least to greatest separated by commas (matches our 'text' shape).
+  const count = difficulty === 1 ? 3 : difficulty === 2 ? 4 : 5;
+  const pool = [
+    -2, -1.5, -1, -0.75, -0.5, -1 / 4, 0, 1 / 4, 0.5, 0.75, 1, 1.5, 2,
+  ];
+  // Pick distinct values
+  const idxs = new Set<number>();
+  while (idxs.size < count) idxs.add(randomInt(0, pool.length - 1));
+  const chosen = Array.from(idxs).map((i) => pool[i]!);
+  // Display form: integers as int, halves as fraction, others as decimal.
+  const display = (v: number): string => {
+    if (Number.isInteger(v)) return String(v);
+    if (Math.abs(v) === 0.5) return v < 0 ? '-1/2' : '1/2';
+    if (Math.abs(v) === 0.25) return v < 0 ? '-1/4' : '1/4';
+    if (Math.abs(v) === 0.75) return v < 0 ? '-3/4' : '3/4';
+    return v.toString();
+  };
+  const shuffled = [...chosen].sort(() => Math.random() - 0.5);
+  const sorted = [...chosen].sort((a, b) => a - b);
+  const presented = shuffled.map(display).join(', ');
+  const answer = sorted.map(display).join(', ');
+  return g7Wrap(difficulty, 'g6_ns_compare_order_rationals', 'M6.NS.4.5', 'Comparing and Ordering Rationals', {
+    question: `Order from LEAST to GREATEST: ${presented}\n\nEnter the values separated by commas, in order.`,
+    answer,
+    solution_steps: [
+      `Convert each value to decimal form (or place on a number line) to compare.`,
+      `From least to greatest: ${answer}.`,
+    ],
+    answer_type: 'text',
+  });
+}
+
+// 12. M6.NS.4.7 — Coordinate Distance on the Same Axis
+export function generate_g6_ns_coordinate_distance_6(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Two points sharing an x-coordinate (vertical distance) or y-coordinate
+  // (horizontal distance) — answer is |a − b|.
+  const sharedAxis = (['x', 'y'] as const)[randomInt(0, 1)]!;
+  let a: number, b: number;
+  do {
+    a = randomInt(-10, 10);
+    b = randomInt(-10, 10);
+  } while (a === b);
+  const shared = randomInt(-10, 10);
+  const p1 = sharedAxis === 'x' ? `(${shared}, ${a})` : `(${a}, ${shared})`;
+  const p2 = sharedAxis === 'x' ? `(${shared}, ${b})` : `(${b}, ${shared})`;
+  const distance = Math.abs(a - b);
+  return g7Wrap(difficulty, 'g6_ns_coordinate_distance_6', 'M6.NS.4.7', 'Distance on the Coordinate Plane', {
+    question: `Find the distance between ${p1} and ${p2}.`,
+    answer: String(distance),
+    solution_steps: [
+      `The points share the ${sharedAxis}-coordinate, so the distance is |${a} − ${b}|.`,
+      `|${a} − ${b}| = ${distance}.`,
+    ],
+    answer_type: 'integer_or_decimal',
+  });
+}
+
+// 13. M6.RP.1.3 — Calculate a Unit Rate
+export function generate_g6_rp_calculate_unit_rate(difficulty: DifficultyLevel): GeneratedQuestion {
+  const contexts = [
+    { subj: 'A car drives',     verb: 'miles in',       unit: 'miles',    per: 'hour'    },
+    { subj: 'A box of',         verb: 'apples costs $', unit: 'dollars',  per: 'apple'   },
+    { subj: 'A printer prints', verb: 'pages in',       unit: 'pages',    per: 'minute'  },
+    { subj: 'A snack contains', verb: 'calories per',   unit: 'calories', per: 'serving' },
+  ];
+  const ctx = contexts[randomInt(0, contexts.length - 1)]!;
+  const denominator = randomInt(2, difficulty === 1 ? 6 : 12);
+  const rate = randomInt(difficulty === 1 ? 5 : 15, difficulty === 1 ? 30 : 80);
+  const numerator = denominator * rate;
+  return g7Wrap(difficulty, 'g6_rp_calculate_unit_rate', 'M6.RP.1.3', 'Calculating a Unit Rate', {
+    question: `${ctx.subj} ${numerator} ${ctx.verb} ${denominator} ${ctx.per}${denominator === 1 ? '' : 's'}. What is the unit rate in ${ctx.unit} per ${ctx.per}?`,
+    answer: String(rate),
+    solution_steps: [
+      `Unit rate = total ÷ units.`,
+      `${numerator} ÷ ${denominator} = ${rate}.`,
+      `Answer: ${rate} ${ctx.unit} per ${ctx.per}.`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// 14. M6.RP.2.1 — Solve a Missing Value in a Ratio Table
+export function generate_g6_rp_ratio_table_solve(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Build a 3-row ratio table: (1, k), (a, ak), (b, ?). Ask for the missing value.
+  const k = randomInt(2, difficulty === 1 ? 6 : 12);
+  const a = randomInt(2, 5);
+  const b = randomInt(a + 1, difficulty === 1 ? 8 : 14);
+  const missing = b * k;
+  const table = `  x | y\n  1 | ${k}\n  ${a} | ${a * k}\n  ${b} | ?`;
+  return g7Wrap(difficulty, 'g6_rp_ratio_table_solve', 'M6.RP.2.1', 'Ratio Table — Missing Value', {
+    question: `Find the missing value in the ratio table:\n\n${table}`,
+    answer: String(missing),
+    solution_steps: [
+      `Find the constant of proportionality: y/x = ${k}.`,
+      `When x = ${b}, y = ${b} × ${k} = ${missing}.`,
+    ],
+    answer_type: 'integer_or_decimal',
+  });
+}
+
+// 15. M6.RP.2.3 — Ratio Word Problem
+export function generate_g6_rp_ratio_word_problem(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Part-to-part: ratio of blue:red = a:b. Given total, find each.
+  const a = randomInt(1, 5);
+  let b = randomInt(1, 5);
+  while (gcd(a, b) !== 1) b = randomInt(1, 5);
+  const parts = a + b;
+  const totalMultiple = randomInt(3, difficulty === 1 ? 8 : 15);
+  const total = parts * totalMultiple;
+  const blue = a * totalMultiple;
+  const red = b * totalMultiple;
+  // Ask for one of the parts.
+  const ask = Math.random() < 0.5 ? 'blue' : 'red';
+  const answer = ask === 'blue' ? blue : red;
+  return g7Wrap(difficulty, 'g6_rp_ratio_word_problem', 'M6.RP.2.3', 'Ratio Word Problem', {
+    question: `A class has blue and red counters in the ratio ${a}:${b}. If there are ${total} counters in total, how many are ${ask}?`,
+    answer: String(answer),
+    solution_steps: [
+      `The ratio has ${a} + ${b} = ${parts} equal parts.`,
+      `Each part = ${total} ÷ ${parts} = ${totalMultiple}.`,
+      `${ask === 'blue' ? `Blue = ${a} parts = ${a} × ${totalMultiple} = ${blue}.` : `Red = ${b} parts = ${b} × ${totalMultiple} = ${red}.`}`,
+    ],
+    answer_type: 'integer_or_decimal',
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BATCH 4: RP Percents & Conversions, EE Exponents (G6)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// 16. M6.RP.3.2 — Percent of a Quantity
+export function generate_g6_rp_percent_of_quantity(difficulty: DifficultyLevel): GeneratedQuestion {
+  const pct = [10, 15, 20, 25, 30, 40, 50, 60, 75, 80, 100, 5, 12.5][randomInt(0, 12)]!;
+  const base = randomInt(20, difficulty === 1 ? 200 : 500);
+  const result = +(base * pct / 100).toFixed(2);
+  return g7Wrap(difficulty, 'g6_rp_percent_of_quantity', 'M6.RP.3.2', 'Percent of a Quantity', {
+    question: `What is ${pct}% of ${base}? Round to 2 decimal places if needed.`,
+    answer: result.toFixed(2),
+    solution_steps: [
+      `Convert ${pct}% to a decimal: ${(pct / 100).toFixed(3)}.`,
+      `Multiply: ${(pct / 100).toFixed(3)} × ${base} = ${result.toFixed(2)}.`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// 17. M6.RP.3.3 — Find Whole or Percent given Part
+export function generate_g6_rp_percent_whole_part(difficulty: DifficultyLevel): GeneratedQuestion {
+  const solveFor = (['whole', 'percent'] as const)[randomInt(0, 1)]!;
+  const pct = [10, 20, 25, 40, 50, 60, 75, 80][randomInt(0, 7)]!;
+  // Build clean numbers: choose whole, derive part from pct.
+  const whole = randomInt(20, difficulty === 1 ? 150 : 400);
+  const part = +(whole * pct / 100).toFixed(2);
+  if (solveFor === 'whole') {
+    return g7Wrap(difficulty, 'g6_rp_percent_whole_part', 'M6.RP.3.3', 'Find Whole or Percent', {
+      question: `${pct}% of a number is ${part}. What is the number?`,
+      answer: String(whole),
+      solution_steps: [
+        `Set up: ${pct}% × W = ${part}, i.e., ${pct / 100} × W = ${part}.`,
+        `Divide: W = ${part} / ${(pct / 100)} = ${whole}.`,
+      ],
+      answer_type: 'decimal',
+    });
+  }
+  return g7Wrap(difficulty, 'g6_rp_percent_whole_part', 'M6.RP.3.3', 'Find Whole or Percent', {
+    question: `${part} is what percent of ${whole}? Enter just the number (no % sign).`,
+    answer: String(pct),
+    solution_steps: [
+      `Set up: P × ${whole} = ${part}, so P = ${part} / ${whole}.`,
+      `P = ${(part / whole).toFixed(4)} = ${pct}%.`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// 18. M6.RP.3.4 — Convert Between Fraction, Decimal, Percent (G6 level)
+export function generate_g6_rp_fraction_decimal_pct_6(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Curated value pool with exact 3-way conversions.
+  const pool: Array<{ frac: string; dec: string; pct: string }> = [
+    { frac: '1/2',   dec: '0.5',   pct: '50'   },
+    { frac: '1/4',   dec: '0.25',  pct: '25'   },
+    { frac: '3/4',   dec: '0.75',  pct: '75'   },
+    { frac: '1/5',   dec: '0.2',   pct: '20'   },
+    { frac: '2/5',   dec: '0.4',   pct: '40'   },
+    { frac: '3/5',   dec: '0.6',   pct: '60'   },
+    { frac: '4/5',   dec: '0.8',   pct: '80'   },
+    { frac: '1/8',   dec: '0.125', pct: '12.5' },
+    { frac: '3/8',   dec: '0.375', pct: '37.5' },
+    { frac: '5/8',   dec: '0.625', pct: '62.5' },
+    { frac: '1/10',  dec: '0.1',   pct: '10'   },
+    { frac: '3/10',  dec: '0.3',   pct: '30'   },
+    { frac: '7/10',  dec: '0.7',   pct: '70'   },
+    { frac: '9/10',  dec: '0.9',   pct: '90'   },
+    { frac: '1/20',  dec: '0.05',  pct: '5'    },
+    { frac: '3/20',  dec: '0.15',  pct: '15'   },
+    { frac: '1/25',  dec: '0.04',  pct: '4'    },
+    { frac: '1/100', dec: '0.01',  pct: '1'    },
+  ];
+  const pick = pool[randomInt(0, pool.length - 1)]!;
+  const forms = (['frac', 'dec', 'pct'] as const);
+  let from = forms[randomInt(0, 2)]!;
+  let to = forms[randomInt(0, 2)]!;
+  while (to === from) to = forms[randomInt(0, 2)]!;
+  const fromVal = from === 'pct' ? `${pick.pct}%` : pick[from];
+  const toVal = to === 'pct' ? `${pick.pct}%` : pick[to];
+  const label = (k: 'frac' | 'dec' | 'pct'): string => k === 'frac' ? 'fraction' : k === 'dec' ? 'decimal' : 'percent';
+  return g7Wrap(difficulty, 'g6_rp_fraction_decimal_pct_6', 'M6.RP.3.4', 'Fraction ↔ Decimal ↔ Percent', {
+    question: `Convert ${fromVal} to a ${label(to)}.`,
+    answer: toVal,
+    solution_steps: [
+      `Recognise: ${pick.frac} = ${pick.dec} = ${pick.pct}%.`,
+      `${fromVal} as a ${label(to)} is ${toVal}.`,
+    ],
+    answer_type: 'decimal_or_fraction_or_percent',
+  });
+}
+
+// 19. M6.RP.4.1 — Unit Conversion (Ratio Reasoning)
+export function generate_g6_rp_unit_conversion(difficulty: DifficultyLevel): GeneratedQuestion {
+  const conversions = [
+    { from: 'feet',   to: 'inches',      factor: 12   },
+    { from: 'yards',  to: 'feet',        factor: 3    },
+    { from: 'km',     to: 'm',           factor: 1000 },
+    { from: 'hours',  to: 'minutes',     factor: 60   },
+    { from: 'pounds', to: 'ounces',      factor: 16   },
+    { from: 'liters', to: 'milliliters', factor: 1000 },
+  ];
+  const c = conversions[randomInt(0, conversions.length - 1)]!;
+  const value = randomInt(2, difficulty === 1 ? 25 : 50);
+  const result = value * c.factor;
+  return g7Wrap(difficulty, 'g6_rp_unit_conversion', 'M6.RP.4.1', 'Unit Conversion', {
+    question: `Convert ${value} ${c.from} to ${c.to}.`,
+    answer: String(result),
+    solution_steps: [
+      `1 ${c.from.replace(/s$/, '')} = ${c.factor} ${c.to}.`,
+      `${value} × ${c.factor} = ${result} ${c.to}.`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// 20. M6.EE.1.1 — Evaluate Numerical Expressions with Exponents
+export function generate_g6_ee_eval_numerical_exponents(difficulty: DifficultyLevel): GeneratedQuestion {
+  const base = randomInt(2, difficulty === 1 ? 6 : 12);
+  const exp = randomInt(2, difficulty === 1 ? 3 : 4);
+  const c = randomInt(1, 20);
+  const forms = [
+    { expr: `${base}^${exp}`,           value: Math.pow(base, exp) },
+    { expr: `${base}^${exp} + ${c}`,    value: Math.pow(base, exp) + c },
+    { expr: `${base}^${exp} - ${c}`,    value: Math.pow(base, exp) - c },
+    { expr: `${base}^${exp} × ${c}`,    value: Math.pow(base, exp) * c },
+  ];
+  const f = forms[randomInt(0, forms.length - 1)]!;
+  return g7Wrap(difficulty, 'g6_ee_eval_numerical_exponents', 'M6.EE.1.1', 'Numerical Expressions with Exponents', {
+    question: `Evaluate: ${f.expr}`,
+    answer: String(f.value),
+    solution_steps: [
+      `Apply exponents first: ${base}^${exp} = ${Math.pow(base, exp)}.`,
+      `Then complete remaining operations.`,
+      `Result: ${f.value}.`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BATCH 5: EE — Expressions & One-Step Equations (G6)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// 21. M6.EE.1.4 — Evaluate an Algebraic Expression
+export function generate_g6_ee_evaluate_algebraic_expr(difficulty: DifficultyLevel): GeneratedQuestion {
+  const form = (['ax_plus_b', 'ax2_plus_b', 'ax_plus_bx'] as const)[randomInt(0, 2)]!;
+  const x = randomInt(1, difficulty === 1 ? 8 : 15);
+  if (form === 'ax_plus_b') {
+    const a = randomInt(1, 10);
+    const b = randomInt(1, 20);
+    const result = a * x + b;
+    return g7Wrap(difficulty, 'g6_ee_evaluate_algebraic_expr', 'M6.EE.1.4', 'Evaluating Algebraic Expressions', {
+      question: `Evaluate ${a}x + ${b} when x = ${x}.`,
+      answer: String(result),
+      solution_steps: [
+        `Substitute x = ${x}: ${a}(${x}) + ${b}.`,
+        `= ${a * x} + ${b} = ${result}.`,
+      ],
+      answer_type: 'integer_or_decimal',
+    });
+  }
+  if (form === 'ax2_plus_b') {
+    const a = randomInt(1, 5);
+    const b = randomInt(1, 20);
+    const result = a * x * x + b;
+    return g7Wrap(difficulty, 'g6_ee_evaluate_algebraic_expr', 'M6.EE.1.4', 'Evaluating Algebraic Expressions', {
+      question: `Evaluate ${a}x² + ${b} when x = ${x}.`,
+      answer: String(result),
+      solution_steps: [
+        `Substitute x = ${x}: ${a}(${x})² + ${b}.`,
+        `= ${a * x * x} + ${b} = ${result}.`,
+      ],
+      answer_type: 'integer_or_decimal',
+    });
+  }
+  // ax + bx (combines to (a+b)x)
+  const a = randomInt(1, 8);
+  const b = randomInt(1, 8);
+  const result = (a + b) * x;
+  return g7Wrap(difficulty, 'g6_ee_evaluate_algebraic_expr', 'M6.EE.1.4', 'Evaluating Algebraic Expressions', {
+    question: `Evaluate ${a}x + ${b}x when x = ${x}.`,
+    answer: String(result),
+    solution_steps: [
+      `Combine like terms first: ${a}x + ${b}x = ${a + b}x.`,
+      `Substitute x = ${x}: ${a + b}(${x}) = ${result}.`,
+    ],
+    answer_type: 'integer_or_decimal',
+  });
+}
+
+// 22. M6.EE.2.1 — Expand Using Distributive Property
+export function generate_g6_ee_expand_distributive_6(difficulty: DifficultyLevel): GeneratedQuestion {
+  const outer = randomInt(2, 10);
+  const inner = randomInt(1, 12);
+  const op = Math.random() < 0.5 ? '+' : '-';
+  const useVariable = Math.random() < 0.7;
+  if (useVariable) {
+    return g7Wrap(difficulty, 'g6_ee_expand_distributive_6', 'M6.EE.2.1', 'Distributive Property', {
+      question: `Expand using the distributive property:  ${outer}(x ${op} ${inner})`,
+      answer: `${outer}x ${op} ${outer * inner}`,
+      solution_steps: [
+        `Distribute ${outer} across both terms.`,
+        `${outer} × x = ${outer}x.`,
+        `${outer} × ${inner} = ${outer * inner}.`,
+        `Result: ${outer}x ${op} ${outer * inner}.`,
+      ],
+      answer_type: 'text',
+    });
+  }
+  const b = randomInt(1, 12);
+  const result = op === '+' ? outer * b + outer * inner : outer * b - outer * inner;
+  return g7Wrap(difficulty, 'g6_ee_expand_distributive_6', 'M6.EE.2.1', 'Distributive Property', {
+    question: `Expand and simplify:  ${outer}(${b} ${op} ${inner})`,
+    answer: String(result),
+    solution_steps: [
+      `Distribute ${outer}: ${outer}·${b} ${op} ${outer}·${inner}.`,
+      `= ${outer * b} ${op} ${outer * inner} = ${result}.`,
+    ],
+    answer_type: 'text',
+  });
+}
+
+// 23. M6.EE.2.2 — Combine Like Terms
+export function generate_g6_ee_combine_like_terms_6(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Two variables x, y plus a constant.
+  const a1 = randomInt(1, 10);
+  const a2 = randomInt(1, 10);
+  const b1 = randomInt(1, 10);
+  const b2 = randomInt(1, 10);
+  const c = randomInt(1, 20);
+  const xSum = a1 + a2;
+  const ySum = b1 + b2;
+  const useTwoVars = difficulty >= 2 && Math.random() < 0.6;
+  if (useTwoVars) {
+    return g7Wrap(difficulty, 'g6_ee_combine_like_terms_6', 'M6.EE.2.2', 'Combining Like Terms', {
+      question: `Simplify: ${a1}x + ${b1}y + ${a2}x + ${b2}y + ${c}`,
+      answer: `${xSum}x + ${ySum}y + ${c}`,
+      solution_steps: [
+        `Group like terms.`,
+        `x-terms: ${a1}x + ${a2}x = ${xSum}x.`,
+        `y-terms: ${b1}y + ${b2}y = ${ySum}y.`,
+        `Constant: ${c}.`,
+        `Result: ${xSum}x + ${ySum}y + ${c}.`,
+      ],
+      answer_type: 'text',
+    });
+  }
+  // single variable
+  return g7Wrap(difficulty, 'g6_ee_combine_like_terms_6', 'M6.EE.2.2', 'Combining Like Terms', {
+    question: `Simplify: ${a1}x + ${b1} + ${a2}x + ${b2}`,
+    answer: `${a1 + a2}x + ${b1 + b2}`,
+    solution_steps: [
+      `Combine x-terms: ${a1}x + ${a2}x = ${a1 + a2}x.`,
+      `Combine constants: ${b1} + ${b2} = ${b1 + b2}.`,
+      `Result: ${a1 + a2}x + ${b1 + b2}.`,
+    ],
+    answer_type: 'text',
+  });
+}
+
+// 24. M6.EE.3.2 — Solve One-Step Equations (Add / Subtract)
+export function generate_g6_ee_solve_one_step_add_sub(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Spec says solution_positive: true. Build x + p = q or x − p = q with x > 0.
+  const useSub = Math.random() < 0.5;
+  if (useSub) {
+    const x = randomInt(1, difficulty === 1 ? 50 : 100);
+    const p = randomInt(1, 50);
+    const q = x - p;
+    return g7Wrap(difficulty, 'g6_ee_solve_one_step_add_sub', 'M6.EE.3.2', 'One-Step Equations (+/−)', {
+      question: `Solve for x:  x - ${p} = ${q}`,
+      answer: String(x),
+      solution_steps: [
+        `Add ${p} to both sides.`,
+        `x = ${q} + ${p} = ${x}.`,
+      ],
+      answer_type: 'integer_or_decimal',
+    });
+  }
+  const x = randomInt(1, difficulty === 1 ? 50 : 100);
+  const p = randomInt(1, 50);
+  const q = x + p;
+  return g7Wrap(difficulty, 'g6_ee_solve_one_step_add_sub', 'M6.EE.3.2', 'One-Step Equations (+/−)', {
+    question: `Solve for x:  x + ${p} = ${q}`,
+    answer: String(x),
+    solution_steps: [
+      `Subtract ${p} from both sides.`,
+      `x = ${q} - ${p} = ${x}.`,
+    ],
+    answer_type: 'integer_or_decimal',
+  });
+}
+
+// 25. M6.EE.3.3 — Solve One-Step Equations (Multiply / Divide)
+export function generate_g6_ee_solve_one_step_mul_div(difficulty: DifficultyLevel): GeneratedQuestion {
+  const useDiv = Math.random() < 0.5;
+  if (useDiv) {
+    // x / p = q → x = p*q
+    const p = randomInt(2, difficulty === 1 ? 8 : 20);
+    const q = randomInt(2, difficulty === 1 ? 12 : 30);
+    const x = p * q;
+    return g7Wrap(difficulty, 'g6_ee_solve_one_step_mul_div', 'M6.EE.3.3', 'One-Step Equations (×/÷)', {
+      question: `Solve for x:  x / ${p} = ${q}`,
+      answer: String(x),
+      solution_steps: [
+        `Multiply both sides by ${p}.`,
+        `x = ${q} × ${p} = ${x}.`,
+      ],
+      answer_type: 'decimal_or_fraction',
+    });
+  }
+  // px = q → x = q/p
+  const p = randomInt(2, difficulty === 1 ? 8 : 20);
+  const xVal = randomInt(2, difficulty === 1 ? 12 : 30);
+  const q = p * xVal;
+  return g7Wrap(difficulty, 'g6_ee_solve_one_step_mul_div', 'M6.EE.3.3', 'One-Step Equations (×/÷)', {
+    question: `Solve for x:  ${p}x = ${q}`,
+    answer: String(xVal),
+    solution_steps: [
+      `Divide both sides by ${p}.`,
+      `x = ${q} / ${p} = ${xVal}.`,
+    ],
+    answer_type: 'decimal_or_fraction',
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BATCH 6: GEO — Area & Volume (G6)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// 26. M6.GEO.1.1 — Area of a Triangle (A = ½bh)
+export function generate_g6_geo_area_triangle_6(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Force even base×height so area is an integer (decimal answer_type still works).
+  let base = randomInt(2, difficulty === 1 ? 14 : 24);
+  const height = randomInt(2, difficulty === 1 ? 12 : 20);
+  if ((base * height) % 2 !== 0) base += 1;
+  const area = (base * height) / 2;
+  return g7Wrap(difficulty, 'g6_geo_area_triangle_6', 'M6.GEO.1.1', 'Area of a Triangle', {
+    question: `Find the area of a triangle with base ${base} cm and height ${height} cm.`,
+    answer: String(area),
+    solution_steps: [
+      `Area = ½ × base × height.`,
+      `= ½ × ${base} × ${height}.`,
+      `= ${area} cm².`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// 27. M6.GEO.1.2 — Area of a Parallelogram (A = bh)
+export function generate_g6_geo_area_parallelogram(difficulty: DifficultyLevel): GeneratedQuestion {
+  const base = randomInt(3, difficulty === 1 ? 15 : 25);
+  const height = randomInt(2, difficulty === 1 ? 12 : 20);
+  return g7Wrap(difficulty, 'g6_geo_area_parallelogram', 'M6.GEO.1.2', 'Area of a Parallelogram', {
+    question: `Find the area of a parallelogram with base ${base} cm and height ${height} cm.`,
+    answer: String(base * height),
+    solution_steps: [
+      `Area = base × height.`,
+      `= ${base} × ${height} = ${base * height} cm².`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// 28. M6.GEO.1.3 — Area of a Trapezoid (A = ½(b₁ + b₂)h)
+export function generate_g6_geo_area_trapezoid(difficulty: DifficultyLevel): GeneratedQuestion {
+  let b1 = randomInt(3, 14);
+  let b2 = randomInt(b1 + 2, 22);
+  const height = randomInt(2, 15);
+  if (((b1 + b2) * height) % 2 !== 0) b1 += 1;
+  const area = ((b1 + b2) * height) / 2;
+  return g7Wrap(difficulty, 'g6_geo_area_trapezoid', 'M6.GEO.1.3', 'Area of a Trapezoid', {
+    question: `Find the area of a trapezoid with parallel sides ${b1} cm and ${b2} cm and height ${height} cm.`,
+    answer: String(area),
+    solution_steps: [
+      `Area = ½ × (b₁ + b₂) × h.`,
+      `= ½ × (${b1} + ${b2}) × ${height}.`,
+      `= ½ × ${b1 + b2} × ${height} = ${area} cm².`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// 29. M6.GEO.3.2 — Volume of a Rectangular Prism (Whole-Number Edges)
+export function generate_g6_geo_volume_rect_prism_whole(difficulty: DifficultyLevel): GeneratedQuestion {
+  const max = difficulty === 1 ? 8 : difficulty === 2 ? 12 : 15;
+  const l = randomInt(2, max);
+  const w = randomInt(2, max);
+  const h = randomInt(2, max);
+  return g7Wrap(difficulty, 'g6_geo_volume_rect_prism_whole', 'M6.GEO.3.2', 'Volume of a Rectangular Prism', {
+    question: `Find the volume of a rectangular prism with length ${l} cm, width ${w} cm, and height ${h} cm.`,
+    answer: String(l * w * h),
+    solution_steps: [
+      `Volume = length × width × height.`,
+      `= ${l} × ${w} × ${h} = ${l * w * h} cm³.`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// 30. M6.GEO.3.3 — Volume of a Rectangular Prism (Fractional Edges)
+export function generate_g6_geo_volume_rect_prism_frac(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Use halves / thirds / quarters per spec. Build edges as Rationals.
+  const fracOptions: G7Rational[] = [
+    g7Rat(3, 2),   // 1½
+    g7Rat(5, 2),   // 2½
+    g7Rat(7, 2),   // 3½
+    g7Rat(4, 3),   // 1⅓
+    g7Rat(5, 3),   // 1⅔
+    g7Rat(7, 3),   // 2⅓
+    g7Rat(5, 4),   // 1¼
+    g7Rat(7, 4),   // 1¾
+    g7Rat(9, 4),   // 2¼
+  ];
+  const l = fracOptions[randomInt(0, fracOptions.length - 1)]!;
+  const w = fracOptions[randomInt(0, fracOptions.length - 1)]!;
+  const hWhole = randomInt(2, 6);
+  const h = g7Rat(hWhole);
+  const lw = g7RatMul(l, w);
+  const V = g7RatMul(lw, h);
+  return g7Wrap(difficulty, 'g6_geo_volume_rect_prism_frac', 'M6.GEO.3.3', 'Volume with Fractional Edges', {
+    question: `Find the volume of a rectangular prism with length ${g7FmtRat(l)} cm, width ${g7FmtRat(w)} cm, and height ${hWhole} cm.`,
+    answer: g7FmtRat(V),
+    solution_steps: [
+      `Volume = length × width × height.`,
+      `= ${g7FmtRat(l)} × ${g7FmtRat(w)} × ${hWhole}.`,
+      `Step 1: ${g7FmtRat(l)} × ${g7FmtRat(w)} = ${g7FmtRat(lw)}.`,
+      `Step 2: ${g7FmtRat(lw)} × ${hWhole} = ${g7FmtRat(V)}.`,
+    ],
+    answer_type: 'fraction_or_decimal',
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BATCH 7: SP — Statistics (G6)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// 31. M6.SP.2.2 — Five-Number Summary
+export function generate_g6_sp_five_number_summary(difficulty: DifficultyLevel): GeneratedQuestion {
+  // 9 distinct values for clean Q1/median/Q3 positions
+  // (positions 1, 3, 5, 7, 9 → min, Q1, median, Q3, max).
+  const values: number[] = [];
+  const seen = new Set<number>();
+  while (values.length < 9) {
+    const v = randomInt(10, difficulty === 1 ? 60 : 100);
+    if (!seen.has(v)) { seen.add(v); values.push(v); }
+  }
+  values.sort((a, b) => a - b);
+  const min = values[0]!;
+  const Q1 = values[2]!;
+  const median = values[4]!;
+  const Q3 = values[6]!;
+  const max = values[8]!;
+  const ask = (['min', 'Q1', 'median', 'Q3', 'max'] as const)[randomInt(0, 4)]!;
+  const askedValue = ask === 'min' ? min : ask === 'Q1' ? Q1 : ask === 'median' ? median : ask === 'Q3' ? Q3 : max;
+  const askLabel = ask === 'Q1' ? 'first quartile (Q1)' : ask === 'Q3' ? 'third quartile (Q3)' : ask === 'median' ? 'median' : ask === 'min' ? 'minimum' : 'maximum';
+  return g7Wrap(difficulty, 'g6_sp_five_number_summary', 'M6.SP.2.2', 'Five-Number Summary', {
+    question: `For the data set: ${values.join(', ')}\n\nFind the ${askLabel}.`,
+    answer: String(askedValue),
+    solution_steps: [
+      `Sort the values: ${values.join(', ')}.`,
+      `9 values → positions 1, 3, 5, 7, 9 give min=${min}, Q1=${Q1}, median=${median}, Q3=${Q3}, max=${max}.`,
+      `${askLabel} = ${askedValue}.`,
+    ],
+    answer_type: 'integer_or_decimal',
+  });
+}
+
+// 32. M6.SP.3.1 — Compute Mean, Median, or Mode
+export function generate_g6_sp_compute_center_stats(difficulty: DifficultyLevel): GeneratedQuestion {
+  const size = difficulty === 1 ? 5 : difficulty === 2 ? 7 : 9;
+  // Force a repeated value so mode is well-defined.
+  const values: number[] = [];
+  const repeat = randomInt(2, difficulty === 1 ? 25 : 60);
+  values.push(repeat, repeat);
+  while (values.length < size) values.push(randomInt(1, difficulty === 1 ? 30 : 100));
+  values.sort((a, b) => a - b);
+  const ask = (['mean', 'median', 'mode'] as const)[randomInt(0, 2)]!;
+  if (ask === 'mean') {
+    const sum = values.reduce((s, v) => s + v, 0);
+    const mean = +(sum / values.length).toFixed(2);
+    return g7Wrap(difficulty, 'g6_sp_compute_center_stats', 'M6.SP.3.1', 'Mean / Median / Mode', {
+      question: `Find the MEAN of: ${values.join(', ')}\n\nRound to 2 decimal places if needed.`,
+      answer: mean.toFixed(2),
+      solution_steps: [
+        `Sum: ${sum}.`,
+        `Divide by count (${values.length}): ${sum} / ${values.length} = ${mean.toFixed(2)}.`,
+      ],
+      answer_type: 'decimal',
+    });
+  }
+  if (ask === 'median') {
+    const mid = Math.floor(values.length / 2);
+    const median = values.length % 2 === 1
+      ? values[mid]!
+      : +((values[mid - 1]! + values[mid]!) / 2).toFixed(2);
+    return g7Wrap(difficulty, 'g6_sp_compute_center_stats', 'M6.SP.3.1', 'Mean / Median / Mode', {
+      question: `Find the MEDIAN of: ${values.join(', ')}`,
+      answer: String(median),
+      solution_steps: [
+        `Sort the values: ${values.join(', ')}.`,
+        values.length % 2 === 1
+          ? `Middle value (position ${mid + 1}): ${median}.`
+          : `Average of two middle values: (${values[mid - 1]} + ${values[mid]}) / 2 = ${median}.`,
+      ],
+      answer_type: 'decimal',
+    });
+  }
+  return g7Wrap(difficulty, 'g6_sp_compute_center_stats', 'M6.SP.3.1', 'Mean / Median / Mode', {
+    question: `Find the MODE of: ${values.join(', ')}`,
+    answer: String(repeat),
+    solution_steps: [
+      `Mode = value that appears most often.`,
+      `${repeat} appears more than once; no other value does.`,
+      `Mode = ${repeat}.`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// 33. M6.SP.3.2 — Compute Range and IQR
+export function generate_g6_sp_compute_variability(difficulty: DifficultyLevel): GeneratedQuestion {
+  // 7 distinct values: positions 2, 4, 6 give Q1, median, Q3 cleanly.
+  const values: number[] = [];
+  const seen = new Set<number>();
+  while (values.length < 7) {
+    const v = randomInt(5, difficulty === 1 ? 50 : 100);
+    if (!seen.has(v)) { seen.add(v); values.push(v); }
+  }
+  values.sort((a, b) => a - b);
+  const range = values[6]! - values[0]!;
+  const Q1 = values[1]!;
+  const Q3 = values[5]!;
+  const IQR = Q3 - Q1;
+  const askIQR = Math.random() < 0.5;
+  if (askIQR) {
+    return g7Wrap(difficulty, 'g6_sp_compute_variability', 'M6.SP.3.2', 'Range / IQR', {
+      question: `Find the IQR of: ${values.join(', ')}`,
+      answer: String(IQR),
+      solution_steps: [
+        `Sort: ${values.join(', ')}.`,
+        `With 7 values, Q1 is the 2nd and Q3 is the 6th.`,
+        `Q1 = ${Q1}, Q3 = ${Q3}.`,
+        `IQR = Q3 − Q1 = ${IQR}.`,
+      ],
+      answer_type: 'decimal',
+    });
+  }
+  return g7Wrap(difficulty, 'g6_sp_compute_variability', 'M6.SP.3.2', 'Range / IQR', {
+    question: `Find the RANGE of: ${values.join(', ')}`,
+    answer: String(range),
+    solution_steps: [
+      `Range = max − min.`,
+      `${values[6]} − ${values[0]} = ${range}.`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// 34. M6.SP.3.3 — Mean Absolute Deviation (MAD)
+export function generate_g6_sp_compute_mad(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Build a 5-value data set with an integer mean.
+  // mean = m means sum = 5m. Pick m, then choose deviations that sum to 0.
+  const m = randomInt(15, 60);
+  // Choose deviations that sum to 0 (so the mean is exactly m).
+  const devs = [-2, -1, 0, 1, 2];                                    // sums to 0
+  const values = devs.map((d) => m + d * randomInt(1, 4));
+  // Recompute mean and re-derive deviations from the actual values (they
+  // may differ from `devs` after scaling by randomInt).
+  const actualSum = values.reduce((s, v) => s + v, 0);
+  const actualMean = actualSum / values.length;
+  // Force exact integer mean by adjusting the last value.
+  if (!Number.isInteger(actualMean)) {
+    const targetSum = Math.round(actualMean) * values.length;
+    values[values.length - 1] += targetSum - actualSum;
+  }
+  const finalMean = values.reduce((s, v) => s + v, 0) / values.length;
+  const absDevs = values.map((v) => Math.abs(v - finalMean));
+  const mad = +(absDevs.reduce((s, v) => s + v, 0) / values.length).toFixed(2);
+  return g7Wrap(difficulty, 'g6_sp_compute_mad', 'M6.SP.3.3', 'Mean Absolute Deviation', {
+    question: `Compute the Mean Absolute Deviation (MAD) of: ${values.join(', ')}\n\nRound to 2 decimal places if needed.`,
+    answer: mad.toFixed(2),
+    solution_steps: [
+      `Find the mean: (${values.join(' + ')}) / ${values.length} = ${finalMean}.`,
+      `Find absolute deviations from the mean: ${absDevs.join(', ')}.`,
+      `Average the deviations: (${absDevs.join(' + ')}) / ${values.length} ≈ ${mad.toFixed(2)}.`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// =============================================================================
 // GENERATOR REGISTRY - ALL 54 GENERATORS
 // =============================================================================
 
@@ -6459,6 +7455,49 @@ export const GENERATORS: Record<string, (difficulty: DifficultyLevel) => Generat
   mf_probability_basic:           generate_mf_probability_basic,
   mf_exponent_evaluate:           generate_mf_exponent_evaluate,
   mf_square_cube_root:            generate_mf_square_cube_root,
+
+  // ─── NC GRADE 6 (Rising Stars division) ────────────────────────────────────
+  // BATCH 1: NS — Decimal & Fraction Operations (5)
+  g6_ns_add_sub_decimals:         generate_g6_ns_add_sub_decimals,
+  g6_ns_multiply_decimals:        generate_g6_ns_multiply_decimals,
+  g6_ns_long_division_whole:      generate_g6_ns_long_division_whole,
+  g6_ns_divide_decimals:          generate_g6_ns_divide_decimals,
+  g6_ns_divide_fractions:         generate_g6_ns_divide_fractions,
+  // BATCH 2: NS — Word Problem, GCF/LCM, Absolute Value (5)
+  g6_ns_fraction_division_word:   generate_g6_ns_fraction_division_word,
+  g6_ns_find_gcf:                 generate_g6_ns_find_gcf,
+  g6_ns_find_lcm:                 generate_g6_ns_find_lcm,
+  g6_ns_gcf_rewrite_expression:   generate_g6_ns_gcf_rewrite_expression,
+  g6_ns_compute_absolute_value:   generate_g6_ns_compute_absolute_value,
+  // BATCH 3: NS Compare/Distance, RP Rates & Ratios (5)
+  g6_ns_compare_order_rationals:  generate_g6_ns_compare_order_rationals,
+  g6_ns_coordinate_distance_6:    generate_g6_ns_coordinate_distance_6,
+  g6_rp_calculate_unit_rate:      generate_g6_rp_calculate_unit_rate,
+  g6_rp_ratio_table_solve:        generate_g6_rp_ratio_table_solve,
+  g6_rp_ratio_word_problem:       generate_g6_rp_ratio_word_problem,
+  // BATCH 4: RP Percents & Conversions, EE Exponents (5)
+  g6_rp_percent_of_quantity:      generate_g6_rp_percent_of_quantity,
+  g6_rp_percent_whole_part:       generate_g6_rp_percent_whole_part,
+  g6_rp_fraction_decimal_pct_6:   generate_g6_rp_fraction_decimal_pct_6,
+  g6_rp_unit_conversion:          generate_g6_rp_unit_conversion,
+  g6_ee_eval_numerical_exponents: generate_g6_ee_eval_numerical_exponents,
+  // BATCH 5: EE Expressions & One-Step Equations (5)
+  g6_ee_evaluate_algebraic_expr:  generate_g6_ee_evaluate_algebraic_expr,
+  g6_ee_expand_distributive_6:    generate_g6_ee_expand_distributive_6,
+  g6_ee_combine_like_terms_6:     generate_g6_ee_combine_like_terms_6,
+  g6_ee_solve_one_step_add_sub:   generate_g6_ee_solve_one_step_add_sub,
+  g6_ee_solve_one_step_mul_div:   generate_g6_ee_solve_one_step_mul_div,
+  // BATCH 6: GEO Area & Volume (5)
+  g6_geo_area_triangle_6:         generate_g6_geo_area_triangle_6,
+  g6_geo_area_parallelogram:      generate_g6_geo_area_parallelogram,
+  g6_geo_area_trapezoid:          generate_g6_geo_area_trapezoid,
+  g6_geo_volume_rect_prism_whole: generate_g6_geo_volume_rect_prism_whole,
+  g6_geo_volume_rect_prism_frac:  generate_g6_geo_volume_rect_prism_frac,
+  // BATCH 7: SP Statistics (4)
+  g6_sp_five_number_summary:      generate_g6_sp_five_number_summary,
+  g6_sp_compute_center_stats:     generate_g6_sp_compute_center_stats,
+  g6_sp_compute_variability:      generate_g6_sp_compute_variability,
+  g6_sp_compute_mad:              generate_g6_sp_compute_mad,
 };
 
 // Helper to get all generator types
