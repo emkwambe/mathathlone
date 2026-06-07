@@ -595,12 +595,18 @@ export async function generateAndInsertQuestions(
   }
 
   const inserts: HeatQuestionInsert[] = [];
-  const recentGenerators: string[] = [];                  // sliding repeat-avoidance window
+
+  // BUG 5 fix — fair distribution via shuffle-without-replacement deck.
+  // The old pickGenerator() + recent-window approach was probabilistic:
+  // popular generators landed 3-4 times per heat while others never
+  // appeared. The deck guarantees every generator is dealt before any
+  // generator repeats (cyclic shuffle when generatorCount > pool size).
+  const generatorDeck = buildShuffledDeck(generators, generatorCount);
 
   // --- Generator-based questions ----------------------------------------------
   for (let i = 0; i < generatorCount; i++) {
     const difficulty = pickDifficulty(depthMin, depthMax);
-    const generator = pickGenerator(generators, recentGenerators);
+    const generator = generatorDeck[i] ?? pickGenerator(generators, []);
     if (!generator) {
       console.warn('[question-delivery] no generator available to pick — skipping slot', i);
       continue;
@@ -616,11 +622,6 @@ export async function generateAndInsertQuestions(
         { generator_type: generator.generator_type, id: generator.id }
       );
       continue;
-    }
-
-    recentGenerators.push(generator.generator_type);
-    if (recentGenerators.length > Math.min(8, generators.length - 1)) {
-      recentGenerators.shift();
     }
 
     let q: GeneratedQuestion | null = null;
@@ -828,9 +829,41 @@ export async function generateAndInsertQuestions(
 }
 
 // -----------------------------------------------------------------------------
-// INTERNAL: pick a generator avoiding recent repeats
+// INTERNAL: shuffled-deck generator scheduler
 // -----------------------------------------------------------------------------
 
+/**
+ * Build a `count`-length sequence of generators by repeatedly shuffling
+ * the pool until enough cards exist. Guarantees each generator appears
+ * either once or twice (never three times) until every other generator
+ * has appeared once — replacing the old Math.random-with-window approach
+ * that left some generators starved while others fired repeatedly.
+ */
+function buildShuffledDeck(
+  generators: GeneratorRow[],
+  count: number
+): GeneratorRow[] {
+  if (generators.length === 0 || count <= 0) return [];
+  function shuffle<T>(arr: T[]): T[] {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+  const deck: GeneratorRow[] = [];
+  while (deck.length < count) {
+    deck.push(...shuffle(generators));
+  }
+  return deck.slice(0, count);
+}
+
+/**
+ * Legacy single-pick selector — kept as a fallback for any caller that
+ * doesn't go through the deck. Active production path uses
+ * buildShuffledDeck() in generateAndInsertQuestions().
+ */
 function pickGenerator(
   pool: GeneratorRow[],
   recent: string[]

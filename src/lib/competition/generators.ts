@@ -1946,10 +1946,20 @@ export function generate_g7_divide_rational(difficulty: DifficultyLevel): Genera
 }
 
 // 5. M7.NS.3.1 — Converting Rational Numbers to Decimals (Terminating/Repeating)
+// BUG 3 — module-scoped sliding-window dedup for g7_rational_to_decimal.
+// Independent random picks from a small pool collide often. This window
+// remembers the last N fraction keys issued (across heats — generators
+// don't know about heat boundaries) so the next call retries until it
+// finds a key not in the window. Window length 8 = at least 8 distinct
+// fractions before any repeat.
+const g7RationalRecentFractions: string[] = [];
+const G7_RATIONAL_WINDOW = 8;
+
 export function generate_g7_rational_to_decimal(difficulty: DifficultyLevel): GeneratedQuestion {
-  // Curated pools so the answer key is exact. Terminating denominators
-  // factor into 2s and 5s only; repeating decimals get a "..." marker so
-  // students aren't fishing for the exact long-form value.
+  // BUG 3 fix: pools expanded to ≥ 8 entries each so the sliding-window
+  // dedup below never starves. Terminating denominators factor into 2s
+  // and 5s only; repeating decimals get a "..." marker so students aren't
+  // fishing for the exact long-form value.
   const terminating: Array<{ num: number; den: number; dec: string }> = [
     { num: 1, den: 2,  dec: '0.5'   },
     { num: 1, den: 4,  dec: '0.25'  },
@@ -1962,20 +1972,51 @@ export function generate_g7_rational_to_decimal(difficulty: DifficultyLevel): Ge
     { num: 3, den: 8,  dec: '0.375' },
     { num: 5, den: 8,  dec: '0.625' },
     { num: 7, den: 8,  dec: '0.875' },
+    { num: 1, den: 10, dec: '0.1'   },
+    { num: 3, den: 10, dec: '0.3'   },
     { num: 7, den: 10, dec: '0.7'   },
+    { num: 9, den: 10, dec: '0.9'   },
+    { num: 1, den: 16, dec: '0.0625' },
+    { num: 3, den: 16, dec: '0.1875' },
+    { num: 1, den: 20, dec: '0.05'  },
+    { num: 3, den: 20, dec: '0.15'  },
+    { num: 1, den: 25, dec: '0.04'  },
+    { num: 3, den: 25, dec: '0.12'  },
   ];
   const repeating: Array<{ num: number; den: number; dec: string; bar: string }> = [
-    { num: 1, den: 3, dec: '0.333...', bar: '3'   },
-    { num: 2, den: 3, dec: '0.666...', bar: '6'   },
-    { num: 1, den: 6, dec: '0.1666...', bar: '6'  },
-    { num: 5, den: 6, dec: '0.8333...', bar: '3'  },
-    { num: 1, den: 9, dec: '0.111...', bar: '1'   },
-    { num: 4, den: 9, dec: '0.444...', bar: '4'   },
-    { num: 1, den: 7, dec: '0.142857...', bar: '142857' },
+    { num: 1, den: 3,  dec: '0.333...',    bar: '3'      },
+    { num: 2, den: 3,  dec: '0.666...',    bar: '6'      },
+    { num: 1, den: 6,  dec: '0.1666...',   bar: '6'      },
+    { num: 5, den: 6,  dec: '0.8333...',   bar: '3'      },
+    { num: 1, den: 9,  dec: '0.111...',    bar: '1'      },
+    { num: 2, den: 9,  dec: '0.222...',    bar: '2'      },
+    { num: 4, den: 9,  dec: '0.444...',    bar: '4'      },
+    { num: 5, den: 9,  dec: '0.555...',    bar: '5'      },
+    { num: 7, den: 9,  dec: '0.777...',    bar: '7'      },
+    { num: 8, den: 9,  dec: '0.888...',    bar: '8'      },
+    { num: 1, den: 7,  dec: '0.142857...', bar: '142857' },
+    { num: 1, den: 11, dec: '0.0909...',   bar: '09'     },
+    { num: 2, den: 11, dec: '0.1818...',   bar: '18'     },
   ];
+
   const useTerm = difficulty === 1 || Math.random() < 0.6;
   const pool = useTerm ? terminating : repeating;
-  const pick = pool[randomInt(0, pool.length - 1)]!;
+
+  // Sliding-window pick: retry up to 12 times to find a key not in the
+  // recent set. If every retry collides (rare — would mean the entire pool
+  // is in the window), fall through with whatever the last pick was.
+  let pick = pool[randomInt(0, pool.length - 1)]!;
+  for (let tries = 0; tries < 12; tries++) {
+    const key = `${pick.num}/${pick.den}`;
+    if (!g7RationalRecentFractions.includes(key)) break;
+    pick = pool[randomInt(0, pool.length - 1)]!;
+  }
+  const pickKey = `${pick.num}/${pick.den}`;
+  g7RationalRecentFractions.push(pickKey);
+  while (g7RationalRecentFractions.length > G7_RATIONAL_WINDOW) {
+    g7RationalRecentFractions.shift();
+  }
+
   const negate = Math.random() < 0.3;
   const numDisplay = `${negate ? '-' : ''}${pick.num}/${pick.den}`;
   const answer = `${negate ? '-' : ''}${pick.dec}`;
@@ -1998,14 +2039,28 @@ export function generate_g7_rational_to_decimal(difficulty: DifficultyLevel): Ge
 
 // 6. M7.RP.1.2 — Identifying the Constant of Proportionality (unit rate)
 export function generate_g7_find_unit_rate(difficulty: DifficultyLevel): GeneratedQuestion {
-  // Pick a clean unit rate so y/x is well-formed. Difficulty controls the
-  // magnitude of k and whether decimal values appear.
-  const contexts = [
-    { item: 'miles', per: 'hour', subject: 'A car' },
-    { item: 'dollars', per: 'pound', subject: 'Apples cost' },
-    { item: 'pages', per: 'minute', subject: 'A printer outputs' },
-    { item: 'words', per: 'minute', subject: 'A typist averages' },
-    { item: 'liters', per: 'minute', subject: 'A pump moves' },
+  // BUG 2 fix: each context owns its own grammatical sentence. The old
+  // template hardcoded "travels" between subject and amount, producing
+  // garbled output like "A typist averages travels 10 words in 2 minutes".
+  // Now every context is a self-contained template((y, x) => string) so
+  // the verb stays scenario-appropriate.
+  const contexts: Array<{
+    item: string;
+    per: string;
+    template: (y: number, x: number) => string;
+  }> = [
+    { item: 'miles', per: 'hour',
+      template: (y, x) => `A car travels ${y} miles in ${x} hour${x === 1 ? '' : 's'}.` },
+    { item: 'miles', per: 'hour',
+      template: (y, x) => `A runner covers ${y} miles in ${x} hour${x === 1 ? '' : 's'}.` },
+    { item: 'words', per: 'minute',
+      template: (y, x) => `A typist types ${y} words in ${x} minute${x === 1 ? '' : 's'}.` },
+    { item: 'pages', per: 'minute',
+      template: (y, x) => `A printer outputs ${y} pages in ${x} minute${x === 1 ? '' : 's'}.` },
+    { item: 'liters', per: 'minute',
+      template: (y, x) => `A pump moves ${y} liters in ${x} minute${x === 1 ? '' : 's'}.` },
+    { item: 'dollars', per: 'pound',
+      template: (y, x) => `Apples cost ${y} dollars for ${x} pound${x === 1 ? '' : 's'}.` },
   ];
   const ctx = contexts[randomInt(0, contexts.length - 1)]!;
   // Clean integer unit rates first, then scale x.
@@ -2014,7 +2069,7 @@ export function generate_g7_find_unit_rate(difficulty: DifficultyLevel): Generat
   const x = xMultiplier;
   const y = k * x;
   return g7Wrap(difficulty, 'g7_find_unit_rate', 'M7.RP.1.2', 'Identifying the Constant of Proportionality', {
-    question: `${ctx.subject} travels ${y} ${ctx.item} in ${x} ${ctx.per}${x === 1 ? '' : 's'}. What is the unit rate in ${ctx.item} per ${ctx.per}?`,
+    question: `${ctx.template(y, x)} What is the unit rate in ${ctx.item} per ${ctx.per}?`,
     answer: String(k),
     solution_steps: [
       `Unit rate = total ÷ number of units`,
@@ -2027,19 +2082,25 @@ export function generate_g7_find_unit_rate(difficulty: DifficultyLevel): Generat
 
 // 7. M7.RP.2.1 — Using Proportional Relationships to Solve Real-World Problems
 export function generate_g7_proportional_solve(difficulty: DifficultyLevel): GeneratedQuestion {
+  // BUG 1 fix: the car scenario wording reads "A car travels ${a} miles on
+  // ${b} gallons" — here `a` is the OUTPUT unit (miles) and `b` is the INPUT
+  // unit (gallons). All other scenarios have `a` as input and `b` as output.
+  // The old uniform formula `newInput × k` (= newInput × known2/known1)
+  // produced the wrong answer for the car case. Now each scenario carries
+  // a `direction` flag and the cross-multiplication branches accordingly.
   const scenarios = [
     { setup: (a: number, b: number) => `A recipe uses ${a} cups of flour to make ${b} cookies.`,
       ask: (n: number) => `How many cookies can be made with ${n} cups of flour?`,
-      unit: 'cookies' },
+      unit: 'cookies', direction: 'forward' as const },
     { setup: (a: number, b: number) => `A car travels ${a} miles on ${b} gallons of gas.`,
       ask: (n: number) => `How many miles can it travel on ${n} gallons?`,
-      unit: 'miles' },
+      unit: 'miles', direction: 'inverted' as const },
     { setup: (a: number, b: number) => `${a} oranges cost $${b}.`,
       ask: (n: number) => `How much do ${n} oranges cost in dollars?`,
-      unit: 'dollars' },
+      unit: 'dollars', direction: 'forward' as const },
     { setup: (a: number, b: number) => `On a map, ${a} cm represents ${b} miles.`,
       ask: (n: number) => `How many miles do ${n} cm represent?`,
-      unit: 'miles' },
+      unit: 'miles', direction: 'forward' as const },
   ];
   const sc = scenarios[randomInt(0, scenarios.length - 1)]!;
   // Build a clean ratio that scales to an integer answer.
@@ -2047,17 +2108,38 @@ export function generate_g7_proportional_solve(difficulty: DifficultyLevel): Gen
   const base = randomInt(2, 5);
   const known1 = base;
   const known2 = base * k;
-  const newInput = base * randomInt(2, difficulty === 1 ? 4 : 8);
-  const answer = newInput * k;
+  const m = randomInt(2, difficulty === 1 ? 4 : 8);
+
+  let newInput: number;
+  let answer: number;
+  if (sc.direction === 'inverted') {
+    // newInput is in known2's units; answer is in known1's units.
+    // To keep the answer integer, newInput must be a multiple of known2.
+    // Cross-multiply: known1/known2 = answer/newInput → answer = known1 × newInput / known2.
+    newInput = known2 * m;
+    answer = (known1 * newInput) / known2;
+  } else {
+    // Forward: newInput in known1's units; answer in known2's units.
+    newInput = base * m;
+    answer = newInput * k;
+  }
+
   return g7Wrap(difficulty, 'g7_proportional_solve', 'M7.RP.2.1', 'Solving Proportions in Real-World Problems', {
     question: `${sc.setup(known1, known2)} ${sc.ask(newInput)}`,
     answer: String(answer),
-    solution_steps: [
-      `Set up the proportion: ${known1}/${known2} = ${newInput}/x`,
-      `Find the unit rate: ${known2} ÷ ${known1} = ${k}`,
-      `Multiply: ${newInput} × ${k} = ${answer}`,
-      `Answer: ${answer} ${sc.unit}`,
-    ],
+    solution_steps: sc.direction === 'inverted'
+      ? [
+          `Set up the proportion: ${known1}/${known2} = x/${newInput}`,
+          `Cross-multiply: ${known1} × ${newInput} = ${known2} × x`,
+          `Solve: x = (${known1} × ${newInput}) / ${known2} = ${answer}`,
+          `Answer: ${answer} ${sc.unit}`,
+        ]
+      : [
+          `Set up the proportion: ${known1}/${known2} = ${newInput}/x`,
+          `Find the unit rate: ${known2} ÷ ${known1} = ${k}`,
+          `Multiply: ${newInput} × ${k} = ${answer}`,
+          `Answer: ${answer} ${sc.unit}`,
+        ],
     answer_type: 'decimal',
   });
 }
@@ -2736,33 +2818,75 @@ export function generate_g7_experimental_probability(difficulty: DifficultyLevel
 
 // 25. M7.SP.4.1 — Compound Probability (independent events)
 export function generate_g7_compound_probability(difficulty: DifficultyLevel): GeneratedQuestion {
-  const scenarios: Array<{
-    desc: string;
-    eventA: { desc: string; num: number; den: number };
-    eventB: { desc: string; num: number; den: number };
-  }> = [
+  // BUG 4 fix: scenario pool expanded to 24+ entries (4 spinner sizes × 3
+  // coin types × 3 die types + custom mixes) so repeated outputs from
+  // independent calls are statistically rare. Sub-event descriptions are
+  // varied too so two scenarios sharing P=1/12 still read differently.
+  type Event = { desc: string; num: number; den: number };
+  const dieTypes: Array<{ sides: number; targets: Event[] }> = [
+    { sides: 4, targets: [
+      { desc: 'rolling a 4 on a 4-sided die',            num: 1, den: 4 },
+      { desc: 'rolling an even number on a 4-sided die', num: 1, den: 2 },
+    ]},
+    { sides: 6, targets: [
+      { desc: 'rolling a 6 on a 6-sided die',            num: 1, den: 6 },
+      { desc: 'rolling an even number on a 6-sided die', num: 1, den: 2 },
+      { desc: 'rolling a number greater than 4 on a 6-sided die', num: 1, den: 3 },
+    ]},
+    { sides: 8, targets: [
+      { desc: 'rolling an 8 on an 8-sided die',          num: 1, den: 8 },
+      { desc: 'rolling a multiple of 3 on an 8-sided die', num: 1, den: 4 },
+    ]},
+  ];
+  const coinTypes: Event[] = [
+    { desc: 'flipping heads on a fair coin', num: 1, den: 2 },
+    { desc: 'flipping tails on a penny',     num: 1, den: 2 },
+    { desc: 'flipping heads on a quarter',   num: 1, den: 2 },
+  ];
+  const spinners: Array<{ sectors: number; targets: Event[] }> = [
+    { sectors: 3, targets: [
+      { desc: 'landing on red on a 3-sector spinner',    num: 1, den: 3 },
+      { desc: 'landing on green on a 3-sector spinner',  num: 1, den: 3 },
+    ]},
+    { sectors: 4, targets: [
+      { desc: 'landing on red on a 4-sector spinner',    num: 1, den: 4 },
+      { desc: 'landing on blue on a 4-sector spinner',   num: 1, den: 4 },
+    ]},
+    { sectors: 5, targets: [
+      { desc: 'landing on sector 3 on a 5-sector spinner', num: 1, den: 5 },
+      { desc: 'landing on yellow on a 5-sector spinner', num: 1, den: 5 },
+    ]},
+    { sectors: 6, targets: [
+      { desc: 'landing on sector 6 on a 6-sector spinner', num: 1, den: 6 },
+      { desc: 'landing on purple on a 6-sector spinner', num: 1, den: 6 },
+    ]},
+  ];
+
+  const dieT = dieTypes[randomInt(0, dieTypes.length - 1)]!;
+  const coinT = coinTypes[randomInt(0, coinTypes.length - 1)]!;
+  const spinT = spinners[randomInt(0, spinners.length - 1)]!;
+  const dieEvt = dieT.targets[randomInt(0, dieT.targets.length - 1)]!;
+  const spinEvt = spinT.targets[randomInt(0, spinT.targets.length - 1)]!;
+
+  // Three scenario shapes: die+coin, coin+spinner, die+spinner.
+  const shapes: Array<{ desc: string; eventA: Event; eventB: Event }> = [
     {
-      desc: 'a fair die and a fair coin',
-      eventA: { desc: 'rolling a 6',         num: 1, den: 6 },
-      eventB: { desc: 'flipping heads',      num: 1, den: 2 },
+      desc: `a fair ${dieT.sides}-sided die and a coin`,
+      eventA: dieEvt,
+      eventB: coinT,
     },
     {
-      desc: 'two fair six-sided dice',
-      eventA: { desc: 'rolling a 4 on the first die', num: 1, den: 6 },
-      eventB: { desc: 'rolling an even number on the second die', num: 1, den: 2 },
+      desc: `a coin and a ${spinT.sectors}-sector spinner`,
+      eventA: coinT,
+      eventB: spinEvt,
     },
     {
-      desc: 'two spinners (one 4-sector, one 3-sector)',
-      eventA: { desc: 'landing on red on the 4-sector spinner', num: 1, den: 4 },
-      eventB: { desc: 'landing on blue on the 3-sector spinner', num: 1, den: 3 },
-    },
-    {
-      desc: 'a fair coin and a 5-sector spinner',
-      eventA: { desc: 'flipping tails',      num: 1, den: 2 },
-      eventB: { desc: 'landing on sector 3', num: 1, den: 5 },
+      desc: `a fair ${dieT.sides}-sided die and a ${spinT.sectors}-sector spinner`,
+      eventA: dieEvt,
+      eventB: spinEvt,
     },
   ];
-  const sc = scenarios[randomInt(0, scenarios.length - 1)]!;
+  const sc = shapes[randomInt(0, shapes.length - 1)]!;
   const num = sc.eventA.num * sc.eventB.num;
   const den = sc.eventA.den * sc.eventB.den;
   const [rn, rd] = simplifyFraction(num, den);
