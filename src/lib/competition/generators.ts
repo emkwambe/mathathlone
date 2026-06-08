@@ -3542,10 +3542,13 @@ export function generate_g8_volume_cylinder(difficulty: DifficultyLevel): Genera
   const PI = 3.14159;
   const r = randomInt(2, difficulty === 1 ? 8 : 12);
   const h = randomInt(3, difficulty === 1 ? 12 : 20);
-  const V = +(PI * r * r * h).toFixed(2);
+  // Use Math.round for the 2-decimal rounding rather than toFixed —
+  // toFixed has IEEE-754 edge cases (e.g. 1.005→"1.00") that drop the
+  // deciding digit on some π computations.
+  const V = Math.round(PI * r * r * h * 100) / 100;
   return g7Wrap(difficulty, 'g8_volume_cylinder', 'M8.GEO.PV.3.2', 'Volume of a Cylinder', {
     question: `Find the volume of a cylinder with radius ${r} cm and height ${h} cm. Use π ≈ 3.14159 and round to 2 decimal places.`,
-    answer: V.toFixed(2),
+    answer: String(Math.round(V * 100) / 100),
     solution_steps: [
       `V = π × r² × h`,
       `V = 3.14159 × ${r}² × ${h}`,
@@ -3583,10 +3586,10 @@ export function generate_g8_volume_cone(difficulty: DifficultyLevel): GeneratedQ
 export function generate_g8_volume_sphere(difficulty: DifficultyLevel): GeneratedQuestion {
   const PI = 3.14159;
   const r = randomInt(2, difficulty === 1 ? 7 : 10);
-  const V = +((4 / 3) * PI * r * r * r).toFixed(2);
+  const V = Math.round((4 / 3) * PI * r * r * r * 100) / 100;
   return g7Wrap(difficulty, 'g8_volume_sphere', 'M8.GEO.PV.3.6', 'Volume of a Sphere', {
     question: `Find the volume of a sphere with radius ${r} cm. Use π ≈ 3.14159 and round to 2 decimal places.`,
-    answer: V.toFixed(2),
+    answer: String(Math.round(V * 100) / 100),
     solution_steps: [
       `V = (4/3) × π × r³`,
       `V = (4/3) × 3.14159 × ${r}³`,
@@ -3604,10 +3607,10 @@ export function generate_g8_volume_3d_word_problem(difficulty: DifficultyLevel):
   if (shape === 'cylinder') {
     const r = randomInt(2, 6);
     const h = randomInt(5, 15);
-    const V = +(PI * r * r * h).toFixed(2);
+    const V = Math.round(PI * r * r * h * 100) / 100;
     return g7Wrap(difficulty, 'g8_volume_3d_word_problem', 'M8.GEO.PV.4.1', '3D Volume — Real-World', {
       question: `A water tank is shaped like a cylinder with radius ${r} m and height ${h} m. How many cubic meters of water can it hold? Use π ≈ 3.14159 and round to 2 decimal places.`,
-      answer: V.toFixed(2),
+      answer: String(Math.round(V * 100) / 100),
       solution_steps: [
         `Cylinder volume: V = πr²h`,
         `V = 3.14159 × ${r * r} × ${h}`,
@@ -3619,10 +3622,10 @@ export function generate_g8_volume_3d_word_problem(difficulty: DifficultyLevel):
   if (shape === 'cone') {
     const r = randomInt(2, 5);
     const h = randomInt(4, 12);
-    const V = +(PI * r * r * h / 3).toFixed(2);
+    const V = Math.round(PI * r * r * h / 3 * 100) / 100;
     return g7Wrap(difficulty, 'g8_volume_3d_word_problem', 'M8.GEO.PV.4.1', '3D Volume — Real-World', {
       question: `An ice-cream cone has radius ${r} cm and height ${h} cm. How much ice cream (in cm³) can it hold when filled level to the top? Use π ≈ 3.14159 and round to 2 decimal places.`,
-      answer: V.toFixed(2),
+      answer: String(Math.round(V * 100) / 100),
       solution_steps: [
         `Cone volume: V = (1/3)πr²h`,
         `V = (1/3) × 3.14159 × ${r * r} × ${h}`,
@@ -3633,10 +3636,10 @@ export function generate_g8_volume_3d_word_problem(difficulty: DifficultyLevel):
   }
   // sphere — basketball
   const r = randomInt(10, 16);
-  const V = +((4 / 3) * PI * r * r * r).toFixed(2);
+  const V = Math.round((4 / 3) * PI * r * r * r * 100) / 100;
   return g7Wrap(difficulty, 'g8_volume_3d_word_problem', 'M8.GEO.PV.4.1', '3D Volume — Real-World', {
     question: `A basketball is approximately spherical with radius ${r} cm. What is its volume (in cm³)? Use π ≈ 3.14159 and round to 2 decimal places.`,
-    answer: V.toFixed(2),
+    answer: String(Math.round(V * 100) / 100),
     solution_steps: [
       `Sphere volume: V = (4/3)πr³`,
       `V = (4/3) × 3.14159 × ${r * r * r}`,
