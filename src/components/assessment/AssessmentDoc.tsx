@@ -126,14 +126,14 @@ export default function AssessmentDoc({ doc }: { doc: AssessmentDocument }) {
             </h2>
             <p className="mb-4 text-sm italic">Show all work. Box your final answer.</p>
 
-            {sectionB.map((q) => (
+            {sectionB.map((q, index) => (
               <div key={`B-${q.number}`} className="break-inside-avoid mb-8">
                 <div className="mb-3 flex gap-2 text-[12pt]">
-                  <span className="min-w-[24px] font-bold">{q.number}.</span>
+                  {/* Continue numbering from Section A. */}
+                  <span className="min-w-[24px] font-bold">{sectionA.length + index + 1}.</span>
                   <Math text={q.question} />
                 </div>
                 <div className="ml-6">
-                  <p className="mb-1 text-xs text-gray-500">Work space:</p>
                   {Array.from({ length: q.workspaceLines }).map((_, i) => (
                     <div key={i} className="my-1 h-7 border-b border-gray-400" />
                   ))}
@@ -176,8 +176,8 @@ export default function AssessmentDoc({ doc }: { doc: AssessmentDocument }) {
                 <div>
                   <h3 className="mb-2 text-[12pt] font-semibold">Section B — Free Response</h3>
                   <ol className="space-y-2 text-[11pt]">
-                    {sectionB.map((q) => (
-                      <AnswerKeyFR key={`KB-${q.number}`} q={q} />
+                    {sectionB.map((q, index) => (
+                      <AnswerKeyFR key={`KB-${q.number}`} q={q} num={sectionA.length + index + 1} />
                     ))}
                   </ol>
                 </div>
@@ -202,6 +202,11 @@ export default function AssessmentDoc({ doc }: { doc: AssessmentDocument }) {
           @page {
             size: letter portrait;
             margin: 0.75in;
+            @bottom-center {
+              content: 'Page ' counter(page) ' of ' counter(pages);
+              font-size: 9pt;
+              color: #666;
+            }
           }
           body {
             font-size: 11pt;
@@ -221,11 +226,11 @@ export default function AssessmentDoc({ doc }: { doc: AssessmentDocument }) {
   );
 }
 
-function AnswerKeyFR({ q }: { q: AssessmentQuestion }) {
+function AnswerKeyFR({ q, num }: { q: AssessmentQuestion; num: number }) {
   return (
     <li>
       <div className="flex gap-2">
-        <span className="min-w-[28px] font-medium">{q.number}.</span>
+        <span className="min-w-[28px] font-medium">{num}.</span>
         <Math text={q.answer} className="font-bold" />
       </div>
       {q.solutionSteps.length > 0 && (
