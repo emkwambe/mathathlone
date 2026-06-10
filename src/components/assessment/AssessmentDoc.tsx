@@ -148,7 +148,7 @@ export default function AssessmentDoc({ doc }: { doc: AssessmentDocument }) {
         )}
 
         {/* ── Answer Key (teacher copy) — quiz/test only ───────────────────── */}
-        {doc.type !== 'review' && (
+        {doc.showAnswerKey && (
           <div className="break-before-page">
             <h2 className="mb-1 text-[14pt] font-bold">
               Answer Key — {doc.title} (Teacher Copy)

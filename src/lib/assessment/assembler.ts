@@ -1,8 +1,9 @@
 // =============================================================================
 // MathAthlone — Take-Home Assessment Assembler
 // =============================================================================
-// Builds a printable assessment document (Practice Review / Quiz / Unit Test)
-// from the generator types + difficulties recorded on a heat's questions.
+// Builds a printable assessment document (Practice Review / Quiz / Homework /
+// Unit Test / Makeup Test) from a set of generator types. This is a standalone
+// tool: it takes generator types directly and does NOT depend on a heat.
 //
 // NOTE on generator output shape: the canonical fields on a GeneratedQuestion
 // are `question_text` / `question_latex` / `correct_answer`. The friendlier
@@ -14,7 +15,7 @@
 
 import { GENERATORS } from '@/lib/competition/generators';
 
-export type AssessmentType = 'review' | 'quiz' | 'test';
+export type AssessmentType = 'review' | 'quiz' | 'homework' | 'test' | 'makeup';
 
 export interface AssessmentQuestion {
   number: number;
@@ -43,16 +44,31 @@ export interface AssessmentDocument {
   };
   totalPoints: number;
   heatCode: string;
+  /** Teacher answer key is rendered for formal assessments, not practice. */
+  showAnswerKey: boolean;
 }
 
 const CONFIGS: Record<AssessmentType, {
   total: number; frRatio: number;
   mcPts: number; frPts: number; wsLines: number;
 }> = {
-  review: { total: 10, frRatio: 0.4, mcPts: 2, frPts: 4,  wsLines: 4 },
-  quiz:   { total: 12, frRatio: 0.4, mcPts: 3, frPts: 5,  wsLines: 6 },
-  test:   { total: 20, frRatio: 0.5, mcPts: 3, frPts: 5,  wsLines: 8 },
+  review:   { total: 10, frRatio: 0.4, mcPts: 2, frPts: 4, wsLines: 4 },
+  quiz:     { total: 12, frRatio: 0.4, mcPts: 3, frPts: 5, wsLines: 6 },
+  homework: { total: 8,  frRatio: 0.6, mcPts: 2, frPts: 4, wsLines: 5 },
+  test:     { total: 20, frRatio: 0.5, mcPts: 3, frPts: 5, wsLines: 8 },
+  makeup:   { total: 20, frRatio: 0.5, mcPts: 3, frPts: 5, wsLines: 8 },
 };
+
+const TITLES: Record<AssessmentType, string> = {
+  review:   'Practice Review',
+  quiz:     'Quiz',
+  homework: 'Homework',
+  test:     'Unit Test',
+  makeup:   'Makeup Test',
+};
+
+// Formal assessments ship with a teacher answer key; practice handouts don't.
+const ANSWER_KEY_TYPES = new Set<AssessmentType>(['quiz', 'test', 'makeup']);
 
 // Pull the human-facing question/answer regardless of which field the
 // generator populated.
@@ -121,12 +137,12 @@ function buildMCOptions(
 }
 
 export function assembleAssessment(
-  heatCode: string,
   generatorTypes: string[],
   difficulties: number[],
   type: AssessmentType,
   courseName: string,
-  topicNames: string[]
+  topicNames: string[],
+  heatCode: string = 'STANDALONE'
 ): AssessmentDocument {
   const cfg = CONFIGS[type];
 
@@ -189,9 +205,7 @@ export function assembleAssessment(
     sectionB.reduce((s, q) => s + q.points, 0);
 
   return {
-    title: type === 'review' ? 'Practice Review'
-         : type === 'quiz'   ? 'Quiz'
-         :                     'Unit Test',
+    title: TITLES[type],
     course: courseName,
     topics: topicNames,
     date: new Date().toLocaleDateString('en-US', {
@@ -201,5 +215,6 @@ export function assembleAssessment(
     sections: { A: sectionA, B: sectionB },
     totalPoints,
     heatCode,
+    showAnswerKey: ANSWER_KEY_TYPES.has(type),
   };
 }

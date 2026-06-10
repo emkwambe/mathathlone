@@ -79,18 +79,32 @@ export default async function TeacherDashboard() {
         </div>
 
         {/* Quick Actions */}
-        <div className="mb-8">
+        <div className="mb-8 grid gap-4 md:grid-cols-2">
           {/* Start Heat */}
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white">
+          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white flex flex-col">
             <h2 className="text-2xl font-bold mb-2">🏁 Start a Heat</h2>
-            <p className="text-blue-100 mb-6">
+            <p className="text-blue-100 mb-6 flex-1">
               Create a new competition for your class. Choose the topic and difficulty.
             </p>
             <Link
               href="/compete/create"
-              className="inline-block px-6 py-3 bg-white text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition"
+              className="inline-block self-start px-6 py-3 bg-white text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition"
             >
               Create Heat
+            </Link>
+          </div>
+
+          {/* Generate Assessment */}
+          <div className="bg-gradient-to-r from-emerald-600 to-teal-600 rounded-2xl p-8 text-white flex flex-col">
+            <h2 className="text-2xl font-bold mb-2">📋 Generate Assessment</h2>
+            <p className="text-emerald-100 mb-6 flex-1">
+              Build a printable take-home — Quiz, Homework, Unit Test, and more. No heat required.
+            </p>
+            <Link
+              href="/assessment/generate"
+              className="inline-block self-start px-6 py-3 bg-white text-emerald-700 font-semibold rounded-lg hover:bg-emerald-50 transition"
+            >
+              Generate Assessment
             </Link>
           </div>
         </div>
