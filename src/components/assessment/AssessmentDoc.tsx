@@ -202,11 +202,6 @@ export default function AssessmentDoc({ doc }: { doc: AssessmentDocument }) {
           @page {
             size: letter portrait;
             margin: 0.75in;
-            @bottom-center {
-              content: 'Page ' counter(page) ' of ' counter(pages);
-              font-size: 9pt;
-              color: #666;
-            }
           }
           body {
             font-size: 11pt;
