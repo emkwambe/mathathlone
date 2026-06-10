@@ -5082,16 +5082,33 @@ export function generate_m3_factor_polynomial(difficulty: DifficultyLevel): Gene
   const c1 = b;
   const c0 = a * b;
   const polyStr = `x³ ${c2 >= 0 ? '+' : '-'} ${Math.abs(c2)}x² ${c1 >= 0 ? '+' : '-'} ${Math.abs(c1)}x ${c0 >= 0 ? '+' : '-'} ${Math.abs(c0)}`;
-  const answer = `(x ${a >= 0 ? '+' : '-'} ${Math.abs(a)})(x² ${b >= 0 ? '+' : '-'} ${Math.abs(b)})`;
+  const binomial = `(x ${a >= 0 ? '+' : '-'} ${Math.abs(a)})`;
+  const quadratic = `(x² ${b >= 0 ? '+' : '-'} ${Math.abs(b)})`;
+  // Grouping yields (x + a)(x² + b). If (x² + b) is a difference of squares
+  // — i.e. b < 0 and −b is a perfect square (−b = n²) — factor it completely.
+  const n = b < 0 ? Math.sqrt(-b) : NaN;
+  const isDiffOfSquares = b < 0 && Number.isInteger(n);
+  const groupedAnswer = `${binomial}${quadratic}`;
+  const answer = isDiffOfSquares
+    ? `${binomial}(x - ${n})(x + ${n})`
+    : groupedAnswer;
+  const solution_steps = [
+    `Group the first two and last two terms: (x³ ${c2 >= 0 ? '+' : '-'} ${Math.abs(c2)}x²) + (${c1 >= 0 ? '' : '-'}${Math.abs(c1)}x ${c0 >= 0 ? '+' : '-'} ${Math.abs(c0)})`,
+    `Factor each group: x²(x ${a >= 0 ? '+' : '-'} ${Math.abs(a)}) ${b >= 0 ? '+' : '-'} ${Math.abs(b)}(x ${a >= 0 ? '+' : '-'} ${Math.abs(a)})`,
+    `Factor out the common binomial ${binomial}: ${groupedAnswer}`,
+  ];
+  if (isDiffOfSquares) {
+    solution_steps.push(
+      `Notice ${quadratic} is a difference of squares: x² − ${n}² = (x − ${n})(x + ${n}).`,
+      `Factor completely: ${answer}`,
+    );
+  } else {
+    solution_steps.push(`Result: ${answer}`);
+  }
   return g7Wrap(difficulty, 'm3_factor_polynomial', 'M3.POL.2.1', 'Factoring Polynomials by Grouping', {
-    question: `Factor by grouping: ${polyStr}`,
+    question: `Factor completely: ${polyStr}`,
     answer,
-    solution_steps: [
-      `Group the first two and last two terms: (x³ ${c2 >= 0 ? '+' : '-'} ${Math.abs(c2)}x²) + (${c1 >= 0 ? '' : '-'}${Math.abs(c1)}x ${c0 >= 0 ? '+' : '-'} ${Math.abs(c0)})`,
-      `Factor each group: x²(x ${a >= 0 ? '+' : '-'} ${Math.abs(a)}) ${b >= 0 ? '+' : '-'} ${Math.abs(b)}(x ${a >= 0 ? '+' : '-'} ${Math.abs(a)})`,
-      `Factor out the common binomial (x ${a >= 0 ? '+' : '-'} ${Math.abs(a)}):`,
-      `Result: ${answer}`,
-    ],
+    solution_steps,
     answer_type: 'expression',
   });
 }
