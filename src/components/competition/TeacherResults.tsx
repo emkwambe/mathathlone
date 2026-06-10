@@ -15,6 +15,7 @@ import {
   ArrowLeft,
   Award,
   Check,
+  ChevronDown,
   ChevronRight,
   Clock,
   Crown,
@@ -193,6 +194,7 @@ export default function TeacherResults({ heatId, heatCode, integrityLevel }: Tea
   const [gradeBands, setGradeBands] = useState<{ A: number; B: number; C: number; D: number } | null>(null);
   const [letterGradeByAthlete, setLetterGradeByAthlete] = useState<Map<string, 'A' | 'B' | 'C' | 'D' | 'F'>>(new Map());
   const [releasing, setReleasing] = useState<boolean>(false);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   // ── Load everything ─────────────────────────────────────────────────────
   useEffect(() => {
@@ -570,6 +572,36 @@ export default function TeacherResults({ heatId, heatCode, integrityLevel }: Tea
                 {releasing ? 'Releasing…' : 'Release Results'}
               </button>
             )}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setShowDropdown(!showDropdown)}
+                className="inline-flex items-center justify-center gap-2 px-4 py-3 min-h-[44px] rounded-xl bg-white/10 border border-white/20 text-white text-sm hover:bg-white/20 transition-colors"
+              >
+                Generate Take-Home
+                <ChevronDown className="w-4 h-4" />
+              </button>
+              {showDropdown && (
+                <div className="absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-10 min-w-[180px] overflow-hidden">
+                  {[
+                    { label: '📋 Practice Review', type: 'review' },
+                    { label: '📝 Quiz', type: 'quiz' },
+                    { label: '📄 Unit Test', type: 'test' },
+                  ].map(({ label, type }) => (
+                    <a
+                      key={type}
+                      href={`/assessment/${heatId}/${type}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block px-4 py-2 text-sm hover:bg-gray-50 text-gray-700"
+                      onClick={() => setShowDropdown(false)}
+                    >
+                      {label}
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
             <button
               type="button"
               onClick={handleExport}
