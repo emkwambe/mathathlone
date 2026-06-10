@@ -6533,7 +6533,7 @@ export function generate_g6_ns_fraction_division_word(difficulty: DifficultyLeve
   // "How many a/b in c/d?" → c/d ÷ a/b. Pool a/b and c/d so the answer is clean.
   const scenarios = [
     { setup: (cup: string, sv: string) => `A recipe uses ${cup} cup servings. How many servings can be made from ${sv} cup${sv === '1' ? '' : 's'} of mixture?`, container: 'mixture' },
-    { setup: (cup: string, sv: string) => `A ribbon is ${sv} foot${sv === '1' ? '' : 's'} long. How many ${cup}-foot pieces can be cut from it?`, container: 'ribbon' },
+    { setup: (cup: string, sv: string) => `A ribbon is ${sv} ${sv === '1' ? 'foot' : 'feet'} long. How many ${cup}-foot pieces can be cut from it?`, container: 'ribbon' },
   ];
   // Use unit fractions for the divisor; the dividend is a multiple-of-unit fraction.
   const divisorDen = [2, 3, 4, 5, 6, 8][randomInt(0, 5)]!;
@@ -6652,10 +6652,17 @@ export function generate_g6_ns_compute_absolute_value(difficulty: DifficultyLeve
   // negative_fraction
   const num = randomInt(1, 9);
   const den = [2, 3, 4, 5, 6, 8][randomInt(0, 5)]!;
+  // Absolute value removes the sign; simplify the resulting fraction by its GCD.
+  const g = gcd(num, den);
+  const sNum = num / g;
+  const sDen = den / g;
+  const simplified = sDen === 1 ? `${sNum}` : `${sNum}/${sDen}`;
   return g7Wrap(difficulty, 'g6_ns_compute_absolute_value', 'M6.NS.4.4', 'Computing Absolute Value', {
     question: `Find: |-${num}/${den}|`,
-    answer: `${num}/${den}`,
-    solution_steps: [`|-${num}/${den}| = ${num}/${den} (distance from 0).`],
+    answer: simplified,
+    solution_steps: g > 1
+      ? [`|-${num}/${den}| = ${num}/${den} (distance from 0).`, `Simplify: ${num}/${den} = ${simplified}.`]
+      : [`|-${num}/${den}| = ${simplified} (distance from 0).`],
     answer_type: 'decimal',
   });
 }
@@ -6727,23 +6734,36 @@ export function generate_g6_ns_coordinate_distance_6(difficulty: DifficultyLevel
 
 // 13. M6.RP.1.3 — Calculate a Unit Rate
 export function generate_g6_rp_calculate_unit_rate(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Each context owns its question wording so units never get mixed up.
+  // The unit rate is always total ÷ units = numerator ÷ denominator = rate.
   const contexts = [
-    { subj: 'A car drives',     verb: 'miles in',       unit: 'miles',    per: 'hour'    },
-    { subj: 'A box of',         verb: 'apples costs $', unit: 'dollars',  per: 'apple'   },
-    { subj: 'A printer prints', verb: 'pages in',       unit: 'pages',    per: 'minute'  },
-    { subj: 'A snack contains', verb: 'calories per',   unit: 'calories', per: 'serving' },
+    {
+      question: (n: number, d: number) => `A car drives ${n} miles in ${d} hour${d === 1 ? '' : 's'}. What is the unit rate in miles per hour?`,
+      sol: (n: number, d: number, r: number) => `${n} miles ÷ ${d} hours = ${r} miles per hour.`,
+    },
+    {
+      question: (n: number, d: number) => `A box of ${d} apple${d === 1 ? '' : 's'} costs $${n}. What is the unit rate in dollars per apple?`,
+      sol: (n: number, d: number, r: number) => `$${n} ÷ ${d} apples = $${r} per apple.`,
+    },
+    {
+      question: (n: number, d: number) => `A printer prints ${n} pages in ${d} minute${d === 1 ? '' : 's'}. What is the unit rate in pages per minute?`,
+      sol: (n: number, d: number, r: number) => `${n} pages ÷ ${d} minutes = ${r} pages per minute.`,
+    },
+    {
+      question: (n: number, d: number) => `A snack contains ${n} calories in ${d} serving${d === 1 ? '' : 's'}. What is the unit rate in calories per serving?`,
+      sol: (n: number, d: number, r: number) => `${n} calories ÷ ${d} servings = ${r} calories per serving.`,
+    },
   ];
   const ctx = contexts[randomInt(0, contexts.length - 1)]!;
   const denominator = randomInt(2, difficulty === 1 ? 6 : 12);
   const rate = randomInt(difficulty === 1 ? 5 : 15, difficulty === 1 ? 30 : 80);
   const numerator = denominator * rate;
   return g7Wrap(difficulty, 'g6_rp_calculate_unit_rate', 'M6.RP.1.3', 'Calculating a Unit Rate', {
-    question: `${ctx.subj} ${numerator} ${ctx.verb} ${denominator} ${ctx.per}${denominator === 1 ? '' : 's'}. What is the unit rate in ${ctx.unit} per ${ctx.per}?`,
+    question: ctx.question(numerator, denominator),
     answer: String(rate),
     solution_steps: [
-      `Unit rate = total ÷ units.`,
-      `${numerator} ÷ ${denominator} = ${rate}.`,
-      `Answer: ${rate} ${ctx.unit} per ${ctx.per}.`,
+      `Unit rate = total ÷ number of units.`,
+      ctx.sol(numerator, denominator, rate),
     ],
     answer_type: 'decimal',
   });
