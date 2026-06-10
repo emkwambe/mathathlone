@@ -6,7 +6,6 @@
   "total_static_items": 88,
   "questions": [
 
-    // === FOUNDATIONAL BASICS — MISCONCEPTION-TARGETED ===
 
     {
       "id": "mf_s_fb_3_1_a",
@@ -79,7 +78,6 @@
       "dok": 2
     },
 
-    // === ALGEBRAIC PROPERTIES — MISCONCEPTION-TARGETED ===
 
     {
       "id": "mf_s_ap_1_1_a",
@@ -163,7 +161,6 @@
       "dok": 1
     },
 
-    // === ARITHMETIC & NUMBER THEORY — MISCONCEPTION-TARGETED ===
 
     {
       "id": "mf_s_ant_1_1_a",
@@ -226,7 +223,6 @@
       "dok": 1
     },
 
-    // === FRACTIONS, DECIMALS, PERCENTAGES — MISCONCEPTION-TARGETED ===
 
     {
       "id": "mf_s_fdp_1_2_a",
@@ -316,7 +312,6 @@
       "dok": 1
     },
 
-    // === EXPONENTS & ROOTS — MISCONCEPTION-TARGETED ===
 
     {
       "id": "mf_s_er_1_1_a",
@@ -374,7 +369,6 @@
       "dok": 1
     },
 
-    // === RADICAL OPERATIONS — MISCONCEPTION-TARGETED ===
 
     {
       "id": "mf_s_rad_1_1_a",
@@ -431,7 +425,6 @@
       "dok": 2
     },
 
-    // === UNITS & CONVERSIONS — MISCONCEPTION-TARGETED ===
 
     {
       "id": "mf_s_uc_3_1_a",
@@ -461,7 +454,6 @@
       "dok": 1
     },
 
-    // === RATIOS, PROPORTIONS & BASIC ALGEBRA — MISCONCEPTION-TARGETED ===
 
     {
       "id": "mf_s_rpba_2_1_a",
@@ -507,7 +499,6 @@
       "dok": 1
     },
 
-    // === INTRODUCTION TO SETS — MISCONCEPTION-TARGETED ===
 
     {
       "id": "mf_s_sets_1_1_a",
@@ -569,7 +560,6 @@
       "dok": 2
     },
 
-    // === GEOMETRY FUNDAMENTALS — MISCONCEPTION-TARGETED ===
 
     {
       "id": "mf_s_geo_2_1_a",
@@ -626,7 +616,6 @@
       "dok": 1
     },
 
-    // === STATISTICS & PROBABILITY — MISCONCEPTION-TARGETED ===
 
     {
       "id": "mf_s_s_1_2_a",

@@ -6,7 +6,6 @@
   "total_static_items": 72,
   "questions": [
 
-    // === FND: FOUNDATIONS ===
 
     {
       "id": "alg1_s_fnd_1_1_a",
@@ -127,7 +126,6 @@
       "dok": 2
     },
 
-    // === FLF: FUNCTIONS & LINEAR FUNCTIONS ===
 
     {
       "id": "alg1_s_flf_1_1_a",
@@ -211,7 +209,6 @@
       "dok": 3
     },
 
-    // === SYS: SYSTEMS ===
 
     {
       "id": "alg1_s_sys_1_1_a",
@@ -246,7 +243,6 @@
       "dok": 2
     },
 
-    // === EXP: EXPONENTS & EXPONENTIAL ===
 
     {
       "id": "alg1_s_exp_1_2_a",
@@ -292,7 +288,6 @@
       "dok": 2
     },
 
-    // === POLY: POLYNOMIALS & FACTORING ===
 
     {
       "id": "alg1_s_poly_2_2_a",
@@ -359,7 +354,6 @@
       "dok": 3
     },
 
-    // === QUAD: QUADRATIC ===
 
     {
       "id": "alg1_s_quad_1_1_a",
@@ -426,7 +420,6 @@
       "dok": 3
     },
 
-    // === DAS: DATA ANALYSIS & STATISTICS ===
 
     {
       "id": "alg1_s_das_2_3_a",

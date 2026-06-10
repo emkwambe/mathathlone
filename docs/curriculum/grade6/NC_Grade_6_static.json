@@ -278,7 +278,7 @@
       "id": "g6_s_geo_4_2_a",
       "concept_id": "M6.GEO.4.2",
       "stem": "Mia wants to wrap a gift box that is 10 cm × 8 cm × 5 cm. Approximately how many square centimeters of wrapping paper does she need (surface area)?",
-      "options": ["A. 400 cm²", "B. 340 cm²", "C": "300 cm²", "D. 160 cm²"],
+      "options": ["A. 400 cm²", "B. 340 cm²", "C. 300 cm²", "D. 160 cm²"],
       "correct": "B",
       "explanation": "SA = 2(10×8) + 2(10×5) + 2(8×5) = 160 + 100 + 80 = 340 cm².",
       "three_axis": {"cognitive_demand": "application", "complexity": "medium", "context": "real_world"},

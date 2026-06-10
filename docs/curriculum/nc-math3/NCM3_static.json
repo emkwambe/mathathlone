@@ -6,7 +6,6 @@
   "total_static_items": 65,
   "questions": [
 
-    // === FUNCTIONS & INVERSES ===
 
     {
       "id": "m3_s_fni_1_3_a",
@@ -89,7 +88,6 @@
       "dok": 3
     },
 
-    // === EXPONENTIAL & LOGARITHMIC ===
 
     {
       "id": "m3_s_el_3_1_a",
@@ -156,7 +154,6 @@
       "dok": 2
     },
 
-    // === POLYNOMIAL & RATIONAL FUNCTIONS ===
 
     {
       "id": "m3_s_pr_1_2_a",
@@ -255,7 +252,6 @@
       "dok": 2
     },
 
-    // === TRIGONOMETRY ★ AP PIPELINE ===
 
     {
       "id": "m3_s_trig_1_2_a",
@@ -360,7 +356,6 @@
       "dok": 3
     },
 
-    // === GEOMETRY & CIRCLES ===
 
     {
       "id": "m3_s_geo_2_3_a",
@@ -390,7 +385,6 @@
       "dok": 1
     },
 
-    // === PROBABILITY & STATISTICS ===
 
     {
       "id": "m3_s_ps_2_1_a",
