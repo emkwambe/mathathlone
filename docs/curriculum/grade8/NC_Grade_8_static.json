@@ -8,10 +8,19 @@
       "id": "g8_s_ns_1_1_a",
       "concept_id": "M8.NS.1.1",
       "stem": "Which of the following is a rational number?",
-      "options": ["A. √2", "B. π", "C. 0.333...", "D. √5"],
+      "options": [
+        "A. √2",
+        "B. π",
+        "C. 0.333...",
+        "D. √5"
+      ],
       "correct": "C",
       "explanation": "0.333... = 1/3, which is a ratio of two integers — rational. The others are irrational.",
-      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "three_axis": {
+        "cognitive_demand": "conceptual",
+        "complexity": "low",
+        "context": "abstract"
+      },
       "dok": 1
     },
     {
@@ -22,21 +31,34 @@
         "A. A number that cannot be written as a fraction",
         "B. A number that cannot be expressed as a ratio of two integers and has a non-terminating, non-repeating decimal expansion",
         "C. Any negative number",
-        "D. A number with an infinite decimal expansion"
+        "D. A number with any infinite decimal expansion"
       ],
       "correct": "B",
       "explanation": "Irrational numbers have non-terminating, non-repeating decimals and cannot be expressed as p/q where p, q are integers and q ≠ 0.",
-      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "three_axis": {
+        "cognitive_demand": "conceptual",
+        "complexity": "low",
+        "context": "abstract"
+      },
       "dok": 1
     },
     {
       "id": "g8_s_ns_1_2_b",
       "concept_id": "M8.NS.1.2",
       "stem": "Which of the following is irrational?",
-      "options": ["A. 4/9", "B. √16", "C. 0.75", "D. √7"],
+      "options": [
+        "A. 4/9",
+        "B. √16",
+        "C. 0.75",
+        "D. √7"
+      ],
       "correct": "D",
       "explanation": "√7 ≈ 2.6457... — non-terminating, non-repeating. The others simplify to rational numbers.",
-      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "three_axis": {
+        "cognitive_demand": "conceptual",
+        "complexity": "low",
+        "context": "abstract"
+      },
       "dok": 1
     },
     {
@@ -51,7 +73,11 @@
       ],
       "correct": "C",
       "explanation": "−7 = −7/1 (rational); √9 = 3 (rational); π ≈ 3.14159... (irrational).",
-      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "three_axis": {
+        "cognitive_demand": "conceptual",
+        "complexity": "low",
+        "context": "abstract"
+      },
       "dok": 2
     },
     {
@@ -66,7 +92,11 @@
       ],
       "correct": "A",
       "explanation": "2x + 3 = 2x + 5 simplifies to 3 = 5, a false statement — no solution.",
-      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "three_axis": {
+        "cognitive_demand": "conceptual",
+        "complexity": "medium",
+        "context": "abstract"
+      },
       "dok": 2
     },
     {
@@ -81,7 +111,11 @@
       ],
       "correct": "B",
       "explanation": "3(x + 2) = 3x + 6 simplifies to 3x + 6 = 3x + 6, a true statement for all x — infinitely many solutions.",
-      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "three_axis": {
+        "cognitive_demand": "conceptual",
+        "complexity": "medium",
+        "context": "abstract"
+      },
       "dok": 2
     },
     {
@@ -96,7 +130,11 @@
       ],
       "correct": "B",
       "explanation": "Parallel lines never intersect, so there is no point that satisfies both equations.",
-      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "three_axis": {
+        "cognitive_demand": "conceptual",
+        "complexity": "medium",
+        "context": "abstract"
+      },
       "dok": 2
     },
     {
@@ -111,7 +149,11 @@
       ],
       "correct": "C",
       "explanation": "Coincident lines share every point — infinitely many solutions.",
-      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "three_axis": {
+        "cognitive_demand": "conceptual",
+        "complexity": "medium",
+        "context": "abstract"
+      },
       "dok": 2
     },
     {
@@ -126,7 +168,11 @@
       ],
       "correct": "B",
       "explanation": "Same slope (3), different y-intercepts — parallel lines — no solution.",
-      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "three_axis": {
+        "cognitive_demand": "conceptual",
+        "complexity": "medium",
+        "context": "abstract"
+      },
       "dok": 2
     },
     {
@@ -141,7 +187,11 @@
       ],
       "correct": "B",
       "explanation": "In B, each input (3, 4, 5) maps to exactly one output. The same output (5) is allowed; the same input with different outputs is not.",
-      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "three_axis": {
+        "cognitive_demand": "conceptual",
+        "complexity": "low",
+        "context": "abstract"
+      },
       "dok": 1
     },
     {
@@ -156,7 +206,11 @@
       ],
       "correct": "A",
       "explanation": "If a vertical line crosses the graph more than once, one x-value maps to multiple y-values — not a function.",
-      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "three_axis": {
+        "cognitive_demand": "conceptual",
+        "complexity": "low",
+        "context": "abstract"
+      },
       "dok": 2
     },
     {
@@ -171,7 +225,11 @@
       ],
       "correct": "B",
       "explanation": "Linear functions have a constant rate of change (slope) and produce a straight-line graph.",
-      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "three_axis": {
+        "cognitive_demand": "conceptual",
+        "complexity": "medium",
+        "context": "abstract"
+      },
       "dok": 1
     },
     {
@@ -186,7 +244,11 @@
       ],
       "correct": "B",
       "explanation": "Function B: (14−5)/(3−0) = 9/3 = 3, which is greater than Function A's slope of 2.",
-      "three_axis": {"cognitive_demand": "reasoning", "complexity": "high", "context": "real_world"},
+      "three_axis": {
+        "cognitive_demand": "reasoning",
+        "complexity": "high",
+        "context": "real_world"
+      },
       "dok": 2
     },
     {
@@ -201,7 +263,11 @@
       ],
       "correct": "C",
       "explanation": "The y-intercept (3.50) is the value of C when m = 0 — the base/flat fee before any miles are traveled.",
-      "three_axis": {"cognitive_demand": "reasoning", "complexity": "high", "context": "real_world"},
+      "three_axis": {
+        "cognitive_demand": "reasoning",
+        "complexity": "high",
+        "context": "real_world"
+      },
       "dok": 3
     },
     {
@@ -216,7 +282,11 @@
       ],
       "correct": "C",
       "explanation": "The slope (0.85) is the rate of change — cost increases by $0.85 for each additional mile.",
-      "three_axis": {"cognitive_demand": "reasoning", "complexity": "high", "context": "real_world"},
+      "three_axis": {
+        "cognitive_demand": "reasoning",
+        "complexity": "high",
+        "context": "real_world"
+      },
       "dok": 3
     },
     {
@@ -231,17 +301,30 @@
       ],
       "correct": "A",
       "explanation": "Steep increase = fast walking away, flat section = stopped, decrease back to 0 = returning home.",
-      "three_axis": {"cognitive_demand": "reasoning", "complexity": "medium", "context": "real_world"},
+      "three_axis": {
+        "cognitive_demand": "reasoning",
+        "complexity": "medium",
+        "context": "real_world"
+      },
       "dok": 2
     },
     {
       "id": "g8_s_geo_1_1_a",
       "concept_id": "M8.GEO.TRANS.1.1",
       "stem": "Which of the following is NOT preserved under a rigid transformation?",
-      "options": ["A. Angle measures", "B. Side lengths", "C. Shape", "D. Size of the entire figure after dilation"],
+      "options": [
+        "A. Angle measures",
+        "B. Side lengths",
+        "C. Shape",
+        "D. Size of the entire figure after dilation"
+      ],
       "correct": "D",
       "explanation": "Rigid transformations (translation, reflection, rotation) preserve distance and angle measures. Dilation changes size — but dilation is NOT a rigid transformation.",
-      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "three_axis": {
+        "cognitive_demand": "conceptual",
+        "complexity": "low",
+        "context": "abstract"
+      },
       "dok": 1
     },
     {
@@ -256,7 +339,11 @@
       ],
       "correct": "C",
       "explanation": "Congruent figures have identical size and shape; one can be mapped to the other through translations, reflections, and/or rotations.",
-      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "three_axis": {
+        "cognitive_demand": "conceptual",
+        "complexity": "medium",
+        "context": "abstract"
+      },
       "dok": 2
     },
     {
@@ -271,7 +358,11 @@
       ],
       "correct": "B",
       "explanation": "Scale factor k < 1 shrinks the figure; k = 0.5 reduces each coordinate to half.",
-      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "three_axis": {
+        "cognitive_demand": "conceptual",
+        "complexity": "medium",
+        "context": "abstract"
+      },
       "dok": 1
     },
     {
@@ -286,27 +377,49 @@
       ],
       "correct": "C",
       "explanation": "Similarity requires a dilation (plus any rigid motions). Rigid motions alone produce congruence, not merely similarity.",
-      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "abstract"},
+      "three_axis": {
+        "cognitive_demand": "conceptual",
+        "complexity": "medium",
+        "context": "abstract"
+      },
       "dok": 2
     },
     {
       "id": "g8_s_geo_pv_1_1_a",
       "concept_id": "M8.GEO.PV.1.1",
       "stem": "In a right triangle, the side opposite the right angle is called the:",
-      "options": ["A. Leg", "B. Base", "C. Hypotenuse", "D. Altitude"],
+      "options": [
+        "A. Leg",
+        "B. Base",
+        "C. Hypotenuse",
+        "D. Altitude"
+      ],
       "correct": "C",
       "explanation": "The hypotenuse is always opposite the right angle and is the longest side of a right triangle.",
-      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "three_axis": {
+        "cognitive_demand": "conceptual",
+        "complexity": "low",
+        "context": "abstract"
+      },
       "dok": 1
     },
     {
       "id": "g8_s_geo_pv_3_1_a",
       "concept_id": "M8.GEO.PV.3.1",
       "stem": "Which formula correctly gives the volume of a cylinder with radius r and height h?",
-      "options": ["A. V = πrh", "B. V = 2πr²h", "C. V = πr²h", "D. V = (4/3)πr²h"],
+      "options": [
+        "A. V = πrh",
+        "B. V = 2πr²h",
+        "C. V = πr²h",
+        "D. V = (4/3)πr²h"
+      ],
       "correct": "C",
       "explanation": "Volume of a cylinder = base area × height = πr² × h.",
-      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "three_axis": {
+        "cognitive_demand": "conceptual",
+        "complexity": "low",
+        "context": "abstract"
+      },
       "dok": 1
     },
     {
@@ -321,17 +434,30 @@
       ],
       "correct": "C",
       "explanation": "V_cone = (1/3)πr²h = (1/3) × V_cylinder",
-      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "three_axis": {
+        "cognitive_demand": "conceptual",
+        "complexity": "low",
+        "context": "abstract"
+      },
       "dok": 1
     },
     {
       "id": "g8_s_geo_pv_3_5_a",
       "concept_id": "M8.GEO.PV.3.5",
       "stem": "Which formula gives the volume of a sphere with radius r?",
-      "options": ["A. V = πr³", "B. V = (4/3)πr³", "C. V = 4πr²", "D. V = (2/3)πr³"],
+      "options": [
+        "A. V = πr³",
+        "B. V = (4/3)πr³",
+        "C. V = 4πr²",
+        "D. V = (2/3)πr³"
+      ],
       "correct": "B",
       "explanation": "Volume of a sphere = (4/3)πr³",
-      "three_axis": {"cognitive_demand": "conceptual", "complexity": "low", "context": "abstract"},
+      "three_axis": {
+        "cognitive_demand": "conceptual",
+        "complexity": "low",
+        "context": "abstract"
+      },
       "dok": 1
     },
     {
@@ -346,7 +472,11 @@
       ],
       "correct": "C",
       "explanation": "When both variables increase together, the association is positive.",
-      "three_axis": {"cognitive_demand": "reasoning", "complexity": "medium", "context": "real_world"},
+      "three_axis": {
+        "cognitive_demand": "reasoning",
+        "complexity": "medium",
+        "context": "real_world"
+      },
       "dok": 2
     },
     {
@@ -361,7 +491,11 @@
       ],
       "correct": "B",
       "explanation": "A line of best fit (trend line) captures the general direction and magnitude of the data's linear trend.",
-      "three_axis": {"cognitive_demand": "conceptual", "complexity": "medium", "context": "real_world"},
+      "three_axis": {
+        "cognitive_demand": "conceptual",
+        "complexity": "medium",
+        "context": "real_world"
+      },
       "dok": 2
     },
     {
@@ -376,7 +510,11 @@
       ],
       "correct": "B",
       "explanation": "The y-intercept is the predicted value of y when x = 0 — the baseline score with no study time.",
-      "three_axis": {"cognitive_demand": "reasoning", "complexity": "high", "context": "real_world"},
+      "three_axis": {
+        "cognitive_demand": "reasoning",
+        "complexity": "high",
+        "context": "real_world"
+      },
       "dok": 3
     }
   ]
