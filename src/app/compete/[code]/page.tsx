@@ -377,20 +377,32 @@ export default function HeatLobbyPage() {
 
   // ── Teacher: Start Heat ─────────────────────────────────────────────────
   const handleStart = useCallback(async () => {
-    if (!heat) return;
+    console.log('[HeatLobby] handleStart:fired', {
+      heatId: heat?.id ?? null,
+      status: heat?.status ?? null,
+      isTeacher,
+      userId: user?.id ?? null,
+      createdBy: heat?.created_by ?? null,
+    });
+    if (!heat) {
+      console.warn('[HeatLobby] handleStart:aborted — no heat loaded');
+      return;
+    }
     setStartingHeat(true);
     setStartError(null);
     try {
       // startHeat awaits 5s internally between countdown and active. Other
       // clients pick up the status changes via realtime.
+      console.log('[HeatLobby] handleStart:calling startHeat', { heatId: heat.id });
       await startHeat(supabase, heat.id, 5);
+      console.log('[HeatLobby] handleStart:startHeat resolved', { heatId: heat.id });
     } catch (err: any) {
       console.error('[HeatLobby] startHeat failed:', err);
       setStartError(err?.message ?? 'Failed to start Heat');
     } finally {
       setStartingHeat(false);
     }
-  }, [heat, supabase]);
+  }, [heat, supabase, isTeacher, user]);
 
   // ── Copy heat code to clipboard ─────────────────────────────────────────
   const handleCopyCode = useCallback(async () => {
@@ -799,9 +811,28 @@ function LobbyView({
         {/* Teacher start button */}
         {isTeacher && (
           <div className="flex flex-col sm:flex-row gap-3">
+            {/* DEBUG: render-time visibility into the Start button disabled gate.
+                If the button never fires onClick, this shows whether it's because
+                `disabled` is true (e.g. participants.length === 0). */}
+            {(() => {
+              console.log('[HeatLobby] StartButton:render', {
+                isTeacher,
+                starting,
+                participantCount: participants.length,
+                disabled: starting || participants.length === 0,
+              });
+              return null;
+            })()}
             <button
               type="button"
-              onClick={onStart}
+              onClick={() => {
+                console.log('[HeatLobby] StartButton:onClick', {
+                  starting,
+                  participantCount: participants.length,
+                  disabled: starting || participants.length === 0,
+                });
+                onStart();
+              }}
               disabled={starting || participants.length === 0}
               className={`flex-1 flex items-center justify-center gap-2 py-4 rounded-xl font-bold text-base md:text-lg transition-all shadow-lg ${
                 starting || participants.length === 0
