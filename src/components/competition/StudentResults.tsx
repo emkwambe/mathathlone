@@ -510,8 +510,8 @@ export default function StudentResults({
   // row written by scoring-service (Phase 2).
   const isAssessment = heatMeta?.is_assessment === true;
   const resultsReleased = heatMeta?.results_released !== false;
-  const myLetterGrade: LetterGrade | null =
-    ((me?.award as { letter_grade?: LetterGrade | null } | null | undefined)?.letter_grade) ?? null;
+  // NB: the student-facing card deliberately omits the letter grade and CTA
+  // score — both are teacher-only metrics (see TeacherResults / gradebook).
 
   const myRank = me?.rank_in_heat ?? null;
   const myPercentile = me?.percentile ?? null;
@@ -729,29 +729,19 @@ export default function StudentResults({
               You completed {me.questions_attempted ?? 0} of {heatMeta?.question_count ?? 0} questions.
             </p>
           </div>
-        ) : isAssessment && myLetterGrade ? (
-          // Assessment mode, results released — grade card replaces the
-          // trophy/award badge. Rank/percentile/share are intentionally
-          // hidden (no leaderboard in assessment mode).
+        ) : isAssessment ? (
+          // Assessment mode, results released. The letter grade and CTA score
+          // are INTERNAL metrics — they live in TeacherResults / the gradebook
+          // only and are intentionally NOT shown to the student here. The
+          // student sees accuracy, correct count, time, and concept mastery.
+          // Rank/percentile/share stay hidden too (no leaderboard in
+          // assessment mode).
           <div className="relative rounded-3xl border-4 border-indigo-300 bg-indigo-50 p-6 md:p-8 mb-6 shadow-2xl">
             <div className="flex flex-col md:flex-row md:items-center gap-6">
-              <div className="text-center md:text-left flex flex-col items-center md:items-start">
-                <p className="text-xs uppercase tracking-[0.3em] text-indigo-600 mb-1">
-                  Grade
-                </p>
-                <span className="text-6xl md:text-7xl font-extrabold text-indigo-900 leading-none">
-                  {myLetterGrade}
-                </span>
-                <span className="mt-2 text-indigo-700 text-sm font-medium">
-                  CTA {Math.round(me.cta_score ?? 0)}/100
-                </span>
-                {me.is_flagged && (
-                  <span className="mt-2 inline-flex items-center gap-1 text-[10px] font-semibold text-red-700 bg-red-100 border border-red-300 rounded-full px-2 py-0.5">
-                    Flagged — pending review
-                  </span>
-                )}
-              </div>
               <div className="flex-1 min-w-0">
+                <p className="text-xs uppercase tracking-[0.3em] text-indigo-600 mb-1">
+                  Assessment Complete
+                </p>
                 <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
                   {identity?.display_name ?? me.users?.display_name ?? 'Mathlete'}
                 </h2>
@@ -761,6 +751,11 @@ export default function StudentResults({
                 <p className="text-gray-700 text-sm mt-2">
                   Your assessment result. Results are private — no leaderboard.
                 </p>
+                {me.is_flagged && (
+                  <span className="mt-2 inline-flex items-center gap-1 text-[10px] font-semibold text-red-700 bg-red-100 border border-red-300 rounded-full px-2 py-0.5">
+                    Flagged — pending review
+                  </span>
+                )}
               </div>
             </div>
             {/* Stats tiles — same content as competition but without

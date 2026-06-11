@@ -611,22 +611,17 @@ export default function CompetitionView({
         console.warn('[CompetitionView] participation counter update failed', err);
       }
 
-      // Local state updates
+      // Local state updates. Score/streak stay INTERNAL — the CTA score is
+      // still computed in assessment mode, it's just never surfaced to the
+      // student (no running score, no streak, no points animation).
       setScore((s) => s + pointsEarned);
       setStreak((s) => (isCorrect ? s + 1 : 0));
       setQuestionsAttempted(nextAttempted);
       if (isCorrect) setQuestionsCorrect((c) => c + 1);
-      setFeedback({
-        isCorrect,
-        pointsEarned,
-        timeBonus: cappedBonus,
-        correctAnswer: isCorrect ? undefined : currentQuestion.correct_answer,
-      });
 
-      // Auto-advance after a short pause
-      const pause = isCorrect ? 800 : 1200;
-      setTimeout(() => {
-        setFeedback(null);
+      // Shared advance routine — clears the input and moves to the next
+      // question (or finishes the Heat).
+      const advance = () => {
         setAnswer('');
         setSubmitting(false);
         if (currentIndex >= questions.length - 1) {
@@ -635,6 +630,27 @@ export default function CompetitionView({
           setCurrentIndex((i) => i + 1);
           questionDisplayedAtRef.current = Date.now();
         }
+      };
+
+      // Assessment mode: no correct/incorrect feedback, no points animation.
+      // Advance to the next question silently and immediately.
+      if (isAssessment) {
+        advance();
+        return;
+      }
+
+      setFeedback({
+        isCorrect,
+        pointsEarned,
+        timeBonus: cappedBonus,
+        correctAnswer: isCorrect ? undefined : currentQuestion.correct_answer,
+      });
+
+      // Auto-advance after a short pause so the feedback chip is readable.
+      const pause = isCorrect ? 800 : 1200;
+      setTimeout(() => {
+        setFeedback(null);
+        advance();
       }, pause);
     },
     [
@@ -648,6 +664,7 @@ export default function CompetitionView({
       score,
       participationId,
       supabase,
+      isAssessment,
     ]
   );
 
@@ -911,17 +928,20 @@ export default function CompetitionView({
                 </span>
               )}
             </div>
-            <div className="text-right">
-              {/* CTA framework: hide raw point totals during gameplay — they
-                  encourage "pointsification" (Kapp 2012). Show progress
-                  toward correctness instead, which is pedagogically actionable. */}
-              <p className="text-xs text-white/50 uppercase tracking-wider leading-none mb-0.5">
-                Correct
-              </p>
-              <p className="text-lg font-bold text-emerald-300 font-mono leading-none">
-                {questionsCorrect}/{questions.length}
-              </p>
-            </div>
+            {/* Assessment mode shows ONLY the question number + progress bar —
+                no running correct/score tally. Competition mode keeps the
+                live correctness counter (raw point totals stay hidden either
+                way to avoid "pointsification", Kapp 2012). */}
+            {!isAssessment && (
+              <div className="text-right">
+                <p className="text-xs text-white/50 uppercase tracking-wider leading-none mb-0.5">
+                  Correct
+                </p>
+                <p className="text-lg font-bold text-emerald-300 font-mono leading-none">
+                  {questionsCorrect}/{questions.length}
+                </p>
+              </div>
+            )}
             <div className="flex items-center gap-2">
               <Clock className={`w-5 h-5 ${timerColor}`} />
               <span className={`text-lg font-bold font-mono ${timerColor}`}>
@@ -990,10 +1010,10 @@ export default function CompetitionView({
         </div>
       </div>
 
-      {/* Feedback overlay — assessment mode suppresses the +pts animation
-          but still shows a minimal correct/incorrect chip so the student
-          gets immediate feedback. */}
-      {feedback && (
+      {/* Feedback overlay — competition mode only. Assessment mode never sets
+          `feedback` (it advances silently), so this stays hidden; the explicit
+          !isAssessment guard makes that contract clear. */}
+      {feedback && !isAssessment && (
         <FeedbackOverlay
           isCorrect={feedback.isCorrect}
           pointsEarned={feedback.pointsEarned}

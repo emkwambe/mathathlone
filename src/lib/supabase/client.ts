@@ -25,6 +25,18 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 let _client: SupabaseClient | null = null;
 
+// FIX 3 — Realtime heartbeat / reconnect tuning. A steady 15s heartbeat keeps
+// idle WebSockets alive on networks that aggressively kill silent connections,
+// and the backoff caps reconnect attempts at 10s so a dropped Heat channel
+// re-joins quickly without hammering the server. Applied to every browser
+// client (the heat-realtime hooks all open their channels through this).
+const REALTIME_OPTIONS = {
+  realtime: {
+    heartbeatIntervalMs: 15000,
+    reconnectAfterMs: (tries: number) => Math.min(tries * 1000, 10000),
+  },
+} as const;
+
 /**
  * Get the singleton browser Supabase client.
  *
@@ -41,11 +53,11 @@ export function createClient(): SupabaseClient {
   // singleton with cookie-backed auth.
   if (typeof window === 'undefined') {
     // Server pre-render: ephemeral client, NOT cached. Each render gets fresh.
-    return createBrowserClient(supabaseUrl!, supabaseAnonKey!);
+    return createBrowserClient(supabaseUrl!, supabaseAnonKey!, REALTIME_OPTIONS);
   }
 
   if (!_client) {
-    _client = createBrowserClient(supabaseUrl!, supabaseAnonKey!);
+    _client = createBrowserClient(supabaseUrl!, supabaseAnonKey!, REALTIME_OPTIONS);
   }
   return _client;
 }
