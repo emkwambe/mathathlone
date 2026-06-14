@@ -201,6 +201,78 @@ Expected output:
 
 ---
 
+### Guardrails — Preventing Unnecessary Refactoring
+
+Claude Code has a tendency to "improve" code beyond what was asked.
+These guardrails prevent scope creep that breaks working features.
+
+**Always include at least one of these in every prompt:**
+
+```
+# Minimal change guardrails — pick what applies:
+
+SURGICAL CHANGES ONLY — do not refactor, rename, or restructure
+anything outside the files and functions listed above.
+
+Do NOT:
+- Rename variables or functions that are not part of this fix
+- Extract components or utilities unless explicitly specified
+- Change import order or file organization
+- Add abstraction layers (base classes, higher-order functions, hooks)
+  that were not requested
+- Modify files not listed in READ FIRST, even if you think
+  they are related
+- Change TypeScript types or interfaces beyond what is required
+  for this task
+- Add console.log statements except where explicitly requested
+  for debugging
+- Remove existing console.log or error handling unless explicitly asked
+- Change CSS classes or Tailwind styles on elements not related
+  to the task
+- Upgrade or downgrade any dependency versions
+- Add comments explaining code that was already clear
+```
+
+**Why this matters — real examples from this project:**
+
+| Claude Code tendency | Guardrail that stopped it |
+|---|---|
+| Refactored 1300-line Create Heat page while adding a button | "Do not modify files not listed in READ FIRST" |
+| Extracted SectionCard component from Create Heat while building assessment generator | "Do not extract components unless explicitly specified" |
+| Added TypeScript strict types to all functions in a file while fixing one function | "Do not change TypeScript types beyond what is required" |
+| Rewrote the entire scoring formula while fixing a rounding bug | "SURGICAL CHANGES ONLY" |
+| Added ESLint disable comments to silence warnings in untouched code | "Do not modify files not listed in READ FIRST" |
+
+**The duplication exception:**
+
+Sometimes Claude Code correctly identifies that duplicating code
+is safer than refactoring. Example from this project:
+
+> "Rather than refactor the working 1300-line Create Heat page,
+> I duplicated SectionCard and TopicTreeNode byte-for-byte into
+> the generator page."
+
+This is the RIGHT decision when:
+- The shared component is in a large, complex, working file
+- Extraction would require changes to many files
+- The feature is new and the abstraction may change
+
+Accept duplication in these cases. Refactor later when the
+abstraction stabilizes.
+
+**The one exception to surgical changes:**
+
+If Claude Code says:
+> "I found a related bug while fixing the one you described.
+> Should I fix it?"
+
+Answer: **Yes, but in a separate commit with a separate message.**
+Never combine unrelated fixes in one commit — it makes git history
+unreadable and rollback risky.
+
+
+---
+
 ### Real prompt examples from this project
 
 **Short bug fix (validator):**
