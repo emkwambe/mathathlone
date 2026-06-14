@@ -325,7 +325,7 @@ export default function LandingPage() {
               <div className="slide-up slide-up-4 flex flex-wrap gap-10">
                 {[
                   { n: 699, s: '', label: 'concepts' },
-                  { n: 213, s: '', label: 'generators' },
+                  { n: 100000, s: '+', label: 'practice questions' },
                   { n: 7, s: '', label: 'heat types' },
                   { n: 5, s: '', label: 'Divisions' },
                 ].map((stat) => (
