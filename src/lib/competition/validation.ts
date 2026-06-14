@@ -639,6 +639,43 @@ function validateNumberOrFraction(submitted: string, correct: string): Validatio
 }
 
 /**
+ * Validate a "decimal, fraction, or percent" answer. A percent is just a
+ * scaled number — "20%" means 0.20 — so we fold any trailing '%' into its
+ * decimal value (strip '%', divide by 100) for BOTH the student input and the
+ * correct answer, then defer to validateNumberOrFraction for the actual
+ * numeric comparison. Non-percent inputs pass through untouched.
+ *
+ *   "20%"  vs "0.2"  ✓        "75%"  vs "3/4"  ✓        "100%" vs "1"   ✓
+ *   "20%"  vs "20"   ✗ (0.20 ≠ 20)                      "-50%" vs "-0.5" ✓
+ *
+ * NOTE: validateNumberOrFraction() is reused as-is — this wrapper only
+ * pre-converts the percent form so its internals stay untouched.
+ */
+function validatePercentOrNumber(submitted: string, correct: string): ValidationResult {
+  const foldPercent = (raw: string): string => {
+    const s = prenormalize(raw).replace(/\s+/g, '');
+    if (!s.endsWith('%')) return raw; // not a percent — leave for numeric parse
+    const inner = s.slice(0, -1);
+    // The value before '%' may itself be a fraction ("1/2%") or a plain number.
+    const frac = inner.match(/^(-?\d+(?:\.\d+)?)\/(-?\d+(?:\.\d+)?)$/);
+    let value: number;
+    if (frac) {
+      const num = parseFloat(frac[1]!);
+      const den = parseFloat(frac[2]!);
+      if (!Number.isFinite(num) || !Number.isFinite(den) || den === 0) return raw;
+      value = num / den;
+    } else {
+      const n = parseFloat(inner);
+      if (!Number.isFinite(n)) return raw;
+      value = n;
+    }
+    return String(value / 100);
+  };
+
+  return validateNumberOrFraction(foldPercent(submitted), foldPercent(correct));
+}
+
+/**
  * Validate text answer (exact match, case-insensitive)
  */
 function validateText(submitted: string, correct: string): ValidationResult {
@@ -728,7 +765,20 @@ export function validateAnswer(
       return validateInequality(submitted, correct);
     case 'interval':
       return validateInterval(submitted, correct);
+    // Decimal/fraction/percent: fold any trailing '%' into a decimal, then
+    // compare numerically so "75%" = "3/4" = "0.75" all match (but "20%" ≠ 20).
+    case 'decimal_or_fraction_or_percent':
+      return validatePercentOrNumber(submitted, correct);
     case 'text':
+      return validateText(submitted, correct);
+    // The compound types below are declared in the AnswerType union but are
+    // not emitted by any generator, so they intentionally use plain text
+    // comparison. The "if used, route numeric → validateNumberOrFraction /
+    // validateInteger" pattern is deferred until a generator actually needs it.
+    case 'decimal_or_text':  // unused — no generators emit this type
+    case 'integer_or_text':  // unused — no generators emit this type
+    case 'text_or_fraction': // unused — no generators emit this type
+    case 'integer_or_MC':    // unused — no generators emit this type
       return validateText(submitted, correct);
     default:
       // Fallback to text comparison
