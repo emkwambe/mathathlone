@@ -1,0 +1,870 @@
+[
+  {
+    "Unit Topic": "Foundational Basics",
+    "Lesson Number": "MF.FB.1.1",
+    "Atomic Concept": "Memorizing Multiplication Facts (1-6)",
+    "Key Skills": "Recall products of single-digit numbers (1x1 to 6x9); Solve basic multiplication problems",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.3.OA.A.1"
+  },
+  {
+    "Unit Topic": "Foundational Basics",
+    "Lesson Number": "MF.FB.1.2",
+    "Atomic Concept": "Memorizing Multiplication Facts (7-12)",
+    "Key Skills": "Recall products of single-digit numbers (7x1 to 12x12); Solve basic multiplication problems",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.3.OA.A.1"
+  },
+  {
+    "Unit Topic": "Foundational Basics",
+    "Lesson Number": "MF.FB.1.3",
+    "Atomic Concept": "Memorizing Division Facts (Introduction)",
+    "Key Skills": "Relate division to multiplication; Solve basic division problems (e.g., 12 ÷ 3)",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.3.OA.B.6"
+  },
+  {
+    "Unit Topic": "Foundational Basics",
+    "Lesson Number": "MF.FB.1.4",
+    "Atomic Concept": "Applying Multiplication and Division Facts (Mixed Practice)",
+    "Key Skills": "Fluently solve mixed multiplication and division problems",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.3.OA.A.1"
+  },
+  {
+    "Unit Topic": "Foundational Basics",
+    "Lesson Number": "MF.FB.2.1",
+    "Atomic Concept": "Numeric Long Division (without remainders)",
+    "Key Skills": "Divide multi-digit numbers by single-digit divisors using the long division algorithm",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.4.NBT.B.6"
+  },
+  {
+    "Unit Topic": "Foundational Basics",
+    "Lesson Number": "MF.FB.2.2",
+    "Atomic Concept": "Numeric Long Division (with remainders)",
+    "Key Skills": "Divide multi-digit numbers by single-digit or two-digit divisors, expressing remainders",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.5.NBT.B.6"
+  },
+  {
+    "Unit Topic": "Foundational Basics",
+    "Lesson Number": "MF.FB.3.1",
+    "Atomic Concept": "Classifying Natural and Whole Numbers",
+    "Key Skills": "Define and identify natural numbers; Define and identify whole numbers",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.6.NS.C.5"
+  },
+  {
+    "Unit Topic": "Foundational Basics",
+    "Lesson Number": "MF.FB.3.2",
+    "Atomic Concept": "Classifying Integers",
+    "Key Skills": "Define and identify integers; Understand positive, negative, and zero on a number line",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.6.NS.C.5"
+  },
+  {
+    "Unit Topic": "Foundational Basics",
+    "Lesson Number": "MF.FB.3.3",
+    "Atomic Concept": "Classifying Rational Numbers",
+    "Key Skills": "Define rational numbers (fractions and terminating/repeating decimals); Identify examples",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.8.NS.A.1"
+  },
+  {
+    "Unit Topic": "Foundational Basics",
+    "Lesson Number": "MF.FB.3.4",
+    "Atomic Concept": "Classifying Irrational Numbers",
+    "Key Skills": "Define irrational numbers (non-repeating, non-terminating decimals); Identify examples (e.g., √2, π)",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.8.NS.A.1"
+  },
+  {
+    "Unit Topic": "Foundational Basics",
+    "Lesson Number": "MF.FB.3.5",
+    "Atomic Concept": "Classifying Real Numbers (Putting It All Together)",
+    "Key Skills": "Categorize numbers as natural, whole, integer, rational, or irrational; Place real numbers on a number line",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.8.NS.A.2"
+  },
+  {
+    "Unit Topic": "Algebraic Properties",
+    "Lesson Number": "MF.AP.1.1",
+    "Atomic Concept": "Understanding the Commutative Property of Addition",
+    "Key Skills": "Define and apply a + b = b + a; Reorder numbers in addition problems",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.6.EE.A.3"
+  },
+  {
+    "Unit Topic": "Algebraic Properties",
+    "Lesson Number": "MF.AP.1.2",
+    "Atomic Concept": "Understanding the Commutative Property of Multiplication",
+    "Key Skills": "Define and apply a × b = b × a; Reorder numbers in multiplication problems",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.6.EE.A.3"
+  },
+  {
+    "Unit Topic": "Algebraic Properties",
+    "Lesson Number": "MF.AP.2.1",
+    "Atomic Concept": "Understanding the Associative Property of Addition",
+    "Key Skills": "Define and apply (a + b) + c = a + (b + c); Regroup numbers in addition problems",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.6.EE.A.3"
+  },
+  {
+    "Unit Topic": "Algebraic Properties",
+    "Lesson Number": "MF.AP.2.2",
+    "Atomic Concept": "Understanding the Associative Property of Multiplication",
+    "Key Skills": "Define and apply (a × b) × c = a × (b × c); Regroup numbers in multiplication problems",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.6.EE.A.3"
+  },
+  {
+    "Unit Topic": "Algebraic Properties",
+    "Lesson Number": "MF.AP.3.1",
+    "Atomic Concept": "Understanding the Distributive Property (Multiplication over Addition)",
+    "Key Skills": "Define and apply a × (b + c) = (a × b) + (a × c); Expand expressions",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.6.EE.A.3"
+  },
+  {
+    "Unit Topic": "Algebraic Properties",
+    "Lesson Number": "MF.AP.3.2",
+    "Atomic Concept": "Understanding the Distributive Property (Multiplication over Subtraction)",
+    "Key Skills": "Define and apply a × (b - c) = (a × b) - (a × c); Expand expressions",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.6.EE.A.3"
+  },
+  {
+    "Unit Topic": "Algebraic Properties",
+    "Lesson Number": "MF.AP.4.1",
+    "Atomic Concept": "Understanding the Additive Identity Property",
+    "Key Skills": "Define and apply a + 0 = a; Identify the additive identity (0)",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.7.EE.A.1"
+  },
+  {
+    "Unit Topic": "Algebraic Properties",
+    "Lesson Number": "MF.AP.4.2",
+    "Atomic Concept": "Understanding the Multiplicative Identity Property",
+    "Key Skills": "Define and apply a × 1 = a; Identify the multiplicative identity (1)",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.7.EE.A.1"
+  },
+  {
+    "Unit Topic": "Algebraic Properties",
+    "Lesson Number": "MF.AP.5.1",
+    "Atomic Concept": "Understanding the Additive Inverse Property",
+    "Key Skills": "Define and apply a + (-a) = 0; Find the additive inverse of a number",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.7.NS.A.1"
+  },
+  {
+    "Unit Topic": "Algebraic Properties",
+    "Lesson Number": "MF.AP.5.2",
+    "Atomic Concept": "Understanding the Multiplicative Inverse Property",
+    "Key Skills": "Define and apply a × (1/a) = 1 (for a ≠ 0); Find the multiplicative inverse (reciprocal)",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.7.NS.A.2"
+  },
+  {
+    "Unit Topic": "Algebraic Properties",
+    "Lesson Number": "MF.AP.6.1",
+    "Atomic Concept": "Applying Algebraic Properties to Simplify Expressions",
+    "Key Skills": "Use various properties to simplify numerical and basic algebraic expressions",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.7.EE.A.1"
+  },
+  {
+    "Unit Topic": "Arithmetic & Number Theory",
+    "Lesson Number": "MF.ANT.1.1",
+    "Atomic Concept": "Understanding Integers and Absolute Value",
+    "Key Skills": "Define integers; Understand absolute value as distance from zero; Evaluate absolute value expressions",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.6.NS.C.5"
+  },
+  {
+    "Unit Topic": "Arithmetic & Number Theory",
+    "Lesson Number": "MF.ANT.1.2",
+    "Atomic Concept": "Adding Integers",
+    "Key Skills": "Add integers using number lines and rules for positive/negative numbers",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.7.NS.A.1"
+  },
+  {
+    "Unit Topic": "Arithmetic & Number Theory",
+    "Lesson Number": "MF.ANT.1.3",
+    "Atomic Concept": "Subtracting Integers",
+    "Key Skills": "Subtract integers by adding the opposite; Solve subtraction problems",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.7.NS.A.1"
+  },
+  {
+    "Unit Topic": "Arithmetic & Number Theory",
+    "Lesson Number": "MF.ANT.1.4",
+    "Atomic Concept": "Multiplying Integers",
+    "Key Skills": "Multiply integers using rules for signs; Apply multiplication in context",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.7.NS.A.2"
+  },
+  {
+    "Unit Topic": "Arithmetic & Number Theory",
+    "Lesson Number": "MF.ANT.1.5",
+    "Atomic Concept": "Dividing Integers",
+    "Key Skills": "Divide integers using rules for signs; Understand division by zero is undefined",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.7.NS.A.2"
+  },
+  {
+    "Unit Topic": "Arithmetic & Number Theory",
+    "Lesson Number": "MF.ANT.2.1",
+    "Atomic Concept": "Understanding Prime and Composite Numbers",
+    "Key Skills": "Define prime and composite numbers; Identify prime numbers up to 100",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.4.OA.B.4"
+  },
+  {
+    "Unit Topic": "Arithmetic & Number Theory",
+    "Lesson Number": "MF.ANT.2.2",
+    "Atomic Concept": "Prime Factorization",
+    "Key Skills": "Find prime factors of composite numbers using factor trees or division ladder",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.6.NS.B.4"
+  },
+  {
+    "Unit Topic": "Arithmetic & Number Theory",
+    "Lesson Number": "MF.ANT.2.3",
+    "Atomic Concept": "Finding the Greatest Common Factor (GCF)",
+    "Key Skills": "Find the GCF of two or more numbers using prime factorization or lists of factors",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.6.NS.B.4"
+  },
+  {
+    "Unit Topic": "Arithmetic & Number Theory",
+    "Lesson Number": "MF.ANT.2.4",
+    "Atomic Concept": "Finding the Least Common Multiple (LCM)",
+    "Key Skills": "Find the LCM of two or more numbers using prime factorization or lists of multiples",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.6.NS.B.4"
+  },
+  {
+    "Unit Topic": "Arithmetic & Number Theory",
+    "Lesson Number": "MF.ANT.3.1",
+    "Atomic Concept": "Understanding Order of Operations (PEMDAS/BODMAS)",
+    "Key Skills": "Define the order of operations; Identify grouping symbols, exponents, multiplication, division, addition, subtraction",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.6.EE.A.2"
+  },
+  {
+    "Unit Topic": "Arithmetic & Number Theory",
+    "Lesson Number": "MF.ANT.3.2",
+    "Atomic Concept": "Evaluating Expressions Using Order of Operations",
+    "Key Skills": "Apply PEMDAS/BODMAS to evaluate numerical expressions",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.6.EE.A.2c"
+  },
+  {
+    "Unit Topic": "Arithmetic & Number Theory",
+    "Lesson Number": "MF.ANT.3.3",
+    "Atomic Concept": "Evaluating Expressions with Absolute Value using Order of Operations",
+    "Key Skills": "Apply PEMDAS/BODMAS, treating absolute value as a grouping symbol",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.6.EE.A.2c"
+  },
+  {
+    "Unit Topic": "Units & Conversions",
+    "Lesson Number": "MF.UC.1.1",
+    "Atomic Concept": "Understanding Units of Length (Metric System)",
+    "Key Skills": "Identify and use common metric units of length (mm, cm, m, km)",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.4.MD.A.1"
+  },
+  {
+    "Unit Topic": "Units & Conversions",
+    "Lesson Number": "MF.UC.1.2",
+    "Atomic Concept": "Converting Units of Length (Metric System)",
+    "Key Skills": "Convert between metric units of length (e.g., cm to m, km to m)",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.5.MD.A.1"
+  },
+  {
+    "Unit Topic": "Units & Conversions",
+    "Lesson Number": "MF.UC.1.3",
+    "Atomic Concept": "Understanding Units of Mass (Metric System)",
+    "Key Skills": "Identify and use common metric units of mass (g, kg)",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.4.MD.A.1"
+  },
+  {
+    "Unit Topic": "Units & Conversions",
+    "Lesson Number": "MF.UC.1.4",
+    "Atomic Concept": "Converting Units of Mass (Metric System)",
+    "Key Skills": "Convert between metric units of mass (e.g., g to kg)",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.5.MD.A.1"
+  },
+  {
+    "Unit Topic": "Units & Conversions",
+    "Lesson Number": "MF.UC.1.5",
+    "Atomic Concept": "Understanding Units of Volume/Capacity (Metric System)",
+    "Key Skills": "Identify and use common metric units of volume/capacity (mL, L)",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.4.MD.A.1"
+  },
+  {
+    "Unit Topic": "Units & Conversions",
+    "Lesson Number": "MF.UC.1.6",
+    "Atomic Concept": "Converting Units of Volume/Capacity (Metric System)",
+    "Key Skills": "Convert between metric units of volume/capacity (e.g., mL to L)",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.5.MD.A.1"
+  },
+  {
+    "Unit Topic": "Units & Conversions",
+    "Lesson Number": "MF.UC.2.1",
+    "Atomic Concept": "Understanding Units of Length (Imperial System)",
+    "Key Skills": "Identify and use common imperial units of length (in, ft, yd, mi)",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.4.MD.A.1"
+  },
+  {
+    "Unit Topic": "Units & Conversions",
+    "Lesson Number": "MF.UC.2.2",
+    "Atomic Concept": "Converting Units of Length (Imperial System)",
+    "Key Skills": "Convert between imperial units of length (e.g., inches to feet, yards to miles)",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.5.MD.A.1"
+  },
+  {
+    "Unit Topic": "Units & Conversions",
+    "Lesson Number": "MF.UC.2.3",
+    "Atomic Concept": "Understanding Units of Weight (Imperial System)",
+    "Key Skills": "Identify and use common imperial units of weight (oz, lb, ton)",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.4.MD.A.1"
+  },
+  {
+    "Unit Topic": "Units & Conversions",
+    "Lesson Number": "MF.UC.2.4",
+    "Atomic Concept": "Converting Units of Weight (Imperial System)",
+    "Key Skills": "Convert between imperial units of weight (e.g., ounces to pounds)",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.5.MD.A.1"
+  },
+  {
+    "Unit Topic": "Units & Conversions",
+    "Lesson Number": "MF.UC.2.5",
+    "Atomic Concept": "Understanding Units of Volume/Capacity (Imperial System)",
+    "Key Skills": "Identify and use common imperial units of volume/capacity (fl oz, cup, pint, quart, gal)",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.4.MD.A.1"
+  },
+  {
+    "Unit Topic": "Units & Conversions",
+    "Lesson Number": "MF.UC.2.6",
+    "Atomic Concept": "Converting Units of Volume/Capacity (Imperial System)",
+    "Key Skills": "Convert between imperial units of volume/capacity (e.g., cups to quarts)",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.5.MD.A.1"
+  },
+  {
+    "Unit Topic": "Units & Conversions",
+    "Lesson Number": "MF.UC.3.1",
+    "Atomic Concept": "Understanding Conversion Factors",
+    "Key Skills": "Define conversion factor; Recognize equivalence ratios (e.g., 1 in = 2.54 cm)",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.6.RP.A.3d"
+  },
+  {
+    "Unit Topic": "Units & Conversions",
+    "Lesson Number": "MF.UC.3.2",
+    "Atomic Concept": "Performing Single-Step Conversions (Dimensional Analysis)",
+    "Key Skills": "Use conversion factors to convert a quantity from one unit to another (e.g., inches to cm)",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.N-Q.A.1"
+  },
+  {
+    "Unit Topic": "Units & Conversions",
+    "Lesson Number": "MF.UC.3.3",
+    "Atomic Concept": "Performing Multi-Step Conversions (Dimensional Analysis)",
+    "Key Skills": "Apply a sequence of conversion factors to convert units (e.g., miles to cm)",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.N-Q.A.1"
+  },
+  {
+    "Unit Topic": "Units & Conversions",
+    "Lesson Number": "MF.UC.3.4",
+    "Atomic Concept": "Converting Rates (e.g., miles per hour to feet per second)",
+    "Key Skills": "Apply dimensional analysis to convert compound units",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.N-Q.A.1"
+  },
+  {
+    "Unit Topic": "Fractions, Decimals, Percentages",
+    "Lesson Number": "MF.FDP.1.1",
+    "Atomic Concept": "Understanding Fractions (Parts of a Whole, Equivalent Fractions)",
+    "Key Skills": "Define numerator and denominator; Identify fractions of a whole; Recognize and generate equivalent fractions",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.3.NF.A.1, CCSS.MATH.CONTENT.4.NF.A.1"
+  },
+  {
+    "Unit Topic": "Fractions, Decimals, Percentages",
+    "Lesson Number": "MF.FDP.1.2",
+    "Atomic Concept": "Simplifying Fractions",
+    "Key Skills": "Find the greatest common factor (GCF) of numerator and denominator; Reduce fractions to simplest form",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.4.NF.A.1"
+  },
+  {
+    "Unit Topic": "Fractions, Decimals, Percentages",
+    "Lesson Number": "MF.FDP.1.3",
+    "Atomic Concept": "Converting Between Mixed Numbers and Improper Fractions",
+    "Key Skills": "Convert mixed numbers to improper fractions; Convert improper fractions to mixed numbers",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.4.NF.B.3c"
+  },
+  {
+    "Unit Topic": "Fractions, Decimals, Percentages",
+    "Lesson Number": "MF.FDP.2.1",
+    "Atomic Concept": "Adding and Subtracting Fractions with Like Denominators",
+    "Key Skills": "Add and subtract numerators; Keep the common denominator; Simplify result",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.4.NF.B.3a"
+  },
+  {
+    "Unit Topic": "Fractions, Decimals, Percentages",
+    "Lesson Number": "MF.FDP.2.2",
+    "Atomic Concept": "Adding and Subtracting Fractions with Unlike Denominators",
+    "Key Skills": "Find a common denominator; Rewrite fractions; Add or subtract numerators; Simplify result",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.5.NF.A.1"
+  },
+  {
+    "Unit Topic": "Fractions, Decimals, Percentages",
+    "Lesson Number": "MF.FDP.3.1",
+    "Atomic Concept": "Multiplying Fractions",
+    "Key Skills": "Multiply numerators and denominators; Simplify before or after multiplying",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.5.NF.B.4"
+  },
+  {
+    "Unit Topic": "Fractions, Decimals, Percentages",
+    "Lesson Number": "MF.FDP.3.2",
+    "Atomic Concept": "Dividing Fractions",
+    "Key Skills": "Understand reciprocal; Multiply by the reciprocal (Keep, Change, Flip); Simplify result",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.5.NF.B.7"
+  },
+  {
+    "Unit Topic": "Fractions, Decimals, Percentages",
+    "Lesson Number": "MF.FDP.4.1",
+    "Atomic Concept": "Understanding Decimals and Place Value",
+    "Key Skills": "Identify place value of digits in decimals; Read and write decimals",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.4.NF.C.6"
+  },
+  {
+    "Unit Topic": "Fractions, Decimals, Percentages",
+    "Lesson Number": "MF.FDP.4.2",
+    "Atomic Concept": "Adding and Subtracting Decimals",
+    "Key Skills": "Align decimal points; Add or subtract vertically",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.5.NBT.B.7"
+  },
+  {
+    "Unit Topic": "Fractions, Decimals, Percentages",
+    "Lesson Number": "MF.FDP.4.3",
+    "Atomic Concept": "Multiplying Decimals",
+    "Key Skills": "Multiply as whole numbers; Place decimal point based on total decimal places",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.5.NBT.B.7"
+  },
+  {
+    "Unit Topic": "Fractions, Decimals, Percentages",
+    "Lesson Number": "MF.FDP.4.4",
+    "Atomic Concept": "Dividing Decimals",
+    "Key Skills": "Move decimal in divisor and dividend; Divide as whole numbers; Place decimal point in quotient",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.6.NS.B.3"
+  },
+  {
+    "Unit Topic": "Fractions, Decimals, Percentages",
+    "Lesson Number": "MF.FDP.5.1",
+    "Atomic Concept": "Understanding Percentages (Percent as a Ratio)",
+    "Key Skills": "Define percent as \"out of 100\"; Express percentages as fractions and decimals",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.6.RP.A.3c"
+  },
+  {
+    "Unit Topic": "Fractions, Decimals, Percentages",
+    "Lesson Number": "MF.FDP.5.2",
+    "Atomic Concept": "Converting Between Fractions, Decimals, and Percentages",
+    "Key Skills": "Convert any given form to the other two forms (e.g., fraction to decimal, decimal to percent)",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.6.RP.A.3c"
+  },
+  {
+    "Unit Topic": "Fractions, Decimals, Percentages",
+    "Lesson Number": "MF.FDP.6.1",
+    "Atomic Concept": "Solving Percentage Word Problems (Finding Part)",
+    "Key Skills": "Calculate a percentage of a given number (e.g., 20% of 50)",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.7.RP.A.3"
+  },
+  {
+    "Unit Topic": "Fractions, Decimals, Percentages",
+    "Lesson Number": "MF.FDP.6.2",
+    "Atomic Concept": "Solving Percentage Word Problems (Finding Whole or Percent)",
+    "Key Skills": "Find the whole when a part and percentage are given; Find the percentage when part and whole are given",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.7.RP.A.3"
+  },
+  {
+    "Unit Topic": "Exponents & Roots",
+    "Lesson Number": "MF.ER.1.1",
+    "Atomic Concept": "Understanding Exponents (Base, Exponent, Power)",
+    "Key Skills": "Define base and exponent; Evaluate expressions with whole number exponents",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.6.EE.A.1"
+  },
+  {
+    "Unit Topic": "Exponents & Roots",
+    "Lesson Number": "MF.ER.1.2",
+    "Atomic Concept": "Properties of Exponents: Product and Quotient of Powers",
+    "Key Skills": "Apply x^a • x^b = x^(a+b) and x^a / x^b = x^(a-b) rules to simplify expressions",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.8.EE.A.1"
+  },
+  {
+    "Unit Topic": "Exponents & Roots",
+    "Lesson Number": "MF.ER.1.3",
+    "Atomic Concept": "Properties of Exponents: Power of a Power",
+    "Key Skills": "Apply (x^a)^b = x^(ab) rule to simplify expressions",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.8.EE.A.1"
+  },
+  {
+    "Unit Topic": "Exponents & Roots",
+    "Lesson Number": "MF.ER.1.4",
+    "Atomic Concept": "Properties of Exponents: Power of a Product and Quotient",
+    "Key Skills": "Apply (xy)^a = x^a y^a and (x/y)^a = x^a / y^a rules to simplify expressions",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.8.EE.A.1"
+  },
+  {
+    "Unit Topic": "Exponents & Roots",
+    "Lesson Number": "MF.ER.1.5",
+    "Atomic Concept": "Understanding Zero Exponents",
+    "Key Skills": "Define x^0 = 1 for any non-zero x; Evaluate expressions with a zero exponent",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.8.EE.A.1"
+  },
+  {
+    "Unit Topic": "Exponents & Roots",
+    "Lesson Number": "MF.ER.1.6",
+    "Atomic Concept": "Understanding Negative Exponents",
+    "Key Skills": "Define x^-a = 1/x^a; Evaluate expressions with negative exponents",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.8.EE.A.1"
+  },
+  {
+    "Unit Topic": "Exponents & Roots",
+    "Lesson Number": "MF.ER.1.7",
+    "Atomic Concept": "Simplifying Expressions Using All Laws of Exponents",
+    "Key Skills": "Apply all exponent rules to simplify complex expressions involving integer exponents",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.8.EE.A.1"
+  },
+  {
+    "Unit Topic": "Exponents & Roots",
+    "Lesson Number": "MF.ER.2.1",
+    "Atomic Concept": "Understanding Square Roots and Perfect Squares",
+    "Key Skills": "Define square root; Identify perfect squares; Find square roots of perfect squares",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.8.NS.A.2"
+  },
+  {
+    "Unit Topic": "Exponents & Roots",
+    "Lesson Number": "MF.ER.2.2",
+    "Atomic Concept": "Understanding Cube Roots and Perfect Cubes",
+    "Key Skills": "Define cube root; Identify perfect cubes; Find cube roots of perfect cubes",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.8.NS.A.2"
+  },
+  {
+    "Unit Topic": "Exponents & Roots",
+    "Lesson Number": "MF.ER.2.3",
+    "Atomic Concept": "Understanding Nth Roots (Introduction)",
+    "Key Skills": "Define nth root; Understand how to evaluate basic nth roots",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.N-RN.2"
+  },
+  {
+    "Unit Topic": "Exponents & Roots",
+    "Lesson Number": "MF.ER.2.4",
+    "Atomic Concept": "Approximating Square Roots",
+    "Key Skills": "Estimate square roots of non-perfect squares to the nearest whole number or tenth",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.8.NS.A.2"
+  },
+  {
+    "Unit Topic": "Radical Operations",
+    "Lesson Number": "MF.RAD.1.1",
+    "Atomic Concept": "Simplifying Square Roots (Using Perfect Square Factors)",
+    "Key Skills": "Identify perfect square factors within a radicand; Rewrite and simplify square roots",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.N-RN.2"
+  },
+  {
+    "Unit Topic": "Radical Operations",
+    "Lesson Number": "MF.RAD.1.2",
+    "Atomic Concept": "Simplifying Radical Expressions with Variables (Square Roots)",
+    "Key Skills": "Simplify square roots containing variable expressions (e.g., √x², √x³)",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.N-RN.2"
+  },
+  {
+    "Unit Topic": "Radical Operations",
+    "Lesson Number": "MF.RAD.1.3",
+    "Atomic Concept": "Simplifying Higher Order Radicals (Cube Roots, Nth Roots)",
+    "Key Skills": "Identify perfect cube/nth-power factors; Simplify cube roots and basic nth roots",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.N-RN.2"
+  },
+  {
+    "Unit Topic": "Radical Operations",
+    "Lesson Number": "MF.RAD.2.1",
+    "Atomic Concept": "Adding and Subtracting Like Radical Expressions",
+    "Key Skills": "Identify radical expressions with the same index and radicand; Combine coefficients",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.N-RN.2"
+  },
+  {
+    "Unit Topic": "Radical Operations",
+    "Lesson Number": "MF.RAD.2.2",
+    "Atomic Concept": "Adding and Subtracting Unlike Radical Expressions",
+    "Key Skills": "Simplify radicals first to create like radicals; Then combine if possible",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.N-RN.2"
+  },
+  {
+    "Unit Topic": "Radical Operations",
+    "Lesson Number": "MF.RAD.3.1",
+    "Atomic Concept": "Multiplying Radical Expressions (Monomial by Monomial)",
+    "Key Skills": "Multiply coefficients and radicands; Simplify the resulting radical product",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.N-RN.2"
+  },
+  {
+    "Unit Topic": "Radical Operations",
+    "Lesson Number": "MF.RAD.3.2",
+    "Atomic Concept": "Multiplying Radical Expressions (Monomial by Binomial)",
+    "Key Skills": "Apply the distributive property; Simplify each resulting radical term",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.N-RN.2"
+  },
+  {
+    "Unit Topic": "Radical Operations",
+    "Lesson Number": "MF.RAD.3.3",
+    "Atomic Concept": "Multiplying Radical Expressions (Binomial by Binomial - FOIL)",
+    "Key Skills": "Apply FOIL method; Simplify each resulting radical term; Combine like terms",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.N-RN.2"
+  },
+  {
+    "Unit Topic": "Radical Operations",
+    "Lesson Number": "MF.RAD.4.1",
+    "Atomic Concept": "Dividing Radical Expressions (Rationalizing Monomial Denominators)",
+    "Key Skills": "Multiply numerator and denominator by a radical to eliminate radical from denominator; Simplify result",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.N-RN.2"
+  },
+  {
+    "Unit Topic": "Radical Operations",
+    "Lesson Number": "MF.RAD.4.2",
+    "Atomic Concept": "Dividing Radical Expressions (Rationalizing Binomial Denominators with Conjugates)",
+    "Key Skills": "Multiply numerator and denominator by the conjugate of the binomial denominator; Simplify result",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.N-RN.2"
+  },
+  {
+    "Unit Topic": "Ratios, Proportions & Basic Algebra",
+    "Lesson Number": "MF.RPBA.1.1",
+    "Atomic Concept": "Understanding Ratios and Rates",
+    "Key Skills": "Define a ratio; Write ratios in various forms; Define unit rates",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.6.RP.A.1, CCSS.MATH.CONTENT.6.RP.A.2"
+  },
+  {
+    "Unit Topic": "Ratios, Proportions & Basic Algebra",
+    "Lesson Number": "MF.RPBA.1.2",
+    "Atomic Concept": "Simplifying Ratios",
+    "Key Skills": "Reduce ratios to their simplest form; Identify equivalent ratios",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.6.RP.A.1"
+  },
+  {
+    "Unit Topic": "Ratios, Proportions & Basic Algebra",
+    "Lesson Number": "MF.RPBA.2.1",
+    "Atomic Concept": "Understanding Proportions",
+    "Key Skills": "Define a proportion as two equal ratios; Identify if two ratios form a proportion",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.6.RP.A.3"
+  },
+  {
+    "Unit Topic": "Ratios, Proportions & Basic Algebra",
+    "Lesson Number": "MF.RPBA.2.2",
+    "Atomic Concept": "Solving Proportions (using cross-multiplication)",
+    "Key Skills": "Use cross-multiplication to solve for an unknown variable in a proportion",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.7.RP.A.2b"
+  },
+  {
+    "Unit Topic": "Ratios, Proportions & Basic Algebra",
+    "Lesson Number": "MF.RPBA.2.3",
+    "Atomic Concept": "Solving Word Problems with Proportions",
+    "Key Skills": "Set up proportions from real-world scenarios; Solve to find unknown quantities",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.7.RP.A.3"
+  },
+  {
+    "Unit Topic": "Ratios, Proportions & Basic Algebra",
+    "Lesson Number": "MF.RPBA.3.1",
+    "Atomic Concept": "Understanding Variables and Algebraic Expressions",
+    "Key Skills": "Define a variable; Write simple algebraic expressions from verbal phrases",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.6.EE.A.2a"
+  },
+  {
+    "Unit Topic": "Ratios, Proportions & Basic Algebra",
+    "Lesson Number": "MF.RPBA.3.2",
+    "Atomic Concept": "Solving One-Step Equations (Addition/Subtraction)",
+    "Key Skills": "Use inverse operations to solve equations of the form x + a = b or x - a = b",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.6.EE.B.7"
+  },
+  {
+    "Unit Topic": "Ratios, Proportions & Basic Algebra",
+    "Lesson Number": "MF.RPBA.3.3",
+    "Atomic Concept": "Solving One-Step Equations (Multiplication/Division)",
+    "Key Skills": "Use inverse operations to solve equations of the form ax = b or x/a = b",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.6.EE.B.7"
+  },
+  {
+    "Unit Topic": "Ratios, Proportions & Basic Algebra",
+    "Lesson Number": "MF.RPBA.3.4",
+    "Atomic Concept": "Creating Simple Equations from Context",
+    "Key Skills": "Translate simple word problems into one-step linear equations",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.6.EE.B.6, CCSS.MATH.CONTENT.A-CED.1"
+  },
+  {
+    "Unit Topic": "Introduction to Sets",
+    "Lesson Number": "MF.SETS.1.1",
+    "Atomic Concept": "Understanding Sets, Elements, and Notation",
+    "Key Skills": "Define a set; Identify elements of a set; Use roster notation and set-builder notation",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.S-CP.A.1"
+  },
+  {
+    "Unit Topic": "Introduction to Sets",
+    "Lesson Number": "MF.SETS.1.2",
+    "Atomic Concept": "Understanding Subsets and Proper Subsets",
+    "Key Skills": "Define subset and proper subset; Identify subsets of a given set; Determine the number of subsets",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.S-CP.A.1"
+  },
+  {
+    "Unit Topic": "Introduction to Sets",
+    "Lesson Number": "MF.SETS.1.3",
+    "Atomic Concept": "Understanding Universal Sets and Empty Sets",
+    "Key Skills": "Define universal set; Define empty set (∅ or {}); Identify universal and empty sets in context",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.S-CP.A.1"
+  },
+  {
+    "Unit Topic": "Introduction to Sets",
+    "Lesson Number": "MF.SETS.2.1",
+    "Atomic Concept": "Set Operations: Union (∪)",
+    "Key Skills": "Define the union of two sets; Find the union of given sets; Represent union using Venn diagrams",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.S-CP.A.1"
+  },
+  {
+    "Unit Topic": "Introduction to Sets",
+    "Lesson Number": "MF.SETS.2.2",
+    "Atomic Concept": "Set Operations: Intersection (∩)",
+    "Key Skills": "Define the intersection of two sets; Find the intersection of given sets; Represent intersection using Venn diagrams",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.S-CP.A.1"
+  },
+  {
+    "Unit Topic": "Introduction to Sets",
+    "Lesson Number": "MF.SETS.2.3",
+    "Atomic Concept": "Set Operations: Complement",
+    "Key Skills": "Define the complement of a set; Find the complement of a set within a universal set",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.S-CP.A.1"
+  },
+  {
+    "Unit Topic": "Introduction to Sets",
+    "Lesson Number": "MF.SETS.3.1",
+    "Atomic Concept": "Using Venn Diagrams to Represent Set Operations",
+    "Key Skills": "Draw and label Venn diagrams for two or three sets; Shade regions to represent unions, intersections, and complements",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.S-CP.A.1"
+  },
+  {
+    "Unit Topic": "Introduction to Sets",
+    "Lesson Number": "MF.SETS.4.1",
+    "Atomic Concept": "Understanding the Cardinality of a Set",
+    "Key Skills": "Define cardinality; Find the number of elements in a finite set",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.S-CP.A.1"
+  },
+  {
+    "Unit Topic": "Introduction to Sets",
+    "Lesson Number": "MF.SETS.4.2",
+    "Atomic Concept": "Applying Cardinality Formulas (n(A ∪ B))",
+    "Key Skills": "Use the formula n(A ∪ B) = n(A) + n(B) - n(A ∩ B) to solve problems",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.S-CP.A.1"
+  },
+  {
+    "Unit Topic": "Geometry Fundamentals",
+    "Lesson Number": "MF.GEO.1.1",
+    "Atomic Concept": "Understanding Perimeter of Polygons",
+    "Key Skills": "Define perimeter; Calculate perimeter of squares, rectangles, and triangles",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.3.MD.D.8"
+  },
+  {
+    "Unit Topic": "Geometry Fundamentals",
+    "Lesson Number": "MF.GEO.1.2",
+    "Atomic Concept": "Understanding Area of Squares and Rectangles",
+    "Key Skills": "Define area; Calculate area of squares and rectangles",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.3.MD.C.7b"
+  },
+  {
+    "Unit Topic": "Geometry Fundamentals",
+    "Lesson Number": "MF.GEO.1.3",
+    "Atomic Concept": "Understanding Area of Triangles",
+    "Key Skills": "Define area of a triangle; Calculate area using the formula (1/2)bh",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.6.G.A.1"
+  },
+  {
+    "Unit Topic": "Geometry Fundamentals",
+    "Lesson Number": "MF.GEO.2.1",
+    "Atomic Concept": "Understanding Types of Angles (Acute, Obtuse, Right, Straight)",
+    "Key Skills": "Classify angles based on their measure; Identify angles in diagrams",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.4.G.A.1"
+  },
+  {
+    "Unit Topic": "Geometry Fundamentals",
+    "Lesson Number": "MF.GEO.2.2",
+    "Atomic Concept": "Understanding Complementary Angles",
+    "Key Skills": "Define complementary angles; Find the measure of a complementary angle",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.7.G.B.5"
+  },
+  {
+    "Unit Topic": "Geometry Fundamentals",
+    "Lesson Number": "MF.GEO.2.3",
+    "Atomic Concept": "Understanding Supplementary Angles",
+    "Key Skills": "Define supplementary angles; Find the measure of a supplementary angle",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.7.G.B.5"
+  },
+  {
+    "Unit Topic": "Geometry Fundamentals",
+    "Lesson Number": "MF.GEO.2.4",
+    "Atomic Concept": "Understanding Vertical and Adjacent Angles",
+    "Key Skills": "Define vertical angles and adjacent angles; Apply their properties to find angle measures",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.7.G.B.5"
+  },
+  {
+    "Unit Topic": "Geometry Fundamentals",
+    "Lesson Number": "MF.GEO.3.1",
+    "Atomic Concept": "Understanding the Pythagorean Theorem (a² + b² = c²)",
+    "Key Skills": "Define the Pythagorean Theorem; Identify legs and hypotenuse in a right triangle",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.8.G.B.7"
+  },
+  {
+    "Unit Topic": "Geometry Fundamentals",
+    "Lesson Number": "MF.GEO.3.2",
+    "Atomic Concept": "Applying the Pythagorean Theorem to Find Missing Sides",
+    "Key Skills": "Use the Pythagorean Theorem to find unknown side lengths in right triangles",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.8.G.B.7"
+  },
+  {
+    "Unit Topic": "Geometry Fundamentals",
+    "Lesson Number": "MF.GEO.3.3",
+    "Atomic Concept": "Solving Real-World Problems Using the Pythagorean Theorem",
+    "Key Skills": "Apply the Pythagorean Theorem to solve contextual problems involving right triangles",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.8.G.B.7"
+  },
+  {
+    "Unit Topic": "Statistics & Probability Fundamentals",
+    "Lesson Number": "MF.S.1.1",
+    "Atomic Concept": "Understanding Statistical Questions and Data",
+    "Key Skills": "Differentiate between statistical and non-statistical questions; Understand types of data",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.6.SP.A.1"
+  },
+  {
+    "Unit Topic": "Statistics & Probability Fundamentals",
+    "Lesson Number": "MF.S.1.2",
+    "Atomic Concept": "Calculating the Mean of a Data Set",
+    "Key Skills": "Compute the average of a numerical data set; Interpret the mean as a measure of center",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.6.SP.B.5c"
+  },
+  {
+    "Unit Topic": "Statistics & Probability Fundamentals",
+    "Lesson Number": "MF.S.1.3",
+    "Atomic Concept": "Finding the Median of a Data Set",
+    "Key Skills": "Order data; Identify the middle value; Interpret the median as a measure of center",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.6.SP.B.5c"
+  },
+  {
+    "Unit Topic": "Statistics & Probability Fundamentals",
+    "Lesson Number": "MF.S.1.4",
+    "Atomic Concept": "Finding the Mode of a Data Set",
+    "Key Skills": "Identify the most frequently occurring value(s); Interpret the mode as a measure of center",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.6.SP.B.5c"
+  },
+  {
+    "Unit Topic": "Statistics & Probability Fundamentals",
+    "Lesson Number": "MF.S.2.1",
+    "Atomic Concept": "Calculating the Range of a Data Set",
+    "Key Skills": "Compute the difference between the maximum and minimum values; Interpret range as a measure of variability",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.6.SP.B.5c"
+  },
+  {
+    "Unit Topic": "Statistics & Probability Fundamentals",
+    "Lesson Number": "MF.S.2.2",
+    "Atomic Concept": "Calculating the Interquartile Range (IQR)",
+    "Key Skills": "Find quartiles (Q1, Q3); Compute IQR as Q3 - Q1; Interpret IQR as a measure of variability",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.6.SP.B.5c"
+  },
+  {
+    "Unit Topic": "Statistics & Probability Fundamentals",
+    "Lesson Number": "MF.S.3.1",
+    "Atomic Concept": "Understanding Basic Probability (Simple Events)",
+    "Key Skills": "Define probability; Identify favorable outcomes and total possible outcomes; Calculate simple probabilities",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.7.SP.C.5"
+  },
+  {
+    "Unit Topic": "Statistics & Probability Fundamentals",
+    "Lesson Number": "MF.S.3.2",
+    "Atomic Concept": "Understanding Sample Space and Events",
+    "Key Skills": "List outcomes in a sample space; Identify events as subsets of a sample space",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.7.SP.C.5"
+  },
+  {
+    "Unit Topic": "Statistics & Probability Fundamentals",
+    "Lesson Number": "MF.S.3.3",
+    "Atomic Concept": "Understanding Theoretical vs. Experimental Probability",
+    "Key Skills": "Differentiate between theoretical and experimental probability; Calculate each for simple events",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.7.SP.C.6"
+  },
+  {
+    "Unit Topic": "Statistics & Probability Fundamentals",
+    "Lesson Number": "MF.S.3.4",
+    "Atomic Concept": "Making Predictions Using Probability",
+    "Key Skills": "Use relative frequency to predict the approximate probability of future events",
+    "Aligned CCSS Standard": "CCSS.MATH.CONTENT.7.SP.C.7"
+  }
+]

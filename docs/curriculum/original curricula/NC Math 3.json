@@ -1,0 +1,709 @@
+[
+    {
+      "Unit Topic": "Functions & Inverses",
+      "Lesson Number": "M3.FNI.1.1",
+      "Atomic Concept": "Review: Understanding Functions, Domain, and Range (from multiple representations)",
+      "Key Skills": "Define a function; Determine domain and range from graphs, tables, and algebraic expressions",
+      "NC DPI Standard": "NC.M3.F-IF.1"
+    },
+    {
+      "Unit Topic": "Functions & Inverses",
+      "Lesson Number": "M3.FNI.1.2",
+      "Atomic Concept": "Evaluating Functions using Function Notation",
+      "Key Skills": "Use function notation (f(x)); Substitute input values to find output values",
+      "NC DPI Standard": "NC.M3.F-IF.2"
+    },
+    {
+      "Unit Topic": "Functions & Inverses",
+      "Lesson Number": "M3.FNI.1.3",
+      "Atomic Concept": "Analyzing Key Features of Functions (Intercepts, Max/Min, End Behavior)",
+      "Key Skills": "Identify x- and y-intercepts; Determine intervals of increasing/decreasing, positive/negative; Describe end behavior",
+      "NC DPI Standard": "NC.M3.F-IF.4"
+    },
+    {
+      "Unit Topic": "Functions & Inverses",
+      "Lesson Number": "M3.FNI.2.1",
+      "Atomic Concept": "Calculating Average Rate of Change for Various Function Types",
+      "Key Skills": "Compute average rate of change from tables, graphs, or equations; Interpret in context",
+      "NC DPI Standard": "NC.M3.F-IF.6"
+    },
+    {
+      "Unit Topic": "Functions & Inverses",
+      "Lesson Number": "M3.FNI.3.1",
+      "Atomic Concept": "Performing Operations on Functions (Addition, Subtraction, Multiplication)",
+      "Key Skills": "Add, subtract, and multiply functions algebraically and numerically",
+      "NC DPI Standard": "NC.M3.F-BF.1b"
+    },
+    {
+      "Unit Topic": "Functions & Inverses",
+      "Lesson Number": "M3.FNI.3.2",
+      "Atomic Concept": "Performing Operations on Functions (Division) and Identifying Domain",
+      "Key Skills": "Divide functions algebraically; Determine the domain of the resulting function",
+      "NC DPI Standard": "NC.M3.F-BF.1b"
+    },
+    {
+      "Unit Topic": "Functions & Inverses",
+      "Lesson Number": "M3.FNI.3.3",
+      "Atomic Concept": "Understanding Composition of Functions",
+      "Key Skills": "Define composition of functions; Interpret (f ∘ g)(x) as f(g(x))",
+      "NC DPI Standard": "NC.M3.F-BF.1c"
+    },
+    {
+      "Unit Topic": "Functions & Inverses",
+      "Lesson Number": "M3.FNI.3.4",
+      "Atomic Concept": "Evaluating Composite Functions",
+      "Key Skills": "Evaluate composite functions numerically and algebraically",
+      "NC DPI Standard": "NC.M3.F-BF.1c"
+    },
+    {
+      "Unit Topic": "Functions & Inverses",
+      "Lesson Number": "M3.FNI.4.1",
+      "Atomic Concept": "Understanding Inverse Functions (Concept and Notation)",
+      "Key Skills": "Define inverse functions; Understand that they \"undo\" each other; Use f⁻¹(x) notation",
+      "NC DPI Standard": "NC.M3.F-BF.4"
+    },
+    {
+      "Unit Topic": "Functions & Inverses",
+      "Lesson Number": "M3.FNI.4.2",
+      "Atomic Concept": "Finding the Inverse of a Function Algebraically",
+      "Key Skills": "Swap x and y; Solve for y to find the inverse equation",
+      "NC DPI Standard": "NC.M3.F-BF.4"
+    },
+    {
+      "Unit Topic": "Functions & Inverses",
+      "Lesson Number": "M3.FNI.4.3",
+      "Atomic Concept": "Graphing Inverse Functions (Reflection over y=x)",
+      "Key Skills": "Graph a function and its inverse; Identify symmetry across the line y=x",
+      "NC DPI Standard": "NC.M3.F-BF.4"
+    },
+    {
+      "Unit Topic": "Functions & Inverses",
+      "Lesson Number": "M3.FNI.4.4",
+      "Atomic Concept": "Verifying Inverse Functions (using Composition)",
+      "Key Skills": "Show that (f ∘ f⁻¹)(x) = x and (f⁻¹ ∘ f)(x) = x",
+      "NC DPI Standard": "NC.M3.F-BF.4"
+    },
+    {
+      "Unit Topic": "Functions & Inverses",
+      "Lesson Number": "M3.FNI.4.5",
+      "Atomic Concept": "Restricting Domain to Ensure an Inverse Function Exists (for non-invertible functions)",
+      "Key Skills": "Identify domains for which a function (e.g., quadratic) has an inverse",
+      "NC DPI Standard": "NC.M3.F-BF.4"
+    },
+    {
+      "Unit Topic": "Functions & Inverses",
+      "Lesson Number": "M3.FNI.5.1",
+      "Atomic Concept": "Graphing Piecewise-Defined Functions",
+      "Key Skills": "Define piecewise functions; Graph segments of functions based on given domains",
+      "NC DPI Standard": "NC.M3.F-IF.7b"
+    },
+    {
+      "Unit Topic": "Functions & Inverses",
+      "Lesson Number": "M3.FNI.5.2",
+      "Atomic Concept": "Evaluating Piecewise-Defined Functions",
+      "Key Skills": "Substitute input values into the correct function piece based on domain",
+      "NC DPI Standard": "NC.M3.F-IF.2"
+    },
+    {
+      "Unit Topic": "Exponential & Logarithmic Fns",
+      "Lesson Number": "M3.EL.1.1",
+      "Atomic Concept": "Review: Properties of Exponents (Integer and Rational)",
+      "Key Skills": "Apply all exponent rules to simplify complex expressions; Understand rational exponents",
+      "NC DPI Standard": "NC.M3.N-RN.1"
+    },
+    {
+      "Unit Topic": "Exponential & Logarithmic Fns",
+      "Lesson Number": "M3.EL.2.1",
+      "Atomic Concept": "Understanding Exponential Functions (Definition, Growth vs. Decay)",
+      "Key Skills": "Identify exponential functions; Determine growth or decay based on the base",
+      "NC DPI Standard": "NC.M3.F-LE.1"
+    },
+    {
+      "Unit Topic": "Exponential & Logarithmic Fns",
+      "Lesson Number": "M3.EL.2.2",
+      "Atomic Concept": "Graphing Exponential Functions and their Transformations",
+      "Key Skills": "Graph y=a • b^(x-h) + k; Identify transformations (shifts, stretches, reflections)",
+      "NC DPI Standard": "NC.M3.F-IF.7, NC.M3.F-BF.3"
+    },
+    {
+      "Unit Topic": "Exponential & Logarithmic Fns",
+      "Lesson Number": "M3.EL.2.3",
+      "Atomic Concept": "Understanding the Natural Base *e* and Natural Exponential Functions (y=e^x)",
+      "Key Skills": "Define *e*; Graph exponential functions with base *e*",
+      "NC DPI Standard": "NC.M3.F-LE.4"
+    },
+    {
+      "Unit Topic": "Exponential & Logarithmic Fns",
+      "Lesson Number": "M3.EL.3.1",
+      "Atomic Concept": "Understanding Logarithms as Inverses of Exponential Functions",
+      "Key Skills": "Define logarithm; Relate logarithmic and exponential forms",
+      "NC DPI Standard": "NC.M3.F-LE.4"
+    },
+    {
+      "Unit Topic": "Exponential & Logarithmic Fns",
+      "Lesson Number": "M3.EL.3.2",
+      "Atomic Concept": "Converting Between Exponential and Logarithmic Form",
+      "Key Skills": "Rewrite equations from exponential to logarithmic form and vice-versa",
+      "NC DPI Standard": "NC.M3.F-LE.4"
+    },
+    {
+      "Unit Topic": "Exponential & Logarithmic Fns",
+      "Lesson Number": "M3.EL.3.3",
+      "Atomic Concept": "Evaluating Logarithms (Common, Natural, and Other Bases)",
+      "Key Skills": "Calculate logarithmic values using definition or calculator; Understand log₁₀x and ln x",
+      "NC DPI Standard": "NC.M3.F-LE.4"
+    },
+    {
+      "Unit Topic": "Exponential & Logarithmic Fns",
+      "Lesson Number": "M3.EL.4.1",
+      "Atomic Concept": "Properties of Logarithms: Product and Quotient Rules",
+      "Key Skills": "Apply log_b(MN) = log_b M + log_b N and log_b(M/N) = log_b M - log_b N",
+      "NC DPI Standard": "NC.M3.A-SSE.3c"
+    },
+    {
+      "Unit Topic": "Exponential & Logarithmic Fns",
+      "Lesson Number": "M3.EL.4.2",
+      "Atomic Concept": "Properties of Logarithms: Power Rule and Change of Base Formula",
+      "Key Skills": "Apply log_b(M^p) = p log_b M; Use log_b M = (log_c M)/(log_c b)",
+      "NC DPI Standard": "NC.M3.A-SSE.3c"
+    },
+    {
+      "Unit Topic": "Exponential & Logarithmic Fns",
+      "Lesson Number": "M3.EL.4.3",
+      "Atomic Concept": "Expanding and Condensing Logarithmic Expressions",
+      "Key Skills": "Rewrite single logarithms as sums/differences; Rewrite sums/differences as single logarithms",
+      "NC DPI Standard": "NC.M3.A-SSE.3c"
+    },
+    {
+      "Unit Topic": "Exponential & Logarithmic Fns",
+      "Lesson Number": "M3.EL.5.1",
+      "Atomic Concept": "Solving Exponential Equations (Using Common Bases)",
+      "Key Skills": "Rewrite both sides with the same base; Equate exponents and solve",
+      "NC DPI Standard": "NC.M3.A-REI.1"
+    },
+    {
+      "Unit Topic": "Exponential & Logarithmic Fns",
+      "Lesson Number": "M3.EL.5.2",
+      "Atomic Concept": "Solving Exponential Equations (Using Logarithms)",
+      "Key Skills": "Take the logarithm of both sides; Apply power rule to solve for variable",
+      "NC DPI Standard": "NC.M3.A-REI.1"
+    },
+    {
+      "Unit Topic": "Exponential & Logarithmic Fns",
+      "Lesson Number": "M3.EL.6.1",
+      "Atomic Concept": "Solving Logarithmic Equations (Using Exponentials)",
+      "Key Skills": "Convert to exponential form; Solve; Check for extraneous solutions",
+      "NC DPI Standard": "NC.M3.A-REI.1"
+    },
+    {
+      "Unit Topic": "Exponential & Logarithmic Fns",
+      "Lesson Number": "M3.EL.6.2",
+      "Atomic Concept": "Solving Logarithmic Equations (Using Properties of Logarithms)",
+      "Key Skills": "Condense logarithmic expressions; Solve; Check for extraneous solutions",
+      "NC DPI Standard": "NC.M3.A-REI.1"
+    },
+    {
+      "Unit Topic": "Exponential & Logarithmic Fns",
+      "Lesson Number": "M3.EL.7.1",
+      "Atomic Concept": "Graphing Logarithmic Functions and their Transformations",
+      "Key Skills": "Graph y=log_b(x-h) + k; Identify asymptotes, domain, range, and transformations",
+      "NC DPI Standard": "NC.M3.F-IF.7, NC.M3.F-BF.3"
+    },
+    {
+      "Unit Topic": "Exponential & Logarithmic Fns",
+      "Lesson Number": "M3.EL.8.1",
+      "Atomic Concept": "Modeling Real-World Problems with Exponential Growth and Decay",
+      "Key Skills": "Apply exponential functions to compound interest, population growth, radioactive decay",
+      "NC DPI Standard": "NC.M3.A-CED.1, NC.M3.F-LE.4"
+    },
+    {
+      "Unit Topic": "Exponential & Logarithmic Fns",
+      "Lesson Number": "M3.EL.8.2",
+      "Atomic Concept": "Modeling Real-World Problems with Logarithmic Functions",
+      "Key Skills": "Use logarithmic models to solve problems (e.g., pH, Richter scale, decibels)",
+      "NC DPI Standard": "NC.M3.A-CED.1, NC.M3.F-LE.4"
+    },
+    {
+      "Unit Topic": "Polynomial & Rational Functions",
+      "Lesson Number": "M3.PR.1.1",
+      "Atomic Concept": "Review: Understanding Polynomials (Definition, Degree, Standard Form, Terms)",
+      "Key Skills": "Identify parts of a polynomial; Classify by degree and number of terms",
+      "NC DPI Standard": "NC.M3.A-APR.1"
+    },
+    {
+      "Unit Topic": "Polynomial & Rational Functions",
+      "Lesson Number": "M3.PR.1.2",
+      "Atomic Concept": "Understanding End Behavior of Polynomial Functions",
+      "Key Skills": "Determine the direction of the graph as x → ∞ and x → -∞ based on degree and leading coefficient",
+      "NC DPI Standard": "NC.M3.F-IF.7c"
+    },
+    {
+      "Unit Topic": "Polynomial & Rational Functions",
+      "Lesson Number": "M3.PR.1.3",
+      "Atomic Concept": "Identifying Zeros (Roots) of Polynomial Functions and their Multiplicity",
+      "Key Skills": "Find real zeros of polynomials; Understand how multiplicity affects graph behavior at the x-axis",
+      "NC DPI Standard": "NC.M3.A-APR.3, NC.M3.F-IF.7c"
+    },
+    {
+      "Unit Topic": "Polynomial & Rational Functions",
+      "Lesson Number": "M3.PR.1.4",
+      "Atomic Concept": "Graphing Polynomial Functions (Using Zeros, Multiplicity, and End Behavior)",
+      "Key Skills": "Sketch polynomial graphs by combining knowledge of zeros, end behavior, and turning points",
+      "NC DPI Standard": "NC.M3.F-IF.7c"
+    },
+    {
+      "Unit Topic": "Polynomial & Rational Functions",
+      "Lesson Number": "M3.PR.2.1",
+      "Atomic Concept": "Review: Polynomial Long Division",
+      "Key Skills": "Divide polynomials using the long division algorithm",
+      "NC DPI Standard": "NC.M3.A-APR.6"
+    },
+    {
+      "Unit Topic": "Polynomial & Rational Functions",
+      "Lesson Number": "M3.PR.2.2",
+      "Atomic Concept": "Review: Synthetic Division of Polynomials",
+      "Key Skills": "Use synthetic division for division by linear factors (x-k)",
+      "NC DPI Standard": "NC.M3.A-APR.6"
+    },
+    {
+      "Unit Topic": "Polynomial & Rational Functions",
+      "Lesson Number": "M3.PR.2.3",
+      "Atomic Concept": "Understanding and Applying the Remainder Theorem",
+      "Key Skills": "Use the remainder theorem to find the remainder of polynomial division; Evaluate P(k)",
+      "NC DPI Standard": "NC.M3.A-APR.2"
+    },
+    {
+      "Unit Topic": "Polynomial & Rational Functions",
+      "Lesson Number": "M3.PR.2.4",
+      "Atomic Concept": "Understanding and Applying the Factor Theorem",
+      "Key Skills": "Use the factor theorem to determine if a linear expression is a factor of a polynomial",
+      "NC DPI Standard": "NC.M3.A-APR.2"
+    },
+    {
+      "Unit Topic": "Polynomial & Rational Functions",
+      "Lesson Number": "M3.PR.3.1",
+      "Atomic Concept": "Understanding the Rational Root Theorem",
+      "Key Skills": "Find possible rational roots of a polynomial equation",
+      "NC DPI Standard": "NC.M3.A-APR.3"
+    },
+    {
+      "Unit Topic": "Polynomial & Rational Functions",
+      "Lesson Number": "M3.PR.3.2",
+      "Atomic Concept": "Understanding the Fundamental Theorem of Algebra",
+      "Key Skills": "State the fundamental theorem of algebra (number of complex zeros)",
+      "NC DPI Standard": "NC.M3.N-CN.9"
+    },
+    {
+      "Unit Topic": "Polynomial & Rational Functions",
+      "Lesson Number": "M3.PR.3.3",
+      "Atomic Concept": "Understanding the Conjugate Root Theorem (for Complex and Irrational Zeros)",
+      "Key Skills": "Apply the theorem to find conjugate pairs of complex or irrational roots",
+      "NC DPI Standard": "NC.M3.N-CN.9"
+    },
+    {
+      "Unit Topic": "Polynomial & Rational Functions",
+      "Lesson Number": "M3.PR.4.1",
+      "Atomic Concept": "Finding All Real and Complex Zeros of Polynomial Functions",
+      "Key Skills": "Combine factoring, rational root theorem, division, and quadratic formula to find all zeros",
+      "NC DPI Standard": "NC.M3.A-APR.3, NC.M3.N-CN.9"
+    },
+    {
+      "Unit Topic": "Polynomial & Rational Functions",
+      "Lesson Number": "M3.PR.4.2",
+      "Atomic Concept": "Writing Polynomial Functions Given Zeros",
+      "Key Skills": "Construct a polynomial function from its given real and complex zeros",
+      "NC DPI Standard": "NC.M3.A-APR.3"
+    },
+    {
+      "Unit Topic": "Polynomial & Rational Functions",
+      "Lesson Number": "M3.PR.5.1",
+      "Atomic Concept": "Understanding Rational Functions (Definition, Domain, Excluded Values)",
+      "Key Skills": "Define rational functions; Identify values for which the function is undefined",
+      "NC DPI Standard": "NC.M3.F-IF.7d"
+    },
+    {
+      "Unit Topic": "Polynomial & Rational Functions",
+      "Lesson Number": "M3.PR.5.2",
+      "Atomic Concept": "Identifying Vertical Asymptotes of Rational Functions",
+      "Key Skills": "Find vertical asymptotes from the denominator's zeros",
+      "NC DPI Standard": "NC.M3.F-IF.7d"
+    },
+    {
+      "Unit Topic": "Polynomial & Rational Functions",
+      "Lesson Number": "M3.PR.5.3",
+      "Atomic Concept": "Identifying Horizontal and Slant Asymptotes of Rational Functions",
+      "Key Skills": "Determine horizontal or slant asymptotes based on degrees of numerator and denominator",
+      "NC DPI Standard": "NC.M3.F-IF.7d"
+    },
+    {
+      "Unit Topic": "Polynomial & Rational Functions",
+      "Lesson Number": "M3.PR.5.4",
+      "Atomic Concept": "Identifying Holes (Removable Discontinuities) in Rational Functions",
+      "Key Skills": "Find holes by identifying common factors in numerator and denominator",
+      "NC DPI Standard": "NC.M3.F-IF.7d"
+    },
+    {
+      "Unit Topic": "Polynomial & Rational Functions",
+      "Lesson Number": "M3.PR.5.5",
+      "Atomic Concept": "Graphing Rational Functions (Synthesizing Intercepts, Asymptotes, Holes)",
+      "Key Skills": "Sketch the graph of rational functions using all identified features",
+      "NC DPI Standard": "NC.M3.F-IF.7d"
+    },
+    {
+      "Unit Topic": "Polynomial & Rational Functions",
+      "Lesson Number": "M3.PR.6.1",
+      "Atomic Concept": "Solving Rational Equations Algebraically",
+      "Key Skills": "Multiply by the LCD; Check for extraneous solutions",
+      "NC DPI Standard": "NC.M3.A-REI.2"
+    },
+    {
+      "Unit Topic": "Polynomial & Rational Functions",
+      "Lesson Number": "M3.PR.6.2",
+      "Atomic Concept": "Solving Polynomial Inequalities",
+      "Key Skills": "Use graphical analysis or sign charts to solve polynomial inequalities",
+      "NC DPI Standard": "NC.M3.A-REI.11"
+    },
+    {
+      "Unit Topic": "Polynomial & Rational Functions",
+      "Lesson Number": "M3.PR.6.3",
+      "Atomic Concept": "Solving Rational Inequalities",
+      "Key Skills": "Use graphical analysis or sign charts to solve rational inequalities",
+      "NC DPI Standard": "NC.M3.A-REI.11"
+    },
+    {
+      "Unit Topic": "Polynomial & Rational Functions",
+      "Lesson Number": "M3.PR.7.1",
+      "Atomic Concept": "Applications of Polynomial and Rational Functions",
+      "Key Skills": "Model and solve real-world problems involving these function types",
+      "NC DPI Standard": "NC.M3.A-CED.1"
+    },
+    {
+      "Unit Topic": "Trigonometry",
+      "Lesson Number": "M3.TRIG.1.1",
+      "Atomic Concept": "Review: Understanding Angles in Standard Position and Coterminal Angles",
+      "Key Skills": "Define angles in standard position; Find coterminal angles",
+      "NC DPI Standard": "NC.M3.F-TF.1"
+    },
+    {
+      "Unit Topic": "Trigonometry",
+      "Lesson Number": "M3.TRIG.1.2",
+      "Atomic Concept": "Understanding Radian Measure and Converting Between Degrees and Radians",
+      "Key Skills": "Define radian; Convert angle measures between degrees and radians",
+      "NC DPI Standard": "NC.M3.F-TF.1"
+    },
+    {
+      "Unit Topic": "Trigonometry",
+      "Lesson Number": "M3.TRIG.2.1",
+      "Atomic Concept": "Understanding the Unit Circle (Coordinates and Special Angles)",
+      "Key Skills": "Identify coordinates for special angles (30°, 45°, 60°, etc.) on the unit circle",
+      "NC DPI Standard": "NC.M3.F-TF.2"
+    },
+    {
+      "Unit Topic": "Trigonometry",
+      "Lesson Number": "M3.TRIG.2.2",
+      "Atomic Concept": "Finding Exact Trigonometric Values Using the Unit Circle",
+      "Key Skills": "Determine sine, cosine, and tangent values for angles on the unit circle",
+      "NC DPI Standard": "NC.M3.F-TF.2"
+    },
+    {
+      "Unit Topic": "Trigonometry",
+      "Lesson Number": "M3.TRIG.2.3",
+      "Atomic Concept": "Understanding Trigonometric Functions of Any Angle (Reference Angles)",
+      "Key Skills": "Use reference angles to find trig values for angles beyond Quadrant I",
+      "NC DPI Standard": "NC.M3.F-TF.2"
+    },
+    {
+      "Unit Topic": "Trigonometry",
+      "Lesson Number": "M3.TRIG.3.1",
+      "Atomic Concept": "Graphing the Sine Function (Amplitude and Period)",
+      "Key Skills": "Identify amplitude and period; Graph basic sine function",
+      "NC DPI Standard": "NC.M3.F-IF.7e"
+    },
+    {
+      "Unit Topic": "Trigonometry",
+      "Lesson Number": "M3.TRIG.3.2",
+      "Atomic Concept": "Graphing the Cosine Function (Amplitude and Period)",
+      "Key Skills": "Identify amplitude and period; Graph basic cosine function",
+      "NC DPI Standard": "NC.M3.F-IF.7e"
+    },
+    {
+      "Unit Topic": "Trigonometry",
+      "Lesson Number": "M3.TRIG.3.3",
+      "Atomic Concept": "Graphing Transformed Sine and Cosine Functions (Phase Shift and Vertical Shift)",
+      "Key Skills": "Identify phase shifts and vertical shifts; Graph transformed sine and cosine functions",
+      "NC DPI Standard": "NC.M3.F-IF.7e"
+    },
+    {
+      "Unit Topic": "Trigonometry",
+      "Lesson Number": "M3.TRIG.3.4",
+      "Atomic Concept": "Graphing Basic Tangent and Cotangent Functions",
+      "Key Skills": "Identify asymptotes and key points; Graph basic tangent and cotangent functions",
+      "NC DPI Standard": "NC.M3.F-IF.7e"
+    },
+    {
+      "Unit Topic": "Trigonometry",
+      "Lesson Number": "M3.TRIG.4.1",
+      "Atomic Concept": "Introduction to Inverse Trigonometric Functions (Domain/Range)",
+      "Key Skills": "Define inverse sine, cosine, and tangent; Understand their restricted domains and ranges",
+      "NC DPI Standard": "NC.M3.F-TF.6"
+    },
+    {
+      "Unit Topic": "Trigonometry",
+      "Lesson Number": "M3.TRIG.4.2",
+      "Atomic Concept": "Evaluating Inverse Trigonometric Functions",
+      "Key Skills": "Find values of inverse trigonometric expressions; Solve basic inverse trig equations",
+      "NC DPI Standard": "NC.M3.F-TF.6"
+    },
+    {
+      "Unit Topic": "Trigonometry",
+      "Lesson Number": "M3.TRIG.5.1",
+      "Atomic Concept": "Review: Basic Trigonometric Identities (Reciprocal, Quotient, Pythagorean)",
+      "Key Skills": "Recall and apply fundamental identities",
+      "NC DPI Standard": "NC.M3.F-TF.8"
+    },
+    {
+      "Unit Topic": "Trigonometry",
+      "Lesson Number": "M3.TRIG.5.2",
+      "Atomic Concept": "Proving Trigonometric Identities (Introduction)",
+      "Key Skills": "Use algebraic manipulation and basic identities to prove other identities",
+      "NC DPI Standard": "NC.M3.F-TF.8"
+    },
+    {
+      "Unit Topic": "Trigonometry",
+      "Lesson Number": "M3.TRIG.6.1",
+      "Atomic Concept": "Solving Basic Trigonometric Equations",
+      "Key Skills": "Solve equations involving single trigonometric functions within a given interval",
+      "NC DPI Standard": "NC.M3.F-TF.7"
+    },
+    {
+      "Unit Topic": "Trigonometry",
+      "Lesson Number": "M3.TRIG.6.2",
+      "Atomic Concept": "Solving Trigonometric Equations Using Identities",
+      "Key Skills": "Apply identities to simplify and solve more complex trigonometric equations",
+      "NC DPI Standard": "NC.M3.F-TF.7"
+    },
+    {
+      "Unit Topic": "Trigonometry",
+      "Lesson Number": "M3.TRIG.7.1",
+      "Atomic Concept": "Understanding and Applying the Law of Sines",
+      "Key Skills": "Derive the Law of Sines; Solve non-right triangles using Law of Sines (AAS, ASA, SSA/Ambiguous Case)",
+      "NC DPI Standard": "NC.M3.G-SRT.10"
+    },
+    {
+      "Unit Topic": "Trigonometry",
+      "Lesson Number": "M3.TRIG.7.2",
+      "Atomic Concept": "Understanding and Applying the Law of Cosines",
+      "Key Skills": "Derive the Law of Cosines; Solve non-right triangles using Law of Cosines (SAS, SSS)",
+      "NC DPI Standard": "NC.M3.G-SRT.10"
+    },
+    {
+      "Unit Topic": "Trigonometry",
+      "Lesson Number": "M3.TRIG.8.1",
+      "Atomic Concept": "Finding the Area of Triangles Using Trigonometry (SAS Area Formula)",
+      "Key Skills": "Apply the formula Area = (1/2)ab sin(C) to find triangle area",
+      "NC DPI Standard": "NC.M3.G-SRT.9"
+    },
+    {
+      "Unit Topic": "Trigonometry",
+      "Lesson Number": "M3.TRIG.9.1",
+      "Atomic Concept": "Solving Real-World Problems Using Trigonometry",
+      "Key Skills": "Apply trigonometric concepts (Law of Sines/Cosines, trig functions) to solve practical problems",
+      "NC DPI Standard": "NC.M3.G-SRT.11"
+    },
+    {
+      "Unit Topic": "Geometry & Circles",
+      "Lesson Number": "M3.GEO.CIR.1.1",
+      "Atomic Concept": "Using Coordinates to Prove Geometric Theorems (Distance and Midpoint Formulas)",
+      "Key Skills": "Apply distance and midpoint formulas to prove properties of triangles (e.g., isosceles, right) or quadrilaterals",
+      "NC DPI Standard": "NC.M3.G-GPE.4"
+    },
+    {
+      "Unit Topic": "Geometry & Circles",
+      "Lesson Number": "M3.GEO.CIR.1.2",
+      "Atomic Concept": "Using Coordinates to Prove Geometric Theorems (Slope and Parallel/Perpendicular Lines)",
+      "Key Skills": "Apply slope formula to prove lines are parallel or perpendicular; Prove properties of parallelograms and rectangles",
+      "NC DPI Standard": "NC.M3.G-GPE.5"
+    },
+    {
+      "Unit Topic": "Geometry & Circles",
+      "Lesson Number": "M3.GEO.CIR.2.1",
+      "Atomic Concept": "Understanding the Equation of a Circle (Standard Form)",
+      "Key Skills": "Derive the equation of a circle given center and radius; Write equation given these values",
+      "NC DPI Standard": "NC.M3.G-GPE.1"
+    },
+    {
+      "Unit Topic": "Geometry & Circles",
+      "Lesson Number": "M3.GEO.CIR.2.2",
+      "Atomic Concept": "Graphing Circles from Standard Form and Identifying Key Features",
+      "Key Skills": "Identify center and radius from standard form; Graph circles on the coordinate plane",
+      "NC DPI Standard": "NC.M3.G-GPE.1"
+    },
+    {
+      "Unit Topic": "Geometry & Circles",
+      "Lesson Number": "M3.GEO.CIR.2.3",
+      "Atomic Concept": "Converting the Equation of a Circle from General Form to Standard Form",
+      "Key Skills": "Use completing the square to rewrite general form into standard form",
+      "NC DPI Standard": "NC.M3.G-GPE.1"
+    },
+    {
+      "Unit Topic": "Geometry & Circles",
+      "Lesson Number": "M3.GEO.CIR.2.4",
+      "Atomic Concept": "Writing Equations of Circles Given Various Conditions (e.g., diameter endpoints, tangent to a line)",
+      "Key Skills": "Determine center and radius from given conditions to write the equation",
+      "NC DPI Standard": "NC.M3.G-GPE.1"
+    },
+    {
+      "Unit Topic": "Geometry & Circles",
+      "Lesson Number": "M3.GEO.CIR.3.1",
+      "Atomic Concept": "Understanding and Applying Properties of Tangents to Circles",
+      "Key Skills": "Prove tangent lines are perpendicular to radii; Use properties to solve problems involving tangents",
+      "NC DPI Standard": "NC.M3.G-C.2"
+    },
+    {
+      "Unit Topic": "Geometry & Circles",
+      "Lesson Number": "M3.GEO.CIR.3.2",
+      "Atomic Concept": "Understanding and Applying Properties of Chords, Secants, and Arcs",
+      "Key Skills": "Use theorems related to chords, diameters, and arcs (e.g., congruent chords subtend congruent arcs)",
+      "NC DPI Standard": "NC.M3.G-C.2"
+    },
+    {
+      "Unit Topic": "Geometry & Circles",
+      "Lesson Number": "M3.GEO.CIR.3.3",
+      "Atomic Concept": "Understanding and Applying Inscribed Angles and Cyclic Quadrilaterals",
+      "Key Skills": "Relate inscribed angle measure to intercepted arc; Understand properties of cyclic quadrilaterals",
+      "NC DPI Standard": "NC.M3.G-C.3"
+    },
+    {
+      "Unit Topic": "Geometry & Circles",
+      "Lesson Number": "M3.GEO.CIR.3.4",
+      "Atomic Concept": "Understanding and Applying Angles Formed by Tangents, Secants, and Chords (review/extension)",
+      "Key Skills": "Apply theorems for angles formed by lines intersecting on, inside, or outside a circle",
+      "NC DPI Standard": "NC.M3.G-C.2"
+    },
+    {
+      "Unit Topic": "Geometry & Circles",
+      "Lesson Number": "M3.GEO.CIR.3.5",
+      "Atomic Concept": "Understanding and Applying Segment Lengths Formed by Chords, Secants, and Tangents (review/extension)",
+      "Key Skills": "Apply theorems for products of segment lengths when chords, secants, or tangents intersect",
+      "NC DPI Standard": "NC.M3.G-C.2"
+    },
+    {
+      "Unit Topic": "Geometry & Circles",
+      "Lesson Number": "M3.CIR.4.1",
+      "Atomic Concept": "Calculating Arc Length (Review and Applications)",
+      "Key Skills": "Use formula for arc length in radians or degrees; Solve contextual problems",
+      "NC DPI Standard": "NC.M3.G-C.5"
+    },
+    {
+      "Unit Topic": "Geometry & Circles",
+      "Lesson Number": "M3.CIR.4.2",
+      "Atomic Concept": "Calculating Area of Sectors of Circles (Review and Applications)",
+      "Key Skills": "Use formula for area of a sector in radians or degrees; Solve contextual problems",
+      "NC DPI Standard": "NC.M3.G-C.5"
+    },
+    {
+      "Unit Topic": "Geometry & Circles",
+      "Lesson Number": "M3.GEO.CIR.5.1",
+      "Atomic Concept": "Understanding Dilations in the Coordinate Plane (Review/Extension)",
+      "Key Skills": "Perform dilations with centers not at the origin; Understand effect on coordinates",
+      "NC DPI Standard": "NC.M3.G-SRT.1"
+    },
+    {
+      "Unit Topic": "Geometry & Circles",
+      "Lesson Number": "M3.GEO.CIR.5.2",
+      "Atomic Concept": "Understanding and Applying Similarity Transformations (Review/Extension)",
+      "Key Skills": "Identify sequence of transformations including dilations to show similarity; Understand properties of similar figures",
+      "NC DPI Standard": "NC.M3.G-SRT.2"
+    },
+    {
+      "Unit Topic": "Probability & Statistics",
+      "Lesson Number": "M3.PS.1.1",
+      "Atomic Concept": "Review: Fundamental Counting Principle, Permutations, and Combinations",
+      "Key Skills": "Apply counting principles to determine number of possible arrangements or selections",
+      "NC DPI Standard": "NC.M3.S-CP.9"
+    },
+    {
+      "Unit Topic": "Probability & Statistics",
+      "Lesson Number": "M3.PS.2.1",
+      "Atomic Concept": "Understanding Probability Distributions (Discrete)",
+      "Key Skills": "Define a discrete probability distribution; Construct and interpret probability distribution tables and graphs",
+      "NC DPI Standard": "NC.M3.S-MD.1"
+    },
+    {
+      "Unit Topic": "Probability & Statistics",
+      "Lesson Number": "M3.PS.2.2",
+      "Atomic Concept": "Calculating Expected Value of a Discrete Probability Distribution",
+      "Key Skills": "Calculate expected value; Interpret expected value as a long-run average",
+      "NC DPI Standard": "NC.M3.S-MD.2"
+    },
+    {
+      "Unit Topic": "Probability & Statistics",
+      "Lesson Number": "M3.PS.2.3",
+      "Atomic Concept": "Understanding Binomial Probability Distributions",
+      "Key Skills": "Identify binomial situations; Calculate binomial probabilities using the binomial probability formula or technology",
+      "NC DPI Standard": "NC.M3.S-MD.6"
+    },
+    {
+      "Unit Topic": "Probability & Statistics",
+      "Lesson Number": "M3.PS.3.1",
+      "Atomic Concept": "Understanding the Normal Distribution (Properties and Empirical Rule)",
+      "Key Skills": "Describe characteristics of a normal distribution (bell-shaped, symmetric); Apply the Empirical Rule (68-95-99.7 rule)",
+      "NC DPI Standard": "NC.M3.S-ID.4"
+    },
+    {
+      "Unit Topic": "Probability & Statistics",
+      "Lesson Number": "M3.PS.3.2",
+      "Atomic Concept": "Understanding Z-scores and Standardizing Data",
+      "Key Skills": "Calculate z-scores for data values; Interpret z-scores in context",
+      "NC DPI Standard": "NC.M3.S-ID.4"
+    },
+    {
+      "Unit Topic": "Probability & Statistics",
+      "Lesson Number": "M3.PS.3.3",
+      "Atomic Concept": "Using the Normal Distribution to Estimate Probabilities",
+      "Key Skills": "Use z-tables or technology to find probabilities for given z-scores or data values within a normal distribution",
+      "NC DPI Standard": "NC.M3.S-ID.4"
+    },
+    {
+      "Unit Topic": "Probability & Statistics",
+      "Lesson Number": "M3.PS.4.1",
+      "Atomic Concept": "Understanding Sampling Distributions (Introduction to Sample Means and Proportions)",
+      "Key Skills": "Define a sampling distribution; Understand properties of sampling distributions (mean, standard deviation)",
+      "NC DPI Standard": "NC.M3.S-IC.4"
+    },
+    {
+      "Unit Topic": "Probability & Statistics",
+      "Lesson Number": "M3.PS.4.2",
+      "Atomic Concept": "Understanding Confidence Intervals (Conceptual Introduction)",
+      "Key Skills": "Define a confidence interval; Interpret confidence level (e.g., 95% confidence)",
+      "NC DPI Standard": "NC.M3.S-IC.4"
+    },
+    {
+      "Unit Topic": "Probability & Statistics",
+      "Lesson Number": "M3.PS.5.1",
+      "Atomic Concept": "Understanding Hypothesis Testing (Conceptual Introduction)",
+      "Key Skills": "Define null and alternative hypotheses; Understand the concept of p-value",
+      "NC DPI Standard": "NC.M3.S-IC.5"
+    },
+    {
+      "Unit Topic": "Probability & Statistics",
+      "Lesson Number": "M3.PS.5.2",
+      "Atomic Concept": "Drawing Conclusions from P-values (Significance Level)",
+      "Key Skills": "Interpret p-values in relation to a significance level; Make conclusions about hypotheses",
+      "NC DPI Standard": "NC.M3.S-IC.5"
+    },
+    {
+      "Unit Topic": "Probability & Statistics",
+      "Lesson Number": "M3.PS.6.1",
+      "Atomic Concept": "Evaluating Reports Based on Data",
+      "Key Skills": "Critically analyze statistical arguments; Identify potential biases and misinterpretations of data",
+      "NC DPI Standard": "NC.M3.S-IC.6"
+    },
+    {
+      "Unit Topic": "Probability & Statistics",
+      "Lesson Number": "M3.PS.6.2",
+      "Atomic Concept": "Making Decisions Based on Probabilities (Expected Value in Decision Making)",
+      "Key Skills": "Use expected value to make decisions in situations involving chance",
+      "NC DPI Standard": "NC.M3.S-MD.7"
+    }
+  ]

@@ -1,0 +1,1276 @@
+[
+    {
+      "Unit Topic": "Functions & Transformations",
+      "Lesson Number": "Alg2.FT.1.1",
+      "Atomic Concept": "Review: Understanding Functions, Relations, Domain, and Range",
+      "Key Skills": "Differentiate between functions and relations; Determine domain and range from various representations",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-IF.1"
+    },
+    {
+      "Unit Topic": "Functions & Transformations",
+      "Lesson Number": "Alg2.FT.1.2",
+      "Atomic Concept": "Evaluating Functions using Function Notation",
+      "Key Skills": "Use function notation (f(x)); Substitute values for inputs to find outputs",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-IF.2"
+    },
+    {
+      "Unit Topic": "Functions & Transformations",
+      "Lesson Number": "Alg2.FT.1.3",
+      "Atomic Concept": "Analyzing Key Features of Functions (Intercepts, Intervals, Max/Min, End Behavior)",
+      "Key Skills": "Identify x- and y-intercepts; Determine intervals of increasing/decreasing, positive/negative; Describe end behavior",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-IF.4"
+    },
+    {
+      "Unit Topic": "Functions & Transformations",
+      "Lesson Number": "Alg2.FT.1.4",
+      "Atomic Concept": "Calculating and Interpreting Average Rate of Change",
+      "Key Skills": "Compute average rate of change from tables, graphs, or equations; Interpret in context",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-IF.6"
+    },
+    {
+      "Unit Topic": "Functions & Transformations",
+      "Lesson Number": "Alg2.FT.2.1",
+      "Atomic Concept": "Performing Operations on Functions (Addition and Subtraction)",
+      "Key Skills": "Add and subtract functions algebraically and numerically",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-BF.1b"
+    },
+    {
+      "Unit Topic": "Functions & Transformations",
+      "Lesson Number": "Alg2.FT.2.2",
+      "Atomic Concept": "Performing Operations on Functions (Multiplication and Division)",
+      "Key Skills": "Multiply and divide functions algebraically and numerically; Identify domain restrictions for division",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-BF.1b"
+    },
+    {
+      "Unit Topic": "Functions & Transformations",
+      "Lesson Number": "Alg2.FT.2.3",
+      "Atomic Concept": "Understanding Composition of Functions",
+      "Key Skills": "Define composition of functions; Interpret (f ∘ g)(x) as f(g(x))",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-BF.1c"
+    },
+    {
+      "Unit Topic": "Functions & Transformations",
+      "Lesson Number": "Alg2.FT.2.4",
+      "Atomic Concept": "Evaluating Composite Functions",
+      "Key Skills": "Evaluate composite functions numerically and algebraically",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-BF.1c"
+    },
+    {
+      "Unit Topic": "Functions & Transformations",
+      "Lesson Number": "Alg2.FT.3.1",
+      "Atomic Concept": "Understanding Inverse Functions (Concept and Notation)",
+      "Key Skills": "Define inverse functions; Understand that they \"undo\" each other; Use f⁻¹(x) notation",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-BF.4"
+    },
+    {
+      "Unit Topic": "Functions & Transformations",
+      "Lesson Number": "Alg2.FT.3.2",
+      "Atomic Concept": "Finding the Inverse of a Function Algebraically",
+      "Key Skills": "Swap x and y; Solve for y to find the inverse equation",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-BF.4"
+    },
+    {
+      "Unit Topic": "Functions & Transformations",
+      "Lesson Number": "Alg2.FT.3.3",
+      "Atomic Concept": "Graphing Inverse Functions (Reflection over y=x)",
+      "Key Skills": "Graph a function and its inverse; Identify symmetry across the line y=x",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-BF.4"
+    },
+    {
+      "Unit Topic": "Functions & Transformations",
+      "Lesson Number": "Alg2.FT.3.4",
+      "Atomic Concept": "Verifying Inverse Functions (using Composition)",
+      "Key Skills": "Show that (f ∘ f⁻¹)(x) = x and (f⁻¹ ∘ f)(x) = x",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-BF.4"
+    },
+    {
+      "Unit Topic": "Functions & Transformations",
+      "Lesson Number": "Alg2.FT.3.5",
+      "Atomic Concept": "Restricting Domain to Ensure an Inverse Function Exists",
+      "Key Skills": "Identify domains for which a function (e.g., quadratic) has an inverse",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-BF.4"
+    },
+    {
+      "Unit Topic": "Functions & Transformations",
+      "Lesson Number": "Alg2.FT.4.1",
+      "Atomic Concept": "Graphing Piecewise-Defined Functions",
+      "Key Skills": "Define piecewise functions; Graph segments of functions based on given domains",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-IF.7b"
+    },
+    {
+      "Unit Topic": "Functions & Transformations",
+      "Lesson Number": "Alg2.FT.4.2",
+      "Atomic Concept": "Evaluating Piecewise-Defined Functions",
+      "Key Skills": "Substitute input values into the correct function piece based on domain",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-IF.2"
+    },
+    {
+      "Unit Topic": "Functions & Transformations",
+      "Lesson Number": "Alg2.FT.5.1",
+      "Atomic Concept": "Identifying Parent Functions and Their Basic Graphs",
+      "Key Skills": "Recognize parent functions (linear, quadratic, cubic, absolute value, square root, etc.) and their basic shapes",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-BF.3"
+    },
+    {
+      "Unit Topic": "Functions & Transformations",
+      "Lesson Number": "Alg2.FT.5.2",
+      "Atomic Concept": "Understanding Horizontal and Vertical Translations of Functions",
+      "Key Skills": "Relate changes in h and k to horizontal and vertical shifts of the graph",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-BF.3"
+    },
+    {
+      "Unit Topic": "Functions & Transformations",
+      "Lesson Number": "Alg2.FT.5.3",
+      "Atomic Concept": "Understanding Reflections of Functions Across Axes",
+      "Key Skills": "Relate negative signs in f(x) or x to reflections across x- or y-axes",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-BF.3"
+    },
+    {
+      "Unit Topic": "Functions & Transformations",
+      "Lesson Number": "Alg2.FT.5.4",
+      "Atomic Concept": "Understanding Vertical Stretches and Compressions of Functions",
+      "Key Skills": "Relate the value of 'a' to vertical stretching or compressing the graph",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-BF.3"
+    },
+    {
+      "Unit Topic": "Functions & Transformations",
+      "Lesson Number": "Alg2.FT.5.5",
+      "Atomic Concept": "Understanding Horizontal Stretches and Compressions of Functions",
+      "Key Skills": "Relate changes inside the function (e.g., f(bx)) to horizontal stretching or compressing",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-BF.3"
+    },
+    {
+      "Unit Topic": "Functions & Transformations",
+      "Lesson Number": "Alg2.FT.5.6",
+      "Atomic Concept": "Graphing Functions Using Combined Transformations (e.g., y=a • f(x-h) + k)",
+      "Key Skills": "Apply multiple transformations in the correct order to graph a function",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-BF.3"
+    },
+    {
+      "Unit Topic": "Complex Number System",
+      "Lesson Number": "Alg2.CN.1.1",
+      "Atomic Concept": "Introduction to the Imaginary Unit *i* and its properties",
+      "Key Skills": "Define *i* as √-1; Understand powers of *i* (e.g., i², i³, i⁴)",
+      "CCSS Standard": "CCSS.MATH.CONTENT.N-CN.1"
+    },
+    {
+      "Unit Topic": "Complex Number System",
+      "Lesson Number": "Alg2.CN.1.2",
+      "Atomic Concept": "Simplifying Square Roots of Negative Numbers",
+      "Key Skills": "Express √-b as i√b for b > 0; Simplify radical expressions with negative radicands",
+      "CCSS Standard": "CCSS.MATH.CONTENT.N-CN.1"
+    },
+    {
+      "Unit Topic": "Complex Number System",
+      "Lesson Number": "Alg2.CN.1.3",
+      "Atomic Concept": "Understanding Complex Numbers and their Standard Form (a + bi)",
+      "Key Skills": "Identify real and imaginary parts; Define complex numbers",
+      "CCSS Standard": "CCSS.MATH.CONTENT.N-CN.1"
+    },
+    {
+      "Unit Topic": "Complex Number System",
+      "Lesson Number": "Alg2.CN.2.1",
+      "Atomic Concept": "Adding and Subtracting Complex Numbers",
+      "Key Skills": "Combine real parts with real parts and imaginary parts with imaginary parts",
+      "CCSS Standard": "CCSS.MATH.CONTENT.N-CN.2"
+    },
+    {
+      "Unit Topic": "Complex Number System",
+      "Lesson Number": "Alg2.CN.2.2",
+      "Atomic Concept": "Multiplying Complex Numbers",
+      "Key Skills": "Apply the distributive property; Use i² = -1; Multiply binomials containing complex numbers",
+      "CCSS Standard": "CCSS.MATH.CONTENT.N-CN.2"
+    },
+    {
+      "Unit Topic": "Complex Number System",
+      "Lesson Number": "Alg2.CN.2.3",
+      "Atomic Concept": "Understanding Complex Conjugates",
+      "Key Skills": "Define complex conjugate; Multiply complex numbers by their conjugates",
+      "CCSS Standard": "CCSS.MATH.CONTENT.N-CN.3"
+    },
+    {
+      "Unit Topic": "Complex Number System",
+      "Lesson Number": "Alg2.CN.2.4",
+      "Atomic Concept": "Dividing Complex Numbers",
+      "Key Skills": "Rationalize denominators using complex conjugates",
+      "CCSS Standard": "CCSS.MATH.CONTENT.N-CN.3"
+    },
+    {
+      "Unit Topic": "Complex Number System",
+      "Lesson Number": "Alg2.CN.3.1",
+      "Atomic Concept": "Solving Quadratic Equations with Complex Solutions (using Square Roots)",
+      "Key Skills": "Apply the square root property to solve equations of the form x² = -c",
+      "CCSS Standard": "CCSS.MATH.CONTENT.N-CN.7, CCSS.MATH.CONTENT.A-REI.4b"
+    },
+    {
+      "Unit Topic": "Complex Number System",
+      "Lesson Number": "Alg2.CN.3.2",
+      "Atomic Concept": "Solving Quadratic Equations with Complex Solutions (using Quadratic Formula)",
+      "Key Skills": "Apply the quadratic formula when the discriminant is negative to find complex solutions",
+      "CCSS Standard": "CCSS.MATH.CONTENT.N-CN.7, CCSS.MATH.CONTENT.A-REI.4b"
+    },
+    {
+      "Unit Topic": "Quadratic Functions & Relations (Advanced)",
+      "Lesson Number": "Alg2.ADVQUAD.1.1",
+      "Atomic Concept": "Review: Graphing Quadratic Functions (Standard, Vertex, Intercept Forms)",
+      "Key Skills": "Graph parabolas; Identify vertex, axis of symmetry, intercepts",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-IF.7a"
+    },
+    {
+      "Unit Topic": "Quadratic Functions & Relations (Advanced)",
+      "Lesson Number": "Alg2.ADVQUAD.1.2",
+      "Atomic Concept": "Review: Transformations of Quadratic Functions",
+      "Key Skills": "Understand how parameters 'a', 'h', 'k' affect the graph of y=a(x-h)²+k",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-BF.3"
+    },
+    {
+      "Unit Topic": "Quadratic Functions & Relations (Advanced)",
+      "Lesson Number": "Alg2.ADVQUAD.2.1",
+      "Atomic Concept": "Solving Quadratic Equations by Factoring (Review and Advanced Forms)",
+      "Key Skills": "Factor complex quadratics; Apply Zero Product Property to solve equations",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-REI.4b"
+    },
+    {
+      "Unit Topic": "Quadratic Functions & Relations (Advanced)",
+      "Lesson Number": "Alg2.ADVQUAD.2.2",
+      "Atomic Concept": "Solving Quadratic Equations by Taking Square Roots (Review and Complex Solutions)",
+      "Key Skills": "Isolate squared term; Apply square root property to find real and complex solutions",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-REI.4b"
+    },
+    {
+      "Unit Topic": "Quadratic Functions & Relations (Advanced)",
+      "Lesson Number": "Alg2.ADVQUAD.2.3",
+      "Atomic Concept": "Solving Quadratic Equations by Completing the Square (Review and General Method)",
+      "Key Skills": "Convert standard form to vertex form; Solve equations by completing the square",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-REI.4a"
+    },
+    {
+      "Unit Topic": "Quadratic Functions & Relations (Advanced)",
+      "Lesson Number": "Alg2.ADVQUAD.2.4",
+      "Atomic Concept": "Solving Quadratic Equations using the Quadratic Formula (Real and Complex Solutions)",
+      "Key Skills": "Apply the quadratic formula; Simplify solutions, including complex numbers",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-REI.4b"
+    },
+    {
+      "Unit Topic": "Quadratic Functions & Relations (Advanced)",
+      "Lesson Number": "Alg2.ADVQUAD.3.1",
+      "Atomic Concept": "Analyzing the Discriminant to Determine the Nature of Roots",
+      "Key Skills": "Calculate discriminant; Classify solutions as 2 real, 1 real, or 2 complex",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-REI.4b"
+    },
+    {
+      "Unit Topic": "Quadratic Functions & Relations (Advanced)",
+      "Lesson Number": "Alg2.ADVQUAD.3.2",
+      "Atomic Concept": "Writing Quadratic Equations/Functions Given Roots or Other Conditions",
+      "Key Skills": "Construct quadratic equations from real/complex roots or given points/vertex",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-APR.3, CCSS.MATH.CONTENT.A-CED.1"
+    },
+    {
+      "Unit Topic": "Quadratic Functions & Relations (Advanced)",
+      "Lesson Number": "Alg2.ADVQUAD.4.1",
+      "Atomic Concept": "Solving Quadratic Inequalities Graphically",
+      "Key Skills": "Graph related quadratic function; Identify regions that satisfy the inequality",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-REI.11"
+    },
+    {
+      "Unit Topic": "Quadratic Functions & Relations (Advanced)",
+      "Lesson Number": "Alg2.ADVQUAD.4.2",
+      "Atomic Concept": "Solving Quadratic Inequalities Algebraically",
+      "Key Skills": "Find critical points; Test intervals on a number line; Express solution set",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-REI.11"
+    },
+    {
+      "Unit Topic": "Quadratic Functions & Relations (Advanced)",
+      "Lesson Number": "Alg2.ADVQUAD.5.1",
+      "Atomic Concept": "Solving Systems of Linear and Quadratic Equations (Graphically)",
+      "Key Skills": "Graph linear and quadratic equations; Identify points of intersection",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-REI.7"
+    },
+    {
+      "Unit Topic": "Quadratic Functions & Relations (Advanced)",
+      "Lesson Number": "Alg2.ADVQUAD.5.2",
+      "Atomic Concept": "Solving Systems of Linear and Quadratic Equations (Algebraically)",
+      "Key Skills": "Use substitution or elimination methods to solve systems",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-REI.7"
+    },
+    {
+      "Unit Topic": "Quadratic Functions & Relations (Advanced)",
+      "Lesson Number": "Alg2.ADVQUAD.5.3",
+      "Atomic Concept": "Solving Systems of Two Quadratic Equations",
+      "Key Skills": "Use substitution or elimination to find intersection points of two parabolas",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-REI.7"
+    },
+    {
+      "Unit Topic": "Quadratic Functions & Relations (Advanced)",
+      "Lesson Number": "Alg2.ADVQUAD.6.1",
+      "Atomic Concept": "Modeling Real-World Situations with Quadratic Functions (Advanced Applications)",
+      "Key Skills": "Set up and solve complex word problems involving parabolic trajectories, area optimization",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-CED.1, CCSS.MATH.CONTENT.F-IF.4"
+    },
+    {
+      "Unit Topic": "Polynomial Functions",
+      "Lesson Number": "Alg2.POLY.1.1",
+      "Atomic Concept": "Review: Understanding Polynomials (Definition, Degree, Standard Form, Terms)",
+      "Key Skills": "Identify parts of a polynomial; Classify by degree and number of terms",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-APR.1, CCSS.MATH.CONTENT.A-SSE.1"
+    },
+    {
+      "Unit Topic": "Polynomial Functions",
+      "Lesson Number": "Alg2.POLY.1.2",
+      "Atomic Concept": "Understanding End Behavior of Polynomial Functions",
+      "Key Skills": "Determine the direction of the graph as x → ∞ and x → -∞ based on degree and leading coefficient",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-IF.7c"
+    },
+    {
+      "Unit Topic": "Polynomial Functions",
+      "Lesson Number": "Alg2.POLY.1.3",
+      "Atomic Concept": "Identifying Zeros (Roots) of Polynomial Functions and their Multiplicity",
+      "Key Skills": "Find real zeros of polynomials; Understand how multiplicity affects graph behavior at the x-axis",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-APR.3, CCSS.MATH.CONTENT.F-IF.7c"
+    },
+    {
+      "Unit Topic": "Polynomial Functions",
+      "Lesson Number": "Alg2.POLY.1.4",
+      "Atomic Concept": "Graphing Polynomial Functions (Using Zeros, Multiplicity, and End Behavior)",
+      "Key Skills": "Sketch polynomial graphs by combining knowledge of zeros, end behavior, and turning points",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-IF.7c"
+    },
+    {
+      "Unit Topic": "Polynomial Functions",
+      "Lesson Number": "Alg2.POLY.2.1",
+      "Atomic Concept": "Review: Polynomial Long Division",
+      "Key Skills": "Divide polynomials using the long division algorithm",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-APR.6"
+    },
+    {
+      "Unit Topic": "Polynomial Functions",
+      "Lesson Number": "Alg2.POLY.2.2",
+      "Atomic Concept": "Review: Synthetic Division of Polynomials",
+      "Key Skills": "Use synthetic division for division by linear factors (x-k)",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-APR.6"
+    },
+    {
+      "Unit Topic": "Polynomial Functions",
+      "Lesson Number": "Alg2.POLY.2.3",
+      "Atomic Concept": "Understanding and Applying the Remainder Theorem",
+      "Key Skills": "Use the remainder theorem to find the remainder of polynomial division; Evaluate P(k)",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-APR.2"
+    },
+    {
+      "Unit Topic": "Polynomial Functions",
+      "Lesson Number": "Alg2.POLY.2.4",
+      "Atomic Concept": "Understanding and Applying the Factor Theorem",
+      "Key Skills": "Use the factor theorem to determine if a linear expression is a factor of a polynomial",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-APR.2"
+    },
+    {
+      "Unit Topic": "Polynomial Functions",
+      "Lesson Number": "Alg2.POLY.3.1",
+      "Atomic Concept": "Understanding the Rational Root Theorem",
+      "Key Skills": "Find possible rational roots of a polynomial equation",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-APR.3"
+    },
+    {
+      "Unit Topic": "Polynomial Functions",
+      "Lesson Number": "Alg2.POLY.3.2",
+      "Atomic Concept": "Understanding the Fundamental Theorem of Algebra",
+      "Key Skills": "State the fundamental theorem of algebra (number of complex zeros)",
+      "CCSS Standard": "CCSS.MATH.CONTENT.N-CN.9"
+    },
+    {
+      "Unit Topic": "Polynomial Functions",
+      "Lesson Number": "Alg2.POLY.3.3",
+      "Atomic Concept": "Understanding the Conjugate Root Theorem (for Complex and Irrational Zeros)",
+      "Key Skills": "Apply the theorem to find conjugate pairs of complex or irrational roots",
+      "CCSS Standard": "CCSS.MATH.CONTENT.N-CN.9"
+    },
+    {
+      "Unit Topic": "Polynomial Functions",
+      "Lesson Number": "Alg2.POLY.4.1",
+      "Atomic Concept": "Finding All Real and Complex Zeros of Polynomial Functions",
+      "Key Skills": "Combine factoring, rational root theorem, division, and quadratic formula to find all zeros",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-APR.3, CCSS.MATH.CONTENT.N-CN.9"
+    },
+    {
+      "Unit Topic": "Polynomial Functions",
+      "Lesson Number": "Alg2.POLY.4.2",
+      "Atomic Concept": "Writing Polynomial Functions Given Zeros",
+      "Key Skills": "Construct a polynomial function from its given real and complex zeros",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-APR.3"
+    },
+    {
+      "Unit Topic": "Polynomial Functions",
+      "Lesson Number": "Alg2.POLY.5.1",
+      "Atomic Concept": "Understanding Polynomial Identities (e.g., Sum/Difference of Cubes)",
+      "Key Skills": "Recognize and apply identities like a³ ± b³ = (a ± b)(a² ∓ ab + b²)",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-APR.4"
+    },
+    {
+      "Unit Topic": "Polynomial Functions",
+      "Lesson Number": "Alg2.POLY.5.2",
+      "Atomic Concept": "Understanding and Applying the Binomial Theorem (Pascal's Triangle)",
+      "Key Skills": "Use Pascal's Triangle to expand binomials raised to positive integer powers",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-APR.5"
+    },
+    {
+      "Unit Topic": "Polynomial Functions",
+      "Lesson Number": "Alg2.POLY.6.1",
+      "Atomic Concept": "Transformations of Polynomial Functions",
+      "Key Skills": "Apply horizontal/vertical shifts, reflections, stretches, and compressions to polynomial graphs",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-BF.3"
+    },
+    {
+      "Unit Topic": "Polynomial Functions",
+      "Lesson Number": "Alg2.POLY.7.1",
+      "Atomic Concept": "Solving Polynomial Inequalities",
+      "Key Skills": "Use graphical analysis or sign charts to solve polynomial inequalities",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-REI.11"
+    },
+    {
+      "Unit Topic": "Polynomial Functions",
+      "Lesson Number": "Alg2.POLY.8.1",
+      "Atomic Concept": "Applications of Polynomial Functions",
+      "Key Skills": "Model and solve real-world problems involving polynomial functions",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-CED.1"
+    },
+    {
+      "Unit Topic": "Rational Functions",
+      "Lesson Number": "Alg2.RAT.1.1",
+      "Atomic Concept": "Understanding Rational Functions and Expressions (Definition, Domain)",
+      "Key Skills": "Define rational functions; Identify excluded values from the domain",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-IF.7d"
+    },
+    {
+      "Unit Topic": "Rational Functions",
+      "Lesson Number": "Alg2.RAT.1.2",
+      "Atomic Concept": "Simplifying Rational Expressions",
+      "Key Skills": "Factor numerator and denominator; Cancel common factors to simplify",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-APR.7"
+    },
+    {
+      "Unit Topic": "Rational Functions",
+      "Lesson Number": "Alg2.RAT.2.1",
+      "Atomic Concept": "Multiplying Rational Expressions",
+      "Key Skills": "Factor expressions; Multiply numerators and denominators; Simplify products",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-APR.7"
+    },
+    {
+      "Unit Topic": "Rational Functions",
+      "Lesson Number": "Alg2.RAT.2.2",
+      "Atomic Concept": "Dividing Rational Expressions",
+      "Key Skills": "Multiply by the reciprocal; Factor and simplify quotients",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-APR.7"
+    },
+    {
+      "Unit Topic": "Rational Functions",
+      "Lesson Number": "Alg2.RAT.3.1",
+      "Atomic Concept": "Adding and Subtracting Rational Expressions with Like Denominators",
+      "Key Skills": "Combine numerators over common denominator; Simplify",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-APR.7"
+    },
+    {
+      "Unit Topic": "Rational Functions",
+      "Lesson Number": "Alg2.RAT.3.2",
+      "Atomic Concept": "Finding the Least Common Multiple (LCM) of Polynomials",
+      "Key Skills": "Determine the LCM of polynomial expressions to find common denominators",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-APR.7"
+    },
+    {
+      "Unit Topic": "Rational Functions",
+      "Lesson Number": "Alg2.RAT.3.3",
+      "Atomic Concept": "Adding and Subtracting Rational Expressions with Unlike Denominators",
+      "Key Skills": "Find common denominator; Rewrite expressions; Combine and simplify",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-APR.7"
+    },
+    {
+      "Unit Topic": "Rational Functions",
+      "Lesson Number": "Alg2.RAT.4.1",
+      "Atomic Concept": "Identifying Vertical Asymptotes of Rational Functions",
+      "Key Skills": "Find vertical asymptotes from the denominator's zeros",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-IF.7d"
+    },
+    {
+      "Unit Topic": "Rational Functions",
+      "Lesson Number": "Alg2.RAT.4.2",
+      "Atomic Concept": "Identifying Horizontal Asymptotes of Rational Functions",
+      "Key Skills": "Determine horizontal asymptotes based on the degrees of the numerator and denominator",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-IF.7d"
+    },
+    {
+      "Unit Topic": "Rational Functions",
+      "Lesson Number": "Alg2.RAT.4.3",
+      "Atomic Concept": "Identifying Slant (Oblique) Asymptotes of Rational Functions",
+      "Key Skills": "Determine slant asymptotes using polynomial division (if applicable)",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-IF.7d"
+    },
+    {
+      "Unit Topic": "Rational Functions",
+      "Lesson Number": "Alg2.RAT.4.4",
+      "Atomic Concept": "Identifying Holes (Removable Discontinuities) in Rational Functions",
+      "Key Skills": "Find holes by identifying common factors in numerator and denominator that cancel",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-IF.7d"
+    },
+    {
+      "Unit Topic": "Rational Functions",
+      "Lesson Number": "Alg2.RAT.5.1",
+      "Atomic Concept": "Graphing Rational Functions (Synthesizing Intercepts, Asymptotes, Holes)",
+      "Key Skills": "Sketch the graph of rational functions using all identified features (intercepts, asymptotes, holes)",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-IF.7d"
+    },
+    {
+      "Unit Topic": "Rational Functions",
+      "Lesson Number": "Alg2.RAT.6.1",
+      "Atomic Concept": "Solving Rational Equations Algebraically",
+      "Key Skills": "Multiply by the LCD; Check for extraneous solutions",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-REI.2"
+    },
+    {
+      "Unit Topic": "Rational Functions",
+      "Lesson Number": "Alg2.RAT.6.2",
+      "Atomic Concept": "Solving Rational Inequalities",
+      "Key Skills": "Use graphical analysis or sign charts to solve rational inequalities",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-REI.11"
+    },
+    {
+      "Unit Topic": "Rational Functions",
+      "Lesson Number": "Alg2.RAT.7.1",
+      "Atomic Concept": "Applications of Rational Functions and Equations",
+      "Key Skills": "Model and solve real-world problems involving rational functions and equations",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-CED.1"
+    },
+    {
+      "Unit Topic": "Radical Functions & Rational Exponents",
+      "Lesson Number": "Alg2.RAD.1.1",
+      "Atomic Concept": "Understanding n-th Roots (Square Roots, Cube Roots, etc.)",
+      "Key Skills": "Define n-th roots; Evaluate numerical n-th roots",
+      "CCSS Standard": "CCSS.MATH.CONTENT.N-RN.2"
+    },
+    {
+      "Unit Topic": "Radical Functions & Rational Exponents",
+      "Lesson Number": "Alg2.RAD.1.2",
+      "Atomic Concept": "Understanding Rational Exponents (Connecting a^(m/n) to Radicals)",
+      "Key Skills": "Define rational exponents; Relate fractional exponents to roots and powers",
+      "CCSS Standard": "CCSS.MATH.CONTENT.N-RN.1"
+    },
+    {
+      "Unit Topic": "Radical Functions & Rational Exponents",
+      "Lesson Number": "Alg2.RAD.1.3",
+      "Atomic Concept": "Converting Between Radical Form and Rational Exponent Form",
+      "Key Skills": "Rewrite expressions from radical to rational exponent form and vice-versa",
+      "CCSS Standard": "CCSS.MATH.CONTENT.N-RN.1"
+    },
+    {
+      "Unit Topic": "Radical Functions & Rational Exponents",
+      "Lesson Number": "Alg2.RAD.2.1",
+      "Atomic Concept": "Simplifying Expressions with Rational Exponents (Using Exponent Properties)",
+      "Key Skills": "Apply properties of exponents (product, quotient, power rules) to expressions with rational exponents",
+      "CCSS Standard": "CCSS.MATH.CONTENT.N-RN.1"
+    },
+    {
+      "Unit Topic": "Radical Functions & Rational Exponents",
+      "Lesson Number": "Alg2.RAD.3.1",
+      "Atomic Concept": "Simplifying Radical Expressions (Higher Roots)",
+      "Key Skills": "Simplify nth-root expressions by factoring out perfect nth powers",
+      "CCSS Standard": "CCSS.MATH.CONTENT.N-RN.2"
+    },
+    {
+      "Unit Topic": "Radical Functions & Rational Exponents",
+      "Lesson Number": "Alg2.RAD.3.2",
+      "Atomic Concept": "Simplifying Radical Expressions with Variables (Higher Roots)",
+      "Key Skills": "Simplify radical expressions containing variables; Ensure all variables have lowest possible exponent",
+      "CCSS Standard": "CCSS.MATH.CONTENT.N-RN.2"
+    },
+    {
+      "Unit Topic": "Radical Functions & Rational Exponents",
+      "Lesson Number": "Alg2.RAD.4.1",
+      "Atomic Concept": "Adding and Subtracting Radical Expressions (Combining Like Radicals)",
+      "Key Skills": "Identify like radicals; Combine coefficients of like radicals",
+      "CCSS Standard": "CCSS.MATH.CONTENT.N-RN.2"
+    },
+    {
+      "Unit Topic": "Radical Functions & Rational Exponents",
+      "Lesson Number": "Alg2.RAD.5.1",
+      "Atomic Concept": "Multiplying Radical Expressions",
+      "Key Skills": "Apply distributive property; Use FOIL for binomials; Simplify resulting radicals",
+      "CCSS Standard": "CCSS.MATH.CONTENT.N-RN.2"
+    },
+    {
+      "Unit Topic": "Radical Functions & Rational Exponents",
+      "Lesson Number": "Alg2.RAD.6.1",
+      "Atomic Concept": "Dividing Radical Expressions (Rationalizing the Denominator - Monomial)",
+      "Key Skills": "Eliminate radicals from the denominator by multiplying by appropriate form of 1",
+      "CCSS Standard": "CCSS.MATH.CONTENT.N-RN.2"
+    },
+    {
+      "Unit Topic": "Radical Functions & Rational Exponents",
+      "Lesson Number": "Alg2.RAD.6.2",
+      "Atomic Concept": "Dividing Radical Expressions (Rationalizing the Denominator - Using Conjugates)",
+      "Key Skills": "Use conjugates to rationalize denominators containing binomial radical expressions",
+      "CCSS Standard": "CCSS.MATH.CONTENT.N-RN.2"
+    },
+    {
+      "Unit Topic": "Radical Functions & Rational Exponents",
+      "Lesson Number": "Alg2.RAD.7.1",
+      "Atomic Concept": "Graphing Basic Radical Functions (y = √x, y = ³√x)",
+      "Key Skills": "Create tables of values; Plot points; Sketch graphs; Identify domain and range",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-IF.7b"
+    },
+    {
+      "Unit Topic": "Radical Functions & Rational Exponents",
+      "Lesson Number": "Alg2.RAD.7.2",
+      "Atomic Concept": "Graphing Radical Functions Using Transformations",
+      "Key Skills": "Apply shifts, reflections, stretches, and compressions to basic radical graphs",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-BF.3"
+    },
+    {
+      "Unit Topic": "Radical Functions & Rational Exponents",
+      "Lesson Number": "Alg2.RAD.8.1",
+      "Atomic Concept": "Solving Radical Equations (Isolating the Radical)",
+      "Key Skills": "Isolate the radical term; Raise both sides to the appropriate power",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-REI.2"
+    },
+    {
+      "Unit Topic": "Radical Functions & Rational Exponents",
+      "Lesson Number": "Alg2.RAD.8.2",
+      "Atomic Concept": "Solving Radical Equations with Multiple Radicals or Other Terms",
+      "Key Skills": "Isolate one radical at a time; Square/cube both sides; Check for extraneous solutions",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-REI.2"
+    },
+    {
+      "Unit Topic": "Radical Functions & Rational Exponents",
+      "Lesson Number": "Alg2.RAD.8.3",
+      "Atomic Concept": "Checking for Extraneous Solutions in Radical Equations (Essential Step!)",
+      "Key Skills": "Verify all solutions in the original equation to identify and discard extraneous solutions",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-REI.2"
+    },
+    {
+      "Unit Topic": "Radical Functions & Rational Exponents",
+      "Lesson Number": "Alg2.RAD.9.1",
+      "Atomic Concept": "Applications of Radical Functions and Equations",
+      "Key Skills": "Model and solve real-world problems involving radical functions or equations",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-CED.1"
+    },
+    {
+      "Unit Topic": "Exponential & Logarithmic Fns",
+      "Lesson Number": "Alg2.EL.1.1",
+      "Atomic Concept": "Review: Properties of Exponents (Integer and Rational)",
+      "Key Skills": "Apply all exponent rules to simplify complex expressions; Understand rational exponents",
+      "CCSS Standard": "CCSS.MATH.CONTENT.N-RN.1, CCSS.MATH.CONTENT.N-RN.2"
+    },
+    {
+      "Unit Topic": "Exponential & Logarithmic Fns",
+      "Lesson Number": "Alg2.EL.2.1",
+      "Atomic Concept": "Understanding Exponential Functions (Definition, Growth vs. Decay)",
+      "Key Skills": "Identify exponential functions; Determine growth or decay based on the base",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-LE.1"
+    },
+    {
+      "Unit Topic": "Exponential & Logarithmic Fns",
+      "Lesson Number": "Alg2.EL.2.2",
+      "Atomic Concept": "Graphing Exponential Functions and their Transformations",
+      "Key Skills": "Graph y=a • b^(x-h) + k; Identify transformations (shifts, stretches, reflections)",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-IF.7e, CCSS.MATH.CONTENT.F-BF.3"
+    },
+    {
+      "Unit Topic": "Exponential & Logarithmic Fns",
+      "Lesson Number": "Alg2.EL.2.3",
+      "Atomic Concept": "Understanding the Natural Base *e* and Natural Exponential Functions (y=e^x)",
+      "Key Skills": "Define *e*; Graph exponential functions with base *e*",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-LE.4"
+    },
+    {
+      "Unit Topic": "Exponential & Logarithmic Fns",
+      "Lesson Number": "Alg2.EL.3.1",
+      "Atomic Concept": "Understanding Logarithms as Inverses of Exponential Functions",
+      "Key Skills": "Define logarithm; Relate logarithmic and exponential forms",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-LE.4"
+    },
+    {
+      "Unit Topic": "Exponential & Logarithmic Fns",
+      "Lesson Number": "Alg2.EL.3.2",
+      "Atomic Concept": "Converting Between Exponential and Logarithmic Form",
+      "Key Skills": "Rewrite equations from exponential to logarithmic form and vice-versa",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-LE.4"
+    },
+    {
+      "Unit Topic": "Exponential & Logarithmic Fns",
+      "Lesson Number": "Alg2.EL.3.3",
+      "Atomic Concept": "Evaluating Logarithms (Common, Natural, and Other Bases)",
+      "Key Skills": "Calculate logarithmic values using definition or calculator; Understand log₁₀x and ln x",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-LE.4"
+    },
+    {
+      "Unit Topic": "Exponential & Logarithmic Fns",
+      "Lesson Number": "Alg2.EL.4.1",
+      "Atomic Concept": "Properties of Logarithms: Product and Quotient Rules",
+      "Key Skills": "Apply log_b(MN) = log_b M + log_b N and log_b(M/N) = log_b M - log_b N",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-SSE.3c"
+    },
+    {
+      "Unit Topic": "Exponential & Logarithmic Fns",
+      "Lesson Number": "Alg2.EL.4.2",
+      "Atomic Concept": "Properties of Logarithms: Power Rule and Change of Base Formula",
+      "Key Skills": "Apply log_b(M^p) = p log_b M; Use log_b M = (log_c M)/(log_c b)",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-SSE.3c"
+    },
+    {
+      "Unit Topic": "Exponential & Logarithmic Fns",
+      "Lesson Number": "Alg2.EL.4.3",
+      "Atomic Concept": "Expanding and Condensing Logarithmic Expressions",
+      "Key Skills": "Rewrite single logarithms as sums/differences; Rewrite sums/differences as single logarithms",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-SSE.3c"
+    },
+    {
+      "Unit Topic": "Exponential & Logarithmic Fns",
+      "Lesson Number": "Alg2.EL.5.1",
+      "Atomic Concept": "Solving Exponential Equations (Using Common Bases)",
+      "Key Skills": "Rewrite both sides with the same base; Equate exponents and solve",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-REI.1"
+    },
+    {
+      "Unit Topic": "Exponential & Logarithmic Fns",
+      "Lesson Number": "Alg2.EL.5.2",
+      "Atomic Concept": "Solving Exponential Equations (Using Logarithms)",
+      "Key Skills": "Take the logarithm of both sides; Apply power rule to solve for variable",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-REI.1"
+    },
+    {
+      "Unit Topic": "Exponential & Logarithmic Fns",
+      "Lesson Number": "Alg2.EL.6.1",
+      "Atomic Concept": "Solving Logarithmic Equations (Using Exponentials)",
+      "Key Skills": "Convert to exponential form; Solve; Check for extraneous solutions",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-REI.1"
+    },
+    {
+      "Unit Topic": "Exponential & Logarithmic Fns",
+      "Lesson Number": "Alg2.EL.6.2",
+      "Atomic Concept": "Solving Logarithmic Equations (Using Properties of Logarithms)",
+      "Key Skills": "Condense logarithmic expressions; Solve; Check for extraneous solutions",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-REI.1"
+    },
+    {
+      "Unit Topic": "Exponential & Logarithmic Fns",
+      "Lesson Number": "Alg2.EL.7.1",
+      "Atomic Concept": "Graphing Logarithmic Functions and their Transformations",
+      "Key Skills": "Graph y=log_b(x-h) + k; Identify asymptotes, domain, range, and transformations",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-IF.7e, CCSS.MATH.CONTENT.F-BF.3"
+    },
+    {
+      "Unit Topic": "Exponential & Logarithmic Fns",
+      "Lesson Number": "Alg2.EL.8.1",
+      "Atomic Concept": "Modeling Real-World Problems with Exponential Growth and Decay",
+      "Key Skills": "Apply exponential functions to compound interest, population growth, radioactive decay",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-CED.1, CCSS.MATH.CONTENT.F-LE.4"
+    },
+    {
+      "Unit Topic": "Exponential & Logarithmic Fns",
+      "Lesson Number": "Alg2.EL.8.2",
+      "Atomic Concept": "Modeling Real-World Problems with Logarithmic Functions",
+      "Key Skills": "Use logarithmic models to solve problems (e.g., pH, Richter scale, decibels)",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-CED.1, CCSS.MATH.CONTENT.F-LE.4"
+    },
+    {
+      "Unit Topic": "Sequences & Series",
+      "Lesson Number": "Alg2.SEQ.1.1",
+      "Atomic Concept": "Understanding Sequences (Introduction, Terms, Notation)",
+      "Key Skills": "Define sequence; Identify terms; Use sequence notation",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-IF.3"
+    },
+    {
+      "Unit Topic": "Sequences & Series",
+      "Lesson Number": "Alg2.SEQ.1.2",
+      "Atomic Concept": "Identifying Patterns in Sequences",
+      "Key Skills": "Determine rules for patterns in sequences; Extend sequences",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-IF.3"
+    },
+    {
+      "Unit Topic": "Sequences & Series",
+      "Lesson Number": "Alg2.SEQ.2.1",
+      "Atomic Concept": "Identifying Arithmetic Sequences",
+      "Key Skills": "Recognize arithmetic sequences; Find the common difference",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-BF.2"
+    },
+    {
+      "Unit Topic": "Sequences & Series",
+      "Lesson Number": "Alg2.SEQ.2.2",
+      "Atomic Concept": "Finding the nth Term of an Arithmetic Sequence (Explicit Formula)",
+      "Key Skills": "Write explicit formulas for arithmetic sequences; Find any term",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-BF.2"
+    },
+    {
+      "Unit Topic": "Sequences & Series",
+      "Lesson Number": "Alg2.SEQ.2.3",
+      "Atomic Concept": "Writing Recursive Formulas for Arithmetic Sequences",
+      "Key Skills": "Write recursive rules for arithmetic sequences",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-BF.2"
+    },
+    {
+      "Unit Topic": "Sequences & Series",
+      "Lesson Number": "Alg2.SEQ.3.1",
+      "Atomic Concept": "Understanding Arithmetic Series (Sum of an Arithmetic Sequence)",
+      "Key Skills": "Define series; Use sum notation for arithmetic series",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-SSE.4"
+    },
+    {
+      "Unit Topic": "Sequences & Series",
+      "Lesson Number": "Alg2.SEQ.3.2",
+      "Atomic Concept": "Finding the Sum of a Finite Arithmetic Series",
+      "Key Skills": "Apply formulas for the sum of a finite arithmetic series",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-SSE.4"
+    },
+    {
+      "Unit Topic": "Sequences & Series",
+      "Lesson Number": "Alg2.SEQ.4.1",
+      "Atomic Concept": "Identifying Geometric Sequences",
+      "Key Skills": "Recognize geometric sequences; Find the common ratio",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-BF.2"
+    },
+    {
+      "Unit Topic": "Sequences & Series",
+      "Lesson Number": "Alg2.SEQ.4.2",
+      "Atomic Concept": "Finding the nth Term of a Geometric Sequence (Explicit Formula)",
+      "Key Skills": "Write explicit formulas for geometric sequences; Find any term",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-BF.2"
+    },
+    {
+      "Unit Topic": "Sequences & Series",
+      "Lesson Number": "Alg2.SEQ.4.3",
+      "Atomic Concept": "Writing Recursive Formulas for Geometric Sequences",
+      "Key Skills": "Write recursive rules for geometric sequences",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-BF.2"
+    },
+    {
+      "Unit Topic": "Sequences & Series",
+      "Lesson Number": "Alg2.SEQ.5.1",
+      "Atomic Concept": "Understanding Geometric Series (Sum of a Geometric Sequence)",
+      "Key Skills": "Define series; Use sum notation for geometric series",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-SSE.4"
+    },
+    {
+      "Unit Topic": "Sequences & Series",
+      "Lesson Number": "Alg2.SEQ.5.2",
+      "Atomic Concept": "Finding the Sum of a Finite Geometric Series",
+      "Key Skills": "Apply formulas for the sum of a finite geometric series",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-SSE.4"
+    },
+    {
+      "Unit Topic": "Sequences & Series",
+      "Lesson Number": "Alg2.SEQ.6.1",
+      "Atomic Concept": "Understanding Infinite Geometric Series",
+      "Key Skills": "Define infinite geometric series; Determine convergence or divergence",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-SSE.4"
+    },
+    {
+      "Unit Topic": "Sequences & Series",
+      "Lesson Number": "Alg2.SEQ.6.2",
+      "Atomic Concept": "Finding the Sum of an Infinite Geometric Series",
+      "Key Skills": "Apply the formula for the sum of an infinite geometric series (when it converges)",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-SSE.4"
+    },
+    {
+      "Unit Topic": "Sequences & Series",
+      "Lesson Number": "Alg2.SEQ.7.1",
+      "Atomic Concept": "Understanding Summation Notation (Sigma Notation)",
+      "Key Skills": "Read and write expressions using sigma notation",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-SSE.4"
+    },
+    {
+      "Unit Topic": "Sequences & Series",
+      "Lesson Number": "Alg2.SEQ.7.2",
+      "Atomic Concept": "Evaluating Sums Written in Summation Notation",
+      "Key Skills": "Calculate sums expressed in sigma notation",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-SSE.4"
+    },
+    {
+      "Unit Topic": "Sequences & Series",
+      "Lesson Number": "Alg2.SEQ.8.1",
+      "Atomic Concept": "Applications of Arithmetic and Geometric Sequences and Series",
+      "Key Skills": "Solve real-world problems involving linear and exponential growth/decay models using sequences and series",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-CED.1"
+    },
+    {
+      "Unit Topic": "Sequences & Series",
+      "Lesson Number": "Alg2.SEQ.8.2",
+      "Atomic Concept": "Comparing Arithmetic and Geometric Sequences and Series",
+      "Key Skills": "Analyze growth patterns; Differentiate between arithmetic and geometric models in context",
+      "CCSS Standard": "CCSS.MATH.CONTENT.F-LE.2"
+    },
+    {
+      "Unit Topic": "Probability & Statistics",
+      "Lesson Number": "Alg2.PS.1.1",
+      "Atomic Concept": "Review: Basic Probability Concepts (Theoretical vs. Experimental, Sample Space)",
+      "Key Skills": "Define probability; Identify sample space and events; Calculate simple probabilities",
+      "CCSS Standard": "CCSS.MATH.CONTENT.S-CP.1"
+    },
+    {
+      "Unit Topic": "Probability & Statistics",
+      "Lesson Number": "Alg2.PS.1.2",
+      "Atomic Concept": "Understanding Events: Independent vs. Dependent",
+      "Key Skills": "Differentiate between independent and dependent events",
+      "CCSS Standard": "CCSS.MATH.CONTENT.S-CP.2"
+    },
+    {
+      "Unit Topic": "Probability & Statistics",
+      "Lesson Number": "Alg2.PS.1.3",
+      "Atomic Concept": "Understanding Events: Mutually Exclusive vs. Inclusive",
+      "Key Skills": "Differentiate between mutually exclusive and inclusive events; Use Venn diagrams",
+      "CCSS Standard": "CCSS.MATH.CONTENT.S-CP.1"
+    },
+    {
+      "Unit Topic": "Probability & Statistics",
+      "Lesson Number": "Alg2.PS.2.1",
+      "Atomic Concept": "Understanding and Calculating Conditional Probability",
+      "Key Skills": "Define conditional probability; Calculate P(A|B)",
+      "CCSS Standard": "CCSS.MATH.CONTENT.S-CP.3, CCSS.MATH.CONTENT.S-CP.5"
+    },
+    {
+      "Unit Topic": "Probability & Statistics",
+      "Lesson Number": "Alg2.PS.2.2",
+      "Atomic Concept": "Using Two-Way Frequency Tables to Calculate Conditional Probability",
+      "Key Skills": "Extract data from tables to compute conditional probabilities",
+      "CCSS Standard": "CCSS.MATH.CONTENT.S-CP.4"
+    },
+    {
+      "Unit Topic": "Probability & Statistics",
+      "Lesson Number": "Alg2.PS.2.3",
+      "Atomic Concept": "Recognizing and Explaining Independence in Context (using conditional probability)",
+      "Key Skills": "Determine if events are independent based on P(A|B) = P(A)",
+      "CCSS Standard": "CCSS.MATH.CONTENT.S-CP.5"
+    },
+    {
+      "Unit Topic": "Probability & Statistics",
+      "Lesson Number": "Alg2.PS.3.1",
+      "Atomic Concept": "Applying the Multiplication Rule for Probability (Independent Events)",
+      "Key Skills": "Calculate P(A and B) for independent events",
+      "CCSS Standard": "CCSS.MATH.CONTENT.S-CP.2"
+    },
+    {
+      "Unit Topic": "Probability & Statistics",
+      "Lesson Number": "Alg2.PS.3.2",
+      "Atomic Concept": "Applying the Multiplication Rule for Probability (Dependent Events)",
+      "Key Skills": "Calculate P(A and B) for dependent events using P(A and B) = P(A) • P(B|A)",
+      "CCSS Standard": "CCSS.MATH.CONTENT.S-CP.2"
+    },
+    {
+      "Unit Topic": "Probability & Statistics",
+      "Lesson Number": "Alg2.PS.4.1",
+      "Atomic Concept": "Applying the Addition Rule for Probability (Mutually Exclusive Events)",
+      "Key Skills": "Calculate P(A or B) for mutually exclusive events (P(A)+P(B))",
+      "CCSS Standard": "CCSS.MATH.CONTENT.S-CP.7"
+    },
+    {
+      "Unit Topic": "Probability & Statistics",
+      "Lesson Number": "Alg2.PS.4.2",
+      "Atomic Concept": "Applying the Addition Rule for Probability (Inclusive Events)",
+      "Key Skills": "Calculate P(A or B) for inclusive events (P(A)+P(B)-P(A and B))",
+      "CCSS Standard": "CCSS.MATH.CONTENT.S-CP.7"
+    },
+    {
+      "Unit Topic": "Probability & Statistics",
+      "Lesson Number": "Alg2.PS.5.1",
+      "Atomic Concept": "Understanding the Fundamental Counting Principle",
+      "Key Skills": "Use the principle to find the number of possible outcomes",
+      "CCSS Standard": "CCSS.MATH.CONTENT.S-CP.9"
+    },
+    {
+      "Unit Topic": "Probability & Statistics",
+      "Lesson Number": "Alg2.PS.5.2",
+      "Atomic Concept": "Understanding Permutations (Order Matters)",
+      "Key Skills": "Use permutation formula and notation; Solve problems involving ordered arrangements",
+      "CCSS Standard": "CCSS.MATH.CONTENT.S-CP.9"
+    },
+    {
+      "Unit Topic": "Probability & Statistics",
+      "Lesson Number": "Alg2.PS.5.3",
+      "Atomic Concept": "Understanding and Calculating Combinations (Order Does Not Matter)",
+      "Key Skills": "Use combination formula and notation; Solve problems involving unordered selections",
+      "CCSS Standard": "CCSS.MATH.CONTENT.S-CP.9"
+    },
+    {
+      "Unit Topic": "Probability & Statistics",
+      "Lesson Number": "Alg2.PS.5.4",
+      "Atomic Concept": "Using Counting Principles in Probability Calculations",
+      "Key Skills": "Apply permutations and combinations to find probabilities of complex events",
+      "CCSS Standard": "CCSS.MATH.CONTENT.S-CP.9"
+    },
+    {
+      "Unit Topic": "Probability & Statistics",
+      "Lesson Number": "Alg2.PS.6.1",
+      "Atomic Concept": "Introduction to Probability Distributions (Discrete)",
+      "Key Skills": "Define a discrete probability distribution; Construct and interpret probability distribution tables",
+      "CCSS Standard": "CCSS.MATH.CONTENT.S-MD.1"
+    },
+    {
+      "Unit Topic": "Probability & Statistics",
+      "Lesson Number": "Alg2.PS.6.2",
+      "Atomic Concept": "Understanding Binomial Probability Distributions",
+      "Key Skills": "Identify binomial situations; Calculate binomial probabilities (using formula or technology)",
+      "CCSS Standard": "CCSS.MATH.CONTENT.S-MD.6"
+    },
+    {
+      "Unit Topic": "Probability & Statistics",
+      "Lesson Number": "Alg2.PS.7.1",
+      "Atomic Concept": "Understanding the Normal Distribution (Properties and Empirical Rule)",
+      "Key Skills": "Describe characteristics of a normal distribution (bell-shaped, symmetric); Apply the Empirical Rule (68-95-99.7 rule)",
+      "CCSS Standard": "CCSS.MATH.CONTENT.S-ID.4"
+    },
+    {
+      "Unit Topic": "Probability & Statistics",
+      "Lesson Number": "Alg2.PS.7.2",
+      "Atomic Concept": "Understanding Z-scores and Standardizing Data",
+      "Key Skills": "Calculate z-scores; Interpret z-scores in context; Compare values from different normal distributions",
+      "CCSS Standard": "CCSS.MATH.CONTENT.S-ID.4"
+    },
+    {
+      "Unit Topic": "Probability & Statistics",
+      "Lesson Number": "Alg2.PS.8.1",
+      "Atomic Concept": "Introduction to Sampling Distributions (Conceptual)",
+      "Key Skills": "Understand the concept of a sampling distribution; Relate to population parameter",
+      "CCSS Standard": "CCSS.MATH.CONTENT.S-IC.4"
+    },
+    {
+      "Unit Topic": "Probability & Statistics",
+      "Lesson Number": "Alg2.PS.8.2",
+      "Atomic Concept": "Evaluating Statistical Claims and Data-Based Conclusions",
+      "Key Skills": "Critically evaluate the validity of conclusions drawn from data; Identify potential biases",
+      "CCSS Standard": "CCSS.MATH.CONTENT.S-IC.6"
+    },
+    {
+      "Unit Topic": "Conic Sections",
+      "Lesson Number": "Alg2.CONIC.1.1",
+      "Atomic Concept": "Introduction to Conic Sections (Geometric Formation)",
+      "Key Skills": "Understand how cones and planes intersect to form parabolas, circles, ellipses, and hyperbolas",
+      "CCSS Standard": "CCSS.MATH.CONTENT.HSG.GPE.B.1-3"
+    },
+    {
+      "Unit Topic": "Conic Sections",
+      "Lesson Number": "Alg2.CONIC.1.2",
+      "Atomic Concept": "Review: Distance Formula and Midpoint Formula",
+      "Key Skills": "Apply distance formula to find lengths; Apply midpoint formula to find midpoints",
+      "CCSS Standard": "CCSS.MATH.CONTENT.HSG.GPE.B.4-7"
+    },
+    {
+      "Unit Topic": "Conic Sections",
+      "Lesson Number": "Alg2.CONIC.2.1",
+      "Atomic Concept": "Understanding the Definition of a Circle",
+      "Key Skills": "Define a circle based on its center and radius",
+      "CCSS Standard": "CCSS.MATH.CONTENT.G-GPE.1"
+    },
+    {
+      "Unit Topic": "Conic Sections",
+      "Lesson Number": "Alg2.CONIC.2.2",
+      "Atomic Concept": "Writing and Graphing Equations of Circles (Standard Form, center at origin)",
+      "Key Skills": "Write equation given center (0,0) and radius; Graph circles centered at origin",
+      "CCSS Standard": "CCSS.MATH.CONTENT.G-GPE.1"
+    },
+    {
+      "Unit Topic": "Conic Sections",
+      "Lesson Number": "Alg2.CONIC.2.3",
+      "Atomic Concept": "Writing and Graphing Equations of Circles (Standard Form, center (h, k))",
+      "Key Skills": "Write equation given center (h,k) and radius; Graph circles not centered at origin",
+      "CCSS Standard": "CCSS.MATH.CONTENT.G-GPE.1"
+    },
+    {
+      "Unit Topic": "Conic Sections",
+      "Lesson Number": "Alg2.CONIC.2.4",
+      "Atomic Concept": "Converting the Equation of a Circle from General Form to Standard Form",
+      "Key Skills": "Use completing the square to rewrite general form into standard form",
+      "CCSS Standard": "CCSS.MATH.CONTENT.G-GPE.1"
+    },
+    {
+      "Unit Topic": "Conic Sections",
+      "Lesson Number": "Alg2.CONIC.3.1",
+      "Atomic Concept": "Understanding the Definition of a Parabola (Focus and Directrix)",
+      "Key Skills": "Define a parabola as a set of points equidistant from a focus and directrix",
+      "CCSS Standard": "CCSS.MATH.CONTENT.G-GPE.2"
+    },
+    {
+      "Unit Topic": "Conic Sections",
+      "Lesson Number": "Alg2.CONIC.3.2",
+      "Atomic Concept": "Writing and Graphing Equations of Parabolas (Vertex Form, vertical axis)",
+      "Key Skills": "Write and graph parabolas in the form y = a(x-h)² + k; Identify vertex, axis of symmetry",
+      "CCSS Standard": "CCSS.MATH.CONTENT.G-GPE.2"
+    },
+    {
+      "Unit Topic": "Conic Sections",
+      "Lesson Number": "Alg2.CONIC.3.3",
+      "Atomic Concept": "Writing and Graphing Equations of Parabolas (Vertex Form, horizontal axis)",
+      "Key Skills": "Write and graph parabolas in the form x = a(y-k)² + h; Identify vertex, axis of symmetry",
+      "CCSS Standard": "CCSS.MATH.CONTENT.G-GPE.2"
+    },
+    {
+      "Unit Topic": "Conic Sections",
+      "Lesson Number": "Alg2.CONIC.3.4",
+      "Atomic Concept": "Identifying Vertex, Focus, and Directrix of Parabolas",
+      "Key Skills": "Find coordinates of vertex, focus, and equation of directrix",
+      "CCSS Standard": "CCSS.MATH.CONTENT.G-GPE.2"
+    },
+    {
+      "Unit Topic": "Conic Sections",
+      "Lesson Number": "Alg2.CONIC.4.1",
+      "Atomic Concept": "Understanding the Definition of an Ellipse",
+      "Key Skills": "Define an ellipse as the set of all points where the sum of distances to two foci is constant",
+      "CCSS Standard": "CCSS.MATH.CONTENT.G-GPE.3"
+    },
+    {
+      "Unit Topic": "Conic Sections",
+      "Lesson Number": "Alg2.CONIC.4.2",
+      "Atomic Concept": "Writing and Graphing Equations of Ellipses (Standard Form, center at origin)",
+      "Key Skills": "Write equation given axes lengths; Graph ellipses centered at origin",
+      "CCSS Standard": "CCSS.MATH.CONTENT.G-GPE.3"
+    },
+    {
+      "Unit Topic": "Conic Sections",
+      "Lesson Number": "Alg2.CONIC.4.3",
+      "Atomic Concept": "Identifying Center, Vertices, Co-vertices, and Foci of Ellipses (center at origin)",
+      "Key Skills": "Find these key features from the equation of an ellipse",
+      "CCSS Standard": "CCSS.MATH.CONTENT.G-GPE.3"
+    },
+    {
+      "Unit Topic": "Conic Sections",
+      "Lesson Number": "Alg2.CONIC.5.1",
+      "Atomic Concept": "Understanding the Definition of a Hyperbola",
+      "Key Skills": "Define a hyperbola as the set of all points where the difference of distances to two foci is constant",
+      "CCSS Standard": "CCSS.MATH.CONTENT.G-GPE.3"
+    },
+    {
+      "Unit Topic": "Conic Sections",
+      "Lesson Number": "Alg2.CONIC.5.2",
+      "Atomic Concept": "Writing and Graphing Equations of Hyperbolas (Standard Form, center at origin)",
+      "Key Skills": "Write equation given transverse/conjugate axes; Graph hyperbolas centered at origin",
+      "CCSS Standard": "CCSS.MATH.CONTENT.G-GPE.3"
+    },
+    {
+      "Unit Topic": "Conic Sections",
+      "Lesson Number": "Alg2.CONIC.5.3",
+      "Atomic Concept": "Identifying Center, Vertices, Foci, and Asymptotes of Hyperbolas (center at origin)",
+      "Key Skills": "Find these key features and equations of asymptotes from the equation of a hyperbola",
+      "CCSS Standard": "CCSS.MATH.CONTENT.G-GPE.3"
+    },
+    {
+      "Unit Topic": "Conic Sections",
+      "Lesson Number": "Alg2.CONIC.6.1",
+      "Atomic Concept": "Translating Conic Sections (Equations when center is not at the origin)",
+      "Key Skills": "Apply (x-h) and (y-k) transformations to general conic equations",
+      "CCSS Standard": "CCSS.MATH.CONTENT.G-GPE.1, CCSS.MATH.CONTENT.G-GPE.2, CCSS.MATH.CONTENT.G-GPE.3"
+    },
+    {
+      "Unit Topic": "Conic Sections",
+      "Lesson Number": "Alg2.CONIC.7.1",
+      "Atomic Concept": "Classifying Conic Sections from their General Form Equations",
+      "Key Skills": "Identify the type of conic section (circle, parabola, ellipse, hyperbola) from its general quadratic equation",
+      "CCSS Standard": null
+    },
+    {
+      "Unit Topic": "Conic Sections",
+      "Lesson Number": "Alg2.CONIC.8.1",
+      "Atomic Concept": "Solving Systems of Nonlinear Equations (Conics and Lines)",
+      "Key Skills": "Solve systems algebraically or graphically where one equation is linear and one is a conic",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-REI.7"
+    },
+    {
+      "Unit Topic": "Conic Sections",
+      "Lesson Number": "Alg2.CONIC.8.2",
+      "Atomic Concept": "Solving Systems of Nonlinear Equations (Two Conics)",
+      "Key Skills": "Solve systems algebraically or graphically involving two conic sections",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-REI.7"
+    },
+    {
+      "Unit Topic": "Matrices",
+      "Lesson Number": "Alg2.MAT.1.1",
+      "Atomic Concept": "Introduction to Matrices (Definition, Dimensions, Elements)",
+      "Key Skills": "Define a matrix; Identify its dimensions and individual elements; Understand various types of matrices (row, column, square, zero)",
+      "CCSS Standard": "CCSS.MATH.CONTENT.N-VM.6"
+    },
+    {
+      "Unit Topic": "Matrices",
+      "Lesson Number": "Alg2.MAT.2.1",
+      "Atomic Concept": "Adding and Subtracting Matrices",
+      "Key Skills": "Perform addition and subtraction of matrices; Understand the requirement for same dimensions",
+      "CCSS Standard": "CCSS.MATH.CONTENT.N-VM.8"
+    },
+    {
+      "Unit Topic": "Matrices",
+      "Lesson Number": "Alg2.MAT.2.2",
+      "Atomic Concept": "Performing Scalar Multiplication with Matrices",
+      "Key Skills": "Multiply a matrix by a scalar; Understand how each element is affected",
+      "CCSS Standard": "CCSS.MATH.CONTENT.N-VM.8"
+    },
+    {
+      "Unit Topic": "Matrices",
+      "Lesson Number": "Alg2.MAT.3.1",
+      "Atomic Concept": "Understanding Matrix Multiplication (Conditions for Multiplying)",
+      "Key Skills": "Determine if two matrices can be multiplied based on their dimensions",
+      "CCSS Standard": "CCSS.MATH.CONTENT.N-VM.8"
+    },
+    {
+      "Unit Topic": "Matrices",
+      "Lesson Number": "Alg2.MAT.3.2",
+      "Atomic Concept": "Performing Matrix Multiplication (Calculating the Product)",
+      "Key Skills": "Calculate the product of two matrices",
+      "CCSS Standard": "CCSS.MATH.CONTENT.N-VM.8"
+    },
+    {
+      "Unit Topic": "Matrices",
+      "Lesson Number": "Alg2.MAT.4.1",
+      "Atomic Concept": "Understanding the Identity Matrix",
+      "Key Skills": "Define the identity matrix (I); Understand its role in matrix multiplication",
+      "CCSS Standard": "CCSS.MATH.CONTENT.N-VM.6"
+    },
+    {
+      "Unit Topic": "Matrices",
+      "Lesson Number": "Alg2.MAT.4.2",
+      "Atomic Concept": "Understanding the Determinant of a 2x2 Matrix",
+      "Key Skills": "Calculate the determinant of a 2x2 matrix",
+      "CCSS Standard": "CCSS.MATH.CONTENT.N-VM.10"
+    },
+    {
+      "Unit Topic": "Matrices",
+      "Lesson Number": "Alg2.MAT.4.3",
+      "Atomic Concept": "Understanding the Determinant of a 3x3 Matrix (Optional/Advanced)",
+      "Key Skills": "Calculate the determinant of a 3x3 matrix using minors and cofactors or Sarrus' Rule",
+      "CCSS Standard": "CCSS.MATH.CONTENT.N-VM.10"
+    },
+    {
+      "Unit Topic": "Matrices",
+      "Lesson Number": "Alg2.MAT.5.1",
+      "Atomic Concept": "Understanding the Inverse of a Matrix",
+      "Key Skills": "Define the inverse of a matrix (A⁻¹); Understand that A • A⁻¹ = I",
+      "CCSS Standard": "CCSS.MATH.CONTENT.N-VM.10"
+    },
+    {
+      "Unit Topic": "Matrices",
+      "Lesson Number": "Alg2.MAT.5.2",
+      "Atomic Concept": "Finding the Inverse of a 2x2 Matrix",
+      "Key Skills": "Calculate the inverse of a 2x2 matrix using its formula",
+      "CCSS Standard": "CCSS.MATH.CONTENT.N-VM.10"
+    },
+    {
+      "Unit Topic": "Matrices",
+      "Lesson Number": "Alg2.MAT.6.1",
+      "Atomic Concept": "Writing Systems of Linear Equations as Matrix Equations (AX=B)",
+      "Key Skills": "Convert a system of linear equations into a matrix equation",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-REI.8"
+    },
+    {
+      "Unit Topic": "Matrices",
+      "Lesson Number": "Alg2.MAT.6.2",
+      "Atomic Concept": "Solving Systems of Linear Equations Using Inverse Matrices",
+      "Key Skills": "Use the inverse of the coefficient matrix to solve a system of linear equations",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-REI.8"
+    },
+    {
+      "Unit Topic": "Matrices",
+      "Lesson Number": "Alg2.MAT.7.1",
+      "Atomic Concept": "Using Cramer's Rule to Solve Systems (Using Determinants - Optional/Advanced)",
+      "Key Skills": "Apply Cramer's Rule to solve systems of linear equations using determinants",
+      "CCSS Standard": "CCSS.MATH.CONTENT.A-REI.9"
+    },
+    {
+      "Unit Topic": "Matrices",
+      "Lesson Number": "Alg2.MAT.8.1",
+      "Atomic Concept": "Introduction to Using Matrices for Geometric Transformations",
+      "Key Skills": "Represent basic geometric transformations (e.g., dilations, rotations) using matrices",
+      "CCSS Standard": "CCSS.MATH.CONTENT.N-VM.12"
+    }
+  ]

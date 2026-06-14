@@ -1,0 +1,487 @@
+{
+  "courseTitle": "NC 7th Grade Math",
+  "units": [
+    {
+      "unitTopic": "The Number System",
+      "concepts": [
+        {
+          "lessonNumber": "M7.NS.1.1",
+          "atomicConcept": "Understanding Addition of Rational Numbers (Meaning and Properties)",
+          "keySkills": [
+            "Understand addition of rational numbers as movement on a number line",
+            "Use models like chips or number lines to show sums"
+          ],
+          "standard": "NC.7.NS.A.1"
+        },
+        {
+          "lessonNumber": "M7.NS.1.2",
+          "atomicConcept": "Adding Rational Numbers (Integers and Fractions/Decimals)",
+          "keySkills": [
+            "Add integers using rules",
+            "Add rational numbers (fractions and decimals) fluently"
+          ],
+          "standard": "NC.7.NS.A.1, NC.7.NS.A.3"
+        },
+        {
+          "lessonNumber": "M7.NS.1.3",
+          "atomicConcept": "Understanding Subtraction of Rational Numbers (Meaning and Properties)",
+          "keySkills": [
+            "Understand subtraction as adding the additive inverse (e.g., p-q = p+(-q))",
+            "Interpret differences as distances on a number line"
+          ],
+          "standard": "NC.7.NS.A.1"
+        },
+        {
+          "lessonNumber": "M7.NS.1.4",
+          "atomicConcept": "Subtracting Rational Numbers (Integers and Fractions/Decimals)",
+          "keySkills": [
+            "Subtract integers using rules",
+            "Subtract rational numbers (fractions and decimals) fluently"
+          ],
+          "standard": "NC.7.NS.A.1, NC.7.NS.A.3"
+        },
+        {
+          "lessonNumber": "M7.NS.2.1",
+          "atomicConcept": "Understanding Multiplication of Rational Numbers (Meaning and Properties)",
+          "keySkills": [
+            "Understand multiplication of rational numbers as repeated addition or scaling",
+            "Use rules for signs"
+          ],
+          "standard": "NC.7.NS.A.2"
+        },
+        {
+          "lessonNumber": "M7.NS.2.2",
+          "atomicConcept": "Multiplying Rational Numbers (Integers and Fractions/Decimals)",
+          "keySkills": [
+            "Multiply integers using rules",
+            "Multiply rational numbers (fractions and decimals) fluently"
+          ],
+          "standard": "NC.7.NS.A.2, NC.7.NS.A.3"
+        },
+        {
+          "lessonNumber": "M7.NS.2.3",
+          "atomicConcept": "Understanding Division of Rational Numbers (Meaning and Properties)",
+          "keySkills": [
+            "Understand division as the inverse of multiplication",
+            "Use rules for signs",
+            "Understand division by zero is undefined"
+          ],
+          "standard": "NC.7.NS.A.2"
+        },
+        {
+          "lessonNumber": "M7.NS.2.4",
+          "atomicConcept": "Dividing Rational Numbers (Integers and Fractions/Decimals)",
+          "keySkills": [
+            "Divide integers using rules",
+            "Divide rational numbers (fractions and decimals) fluently"
+          ],
+          "standard": "NC.7.NS.A.2, NC.7.NS.A.3"
+        },
+        {
+          "lessonNumber": "M7.NS.3.1",
+          "atomicConcept": "Converting Rational Numbers to Decimals (Terminating and Repeating)",
+          "keySkills": [
+            "Convert a rational number to a decimal using long division, recognizing that the decimal terminates or repeats"
+          ],
+          "standard": "NC.7.NS.A.2d"
+        },
+        {
+          "lessonNumber": "M7.NS.4.1",
+          "atomicConcept": "Solving Real-World Problems Involving All Four Operations with Rational Numbers",
+          "keySkills": [
+            "Apply addition, subtraction, multiplication, and division of rational numbers to solve real-world problems. For example, \"A runner's distance in a race changes by -3.5 miles, then by +2.1 miles. What's the net change?\""
+          ],
+          "standard": "NC.7.NS.A.3"
+        }
+      ]
+    },
+    {
+      "unitTopic": "Ratio & Proportional Relationships",
+      "concepts": [
+        {
+          "lessonNumber": "M7.RP.1.1",
+          "atomicConcept": "Recognizing Proportional Relationships in Tables and Graphs",
+          "keySkills": [
+            "Identify if a relationship is proportional by checking for equivalent ratios in tables or a straight line through the origin on a graph"
+          ],
+          "standard": "NC.7.RP.A.2"
+        },
+        {
+          "lessonNumber": "M7.RP.1.2",
+          "atomicConcept": "Identifying the Constant of Proportionality (from tables, graphs, equations)",
+          "keySkills": [
+            "Find the constant of proportionality (k = y/x) from given proportional relationships"
+          ],
+          "standard": "NC.7.RP.A.2b"
+        },
+        {
+          "lessonNumber": "M7.RP.1.3",
+          "atomicConcept": "Writing Equations for Proportional Relationships",
+          "keySkills": [
+            "Formulate equations of the form y = kx to represent proportional relationships"
+          ],
+          "standard": "NC.7.RP.A.2c"
+        },
+        {
+          "lessonNumber": "M7.RP.1.4",
+          "atomicConcept": "Explaining What a Point on the Graph of a Proportional Relationship Means",
+          "keySkills": [
+            "Interpret the meaning of points (x, y), especially (0,0) and (1,r), on the graph of a proportional relationship in context"
+          ],
+          "standard": "NC.7.RP.A.2d"
+        },
+        {
+          "lessonNumber": "M7.RP.2.1",
+          "atomicConcept": "Using Proportional Relationships to Solve Real-World Problems",
+          "keySkills": [
+            "Apply tables, graphs, equations, diagrams, and verbal descriptions to solve problems involving proportional relationships"
+          ],
+          "standard": "NC.7.RP.A.2a"
+        },
+        {
+          "lessonNumber": "M7.RP.3.1",
+          "atomicConcept": "Solving Multi-Step Percent Problems (Tax, Tip, Discount)",
+          "keySkills": [
+            "Calculate sales tax, tips, and discounts",
+            "Determine the final cost of an item after applying these percentages"
+          ],
+          "standard": "NC.7.RP.A.3"
+        },
+        {
+          "lessonNumber": "M7.RP.3.2",
+          "atomicConcept": "Solving Multi-Step Percent Problems (Markups, Markdowns, Simple Interest)",
+          "keySkills": [
+            "Calculate markups, markdowns, and simple interest",
+            "Understand the role of principal, rate, and time"
+          ],
+          "standard": "NC.7.RP.A.3"
+        },
+        {
+          "lessonNumber": "M7.RP.3.3",
+          "atomicConcept": "Solving Multi-Step Percent Problems (Percent Increase/Decrease)",
+          "keySkills": [
+            "Compute percent increase or decrease in quantities",
+            "Solve problems involving these concepts"
+          ],
+          "standard": "NC.7.RP.A.3"
+        },
+        {
+          "lessonNumber": "M7.RP.3.4",
+          "atomicConcept": "Converting Between Fractions, Decimals, and Percentages",
+          "keySkills": [
+            "Convert between fraction, decimal, and percent forms of numbers"
+          ],
+          "standard": "NC.7.RP.A.3c"
+        },
+        {
+          "lessonNumber": "M7.RP.4.1",
+          "atomicConcept": "Understanding and Constructing Scale Drawings",
+          "keySkills": [
+            "Draw geometric figures to scale",
+            "Understand scale factor",
+            "Calculate actual lengths and areas from scale drawings"
+          ],
+          "standard": "NC.7.G.A.1"
+        },
+        {
+          "lessonNumber": "M7.RP.4.2",
+          "atomicConcept": "Computing Actual Lengths and Areas from Scale Drawings",
+          "keySkills": [
+            "Use scale factor to find the actual dimensions and areas of figures represented by scale drawings"
+          ],
+          "standard": "NC.7.G.A.1"
+        }
+      ]
+    },
+    {
+      "unitTopic": "Expressions & Equations",
+      "concepts": [
+        {
+          "lessonNumber": "M7.EE.1.1",
+          "atomicConcept": "Applying Properties of Operations to Add and Subtract Linear Expressions",
+          "keySkills": [
+            "Add and subtract linear expressions with rational coefficients (e.g., -(x+7) + 5x or ½(4x-2))"
+          ],
+          "standard": "NC.7.EE.A.1"
+        },
+        {
+          "lessonNumber": "M7.EE.1.2",
+          "atomicConcept": "Applying Properties of Operations to Factor Linear Expressions",
+          "keySkills": [
+            "Factor linear expressions with rational coefficients (e.g., 2x + 4 = 2(x+2))"
+          ],
+          "standard": "NC.7.EE.A.1"
+        },
+        {
+          "lessonNumber": "M7.EE.1.3",
+          "atomicConcept": "Applying Properties of Operations to Expand Linear Expressions",
+          "keySkills": [
+            "Expand linear expressions with rational coefficients (e.g., -2(x+7) = -2x-14)"
+          ],
+          "standard": "NC.7.EE.A.1"
+        },
+        {
+          "lessonNumber": "M7.EE.2.1",
+          "atomicConcept": "Solving Multi-Step Linear Equations with Rational Coefficients",
+          "keySkills": [
+            "Solve equations with positive and negative rational numbers by isolating the variable"
+          ],
+          "standard": "NC.7.EE.B.4a"
+        },
+        {
+          "lessonNumber": "M7.EE.2.2",
+          "atomicConcept": "Solving Linear Equations Involving Distributive Property and Like Terms",
+          "keySkills": [
+            "Solve equations that require using the distributive property and combining like terms"
+          ],
+          "standard": "NC.7.EE.B.4a"
+        },
+        {
+          "lessonNumber": "M7.EE.2.3",
+          "atomicConcept": "Solving Multi-Step Linear Equations to Solve Real-World Problems",
+          "keySkills": [
+            "Construct equations from word problems",
+            "Solve problems where the solutions involve rational numbers"
+          ],
+          "standard": "NC.7.EE.B.4a"
+        },
+        {
+          "lessonNumber": "M7.EE.3.1",
+          "atomicConcept": "Understanding and Solving Linear Inequalities (px+q > r)",
+          "keySkills": [
+            "Solve inequalities of the form px+q > r or px+q < r"
+          ],
+          "standard": "NC.7.EE.B.4b"
+        },
+        {
+          "lessonNumber": "M7.EE.3.2",
+          "atomicConcept": "Graphing Solutions of Linear Inequalities on a Number Line",
+          "keySkills": [
+            "Graph the solution set of an inequality (e.g., x > 2) on a number line"
+          ],
+          "standard": "NC.7.EE.B.4b"
+        },
+        {
+          "lessonNumber": "M7.EE.3.3",
+          "atomicConcept": "Solving Real-World Problems Involving Linear Inequalities",
+          "keySkills": [
+            "Construct inequalities from word problems (e.g., \"At most $15\", \"at least $12\")"
+          ],
+          "standard": "NC.7.EE.B.4b"
+        },
+        {
+          "lessonNumber": "M7.EE.4.1",
+          "atomicConcept": "Understanding the Concept of Equivalent Expressions",
+          "keySkills": [
+            "Recognize that if an expression is written in an equivalent form, it provides additional insight into the relationship between the quantities."
+          ],
+          "standard": "NC.7.EE.A.1"
+        }
+      ]
+    },
+    {
+      "unitTopic": "Geometry",
+      "concepts": [
+        {
+          "lessonNumber": "M7.GEO.1.1",
+          "atomicConcept": "Drawing Geometric Figures with Given Conditions",
+          "keySkills": [
+            "Draw geometric shapes (e.g., triangles, quadrilaterals) with given angle and side conditions (e.g., specific side lengths, angle measures, number of lines of symmetry)."
+          ],
+          "standard": "NC.7.G.A.2"
+        },
+        {
+          "lessonNumber": "M7.GEO.1.2",
+          "atomicConcept": "Constructing Geometric Figures (Triangles from Given Conditions)",
+          "keySkills": [
+            "Construct triangles given three measures of angles or sides, and determine if the conditions create a unique, ambiguous, or impossible triangle."
+          ],
+          "standard": "NC.7.G.A.2"
+        },
+        {
+          "lessonNumber": "M7.GEO.1.3",
+          "atomicConcept": "Describing Two-Dimensional Slices of Three-Dimensional Figures",
+          "keySkills": [
+            "Describe the 2-D shapes that result from slicing 3-D figures (e.g., right rectangular prisms, right rectangular pyramids) with a plane."
+          ],
+          "standard": "NC.7.G.A.3"
+        },
+        {
+          "lessonNumber": "M7.GEO.2.1",
+          "atomicConcept": "Understanding the Area of a Circle (Derivation and Formula)",
+          "keySkills": [
+            "Understand the formula for the area of a circle by relating it to the area of a parallelogram",
+            "Use the formula A = πr² to solve problems."
+          ],
+          "standard": "NC.7.G.B.4"
+        },
+        {
+          "lessonNumber": "M7.GEO.2.2",
+          "atomicConcept": "Understanding the Circumference of a Circle (Derivation and Formula)",
+          "keySkills": [
+            "Understand the formula for the circumference of a circle",
+            "Use the formula C = πd or C = 2πr to solve problems."
+          ],
+          "standard": "NC.7.G.B.4"
+        },
+        {
+          "lessonNumber": "M7.GEO.2.3",
+          "atomicConcept": "Solving Problems Involving Area and Circumference of Circles",
+          "keySkills": [
+            "Apply formulas for area and circumference to solve real-world and mathematical problems involving circles."
+          ],
+          "standard": "NC.7.G.B.4"
+        },
+        {
+          "lessonNumber": "M7.GEO.3.1",
+          "atomicConcept": "Understanding Complementary, Supplementary, and Vertical Angles",
+          "keySkills": [
+            "Define and identify complementary, supplementary, and vertical angles",
+            "Use their properties to write and solve simple equations."
+          ],
+          "standard": "NC.7.G.B.5"
+        },
+        {
+          "lessonNumber": "M7.GEO.3.2",
+          "atomicConcept": "Understanding Angles Formed by Parallel Lines and Transversals",
+          "keySkills": [
+            "Identify and apply properties of angles formed when parallel lines are cut by a transversal (e.g., alternate interior, corresponding, consecutive interior)."
+          ],
+          "standard": "NC.7.G.B.5"
+        },
+        {
+          "lessonNumber": "M7.GEO.4.1",
+          "atomicConcept": "Finding Area of Composite Figures (Decomposition)",
+          "keySkills": [
+            "Find the area of complex shapes by decomposing them into triangles, quadrilaterals, and circles."
+          ],
+          "standard": "NC.7.G.B.6"
+        },
+        {
+          "lessonNumber": "M7.GEO.4.2",
+          "atomicConcept": "Solving Problems Involving Area of Two-Dimensional Objects",
+          "keySkills": [
+            "Solve real-world and mathematical problems involving the area of two-dimensional objects composed of triangles, quadrilaterals, and polygons."
+          ],
+          "standard": "NC.7.G.B.6"
+        },
+        {
+          "lessonNumber": "M7.GEO.4.3",
+          "atomicConcept": "Solving Problems Involving Volume of Three-Dimensional Objects",
+          "keySkills": [
+            "Solve real-world and mathematical problems involving the volume of three-dimensional objects (e.g., right prisms, right pyramids)."
+          ],
+          "standard": "NC.7.G.B.6"
+        },
+        {
+          "lessonNumber": "M7.GEO.4.4",
+          "atomicConcept": "Solving Problems Involving Surface Area of Three-Dimensional Objects",
+          "keySkills": [
+            "Solve real-world and mathematical problems involving the surface area of three-dimensional objects (e.g., right prisms, right pyramids)."
+          ],
+          "standard": "NC.7.G.B.6"
+        }
+      ]
+    },
+    {
+      "unitTopic": "Statistics and Probability",
+      "concepts": [
+        {
+          "lessonNumber": "M7.SP.1.1",
+          "atomicConcept": "Understanding Statistical Questions",
+          "keySkills": [
+            "Define a statistical question (one that anticipates variability in data)",
+            "Differentiate from non-statistical questions"
+          ],
+          "standard": "NC.7.SP.A.1"
+        },
+        {
+          "lessonNumber": "M7.SP.1.2",
+          "atomicConcept": "Understanding Data Distributions and Data Sets",
+          "keySkills": [
+            "Recognize a data set as a collection of numerical or categorical data",
+            "Understand variability in data"
+          ],
+          "standard": "NC.7.SP.A.1"
+        },
+        {
+          "lessonNumber": "M7.SP.2.1",
+          "atomicConcept": "Drawing Informal Comparative Inferences About Two Populations",
+          "keySkills": [
+            "Use measures of center (mean, median) and measures of variability (IQR, MAD) to draw informal comparative inferences about two populations"
+          ],
+          "standard": "NC.7.SP.B.3, NC.7.SP.B.4"
+        },
+        {
+          "lessonNumber": "M7.SP.2.2",
+          "atomicConcept": "Comparing Measures of Center and Variability of Two Data Sets",
+          "keySkills": [
+            "Visually compare the overlap of two numerical data distributions with similar variabilities (e.g., using dot plots, box plots)"
+          ],
+          "standard": "NC.7.SP.B.3"
+        },
+        {
+          "lessonNumber": "M7.SP.3.1",
+          "atomicConcept": "Understanding Probability and Likelihood of Events",
+          "keySkills": [
+            "Understand that the probability of a chance event is a number between 0 and 1",
+            "Express likelihood (e.g., impossible, unlikely, equally likely, likely, certain)"
+          ],
+          "standard": "NC.7.SP.C.5"
+        },
+        {
+          "lessonNumber": "M7.SP.3.2",
+          "atomicConcept": "Approximating Probability Through Experimental Data",
+          "keySkills": [
+            "Conduct simple probability experiments",
+            "Use observed frequencies to approximate the probability of an event"
+          ],
+          "standard": "NC.7.SP.C.6"
+        },
+        {
+          "lessonNumber": "M7.SP.3.3",
+          "atomicConcept": "Developing Probability Models (Theoretical)",
+          "keySkills": [
+            "Develop uniform (equally likely) and non-uniform probability models",
+            "Determine the theoretical probability of simple events"
+          ],
+          "standard": "NC.7.SP.C.7"
+        },
+        {
+          "lessonNumber": "M7.SP.3.4",
+          "atomicConcept": "Comparing Theoretical and Experimental Probabilities",
+          "keySkills": [
+            "Compare probabilities from a model to observed frequencies",
+            "Explain possible discrepancies"
+          ],
+          "standard": "NC.7.SP.C.7"
+        },
+        {
+          "lessonNumber": "M7.SP.4.1",
+          "atomicConcept": "Understanding and Calculating Probabilities of Compound Events",
+          "keySkills": [
+            "Define a compound event",
+            "Understand that the probability of a compound event is the fraction of outcomes in the sample space for which the compound event occurs"
+          ],
+          "standard": "NC.7.SP.D.8"
+        },
+        {
+          "lessonNumber": "M7.SP.4.2",
+          "atomicConcept": "Using Organized Lists, Tables, and Tree Diagrams to Represent Sample Spaces",
+          "keySkills": [
+            "Use tools like organized lists, tables, and tree diagrams to represent the sample space for compound events"
+          ],
+          "standard": "NC.7.SP.D.8a"
+        },
+        {
+          "lessonNumber": "M7.SP.4.3",
+          "atomicConcept": "Designing Simulations to Generate Frequencies for Compound Events",
+          "keySkills": [
+            "Design and use a simulation to generate frequencies for compound events (e.g., using random number generators or dice)"
+          ],
+          "standard": "NC.7.SP.D.8c"
+        }
+      ]
+    }
+  ]
+}

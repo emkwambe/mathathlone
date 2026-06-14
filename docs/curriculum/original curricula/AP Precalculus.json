@@ -1,0 +1,67 @@
+{
+  "curriculum": "AP Precalculus",
+  "architecture_version": "1.0",
+  "units": [
+    {
+      "unit_id": "Pre.1",
+      "unit_name": "Polynomial and Rational Functions",
+      "lessons": [
+        { "id": "Pre.1.1", "concept": "Change in Tandem", "tag": "[AP/REG]", "skill_id": "2.A", "ek": "1.1.A: Identify variables in a relationship and describe how they covary." },
+        { "id": "Pre.1.2", "concept": "Rates of Change", "tag": "[AP/REG]", "skill_id": "1.A", "ek": "1.2.A: Calculate and interpret the average rate of change over an interval." },
+        { "id": "Pre.1.3", "concept": "Rates of Change in Linear and Quadratic Functions", "tag": "[AP/REG]", "skill_id": "3.A", "ek": "1.3.A: Compare constant and linear rates of change." },
+        { "id": "Pre.1.4", "concept": "Polynomial Functions and Rates of Change", "tag": "[AP/REG]", "skill_id": "2.B", "ek": "1.4.A: Identify zeros, multiplicities, and turning points." },
+        { "id": "Pre.1.5", "concept": "Polynomial Functions and Complex Zeros", "tag": "[AP/REG]", "skill_id": "1.B", "ek": "1.5.A: Apply the Fundamental Theorem of Algebra." },
+        { "id": "Pre.1.6", "concept": "Polynomial Functions and End Behavior", "tag": "[AP/REG]", "skill_id": "3.B", "ek": "1.6.A: Describe end behavior using limit-like notation." },
+        { "id": "Pre.1.7", "concept": "Rational Functions and End Behavior", "tag": "[AP/REG]", "skill_id": "2.B", "ek": "1.7.A: Identify horizontal asymptotes based on degree comparison." },
+        { "id": "Pre.1.8", "concept": "Rational Functions and Zeros", "tag": "[AP/REG]", "skill_id": "1.A", "ek": "1.8.A: Determine zeros by analyzing the numerator." },
+        { "id": "Pre.1.9", "concept": "Rational Functions and Vertical Asymptotes", "tag": "[AP/REG]", "skill_id": "2.A", "ek": "1.9.A: Identify non-removable discontinuities in the denominator." },
+        { "id": "Pre.1.10", "concept": "Rational Functions and Holes", "tag": "[AP/REG]", "skill_id": "1.B", "ek": "1.10.A: Identify removable discontinuities." },
+        { "id": "Pre.1.11", "concept": "Equivalent Representations of Expressions", "tag": "[AP/REG]", "skill_id": "1.B", "ek": "1.11.A: Rewrite expressions using long division or factoring." },
+        { "id": "Pre.1.12", "concept": "Transformations of Functions", "tag": "[AP/REG]", "skill_id": "2.B", "ek": "1.12.A: Apply additive and multiplicative transformations." },
+        { "id": "Pre.1.13", "concept": "[MODEL] Function Model Selection", "tag": "[AP/MODEL]", "skill_id": "4.A", "ek": "1.13.A: Select appropriate models based on data characteristics." },
+        { "id": "Pre.1.14", "concept": "[MODEL] Function Model Construction", "tag": "[AP/MODEL]", "skill_id": "4.B", "ek": "1.14.A: Construct and apply models to real-world scenarios." }
+      ]
+    },
+    {
+      "unit_id": "Pre.2",
+      "unit_name": "Exponential and Logarithmic Functions",
+      "lessons": [
+        { "id": "Pre.2.1", "concept": "Change in Arithmetic and Geometric Sequences", "tag": "[AP/REG]", "skill_id": "2.B", "ek": "2.1.A" },
+        { "id": "Pre.2.2", "concept": "Change in Linear and Exponential Functions", "tag": "[AP/REG]", "skill_id": "3.A", "ek": "2.2.A" },
+        { "id": "Pre.2.3", "concept": "Exponential Functions", "tag": "[AP/REG]", "skill_id": "2.A", "ek": "2.3.A" },
+        { "id": "Pre.2.4", "concept": "Exponential Function Manipulation", "tag": "[AP/REG]", "skill_id": "1.B", "ek": "2.4.A" },
+        { "id": "Pre.2.7", "concept": "Composition of Functions", "tag": "[AP/REG]", "skill_id": "1.B", "ek": "2.7.A" },
+        { "id": "Pre.2.8", "concept": "Inverse Functions", "tag": "[AP/REG]", "skill_id": "1.B", "ek": "2.8.A" },
+        { "id": "Pre.2.9", "concept": "Logarithmic Expressions", "tag": "[AP/REG]", "skill_id": "1.A", "ek": "2.9.A" },
+        { "id": "Pre.2.11", "concept": "Logarithmic Functions", "tag": "[AP/REG]", "skill_id": "2.A", "ek": "2.11.A" },
+        { "id": "Pre.2.13", "concept": "Exponential and Logarithmic Equations", "tag": "[AP/REG]", "skill_id": "1.A", "ek": "2.13.A" },
+        { "id": "Pre.2.15", "concept": "Semi-log Plots", "tag": "[AP]", "skill_id": "2.B", "ek": "2.15.A" }
+      ]
+    },
+    {
+      "unit_id": "Pre.3",
+      "unit_name": "Trigonometric and Polar Functions",
+      "lessons": [
+        { "id": "Pre.3.1", "concept": "Periodic Phenomena", "tag": "[AP/REG]", "skill_id": "2.A", "ek": "3.1.A" },
+        { "id": "Pre.3.2", "concept": "Sine, Cosine, and Tangent Foundations", "tag": "[AP/REG]", "skill_id": "1.B", "ek": "3.2.A" },
+        { "id": "Pre.3.4", "concept": "Sine and Cosine Function Graphs", "tag": "[AP/REG]", "skill_id": "2.B", "ek": "3.4.A" },
+        { "id": "Pre.3.6", "concept": "Sinusoidal Function Transformations", "tag": "[AP/REG]", "skill_id": "2.B", "ek": "3.6.A" },
+        { "id": "Pre.3.9", "concept": "Inverse Trigonometric Functions", "tag": "[AP/REG]", "skill_id": "1.B", "ek": "3.9.A" },
+        { "id": "Pre.3.12", "concept": "Equivalent Representations/Identities", "tag": "[AP/REG]", "skill_id": "1.B", "ek": "3.12.A" },
+        { "id": "Pre.3.13", "concept": "Trigonometry and Polar Coordinates", "tag": "[AP/REG]", "skill_id": "2.A", "ek": "3.13.A" },
+        { "id": "Pre.3.14", "concept": "Polar Function Graphs", "tag": "[AP]", "skill_id": "2.B", "ek": "3.14.A" }
+      ]
+    },
+    {
+      "unit_id": "Pre.4",
+      "unit_name": "Functions Involving Parameters, Vectors, and Matrices",
+      "lessons": [
+        { "id": "Pre.4.1", "concept": "Parametric Functions", "tag": "[REG/ADV]", "skill_id": "2.B", "ek": "4.1.A" },
+        { "id": "Pre.4.6", "concept": "Conic Sections", "tag": "[REG/ADV]", "skill_id": "1.B", "ek": "4.6.A" },
+        { "id": "Pre.4.8", "concept": "Vectors", "tag": "[REG/ADV]", "skill_id": "1.B", "ek": "4.8.A" },
+        { "id": "Pre.4.10", "concept": "Matrices", "tag": "[REG/ADV]", "skill_id": "1.A", "ek": "4.10.A" },
+        { "id": "Pre.4.12", "concept": "Linear Transformations and Matrices", "tag": "[ADV]", "skill_id": "2.B", "ek": "4.12.A" }
+      ]
+    }
+  ]
+}

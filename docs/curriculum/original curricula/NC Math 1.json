@@ -1,0 +1,779 @@
+[
+  {
+    "Unit Topic": "Equations & Inequalities",
+    "Lesson Number": "M1.EQN.1.1",
+    "Atomic Concept": "Understanding Variables and Algebraic Expressions",
+    "Key Skills": "Differentiate between constants, variables, coefficients, and terms",
+    "NC DPI Standard": "NC.M1.A-SSE.1"
+  },
+  {
+    "Unit Topic": "Equations & Inequalities",
+    "Lesson Number": "M1.EQN.1.2",
+    "Atomic Concept": "Evaluating Algebraic Expressions",
+    "Key Skills": "Substitute values for variables and simplify expressions",
+    "NC DPI Standard": "NC.M1.A-SSE.1"
+  },
+  {
+    "Unit Topic": "Equations & Inequalities",
+    "Lesson Number": "M1.EQN.1.3",
+    "Atomic Concept": "Simplifying Algebraic Expressions (Combining Like Terms and Distributive Property)",
+    "Key Skills": "Group and combine like terms; Apply the distributive property",
+    "NC DPI Standard": "NC.M1.A-SSE.1"
+  },
+  {
+    "Unit Topic": "Equations & Inequalities",
+    "Lesson Number": "M1.EQN.2.1",
+    "Atomic Concept": "Understanding Equations and Solutions",
+    "Key Skills": "Define an equation; Determine if a value is a solution",
+    "NC DPI Standard": "NC.M1.A-REI.1"
+  },
+  {
+    "Unit Topic": "Equations & Inequalities",
+    "Lesson Number": "M1.EQN.2.2",
+    "Atomic Concept": "Solving One-Step Linear Equations (Addition/Subtraction)",
+    "Key Skills": "Isolate the variable using inverse operations",
+    "NC DPI Standard": "NC.M1.A-REI.3"
+  },
+  {
+    "Unit Topic": "Equations & Inequalities",
+    "Lesson Number": "M1.EQN.2.3",
+    "Atomic Concept": "Solving One-Step Linear Equations (Multiplication/Division)",
+    "Key Skills": "Isolate the variable using inverse operations",
+    "NC DPI Standard": "NC.M1.A-REI.3"
+  },
+  {
+    "Unit Topic": "Equations & Inequalities",
+    "Lesson Number": "M1.EQN.2.4",
+    "Atomic Concept": "Solving Two-Step Linear Equations",
+    "Key Skills": "Apply inverse operations in sequence to solve",
+    "NC DPI Standard": "NC.M1.A-REI.3"
+  },
+  {
+    "Unit Topic": "Equations & Inequalities",
+    "Lesson Number": "M1.EQN.2.5",
+    "Atomic Concept": "Solving Multi-Step Linear Equations (Distribute & Combine Like Terms)",
+    "Key Skills": "Use distributive property; Combine like terms; Apply inverse operations",
+    "NC DPI Standard": "NC.M1.A-REI.3"
+  },
+  {
+    "Unit Topic": "Equations & Inequalities",
+    "Lesson Number": "M1.EQN.2.6",
+    "Atomic Concept": "Solving Linear Equations with Variables on Both Sides",
+    "Key Skills": "Collect variable terms on one side and constant terms on the other",
+    "NC DPI Standard": "NC.M1.A-REI.3"
+  },
+  {
+    "Unit Topic": "Equations & Inequalities",
+    "Lesson Number": "M1.EQN.2.7",
+    "Atomic Concept": "Identifying Equations with No Solution or Infinitely Many Solutions",
+    "Key Skills": "Recognize when an equation leads to a contradiction or an identity",
+    "NC DPI Standard": "NC.M1.A-REI.3"
+  },
+  {
+    "Unit Topic": "Equations & Inequalities",
+    "Lesson Number": "M1.EQN.3.1",
+    "Atomic Concept": "Solving Absolute Value Equations",
+    "Key Skills": "Isolate absolute value; Set up two equations; Solve and check for extraneous solutions",
+    "NC DPI Standard": "NC.M1.A-REI.1"
+  },
+  {
+    "Unit Topic": "Equations & Inequalities",
+    "Lesson Number": "M1.EQN.4.1",
+    "Atomic Concept": "Rewriting Literal Equations (Solving for a Variable)",
+    "Key Skills": "Isolate a specified variable in a formula or equation with multiple variables",
+    "NC DPI Standard": "NC.M1.A-CED.4"
+  },
+  {
+    "Unit Topic": "Equations & Inequalities",
+    "Lesson Number": "M1.EQN.5.1",
+    "Atomic Concept": "Understanding and Graphing Linear Inequalities in One Variable",
+    "Key Skills": "Define inequality; Graph solutions on a number line (open/closed circles, shading)",
+    "NC DPI Standard": "NC.M1.A-REI.3"
+  },
+  {
+    "Unit Topic": "Equations & Inequalities",
+    "Lesson Number": "M1.EQN.5.2",
+    "Atomic Concept": "Solving One-Step Linear Inequalities (Addition/Subtraction)",
+    "Key Skills": "Apply inverse operations; Maintain inequality direction",
+    "NC DPI Standard": "NC.M1.A-REI.3"
+  },
+  {
+    "Unit Topic": "Equations & Inequalities",
+    "Lesson Number": "M1.EQN.5.3",
+    "Atomic Concept": "Solving One-Step Linear Inequalities (Multiplication/Division by Negative)",
+    "Key Skills": "Apply inverse operations; Reverse inequality sign when multiplying/dividing by a negative",
+    "NC DPI Standard": "NC.M1.A-REI.3"
+  },
+  {
+    "Unit Topic": "Equations & Inequalities",
+    "Lesson Number": "M1.EQN.5.4",
+    "Atomic Concept": "Solving Multi-Step Linear Inequalities",
+    "Key Skills": "Use distributive property; Combine like terms; Apply inverse operations; Reverse sign when necessary",
+    "NC DPI Standard": "NC.M1.A-REI.3"
+  },
+  {
+    "Unit Topic": "Equations & Inequalities",
+    "Lesson Number": "M1.EQN.5.5",
+    "Atomic Concept": "Solving Compound Inequalities (AND/OR)",
+    "Key Skills": "Solve each inequality; Find intersection or union of solution sets",
+    "NC DPI Standard": "NC.M1.A-REI.3"
+  },
+  {
+    "Unit Topic": "Equations & Inequalities",
+    "Lesson Number": "M1.EQN.5.6",
+    "Atomic Concept": "Solving Absolute Value Inequalities",
+    "Key Skills": "Isolate absolute value; Set up compound inequality; Solve and graph",
+    "NC DPI Standard": "NC.M1.A-REI.3"
+  },
+  {
+    "Unit Topic": "Equations & Inequalities",
+    "Lesson Number": "M1.EQN.6.1",
+    "Atomic Concept": "Creating Linear Equations and Inequalities in One Variable from Context",
+    "Key Skills": "Translate verbal descriptions into equations/inequalities; Define variables",
+    "NC DPI Standard": "NC.M1.A-CED.1"
+  },
+  {
+    "Unit Topic": "Functions & Linear Functions",
+    "Lesson Number": "M1.FLF.1.1",
+    "Atomic Concept": "Understanding Relations and Functions (Introduction)",
+    "Key Skills": "Differentiate between a relation and a function; Identify domain and range",
+    "NC DPI Standard": "NC.M1.F-IF.1"
+  },
+  {
+    "Unit Topic": "Functions & Linear Functions",
+    "Lesson Number": "M1.FLF.1.2",
+    "Atomic Concept": "Identifying Functions using Vertical Line Test and Tables",
+    "Key Skills": "Determine if a relation is a function from a graph or a table",
+    "NC DPI Standard": "NC.M1.F-IF.1"
+  },
+  {
+    "Unit Topic": "Functions & Linear Functions",
+    "Lesson Number": "M1.FLF.1.3",
+    "Atomic Concept": "Using Function Notation",
+    "Key Skills": "Evaluate functions for given input values using f(x) notation",
+    "NC DPI Standard": "NC.M1.F-IF.2"
+  },
+  {
+    "Unit Topic": "Functions & Linear Functions",
+    "Lesson Number": "M1.FLF.2.1",
+    "Atomic Concept": "Understanding Slope as a Rate of Change",
+    "Key Skills": "Calculate slope from two points or a graph; Interpret slope in context",
+    "NC DPI Standard": "NC.M1.F-IF.6"
+  },
+  {
+    "Unit Topic": "Functions & Linear Functions",
+    "Lesson Number": "M1.FLF.2.2",
+    "Atomic Concept": "Graphing Linear Functions from Slope-Intercept Form (y=mx+b)",
+    "Key Skills": "Identify slope and y-intercept; Graph linear equations",
+    "NC DPI Standard": "NC.M1.F-IF.7"
+  },
+  {
+    "Unit Topic": "Functions & Linear Functions",
+    "Lesson Number": "M1.FLF.2.3",
+    "Atomic Concept": "Graphing Linear Functions from Standard Form (Ax+By=C)",
+    "Key Skills": "Use intercepts to graph linear equations; Convert to slope-intercept form",
+    "NC DPI Standard": "NC.M1.F-IF.7"
+  },
+  {
+    "Unit Topic": "Functions & Linear Functions",
+    "Lesson Number": "M1.FLF.2.4",
+    "Atomic Concept": "Understanding Horizontal and Vertical Lines",
+    "Key Skills": "Identify and graph equations of horizontal and vertical lines",
+    "NC DPI Standard": "NC.M1.F-IF.7"
+  },
+  {
+    "Unit Topic": "Functions & Linear Functions",
+    "Lesson Number": "M1.FLF.3.1",
+    "Atomic Concept": "Writing Linear Equations in Slope-Intercept Form",
+    "Key Skills": "Write equations given slope and y-intercept; Write equations from graphs",
+    "NC DPI Standard": "NC.M1.F-BF.1a"
+  },
+  {
+    "Unit Topic": "Functions & Linear Functions",
+    "Lesson Number": "M1.FLF.3.2",
+    "Atomic Concept": "Writing Linear Equations from Two Points",
+    "Key Skills": "Calculate slope; Use point-slope form or slope-intercept form to write equation",
+    "NC DPI Standard": "NC.M1.F-BF.1a"
+  },
+  {
+    "Unit Topic": "Functions & Linear Functions",
+    "Lesson Number": "M1.FLF.3.3",
+    "Atomic Concept": "Writing Linear Equations from a Point and a Slope (Point-Slope Form)",
+    "Key Skills": "Apply the point-slope formula to write linear equations",
+    "NC DPI Standard": "NC.M1.F-BF.1a"
+  },
+  {
+    "Unit Topic": "Functions & Linear Functions",
+    "Lesson Number": "M1.FLF.3.4",
+    "Atomic Concept": "Converting Between Forms of Linear Equations",
+    "Key Skills": "Convert equations between slope-intercept, point-slope, and standard forms",
+    "NC DPI Standard": "NC.M1.A-CED.4"
+  },
+  {
+    "Unit Topic": "Functions & Linear Functions",
+    "Lesson Number": "M1.FLF.4.1",
+    "Atomic Concept": "Understanding Slopes of Parallel Lines",
+    "Key Skills": "Identify parallel lines based on equal slopes",
+    "NC DPI Standard": "NC.M1.G-GPE.5"
+  },
+  {
+    "Unit Topic": "Functions & Linear Functions",
+    "Lesson Number": "M1.FLF.4.2",
+    "Atomic Concept": "Understanding Slopes of Perpendicular Lines",
+    "Key Skills": "Identify perpendicular lines based on negative reciprocal slopes",
+    "NC DPI Standard": "NC.M1.G-GPE.5"
+  },
+  {
+    "Unit Topic": "Functions & Linear Functions",
+    "Lesson Number": "M1.FLF.4.3",
+    "Atomic Concept": "Writing Equations of Parallel and Perpendicular Lines",
+    "Key Skills": "Write equations for lines passing through a point and parallel/perpendicular to a given line",
+    "NC DPI Standard": "NC.M1.G-GPE.5"
+  },
+  {
+    "Unit Topic": "Functions & Linear Functions",
+    "Lesson Number": "M1.FLF.5.1",
+    "Atomic Concept": "Graphing Linear Inequalities in Two Variables",
+    "Key Skills": "Graph boundary line; Determine shading region; Understand solution set",
+    "NC DPI Standard": "NC.M1.A-REI.12"
+  },
+  {
+    "Unit Topic": "Functions & Linear Functions",
+    "Lesson Number": "M1.FLF.6.1",
+    "Atomic Concept": "Interpreting Key Features of Linear Functions in Context",
+    "Key Skills": "Analyze intercepts, slope, and domain/range in real-world problems",
+    "NC DPI Standard": "NC.M1.F-IF.4"
+  },
+  {
+    "Unit Topic": "Functions & Linear Functions",
+    "Lesson Number": "M1.FLF.6.2",
+    "Atomic Concept": "Constructing Linear Functions to Model Relationships from Context",
+    "Key Skills": "Translate verbal descriptions, tables, or graphs into linear functions",
+    "NC DPI Standard": "NC.M1.F-BF.1"
+  },
+  {
+    "Unit Topic": "Functions & Linear Functions",
+    "Lesson Number": "M1.FLF.7.1",
+    "Atomic Concept": "Comparing Properties of Two Linear Functions Represented in Different Ways",
+    "Key Skills": "Compare rates of change, intercepts, and domains/ranges from various representations",
+    "NC DPI Standard": "NC.M1.F-IF.9"
+  },
+  {
+    "Unit Topic": "Systems of Eqns & Inequalities",
+    "Lesson Number": "M1.SYS.1.1",
+    "Atomic Concept": "Understanding Systems of Linear Equations and their Solutions",
+    "Key Skills": "Define a system of equations; Identify a solution to a system",
+    "NC DPI Standard": "NC.M1.A-REI.5"
+  },
+  {
+    "Unit Topic": "Systems of Eqns & Inequalities",
+    "Lesson Number": "M1.SYS.1.2",
+    "Atomic Concept": "Solving Systems of Linear Equations by Graphing",
+    "Key Skills": "Graph two linear equations; Identify the point of intersection as the solution",
+    "NC DPI Standard": "NC.M1.A-REI.6"
+  },
+  {
+    "Unit Topic": "Systems of Eqns & Inequalities",
+    "Lesson Number": "M1.SYS.2.1",
+    "Atomic Concept": "Solving Systems of Linear Equations by Substitution",
+    "Key Skills": "Solve one equation for a variable; Substitute into the other equation; Solve for both variables",
+    "NC DPI Standard": "NC.M1.A-REI.6"
+  },
+  {
+    "Unit Topic": "Systems of Eqns & Inequalities",
+    "Lesson Number": "M1.SYS.2.2",
+    "Atomic Concept": "Solving Systems of Linear Equations by Elimination (Addition/Subtraction)",
+    "Key Skills": "Add or subtract equations to eliminate a variable; Solve for remaining variables",
+    "NC DPI Standard": "NC.M1.A-REI.6"
+  },
+  {
+    "Unit Topic": "Systems of Eqns & Inequalities",
+    "Lesson Number": "M1.SYS.2.3",
+    "Atomic Concept": "Solving Systems of Linear Equations by Elimination (Multiplication First)",
+    "Key Skills": "Multiply one or both equations to create opposite coefficients; Add/subtract to eliminate",
+    "NC DPI Standard": "NC.M1.A-REI.6"
+  },
+  {
+    "Unit Topic": "Systems of Eqns & Inequalities",
+    "Lesson Number": "M1.SYS.3.1",
+    "Atomic Concept": "Identifying Types of Solutions to Systems of Linear Equations",
+    "Key Skills": "Recognize when a system has one solution, no solution, or infinitely many solutions (graphically and algebraically)",
+    "NC DPI Standard": "NC.M1.A-REI.6"
+  },
+  {
+    "Unit Topic": "Systems of Eqns & Inequalities",
+    "Lesson Number": "M1.SYS.4.1",
+    "Atomic Concept": "Creating Systems of Linear Equations from Word Problems",
+    "Key Skills": "Define variables; Write two linear equations to represent real-world scenarios",
+    "NC DPI Standard": "NC.M1.A-CED.2"
+  },
+  {
+    "Unit Topic": "Systems of Eqns & Inequalities",
+    "Lesson Number": "M1.SYS.4.2",
+    "Atomic Concept": "Solving Real-World Problems Using Systems of Linear Equations",
+    "Key Skills": "Apply graphical or algebraic methods to solve contextual problems",
+    "NC DPI Standard": "NC.M1.A-CED.2"
+  },
+  {
+    "Unit Topic": "Systems of Eqns & Inequalities",
+    "Lesson Number": "M1.SYS.5.1",
+    "Atomic Concept": "Understanding Systems of Linear Inequalities and their Solution Sets",
+    "Key Skills": "Define a system of inequalities; Recognize that the solution is a region of intersection",
+    "NC DPI Standard": "NC.M1.A-REI.12"
+  },
+  {
+    "Unit Topic": "Systems of Eqns & Inequalities",
+    "Lesson Number": "M1.SYS.5.2",
+    "Atomic Concept": "Solving Systems of Linear Inequalities by Graphing",
+    "Key Skills": "Graph each linear inequality; Identify and shade the overlapping feasible region",
+    "NC DPI Standard": "NC.M1.A-REI.12"
+  },
+  {
+    "Unit Topic": "Systems of Eqns & Inequalities",
+    "Lesson Number": "M1.SYS.6.1",
+    "Atomic Concept": "Creating Systems of Linear Inequalities from Word Problems",
+    "Key Skills": "Define variables; Write two or more linear inequalities to represent real-world constraints",
+    "NC DPI Standard": "NC.M1.A-CED.3"
+  },
+  {
+    "Unit Topic": "Systems of Eqns & Inequalities",
+    "Lesson Number": "M1.SYS.6.2",
+    "Atomic Concept": "Solving Real-World Problems Using Systems of Linear Inequalities",
+    "Key Skills": "Apply graphing methods to solve contextual problems involving constraints",
+    "NC DPI Standard": "NC.M1.A-CED.3"
+  },
+  {
+    "Unit Topic": "Exponents & Exponential Functions",
+    "Lesson Number": "M1.EXP.1.1",
+    "Atomic Concept": "Review: Understanding Integer Exponents",
+    "Key Skills": "Define base and exponent; Evaluate expressions with integer exponents",
+    "NC DPI Standard": "NC.M1.N-RN.1"
+  },
+  {
+    "Unit Topic": "Exponents & Exponential Functions",
+    "Lesson Number": "M1.EXP.1.2",
+    "Atomic Concept": "Properties of Exponents: Product of Powers and Quotient of Powers",
+    "Key Skills": "Simplify expressions by adding exponents for multiplication and subtracting for division",
+    "NC DPI Standard": "NC.M1.N-RN.1"
+  },
+  {
+    "Unit Topic": "Exponents & Exponential Functions",
+    "Lesson Number": "M1.EXP.1.3",
+    "Atomic Concept": "Properties of Exponents: Power of a Power and Power of a Product/Quotient",
+    "Key Skills": "Simplify expressions by multiplying exponents for power of a power; Apply power to each factor in product/quotient",
+    "NC DPI Standard": "NC.M1.N-RN.1"
+  },
+  {
+    "Unit Topic": "Exponents & Exponential Functions",
+    "Lesson Number": "M1.EXP.1.4",
+    "Atomic Concept": "Understanding Zero Exponents and Negative Exponents",
+    "Key Skills": "Define a^0=1; Define a^-n = 1/a^n; Simplify expressions with zero or negative exponents",
+    "NC DPI Standard": "NC.M1.N-RN.1"
+  },
+  {
+    "Unit Topic": "Exponents & Exponential Functions",
+    "Lesson Number": "M1.EXP.1.5",
+    "Atomic Concept": "Simplifying Expressions Using All Properties of Integer Exponents",
+    "Key Skills": "Apply all exponent rules to simplify complex expressions",
+    "NC DPI Standard": "NC.M1.N-RN.1"
+  },
+  {
+    "Unit Topic": "Exponents & Exponential Functions",
+    "Lesson Number": "M1.EXP.2.1",
+    "Atomic Concept": "Understanding Exponential Functions (Definition and Key Characteristics)",
+    "Key Skills": "Identify exponential functions from equations, graphs, or tables; Recognize constant ratio of y-values",
+    "NC DPI Standard": "NC.M1.F-IF.7, NC.M1.F-LE.1"
+  },
+  {
+    "Unit Topic": "Exponents & Exponential Functions",
+    "Lesson Number": "M1.EXP.2.2",
+    "Atomic Concept": "Graphing Basic Exponential Functions (y=a • b^x)",
+    "Key Skills": "Create tables of values; Plot points; Sketch graphs; Identify y-intercept, asymptote, domain, and range",
+    "NC DPI Standard": "NC.M1.F-IF.7"
+  },
+  {
+    "Unit Topic": "Exponents & Exponential Functions",
+    "Lesson Number": "M1.EXP.2.3",
+    "Atomic Concept": "Identifying Exponential Growth and Decay",
+    "Key Skills": "Determine if an exponential function represents growth or decay based on the base b",
+    "NC DPI Standard": "NC.M1.F-LE.1"
+  },
+  {
+    "Unit Topic": "Exponents & Exponential Functions",
+    "Lesson Number": "M1.EXP.3.1",
+    "Atomic Concept": "Writing Exponential Functions from Tables or Graphs",
+    "Key Skills": "Identify initial value and common ratio; Write equation in y=a • b^x form",
+    "NC DPI Standard": "NC.M1.F-BF.1"
+  },
+  {
+    "Unit Topic": "Exponents & Exponential Functions",
+    "Lesson Number": "M1.EXP.3.2",
+    "Atomic Concept": "Writing Exponential Functions from Verbal Descriptions (Growth/Decay Models)",
+    "Key Skills": "Translate real-world scenarios into exponential function equations; Define variables",
+    "NC DPI Standard": "NC.M1.F-BF.1"
+  },
+  {
+    "Unit Topic": "Exponents & Exponential Functions",
+    "Lesson Number": "M1.EXP.4.1",
+    "Atomic Concept": "Solving Real-World Problems Involving Exponential Growth and Decay",
+    "Key Skills": "Apply exponential growth/decay models to solve contextual problems",
+    "NC DPI Standard": "NC.M1.F-LE.1, NC.M1.A-CED.1"
+  },
+  {
+    "Unit Topic": "Exponents & Exponential Functions",
+    "Lesson Number": "M1.EXP.5.1",
+    "Atomic Concept": "Comparing Linear and Exponential Functions (Tables and Graphs)",
+    "Key Skills": "Analyze differences in growth patterns (constant difference vs. constant ratio); Compare key features",
+    "NC DPI Standard": "NC.M1.F-LE.3, NC.M1.F-LE.2"
+  },
+  {
+    "Unit Topic": "Exponents & Exponential Functions",
+    "Lesson Number": "M1.EXP.5.2",
+    "Atomic Concept": "Comparing Linear and Exponential Functions (Equations and Context)",
+    "Key Skills": "Formulate and compare linear vs. exponential functions from equations and real-world contexts",
+    "NC DPI Standard": "NC.M1.F-LE.3, NC.M1.F-LE.2"
+  },
+  {
+    "Unit Topic": "Polynomials & Factoring",
+    "Lesson Number": "M1.POLY.1.1",
+    "Atomic Concept": "Understanding Polynomials (Terms, Coefficients, Degree, Standard Form)",
+    "Key Skills": "Define what a polynomial is; Identify its parts; Write in standard form",
+    "NC DPI Standard": "NC.M1.A-SSE.1"
+  },
+  {
+    "Unit Topic": "Polynomials & Factoring",
+    "Lesson Number": "M1.POLY.2.1",
+    "Atomic Concept": "Adding Polynomials",
+    "Key Skills": "Combine like terms of two or more polynomials",
+    "NC DPI Standard": "NC.M1.A-APR.1"
+  },
+  {
+    "Unit Topic": "Polynomials & Factoring",
+    "Lesson Number": "M1.POLY.2.2",
+    "Atomic Concept": "Subtracting Polynomials",
+    "Key Skills": "Distribute the negative sign; Combine like terms",
+    "NC DPI Standard": "NC.M1.A-APR.1"
+  },
+  {
+    "Unit Topic": "Polynomials & Factoring",
+    "Lesson Number": "M1.POLY.2.3",
+    "Atomic Concept": "Multiplying Monomial by Polynomial",
+    "Key Skills": "Apply the distributive property to multiply a monomial by any polynomial",
+    "NC DPI Standard": "NC.M1.A-APR.1"
+  },
+  {
+    "Unit Topic": "Polynomials & Factoring",
+    "Lesson Number": "M1.POLY.2.4",
+    "Atomic Concept": "Multiplying Binomial by Binomial (FOIL/Box Method)",
+    "Key Skills": "Apply distributive property or methods like FOIL/Box to multiply two binomials",
+    "NC DPI Standard": "NC.M1.A-APR.1"
+  },
+  {
+    "Unit Topic": "Polynomials & Factoring",
+    "Lesson Number": "M1.POLY.3.1",
+    "Atomic Concept": "Factoring the Greatest Common Factor (GCF) from Polynomials",
+    "Key Skills": "Identify the greatest common monomial factor; Factor it out from an expression",
+    "NC DPI Standard": "NC.M1.A-SSE.1, NC.M1.A-SSE.2"
+  },
+  {
+    "Unit Topic": "Polynomials & Factoring",
+    "Lesson Number": "M1.POLY.4.1",
+    "Atomic Concept": "Factoring Quadratic Expressions of the Form x² + bx + c",
+    "Key Skills": "Find two numbers that multiply to c and add to b; Write as binomial factors",
+    "NC DPI Standard": "NC.M1.A-SSE.2"
+  },
+  {
+    "Unit Topic": "Polynomials & Factoring",
+    "Lesson Number": "M1.POLY.4.2",
+    "Atomic Concept": "Factoring Quadratic Expressions of the Form ax² + bx + c (where a ≠ 1)",
+    "Key Skills": "Use methods like grouping, trial and error, or the 'slide and divide' method to factor",
+    "NC DPI Standard": "NC.M1.A-SSE.2"
+  },
+  {
+    "Unit Topic": "Polynomials & Factoring",
+    "Lesson Number": "M1.POLY.5.1",
+    "Atomic Concept": "Factoring the Difference of Two Squares (a² - b²)",
+    "Key Skills": "Recognize and factor expressions in the form (a-b)(a+b)",
+    "NC DPI Standard": "NC.M1.A-SSE.2"
+  },
+  {
+    "Unit Topic": "Polynomials & Factoring",
+    "Lesson Number": "M1.POLY.5.2",
+    "Atomic Concept": "Factoring Perfect Square Trinomials (a² ± 2ab + b²)",
+    "Key Skills": "Recognize and factor expressions into (a ± b)²",
+    "NC DPI Standard": "NC.M1.A-SSE.2"
+  },
+  {
+    "Unit Topic": "Polynomials & Factoring",
+    "Lesson Number": "M1.POLY.6.1",
+    "Atomic Concept": "Choosing the Best Factoring Method (Mixed Practice)",
+    "Key Skills": "Determine the most efficient factoring method for a given quadratic expression",
+    "NC DPI Standard": "NC.M1.A-SSE.2"
+  },
+  {
+    "Unit Topic": "Quadratic Functions & Equations",
+    "Lesson Number": "M1.QUAD.1.1",
+    "Atomic Concept": "Understanding Quadratic Functions (Definition, Standard Form)",
+    "Key Skills": "Identify quadratic functions; Recognize coefficients a, b, c",
+    "NC DPI Standard": "NC.M1.F-IF.7"
+  },
+  {
+    "Unit Topic": "Quadratic Functions & Equations",
+    "Lesson Number": "M1.QUAD.1.2",
+    "Atomic Concept": "Graphing Quadratic Functions (y=ax²+bx+c) and Identifying Key Features",
+    "Key Skills": "Identify vertex, axis of symmetry, x- and y-intercepts from graph; Graph parabolas",
+    "NC DPI Standard": "NC.M1.F-IF.4, NC.M1.F-IF.7"
+  },
+  {
+    "Unit Topic": "Quadratic Functions & Equations",
+    "Lesson Number": "M1.QUAD.1.3",
+    "Atomic Concept": "Interpreting Key Features of Quadratic Functions in Context",
+    "Key Skills": "Analyze the meaning of vertex, intercepts, and intervals in real-world problems",
+    "NC DPI Standard": "NC.M1.F-IF.4"
+  },
+  {
+    "Unit Topic": "Quadratic Functions & Equations",
+    "Lesson Number": "M1.QUAD.2.1",
+    "Atomic Concept": "Understanding the Relationship between Zeros, Roots, and X-Intercepts",
+    "Key Skills": "Define zero, root, and x-intercept as interchangeable terms for solutions",
+    "NC DPI Standard": "NC.M1.A-REI.4"
+  },
+  {
+    "Unit Topic": "Quadratic Functions & Equations",
+    "Lesson Number": "M1.QUAD.2.2",
+    "Atomic Concept": "Solving Quadratic Equations by Factoring",
+    "Key Skills": "Factor quadratic expressions; Apply the Zero Product Property to find solutions",
+    "NC DPI Standard": "NC.M1.A-REI.4b"
+  },
+  {
+    "Unit Topic": "Quadratic Functions & Equations",
+    "Lesson Number": "M1.QUAD.2.3",
+    "Atomic Concept": "Solving Quadratic Equations by Taking Square Roots",
+    "Key Skills": "Isolate the squared term; Apply the square root property to solve equations",
+    "NC DPI Standard": "NC.M1.A-REI.4b"
+  },
+  {
+    "Unit Topic": "Quadratic Functions & Equations",
+    "Lesson Number": "M1.QUAD.2.4",
+    "Atomic Concept": "Solving Quadratic Equations using the Quadratic Formula (Real Solutions)",
+    "Key Skills": "Identify a, b, c; Substitute into the quadratic formula; Simplify to find real solutions",
+    "NC DPI Standard": "NC.M1.A-REI.4b"
+  },
+  {
+    "Unit Topic": "Quadratic Functions & Equations",
+    "Lesson Number": "M1.QUAD.3.1",
+    "Atomic Concept": "Creating Quadratic Equations from Graphs, Tables, or Verbal Descriptions",
+    "Key Skills": "Write quadratic equations from given data points or descriptions; Define variables",
+    "NC DPI Standard": "NC.M1.A-CED.1, NC.M1.F-BF.1"
+  },
+  {
+    "Unit Topic": "Quadratic Functions & Equations",
+    "Lesson Number": "M1.QUAD.4.1",
+    "Atomic Concept": "Comparing Linear, Exponential, and Quadratic Functions (Tables and Graphs)",
+    "Key Skills": "Analyze patterns of change in tables (constant 1st, 2nd differences, common ratio); Compare shapes of graphs",
+    "NC DPI Standard": "NC.M1.F-LE.3"
+  },
+  {
+    "Unit Topic": "Quadratic Functions & Equations",
+    "Lesson Number": "M1.QUAD.4.2",
+    "Atomic Concept": "Comparing Linear, Exponential, and Quadratic Functions (Equations and Context)",
+    "Key Skills": "Formulate and compare linear vs. exponential functions from equations and real-world contexts",
+    "NC DPI Standard": "NC.M1.F-LE.3"
+  },
+  {
+    "Unit Topic": "Data Analysis & Statistics",
+    "Lesson Number": "M1.DAS.1.1",
+    "Atomic Concept": "Understanding Types of Data (Quantitative vs. Categorical)",
+    "Key Skills": "Differentiate between types of data; Identify appropriate data for statistical questions",
+    "NC DPI Standard": "NC.M1.S-ID.1"
+  },
+  {
+    "Unit Topic": "Data Analysis & Statistics",
+    "Lesson Number": "M1.DAS.1.2",
+    "Atomic Concept": "Representing One-Variable Data (Dot Plots and Histograms)",
+    "Key Skills": "Create and interpret dot plots and histograms; Describe distribution shape",
+    "NC DPI Standard": "NC.M1.S-ID.1"
+  },
+  {
+    "Unit Topic": "Data Analysis & Statistics",
+    "Lesson Number": "M1.DAS.1.3",
+    "Atomic Concept": "Representing One-Variable Data (Box Plots/Box-and-Whisker Plots)",
+    "Key Skills": "Create and interpret box plots; Identify quartiles, median, and range",
+    "NC DPI Standard": "NC.M1.S-ID.1"
+  },
+  {
+    "Unit Topic": "Data Analysis & Statistics",
+    "Lesson Number": "M1.DAS.2.1",
+    "Atomic Concept": "Calculating Measures of Central Tendency (Mean, Median, Mode)",
+    "Key Skills": "Compute mean, median, and mode for a data set; Interpret their meaning",
+    "NC DPI Standard": "NC.M1.S-ID.2"
+  },
+  {
+    "Unit Topic": "Data Analysis & Statistics",
+    "Lesson Number": "M1.DAS.2.2",
+    "Atomic Concept": "Calculating Measures of Variability (Range and Interquartile Range)",
+    "Key Skills": "Compute range and IQR; Understand how they describe data spread",
+    "NC DPI Standard": "NC.M1.S-ID.2"
+  },
+  {
+    "Unit Topic": "Data Analysis & Statistics",
+    "Lesson Number": "M1.DAS.2.3",
+    "Atomic Concept": "Understanding Standard Deviation (Introduction)",
+    "Key Skills": "Understand standard deviation as a measure of typical distance from the mean",
+    "NC DPI Standard": "NC.M1.S-ID.2"
+  },
+  {
+    "Unit Topic": "Data Analysis & Statistics",
+    "Lesson Number": "M1.DAS.2.4",
+    "Atomic Concept": "Comparing Data Sets (Using Measures of Center and Variability)",
+    "Key Skills": "Compare and contrast two or more data sets using calculated statistics",
+    "NC DPI Standard": "NC.M1.S-ID.2"
+  },
+  {
+    "Unit Topic": "Data Analysis & Statistics",
+    "Lesson Number": "M1.DAS.3.1",
+    "Atomic Concept": "Representing Two-Variable Data with Scatter Plots",
+    "Key Skills": "Create scatter plots from bivariate data; Label axes correctly",
+    "NC DPI Standard": "NC.M1.S-ID.6"
+  },
+  {
+    "Unit Topic": "Data Analysis & Statistics",
+    "Lesson Number": "M1.DAS.3.2",
+    "Atomic Concept": "Interpreting Scatter Plots (Correlation, Outliers, Clusters)",
+    "Key Skills": "Describe the direction, form, and strength of association; Identify outliers",
+    "NC DPI Standard": "NC.M1.S-ID.6"
+  },
+  {
+    "Unit Topic": "Data Analysis & Statistics",
+    "Lesson Number": "M1.DAS.4.1",
+    "Atomic Concept": "Understanding and Calculating the Line of Best Fit (Linear Regression)",
+    "Key Skills": "Draw a line of best fit by eye; Use technology to calculate the least-squares regression line",
+    "NC DPI Standard": "NC.M1.S-ID.6"
+  },
+  {
+    "Unit Topic": "Data Analysis & Statistics",
+    "Lesson Number": "M1.DAS.4.2",
+    "Atomic Concept": "Using the Line of Best Fit for Prediction and Interpretation",
+    "Key Skills": "Predict values using the linear model; Interpret the slope and y-intercept in context",
+    "NC DPI Standard": "NC.M1.S-ID.7"
+  },
+  {
+    "Unit Topic": "Data Analysis & Statistics",
+    "Lesson Number": "M1.DAS.4.3",
+    "Atomic Concept": "Understanding Residuals",
+    "Key Skills": "Calculate residuals; Interpret residuals in relation to the line of best fit",
+    "NC DPI Standard": "NC.M1.S-ID.6"
+  },
+  {
+    "Unit Topic": "Data Analysis & Statistics",
+    "Lesson Number": "M1.DAS.5.1",
+    "Atomic Concept": "Understanding the Correlation Coefficient (Introduction to r-value)",
+    "Key Skills": "Interpret the meaning of the correlation coefficient (strength and direction)",
+    "NC DPI Standard": "NC.M1.S-ID.8"
+  },
+  {
+    "Unit Topic": "Data Analysis & Statistics",
+    "Lesson Number": "M1.DAS.5.2",
+    "Atomic Concept": "Distinguishing Between Correlation and Causation",
+    "Key Skills": "Explain that correlation does not imply causation; Identify potential lurking variables",
+    "NC DPI Standard": "NC.M1.S-ID.9"
+  },
+  {
+    "Unit Topic": "Geometric Transformations & Congruence",
+    "Lesson Number": "M1.GEO.TRANS.1.1",
+    "Atomic Concept": "Understanding Transformations (Introduction to Rigid Motions/Isometries)",
+    "Key Skills": "Define transformation; Identify rigid motions that preserve distance and angle measure",
+    "NC DPI Standard": "NC.M1.G-CO.2"
+  },
+  {
+    "Unit Topic": "Geometric Transformations & Congruence",
+    "Lesson Number": "M1.GEO.TRANS.2.1",
+    "Atomic Concept": "Understanding Translations (Vector Notation and Coordinate Rules)",
+    "Key Skills": "Define translation; Represent translations using vectors or coordinate rules",
+    "NC DPI Standard": "NC.M1.G-CO.2, NC.M1.G-CO.4"
+  },
+  {
+    "Unit Topic": "Geometric Transformations & Congruence",
+    "Lesson Number": "M1.GEO.TRANS.2.2",
+    "Atomic Concept": "Performing and Graphing Translations in the Coordinate Plane",
+    "Key Skills": "Translate figures on the coordinate plane based on given rules or vectors",
+    "NC DPI Standard": "NC.M1.G-CO.2"
+  },
+  {
+    "Unit Topic": "Geometric Transformations & Congruence",
+    "Lesson Number": "M1.GEO.TRANS.3.1",
+    "Atomic Concept": "Understanding Reflections Across Axes and the Lines y=x and y=-x",
+    "Key Skills": "Define reflection; Identify lines of reflection (x-axis, y-axis, y=x, y=-x)",
+    "NC DPI Standard": "NC.M1.G-CO.2, NC.M1.G-CO.4"
+  },
+  {
+    "Unit Topic": "Geometric Transformations & Congruence",
+    "Lesson Number": "M1.GEO.TRANS.3.2",
+    "Atomic Concept": "Performing and Graphing Reflections in the Coordinate Plane",
+    "Key Skills": "Reflect figures across given lines on the coordinate plane",
+    "NC DPI Standard": "NC.M1.G-CO.2"
+  },
+  {
+    "Unit Topic": "Geometric Transformations & Congruence",
+    "Lesson Number": "M1.GEO.TRANS.3.3",
+    "Atomic Concept": "Understanding Reflections Across Horizontal and Vertical Lines (Not Axes)",
+    "Key Skills": "Identify and apply rules for reflections across y=k and x=h",
+    "NC DPI Standard": "NC.M1.G-CO.2"
+  },
+  {
+    "Unit Topic": "Geometric Transformations & Congruence",
+    "Lesson Number": "M1.GEO.TRANS.4.1",
+    "Atomic Concept": "Understanding Rotations About the Origin (90°, 180°, 270°)",
+    "Key Skills": "Define rotation; Understand angle and direction of rotation; Use coordinate rules",
+    "NC DPI Standard": "NC.M1.G-CO.2, NC.M1.G-CO.4"
+  },
+  {
+    "Unit Topic": "Geometric Transformations & Congruence",
+    "Lesson Number": "M1.GEO.TRANS.4.2",
+    "Atomic Concept": "Performing and Graphing Rotations About the Origin",
+    "Key Skills": "Rotate figures on the coordinate plane using rules for specific angles",
+    "NC DPI Standard": "NC.M1.G-CO.2"
+  },
+  {
+    "Unit Topic": "Geometric Transformations & Congruence",
+    "Lesson Number": "M1.GEO.TRANS.5.1",
+    "Atomic Concept": "Understanding Sequences of Transformations",
+    "Key Skills": "Perform a composition of two or more rigid transformations",
+    "NC DPI Standard": "NC.M1.G-CO.5"
+  },
+  {
+    "Unit Topic": "Geometric Transformations & Congruence",
+    "Lesson Number": "M1.GEO.TRANS.6.1",
+    "Atomic Concept": "Identifying Congruent Figures Based on Rigid Motions",
+    "Key Skills": "Determine if two figures are congruent by identifying a sequence of rigid motions",
+    "NC DPI Standard": "NC.M1.G-CO.6"
+  },
+  {
+    "Unit Topic": "Geometric Transformations & Congruence",
+    "Lesson Number": "M1.GEO.TRANS.7.1",
+    "Atomic Concept": "Understanding Definitions of Geometric Figures in Terms of Rigid Motions",
+    "Key Skills": "Understand how rigid motions relate to definitions of angles, perpendicular lines, parallel lines, and line segments",
+    "NC DPI Standard": "NC.M1.G-CO.1"
+  },
+  {
+    "Unit Topic": "Geometric Transformations & Congruence",
+    "Lesson Number": "M1.GEO.TRANS.7.2",
+    "Atomic Concept": "Understanding Definitions of Circles and Polygons in Terms of Rigid Motions",
+    "Key Skills": "Understand how rigid motions relate to definitions of circles and polygons",
+    "NC DPI Standard": "NC.M1.G-CO.1"
+  },
+  {
+    "Unit Topic": "Geometric Transformations & Congruence",
+    "Lesson Number": "M1.GEO.TRANS.8.1",
+    "Atomic Concept": "Understanding Line Symmetry",
+    "Key Skills": "Identify lines of symmetry in two-dimensional figures",
+    "NC DPI Standard": "NC.M1.G-CO.3"
+  },
+  {
+    "Unit Topic": "Geometric Transformations & Congruence",
+    "Lesson Number": "M1.GEO.TRANS.8.2",
+    "Atomic Concept": "Understanding Rotational Symmetry",
+    "Key Skills": "Identify rotational symmetry in two-dimensional figures; Determine angle of rotation",
+    "NC DPI Standard": "NC.M1.G-CO.3"
+  }
+]

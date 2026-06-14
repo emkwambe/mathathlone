@@ -1,0 +1,588 @@
+{
+  "courseTitle": "NC 8th Grade Math",
+  "units": [
+    {
+      "unitTopic": "The Real Number System",
+      "concepts": [
+        {
+          "lessonNumber": "M8.NS.1.1",
+          "atomicConcept": "Understanding Rational Numbers (Review)",
+          "keySkills": [
+            "Define rational numbers",
+            "Recognize fractions, terminating and repeating decimals as rational"
+          ],
+          "standard": "NC.8.NS.A.1"
+        },
+        {
+          "lessonNumber": "M8.NS.1.2",
+          "atomicConcept": "Understanding Irrational Numbers",
+          "keySkills": [
+            "Define irrational numbers",
+            "Identify examples like √2 or π as irrational"
+          ],
+          "standard": "NC.8.NS.A.1"
+        },
+        {
+          "lessonNumber": "M8.NS.1.3",
+          "atomicConcept": "Classifying Real Numbers (Rational vs. Irrational)",
+          "keySkills": [
+            "Categorize given numbers as rational or irrational",
+            "Understand the relationship between number sets"
+          ],
+          "standard": "NC.8.NS.A.1"
+        },
+        {
+          "lessonNumber": "M8.NS.2.1",
+          "atomicConcept": "Evaluating Square Roots and Cube Roots",
+          "keySkills": [
+            "Evaluate square roots of perfect squares",
+            "Evaluate cube roots of perfect cubes"
+          ],
+          "standard": "NC.8.NS.A.2"
+        },
+        {
+          "lessonNumber": "M8.NS.2.2",
+          "atomicConcept": "Solving Simple Equations Involving Squares (x² = p)",
+          "keySkills": [
+            "Solve equations of the form x² = p, where p is a positive rational number",
+            "Understand positive and negative solutions"
+          ],
+          "standard": "NC.8.NS.A.2"
+        },
+        {
+          "lessonNumber": "M8.NS.2.3",
+          "atomicConcept": "Solving Simple Equations Involving Cubes (x³ = p)",
+          "keySkills": [
+            "Solve equations of the form x³ = p, where p is a rational number"
+          ],
+          "standard": "NC.8.NS.A.2"
+        },
+        {
+          "lessonNumber": "M8.NS.3.1",
+          "atomicConcept": "Approximating Irrational Numbers by Rational Numbers",
+          "keySkills": [
+            "Approximate irrational numbers by truncating or rounding their decimal expansions"
+          ],
+          "standard": "NC.8.NS.A.2"
+        },
+        {
+          "lessonNumber": "M8.NS.3.2",
+          "atomicConcept": "Locating Irrational Numbers on a Number Line",
+          "keySkills": [
+            "Place irrational numbers (e.g., √2, √7, π) approximately on a number line"
+          ],
+          "standard": "NC.8.NS.A.2"
+        },
+        {
+          "lessonNumber": "M8.NS.3.3",
+          "atomicConcept": "Comparing the Size of Irrational Numbers",
+          "keySkills": [
+            "Compare two irrational numbers without using decimal approximations and justify the comparison"
+          ],
+          "standard": "NC.8.NS.A.2"
+        }
+      ]
+    },
+    {
+      "unitTopic": "Expressions & Equations",
+      "concepts": [
+        {
+          "lessonNumber": "M8.EE.1.1",
+          "atomicConcept": "Understanding and Applying Properties of Integer Exponents",
+          "keySkills": [
+            "Apply rules for exponents (product, quotient, power of a power, zero, negative) to simplify expressions"
+          ],
+          "standard": "NC.8.EE.A.1"
+        },
+        {
+          "lessonNumber": "M8.EE.2.1",
+          "atomicConcept": "Solving Linear Equations with Rational Coefficients (Multi-step)",
+          "keySkills": [
+            "Solve linear equations that require combining like terms and using the distributive property"
+          ],
+          "standard": "NC.8.EE.B.7a"
+        },
+        {
+          "lessonNumber": "M8.EE.2.2",
+          "atomicConcept": "Solving Linear Equations with Variables on Both Sides",
+          "keySkills": [
+            "Solve linear equations that include variables on both sides of the equal sign"
+          ],
+          "standard": "NC.8.EE.B.7a"
+        },
+        {
+          "lessonNumber": "M8.EE.2.3",
+          "atomicConcept": "Identifying Linear Equations with No Solution or Infinitely Many Solutions",
+          "keySkills": [
+            "Recognize and explain when linear equations have one solution, no solution, or infinitely many solutions"
+          ],
+          "standard": "NC.8.EE.B.7a"
+        },
+        {
+          "lessonNumber": "M8.EE.3.1",
+          "atomicConcept": "Understanding Solutions to Systems of Linear Equations (Graphically)",
+          "keySkills": [
+            "Understand that solutions to a system of two linear equations are the points of intersection on their graphs"
+          ],
+          "standard": "NC.8.EE.B.8a"
+        },
+        {
+          "lessonNumber": "M8.EE.3.2",
+          "atomicConcept": "Solving Systems of Linear Equations by Graphing",
+          "keySkills": [
+            "Graph two linear equations on a coordinate plane",
+            "Identify and state the intersection point as the solution"
+          ],
+          "standard": "NC.8.EE.B.8a"
+        },
+        {
+          "lessonNumber": "M8.EE.3.3",
+          "atomicConcept": "Solving Systems of Linear Equations by Substitution",
+          "keySkills": [
+            "Solve systems of two linear equations in two variables algebraically using the substitution method"
+          ],
+          "standard": "NC.8.EE.B.8b"
+        },
+        {
+          "lessonNumber": "M8.EE.3.4",
+          "atomicConcept": "Solving Systems of Linear Equations by Elimination",
+          "keySkills": [
+            "Solve systems of two linear equations in two variables algebraically using the elimination method"
+          ],
+          "standard": "NC.8.EE.B.8b"
+        },
+        {
+          "lessonNumber": "M8.EE.3.5",
+          "atomicConcept": "Identifying Types of Solutions to Systems of Linear Equations (Algebraically)",
+          "keySkills": [
+            "Recognize when systems have one solution, no solution, or infinitely many solutions from algebraic manipulation"
+          ],
+          "standard": "NC.8.EE.B.8b"
+        },
+        {
+          "lessonNumber": "M8.EE.4.1",
+          "atomicConcept": "Solving Real-World Problems Leading to Linear Equations",
+          "keySkills": [
+            "Model real-world situations with linear equations",
+            "Solve and interpret solutions in context"
+          ],
+          "standard": "NC.8.EE.B.6"
+        },
+        {
+          "lessonNumber": "M8.EE.4.2",
+          "atomicConcept": "Solving Real-World Problems Leading to Systems of Linear Equations",
+          "keySkills": [
+            "Construct and solve systems of linear equations to represent real-world problems (e.g., cost analysis, mixture problems)"
+          ],
+          "standard": "NC.8.EE.B.8c"
+        }
+      ]
+    },
+    {
+      "unitTopic": "Functions",
+      "concepts": [
+        {
+          "lessonNumber": "M8.F.1.1",
+          "atomicConcept": "Understanding the Concept of a Function",
+          "keySkills": [
+            "Define a function as a rule that assigns to each input exactly one output",
+            "Understand input-output relationship."
+          ],
+          "standard": "NC.8.F.A.1"
+        },
+        {
+          "lessonNumber": "M8.F.1.2",
+          "atomicConcept": "Identifying Functions from Tables, Graphs, and Ordered Pairs",
+          "keySkills": [
+            "Determine if a relation represented by a table, graph (using vertical line test), or set of ordered pairs is a function."
+          ],
+          "standard": "NC.8.F.A.1"
+        },
+        {
+          "lessonNumber": "M8.F.1.3",
+          "atomicConcept": "Understanding Domain and Range (Introduction)",
+          "keySkills": [
+            "Identify the set of possible input values (domain) and output values (range) for a function."
+          ],
+          "standard": "NC.8.F.A.1"
+        },
+        {
+          "lessonNumber": "M8.F.1.4",
+          "atomicConcept": "Evaluating Functions using Function Notation",
+          "keySkills": [
+            "Evaluate functions for specific input values, represented using f(x) notation."
+          ],
+          "standard": "NC.8.F.A.1"
+        },
+        {
+          "lessonNumber": "M8.F.2.1",
+          "atomicConcept": "Distinguishing Between Linear and Nonlinear Functions from Graphs",
+          "keySkills": [
+            "Recognize linear functions as having a constant rate of change represented by a straight line on a graph",
+            "Identify nonlinear functions."
+          ],
+          "standard": "NC.8.F.A.3"
+        },
+        {
+          "lessonNumber": "M8.F.2.2",
+          "atomicConcept": "Distinguishing Between Linear and Nonlinear Functions from Tables",
+          "keySkills": [
+            "Analyze tables to determine if there is a constant rate of change (linear) or not (nonlinear)."
+          ],
+          "standard": "NC.8.F.A.3"
+        },
+        {
+          "lessonNumber": "M8.F.2.3",
+          "atomicConcept": "Distinguishing Between Linear and Nonlinear Functions from Equations",
+          "keySkills": [
+            "Identify linear equations (y=mx+b) vs. nonlinear equations (e.g., those with x² or 1/x)."
+          ],
+          "standard": "NC.8.F.A.3"
+        },
+        {
+          "lessonNumber": "M8.F.3.1",
+          "atomicConcept": "Comparing Properties of Two Functions (Different Representations)",
+          "keySkills": [
+            "Compare rates of change, y-intercepts, and other key features of two functions each represented in a different way (e.g., algebraically, graphically, numerically in tables, or by verbal descriptions)."
+          ],
+          "standard": "NC.8.F.A.4"
+        },
+        {
+          "lessonNumber": "M8.F.3.2",
+          "atomicConcept": "Constructing a Function to Model a Linear Relationship",
+          "keySkills": [
+            "Write equations for linear functions from tables, graphs, or verbal descriptions",
+            "Determine the slope and y-intercept."
+          ],
+          "standard": "NC.8.F.B.5"
+        },
+        {
+          "lessonNumber": "M8.F.3.3",
+          "atomicConcept": "Interpreting the Rate of Change and Initial Value of a Linear Function in Context",
+          "keySkills": [
+            "Explain the meaning of the slope and y-intercept of a linear function in terms of the situation it models."
+          ],
+          "standard": "NC.8.F.B.5"
+        },
+        {
+          "lessonNumber": "M8.F.4.1",
+          "atomicConcept": "Describing Qualitative Features of a Function's Graph",
+          "keySkills": [
+            "Describe qualitatively the relationship between two quantities by analyzing a graph (e.g., where the function is increasing, decreasing, linear, or nonlinear)."
+          ],
+          "standard": "NC.8.F.B.6"
+        },
+        {
+          "lessonNumber": "M8.F.4.2",
+          "atomicConcept": "Sketching a Graph from a Qualitative Description",
+          "keySkills": [
+            "Sketch a graph that exhibits the qualitative features of a function based on a verbal description (e.g., a graph showing a car's speed over time)."
+          ],
+          "standard": "NC.8.F.B.6"
+        }
+      ]
+    },
+    {
+      "unitTopic": "Geometry: Transformations, Congruence, & Similarity",
+      "concepts": [
+        {
+          "lessonNumber": "M8.GEO.TRANS.1.1",
+          "atomicConcept": "Understanding Rigid Transformations (Translations, Reflections, Rotations)",
+          "keySkills": [
+            "Define rigid transformations",
+            "Understand that they preserve side lengths and angle measures"
+          ],
+          "standard": "NC.8.G.A.1, NC.8.G.A.2"
+        },
+        {
+          "lessonNumber": "M8.GEO.TRANS.1.2",
+          "atomicConcept": "Describing and Performing Translations in the Coordinate Plane",
+          "keySkills": [
+            "Understand translation as a slide",
+            "Describe translations using words or coordinate rules",
+            "Perform translations of figures on a coordinate plane"
+          ],
+          "standard": "NC.8.G.A.1, NC.8.G.A.3"
+        },
+        {
+          "lessonNumber": "M8.GEO.TRANS.1.3",
+          "atomicConcept": "Describing and Performing Reflections in the Coordinate Plane",
+          "keySkills": [
+            "Understand reflection as a flip",
+            "Describe reflections across axes (x, y) and lines like y=x",
+            "Perform reflections of figures on a coordinate plane"
+          ],
+          "standard": "NC.8.G.A.1, NC.8.G.A.3"
+        },
+        {
+          "lessonNumber": "M8.GEO.TRANS.1.4",
+          "atomicConcept": "Describing and Performing Rotations in the Coordinate Plane (90°, 180°, 270°)",
+          "keySkills": [
+            "Understand rotation as a turn about a center (origin)",
+            "Describe rotations",
+            "Perform rotations of figures on a coordinate plane"
+          ],
+          "standard": "NC.8.G.A.1, NC.8.G.A.3"
+        },
+        {
+          "lessonNumber": "M8.GEO.TRANS.2.1",
+          "atomicConcept": "Understanding Congruence in Terms of Rigid Transformations",
+          "keySkills": [
+            "Understand that two-dimensional figures are congruent if one can be obtained from the other by a sequence of rigid transformations"
+          ],
+          "standard": "NC.8.G.A.2"
+        },
+        {
+          "lessonNumber": "M8.GEO.TRANS.2.2",
+          "atomicConcept": "Determining Congruence Using Rigid Transformations",
+          "keySkills": [
+            "Determine if two figures are congruent by identifying a sequence of rigid transformations that maps one onto the other"
+          ],
+          "standard": "NC.8.G.A.2"
+        },
+        {
+          "lessonNumber": "M8.GEO.TRANS.3.1",
+          "atomicConcept": "Understanding Dilations (Center and Scale Factor)",
+          "keySkills": [
+            "Define dilation as a transformation that enlarges or reduces a figure",
+            "Understand how scale factor affects size"
+          ],
+          "standard": "NC.8.G.A.3, NC.8.G.A.4"
+        },
+        {
+          "lessonNumber": "M8.GEO.TRANS.3.2",
+          "atomicConcept": "Describing and Performing Dilations in the Coordinate Plane",
+          "keySkills": [
+            "Describe dilations using words (e.g., \"dilation with center at the origin and scale factor 2\")",
+            "Perform dilations of figures on a coordinate plane"
+          ],
+          "standard": "NC.8.G.A.3, NC.8.G.A.4"
+        },
+        {
+          "lessonNumber": "M8.GEO.TRANS.4.1",
+          "atomicConcept": "Understanding Similarity in Terms of Transformations",
+          "keySkills": [
+            "Understand that a two-dimensional figure is similar to another if the second can be obtained from the first by a sequence of rigid transformations and a dilation"
+          ],
+          "standard": "NC.8.G.A.4"
+        },
+        {
+          "lessonNumber": "M8.GEO.TRANS.4.2",
+          "atomicConcept": "Determining Similarity Using Transformations",
+          "keySkills": [
+            "Determine if two figures are similar by identifying a sequence of transformations (rigid motions and dilation) that maps one onto the other"
+          ],
+          "standard": "NC.8.G.A.4"
+        },
+        {
+          "lessonNumber": "M8.GEO.TRANS.5.1",
+          "atomicConcept": "Understanding Corresponding Sides and Angles of Similar Figures",
+          "keySkills": [
+            "Identify corresponding sides and angles of similar figures after a sequence of transformations"
+          ],
+          "standard": "NC.8.G.A.4"
+        },
+        {
+          "lessonNumber": "M8.GEO.TRANS.5.2",
+          "atomicConcept": "Using Similar Figures to Solve Problems (Finding Missing Sides/Angles)",
+          "keySkills": [
+            "Apply properties of similar figures to find unknown side lengths or angle measures"
+          ],
+          "standard": "NC.8.G.A.5"
+        },
+        {
+          "lessonNumber": "M8.GEO.TRANS.6.1",
+          "atomicConcept": "Understanding the Relationship Between Parallel Lines and Transversals",
+          "keySkills": [
+            "Understand that the sum of angles in a triangle is 180° by explaining angles formed by parallel lines and transversals."
+          ],
+          "standard": "NC.8.G.A.5"
+        },
+        {
+          "lessonNumber": "M8.GEO.TRANS.6.2",
+          "atomicConcept": "Explaining Angle Sum and Exterior Angle of Triangles",
+          "keySkills": [
+            "Explain proofs of the angle sum theorem and the exterior angle theorem of triangles."
+          ],
+          "standard": "NC.8.G.A.5"
+        }
+      ]
+    },
+    {
+      "unitTopic": "Geometry: Pythagorean Theorem & Volume",
+      "concepts": [
+        {
+          "lessonNumber": "M8.GEO.PV.1.1",
+          "atomicConcept": "Understanding the Pythagorean Theorem (a² + b² = c²)",
+          "keySkills": [
+            "Define the Pythagorean Theorem",
+            "Identify legs and hypotenuse in a right triangle"
+          ],
+          "standard": "NC.8.G.B.6"
+        },
+        {
+          "lessonNumber": "M8.GEO.PV.1.2",
+          "atomicConcept": "Applying the Pythagorean Theorem to Find Missing Side Lengths",
+          "keySkills": [
+            "Use the Pythagorean Theorem to find unknown side lengths of right triangles (legs or hypotenuse)"
+          ],
+          "standard": "NC.8.G.B.7"
+        },
+        {
+          "lessonNumber": "M8.GEO.PV.1.3",
+          "atomicConcept": "Applying the Pythagorean Theorem in Two-Dimensional Contexts",
+          "keySkills": [
+            "Solve real-world problems involving right triangles in 2-D scenarios (e.g., finding the length of a ladder against a wall)"
+          ],
+          "standard": "NC.8.G.B.7"
+        },
+        {
+          "lessonNumber": "M8.GEO.PV.1.4",
+          "atomicConcept": "Applying the Pythagorean Theorem in Three-Dimensional Contexts",
+          "keySkills": [
+            "Use the Pythagorean Theorem to find unknown lengths in 3-D figures (e.g., diagonal of a rectangular prism)"
+          ],
+          "standard": "NC.8.G.B.7"
+        },
+        {
+          "lessonNumber": "M8.GEO.PV.1.5",
+          "atomicConcept": "Understanding and Applying the Converse of the Pythagorean Theorem",
+          "keySkills": [
+            "Determine if a triangle is a right triangle given its side lengths"
+          ],
+          "standard": "NC.8.G.B.6"
+        },
+        {
+          "lessonNumber": "M8.GEO.PV.2.1",
+          "atomicConcept": "Finding the Distance Between Two Points in the Coordinate Plane",
+          "keySkills": [
+            "Use the Pythagorean Theorem or the distance formula to find the distance between any two points in the coordinate plane"
+          ],
+          "standard": "NC.8.G.B.8"
+        },
+        {
+          "lessonNumber": "M8.GEO.PV.3.1",
+          "atomicConcept": "Understanding Volume Formulas for Cylinders",
+          "keySkills": [
+            "Understand the relationship between the base area and height in a cylinder's volume formula (V = Bh or V = πr²h)"
+          ],
+          "standard": "NC.8.G.C.9"
+        },
+        {
+          "lessonNumber": "M8.GEO.PV.3.2",
+          "atomicConcept": "Calculating Volume of Cylinders",
+          "keySkills": [
+            "Calculate the volume of cylinders using the formula",
+            "Solve problems involving cylinders"
+          ],
+          "standard": "NC.8.G.C.9"
+        },
+        {
+          "lessonNumber": "M8.GEO.PV.3.3",
+          "atomicConcept": "Understanding Volume Formulas for Cones",
+          "keySkills": [
+            "Understand the relationship between the volume of a cone and a cylinder with the same base and height (V = ⅓Bh or V = ⅓πr²h)"
+          ],
+          "standard": "NC.8.G.C.9"
+        },
+        {
+          "lessonNumber": "M8.GEO.PV.3.4",
+          "atomicConcept": "Calculating Volume of Cones",
+          "keySkills": [
+            "Calculate the volume of cones using the formula",
+            "Solve problems involving cones"
+          ],
+          "standard": "NC.8.G.C.9"
+        },
+        {
+          "lessonNumber": "M8.GEO.PV.3.5",
+          "atomicConcept": "Understanding Volume Formulas for Spheres",
+          "keySkills": [
+            "Understand the formula for the volume of a sphere (V = ⁴⁄₃πr³)"
+          ],
+          "standard": "NC.8.G.C.9"
+        },
+        {
+          "lessonNumber": "M8.GEO.PV.3.6",
+          "atomicConcept": "Calculating Volume of Spheres",
+          "keySkills": [
+            "Calculate the volume of spheres using the formula",
+            "Solve problems involving spheres"
+          ],
+          "standard": "NC.8.G.C.9"
+        },
+        {
+          "lessonNumber": "M8.GEO.PV.4.1",
+          "atomicConcept": "Solving Real-World Problems Involving Volumes of Cylinders, Cones, and Spheres",
+          "keySkills": [
+            "Apply volume formulas to solve contextual problems (e.g., finding how much a container can hold)"
+          ],
+          "standard": "NC.8.G.C.9"
+        }
+      ]
+    },
+    {
+      "unitTopic": "Statistics and Probability",
+      "concepts": [
+        {
+          "lessonNumber": "M8.SP.1.1",
+          "atomicConcept": "Constructing and Interpreting Scatter Plots for Bivariate Data",
+          "keySkills": [
+            "Construct a scatter plot for two quantitative variables on a coordinate plane",
+            "Interpret points on the scatter plot."
+          ],
+          "standard": "NC.8.SP.A.1"
+        },
+        {
+          "lessonNumber": "M8.SP.1.2",
+          "atomicConcept": "Investigating Patterns of Association in Scatter Plots",
+          "keySkills": [
+            "Describe patterns of association (e.g., positive, negative, no association; linear or nonlinear association).",
+            "Identify outliers or clusters."
+          ],
+          "standard": "NC.8.SP.A.1"
+        },
+        {
+          "lessonNumber": "M8.SP.2.1",
+          "atomicConcept": "Understanding and Drawing Lines of Best Fit (Informal)",
+          "keySkills": [
+            "Informally fit a straight line to a scatter plot that suggests a linear association."
+          ],
+          "standard": "NC.8.SP.A.2"
+        },
+        {
+          "lessonNumber": "M8.SP.2.2",
+          "atomicConcept": "Using Lines of Best Fit to Solve Problems in Context",
+          "keySkills": [
+            "Use the equation of a linear model to solve problems in the context of bivariate measurement data."
+          ],
+          "standard": "NC.8.SP.A.3"
+        },
+        {
+          "lessonNumber": "M8.SP.2.3",
+          "atomicConcept": "Interpreting the Slope and Y-intercept of a Linear Model",
+          "keySkills": [
+            "Interpret the slope and y-intercept of a linear model in the context of the data."
+          ],
+          "standard": "NC.8.SP.A.3"
+        },
+        {
+          "lessonNumber": "M8.SP.3.1",
+          "atomicConcept": "Constructing and Interpreting Two-Way Tables for Categorical Data",
+          "keySkills": [
+            "Construct a two-way table summarizing data on two categorical variables."
+          ],
+          "standard": "NC.8.SP.B.4"
+        },
+        {
+          "lessonNumber": "M8.SP.3.2",
+          "atomicConcept": "Understanding Relative Frequencies for Rows or Columns in Two-Way Tables",
+          "keySkills": [
+            "Calculate and interpret relative frequencies for rows or columns to describe possible association between the two variables."
+          ],
+          "standard": "NC.8.SP.B.4"
+        }
+      ]
+    }
+  ]
+}

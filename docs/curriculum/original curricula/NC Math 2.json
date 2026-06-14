@@ -1,0 +1,1101 @@
+[
+    {
+      "Unit Topic": "The Real Number System",
+      "Lesson Number": "M2.RNS.1.1",
+      "Atomic Concept": "Understanding Rational Numbers",
+      "Key Skills": "Define rational numbers; Convert fractions to decimals and vice-versa",
+      "NC DPI Standard": "NC.M2.N-RN.2"
+    },
+    {
+      "Unit Topic": "The Real Number System",
+      "Lesson Number": "M2.RNS.1.2",
+      "Atomic Concept": "Understanding Irrational Numbers",
+      "Key Skills": "Define irrational numbers (e.g., √2, π); Recognize non-repeating, non-terminating decimals",
+      "NC DPI Standard": "NC.M2.N-RN.2"
+    },
+    {
+      "Unit Topic": "The Real Number System",
+      "Lesson Number": "M2.RNS.1.3",
+      "Atomic Concept": "Classifying Real Numbers (Rational vs. Irrational)",
+      "Key Skills": "Categorize numbers as rational or irrational; Place on a number line",
+      "NC DPI Standard": "NC.M2.N-RN.2"
+    },
+    {
+      "Unit Topic": "The Real Number System",
+      "Lesson Number": "M2.RNS.2.1",
+      "Atomic Concept": "Understanding and Applying Properties of Rational Exponents",
+      "Key Skills": "Define a^(m/n) = nth_root(a^m); Apply integer exponent properties to rational exponents",
+      "NC DPI Standard": "NC.M2.N-RN.1"
+    },
+    {
+      "Unit Topic": "The Real Number System",
+      "Lesson Number": "M2.RNS.2.2",
+      "Atomic Concept": "Simplifying Expressions with Rational Exponents",
+      "Key Skills": "Use exponent rules (product, quotient, power rules) with fractional exponents",
+      "NC DPI Standard": "NC.M2.N-RN.1"
+    },
+    {
+      "Unit Topic": "The Real Number System",
+      "Lesson Number": "M2.RNS.3.1",
+      "Atomic Concept": "Simplifying Radical Expressions (Review & Extension)",
+      "Key Skills": "Factor out perfect squares/cubes; Simplify radicals with variables",
+      "NC DPI Standard": "NC.M2.N-RN.2"
+    },
+    {
+      "Unit Topic": "The Real Number System",
+      "Lesson Number": "M2.RNS.3.2",
+      "Atomic Concept": "Adding and Subtracting Radical Expressions",
+      "Key Skills": "Combine like radicals; Simplify before combining",
+      "NC DPI Standard": "NC.M2.N-RN.2"
+    },
+    {
+      "Unit Topic": "The Real Number System",
+      "Lesson Number": "M2.RNS.3.3",
+      "Atomic Concept": "Multiplying Radical Expressions",
+      "Key Skills": "Apply distributive property; Use FOIL for binomials; Simplify products",
+      "NC DPI Standard": "NC.M2.N-RN.2"
+    },
+    {
+      "Unit Topic": "The Real Number System",
+      "Lesson Number": "M2.RNS.3.4",
+      "Atomic Concept": "Dividing Radical Expressions (Rationalizing the Denominator - Monomial)",
+      "Key Skills": "Eliminate radicals from the denominator; Simplify quotients",
+      "NC DPI Standard": "NC.M2.N-RN.2"
+    },
+    {
+      "Unit Topic": "The Real Number System",
+      "Lesson Number": "M2.RNS.3.5",
+      "Atomic Concept": "Dividing Radical Expressions (Rationalizing the Denominator - Conjugates)",
+      "Key Skills": "Use conjugates to rationalize binomial denominators",
+      "NC DPI Standard": "NC.M2.N-RN.2"
+    },
+    {
+      "Unit Topic": "The Real Number System",
+      "Lesson Number": "M2.RNS.4.1",
+      "Atomic Concept": "Solving Equations with Rational Exponents",
+      "Key Skills": "Isolate term with rational exponent; Raise both sides to reciprocal power",
+      "NC DPI Standard": "NC.M2.A-REI.2"
+    },
+    {
+      "Unit Topic": "The Real Number System",
+      "Lesson Number": "M2.RNS.4.2",
+      "Atomic Concept": "Solving Radical Equations (with one radical)",
+      "Key Skills": "Isolate the radical; Square/cube both sides",
+      "NC DPI Standard": "NC.M2.A-REI.2"
+    },
+    {
+      "Unit Topic": "The Real Number System",
+      "Lesson Number": "M2.RNS.4.3",
+      "Atomic Concept": "Solving Radical Equations (with multiple radicals or other terms)",
+      "Key Skills": "Isolate one radical at a time; Square/cube both sides; Check for extraneous solutions",
+      "NC DPI Standard": "NC.M2.A-REI.2"
+    },
+    {
+      "Unit Topic": "The Complex Number System",
+      "Lesson Number": "M2.CN.1.1",
+      "Atomic Concept": "Understanding the Imaginary Unit *i* and its properties",
+      "Key Skills": "Define *i* as √-1; Understand powers of *i* (e.g., i², i³, i⁴)",
+      "NC DPI Standard": "NC.M2.N-CN.1"
+    },
+    {
+      "Unit Topic": "The Complex Number System",
+      "Lesson Number": "M2.CN.1.2",
+      "Atomic Concept": "Simplifying Square Roots of Negative Numbers",
+      "Key Skills": "Express √-b as i√b for b > 0; Simplify radical expressions with negative radicands",
+      "NC DPI Standard": "NC.M2.N-CN.1"
+    },
+    {
+      "Unit Topic": "The Complex Number System",
+      "Lesson Number": "M2.CN.1.3",
+      "Atomic Concept": "Understanding Complex Numbers and their Standard Form (a + bi)",
+      "Key Skills": "Identify the real part and the imaginary part; Represent complex numbers in the form a + bi",
+      "NC DPI Standard": "NC.M2.N-CN.1"
+    },
+    {
+      "Unit Topic": "The Complex Number System",
+      "Lesson Number": "M2.CN.2.1",
+      "Atomic Concept": "Adding and Subtracting Complex Numbers",
+      "Key Skills": "Combine real parts with real parts and imaginary parts with imaginary parts",
+      "NC DPI Standard": "NC.M2.N-CN.2"
+    },
+    {
+      "Unit Topic": "The Complex Number System",
+      "Lesson Number": "M2.CN.2.2",
+      "Atomic Concept": "Multiplying Complex Numbers",
+      "Key Skills": "Apply the distributive property; Use i² = -1; Multiply binomials containing complex numbers",
+      "NC DPI Standard": "NC.M2.N-CN.2"
+    },
+    {
+      "Unit Topic": "The Complex Number System",
+      "Lesson Number": "M2.CN.2.3",
+      "Atomic Concept": "Understanding Complex Conjugates",
+      "Key Skills": "Define the complex conjugate of a + bi as a - bi; Understand their role in division",
+      "NC DPI Standard": "NC.M2.N-CN.3"
+    },
+    {
+      "Unit Topic": "The Complex Number System",
+      "Lesson Number": "M2.CN.2.4",
+      "Atomic Concept": "Dividing Complex Numbers",
+      "Key Skills": "Rationalize the denominator by multiplying by the complex conjugate",
+      "NC DPI Standard": "NC.M2.N-CN.3"
+    },
+    {
+      "Unit Topic": "The Complex Number System",
+      "Lesson Number": "M2.CN.3.1",
+      "Atomic Concept": "Solving Quadratic Equations with Complex Solutions (using Square Roots)",
+      "Key Skills": "Apply the square root property to solve equations of the form x² = -c",
+      "NC DPI Standard": "NC.M2.N-CN.7, NC.M2.A-REI.4b"
+    },
+    {
+      "Unit Topic": "The Complex Number System",
+      "Lesson Number": "M2.CN.3.2",
+      "Atomic Concept": "Solving Quadratic Equations with Complex Solutions (using Quadratic Formula)",
+      "Key Skills": "Use the quadratic formula when the discriminant is negative to find complex solutions",
+      "NC DPI Standard": "NC.M2.N-CN.7, NC.M2.A-REI.4b"
+    },
+    {
+      "Unit Topic": "Seeing Structure in Expressions",
+      "Lesson Number": "M2.SSE.1.1",
+      "Atomic Concept": "Interpreting Parts of an Expression (Terms, Factors, Coefficients, Exponents)",
+      "Key Skills": "Identify components of expressions; Understand their meaning in context",
+      "NC DPI Standard": "NC.M2.A-SSE.1"
+    },
+    {
+      "Unit Topic": "Seeing Structure in Expressions",
+      "Lesson Number": "M2.SSE.1.2",
+      "Atomic Concept": "Interpreting Complicated Expressions by Viewing Parts as a Single Entity",
+      "Key Skills": "Recognize binomials or complex terms as single units (e.g., (x²-1) as a difference of squares)",
+      "NC DPI Standard": "NC.M2.A-SSE.1b"
+    },
+    {
+      "Unit Topic": "Seeing Structure in Expressions",
+      "Lesson Number": "M2.SSE.2.1",
+      "Atomic Concept": "Factoring Quadratic Expressions to Reveal the Zeros of the Function",
+      "Key Skills": "Factor quadratic expressions to find x-intercepts or roots",
+      "NC DPI Standard": "NC.M2.A-SSE.3a"
+    },
+    {
+      "Unit Topic": "Seeing Structure in Expressions",
+      "Lesson Number": "M2.SSE.2.2",
+      "Atomic Concept": "Completing the Square in a Quadratic Expression to Reveal Vertex Form",
+      "Key Skills": "Rewrite quadratic expressions to identify maximum or minimum values",
+      "NC DPI Standard": "NC.M2.A-SSE.3b"
+    },
+    {
+      "Unit Topic": "Seeing Structure in Expressions",
+      "Lesson Number": "M2.SSE.3.1",
+      "Atomic Concept": "Using Properties of Exponents to Rewrite Radical Expressions",
+      "Key Skills": "Apply rules for integer and rational exponents to simplify and rewrite expressions involving radicals",
+      "NC DPI Standard": "NC.M2.N-RN.1, NC.M2.N-RN.2"
+    },
+    {
+      "Unit Topic": "Seeing Structure in Expressions",
+      "Lesson Number": "M2.SSE.3.2",
+      "Atomic Concept": "Rewriting Rational Expressions in Different Forms",
+      "Key Skills": "Factor and simplify rational expressions; Perform operations to rewrite forms",
+      "NC DPI Standard": "NC.M2.A-APR.7"
+    },
+    {
+      "Unit Topic": "Seeing Structure in Expressions",
+      "Lesson Number": "M2.SSE.4.1",
+      "Atomic Concept": "Choosing and Using Equivalent Forms of Expressions to Solve Problems",
+      "Key Skills": "Select the most appropriate form (factored, standard, vertex) to answer questions",
+      "NC DPI Standard": "NC.M2.A-SSE.3"
+    },
+    {
+      "Unit Topic": "Seeing Structure in Expressions",
+      "Lesson Number": "M2.SSE.4.2",
+      "Atomic Concept": "Analyzing Expressions in Context (e.g., projectile motion, financial models)",
+      "Key Skills": "Interpret coefficients, terms, and factors in real-world scenarios",
+      "NC DPI Standard": "NC.M2.A-SSE.1, NC.M2.A-SSE.3"
+    },
+    {
+      "Unit Topic": "Arithmetic with Polynomial & Rational Expressions",
+      "Lesson Number": "M2.APR.1.1",
+      "Atomic Concept": "Review: Adding and Subtracting Polynomials",
+      "Key Skills": "Combine like terms of two or more polynomials",
+      "NC DPI Standard": "NC.M2.A-APR.1"
+    },
+    {
+      "Unit Topic": "Arithmetic with Polynomial & Rational Expressions",
+      "Lesson Number": "M2.APR.1.2",
+      "Atomic Concept": "Review: Multiplying Polynomials (Monomial by Polynomial, Binomial by Binomial)",
+      "Key Skills": "Use distributive property; Apply FOIL method; Expand expressions",
+      "NC DPI Standard": "NC.M2.A-APR.1"
+    },
+    {
+      "Unit Topic": "Arithmetic with Polynomial & Rational Expressions",
+      "Lesson Number": "M2.APR.1.3",
+      "Atomic Concept": "Understanding Closure Property of Polynomials (Addition, Subtraction, Multiplication)",
+      "Key Skills": "Determine if the result of an operation on polynomials is always a polynomial",
+      "NC DPI Standard": "NC.M2.A-APR.1"
+    },
+    {
+      "Unit Topic": "Arithmetic with Polynomial & Rational Expressions",
+      "Lesson Number": "M2.APR.1.4",
+      "Atomic Concept": "Understanding Polynomials as Analogous to Integers",
+      "Key Skills": "Recognize structural similarities between polynomial arithmetic and integer arithmetic",
+      "NC DPI Standard": "NC.M2.A-APR.1"
+    },
+    {
+      "Unit Topic": "Arithmetic with Polynomial & Rational Expressions",
+      "Lesson Number": "M2.APR.2.1",
+      "Atomic Concept": "Performing Polynomial Long Division",
+      "Key Skills": "Divide polynomials using long division algorithm",
+      "NC DPI Standard": "NC.M2.A-APR.6"
+    },
+    {
+      "Unit Topic": "Arithmetic with Polynomial & Rational Expressions",
+      "Lesson Number": "M2.APR.2.2",
+      "Atomic Concept": "Performing Synthetic Division of Polynomials",
+      "Key Skills": "Use synthetic division for division by linear factors (x-k)",
+      "NC DPI Standard": "NC.M2.A-APR.6"
+    },
+    {
+      "Unit Topic": "Arithmetic with Polynomial & Rational Expressions",
+      "Lesson Number": "M2.APR.3.1",
+      "Atomic Concept": "Review: Simplifying Rational Expressions",
+      "Key Skills": "Factor numerator and denominator; Cancel common factors",
+      "NC DPI Standard": "NC.M2.A-APR.7"
+    },
+    {
+      "Unit Topic": "Arithmetic with Polynomial & Rational Expressions",
+      "Lesson Number": "M2.APR.3.2",
+      "Atomic Concept": "Multiplying Rational Expressions",
+      "Key Skills": "Factor expressions; Multiply numerators and denominators; Simplify products",
+      "NC DPI Standard": "NC.M2.A-APR.7"
+    },
+    {
+      "Unit Topic": "Arithmetic with Polynomial & Rational Expressions",
+      "Lesson Number": "M2.APR.3.3",
+      "Atomic Concept": "Dividing Rational Expressions",
+      "Key Skills": "Multiply by the reciprocal; Factor and simplify quotients",
+      "NC DPI Standard": "NC.M2.A-APR.7"
+    },
+    {
+      "Unit Topic": "Arithmetic with Polynomial & Rational Expressions",
+      "Lesson Number": "M2.APR.4.1",
+      "Atomic Concept": "Finding the Least Common Multiple (LCM) of Polynomials",
+      "Key Skills": "Determine the LCM of polynomial expressions to find common denominators",
+      "NC DPI Standard": "NC.M2.A-APR.7"
+    },
+    {
+      "Unit Topic": "Arithmetic with Polynomial & Rational Expressions",
+      "Lesson Number": "M2.APR.4.2",
+      "Atomic Concept": "Adding and Subtracting Rational Expressions with Like Denominators",
+      "Key Skills": "Combine numerators over common denominator; Simplify",
+      "NC DPI Standard": "NC.M2.A-APR.7"
+    },
+    {
+      "Unit Topic": "Arithmetic with Polynomial & Rational Expressions",
+      "Lesson Number": "M2.APR.4.3",
+      "Atomic Concept": "Adding and Subtracting Rational Expressions with Unlike Denominators",
+      "Key Skills": "Find common denominator; Rewrite expressions; Combine and simplify",
+      "NC DPI Standard": "NC.M2.A-APR.7"
+    },
+    {
+      "Unit Topic": "Arithmetic with Polynomial & Rational Expressions",
+      "Lesson Number": "M2.APR.4.4",
+      "Atomic Concept": "Understanding Rational Expressions as Analogous to Rational Numbers",
+      "Key Skills": "Recognize structural similarities between rational expression arithmetic and rational number arithmetic",
+      "NC DPI Standard": "NC.M2.A-APR.7"
+    },
+    {
+      "Unit Topic": "Creating Equations",
+      "Lesson Number": "M2.CE.1.1",
+      "Atomic Concept": "Creating Equations and Inequalities in One Variable from Context",
+      "Key Skills": "Translate verbal descriptions into linear or quadratic equations/inequalities with one unknown",
+      "NC DPI Standard": "NC.M2.A-CED.1"
+    },
+    {
+      "Unit Topic": "Creating Equations",
+      "Lesson Number": "M2.CE.1.2",
+      "Atomic Concept": "Creating Equations in Two or More Variables to Represent Relationships",
+      "Key Skills": "Define variables; Write equations that represent the relationship between two or more quantities",
+      "NC DPI Standard": "NC.M2.A-CED.2"
+    },
+    {
+      "Unit Topic": "Creating Equations",
+      "Lesson Number": "M2.CE.1.3",
+      "Atomic Concept": "Creating Inequalities in Two Variables to Represent Constraints",
+      "Key Skills": "Model real-world situations with linear or quadratic inequalities in two variables",
+      "NC DPI Standard": "NC.M2.A-CED.2"
+    },
+    {
+      "Unit Topic": "Creating Equations",
+      "Lesson Number": "M2.CE.2.1",
+      "Atomic Concept": "Representing Constraints Using Equations or Inequalities (Contextual Problems)",
+      "Key Skills": "Formulate a system of equations or inequalities to describe a situation",
+      "NC DPI Standard": "NC.M2.A-CED.3"
+    },
+    {
+      "Unit Topic": "Creating Equations",
+      "Lesson Number": "M2.CE.3.1",
+      "Atomic Concept": "Rearranging Formulas to Highlight a Quantity of Interest (Literal Equations)",
+      "Key Skills": "Isolate a specific variable in a formula or equation that has multiple variables",
+      "NC DPI Standard": "NC.M2.A-CED.4"
+    },
+    {
+      "Unit Topic": "Creating Equations",
+      "Lesson Number": "M2.CE.4.1",
+      "Atomic Concept": "Creating Quadratic Equations from Graphs, Tables, or Verbal Descriptions",
+      "Key Skills": "Identify key features (vertex, intercepts) to write the equation; Use given points to determine parameters",
+      "NC DPI Standard": "NC.M2.A-CED.1, NC.M2.F-BF.1"
+    },
+    {
+      "Unit Topic": "Creating Equations",
+      "Lesson Number": "M2.CE.4.2",
+      "Atomic Concept": "Creating Square Root Equations from Graphs, Tables, or Verbal Descriptions",
+      "Key Skills": "Determine parameters to write equations for square root functions",
+      "NC DPI Standard": "NC.M2.A-CED.1, NC.M2.F-BF.1"
+    },
+    {
+      "Unit Topic": "Creating Equations",
+      "Lesson Number": "M2.CE.4.3",
+      "Atomic Concept": "Creating Inverse Variation Equations from Graphs, Tables, or Verbal Descriptions",
+      "Key Skills": "Identify inverse relationship; Write equations for inverse variation functions",
+      "NC DPI Standard": "NC.M2.A-CED.1, NC.M2.F-BF.1"
+    },
+    {
+      "Unit Topic": "Creating Equations",
+      "Lesson Number": "M2.CE.5.1",
+      "Atomic Concept": "Solving Equations Graphically (Finding Intersections)",
+      "Key Skills": "Use graphs to find approximate or exact solutions to equations",
+      "NC DPI Standard": "NC.M2.A-REI.11"
+    },
+    {
+      "Unit Topic": "Reasoning with Equations & Inequalities",
+      "Lesson Number": "M2.REI.1.1",
+      "Atomic Concept": "Understanding the Process of Solving Equations as a Logical Progression",
+      "Key Skills": "Justify each step in solving equations; Explain the derivation of solutions",
+      "NC DPI Standard": "NC.M2.A-REI.1"
+    },
+    {
+      "Unit Topic": "Reasoning with Equations & Inequalities",
+      "Lesson Number": "M2.REI.2.1",
+      "Atomic Concept": "Solving Quadratic Equations by Factoring, Taking Square Roots, and Completing the Square",
+      "Key Skills": "Choose and apply appropriate method to find all real and complex solutions",
+      "NC DPI Standard": "NC.M2.A-REI.4a, NC.M2.A-REI.4b"
+    },
+    {
+      "Unit Topic": "Reasoning with Equations & Inequalities",
+      "Lesson Number": "M2.REI.2.2",
+      "Atomic Concept": "Solving Quadratic Equations using the Quadratic Formula (Real and Complex Solutions)",
+      "Key Skills": "Apply the formula; Simplify solutions, including those with imaginary components",
+      "NC DPI Standard": "NC.M2.A-REI.4b"
+    },
+    {
+      "Unit Topic": "Reasoning with Equations & Inequalities",
+      "Lesson Number": "M2.REI.3.1",
+      "Atomic Concept": "Solving Radical Equations (Focus on extraneous solutions)",
+      "Key Skills": "Isolate radical; Square both sides; Check all solutions to avoid extraneous ones",
+      "NC DPI Standard": "NC.M2.A-REI.2"
+    },
+    {
+      "Unit Topic": "Reasoning with Equations & Inequalities",
+      "Lesson Number": "M2.REI.4.1",
+      "Atomic Concept": "Solving Rational Equations (Focus on extraneous solutions and domain restrictions)",
+      "Key Skills": "Find common denominators; Clear denominators; Check for extraneous solutions due to domain restrictions",
+      "NC DPI Standard": "NC.M2.A-REI.2"
+    },
+    {
+      "Unit Topic": "Reasoning with Equations & Inequalities",
+      "Lesson Number": "M2.REI.5.1",
+      "Atomic Concept": "Solving Simple Exponential Equations (Common Base Method)",
+      "Key Skills": "Rewrite terms with a common base; Equate exponents and solve",
+      "NC DPI Standard": "NC.M2.A-REI.1"
+    },
+    {
+      "Unit Topic": "Reasoning with Equations & Inequalities",
+      "Lesson Number": "M2.REI.6.1",
+      "Atomic Concept": "Solving Systems of Linear and Quadratic Equations (Algebraically)",
+      "Key Skills": "Use substitution or elimination methods to find intersection points",
+      "NC DPI Standard": "NC.M2.A-REI.7"
+    },
+    {
+      "Unit Topic": "Reasoning with Equations & Inequalities",
+      "Lesson Number": "M2.REI.6.2",
+      "Atomic Concept": "Solving Systems of Linear and Quadratic Equations (Graphically)",
+      "Key Skills": "Graph both equations; Identify and interpret points of intersection",
+      "NC DPI Standard": "NC.M2.A-REI.7"
+    },
+    {
+      "Unit Topic": "Reasoning with Equations & Inequalities",
+      "Lesson Number": "M2.REI.7.1",
+      "Atomic Concept": "Solving Quadratic Inequalities by Graphing",
+      "Key Skills": "Graph the related parabola; Identify regions that satisfy the inequality; Write solution set",
+      "NC DPI Standard": "NC.M2.A-REI.11"
+    },
+    {
+      "Unit Topic": "Reasoning with Equations & Inequalities",
+      "Lesson Number": "M2.REI.7.2",
+      "Atomic Concept": "Solving Quadratic Inequalities Algebraically",
+      "Key Skills": "Find critical points; Test intervals on a number line; Express solution set",
+      "NC DPI Standard": "NC.M2.A-REI.11"
+    },
+    {
+      "Unit Topic": "Reasoning with Equations & Inequalities",
+      "Lesson Number": "M2.REI.8.1",
+      "Atomic Concept": "Solving Systems of Inequalities (Linear and Quadratic) by Graphing",
+      "Key Skills": "Graph each inequality; Shade the feasible region; Identify solution set",
+      "NC DPI Standard": "NC.M2.A-REI.11"
+    },
+    {
+      "Unit Topic": "Interpreting Functions",
+      "Lesson Number": "M2.IF.1.1",
+      "Atomic Concept": "Understanding Function Notation and Evaluating Functions",
+      "Key Skills": "Use function notation (f(x)); Substitute input values to find output values",
+      "NC DPI Standard": "NC.M2.F-IF.2"
+    },
+    {
+      "Unit Topic": "Interpreting Functions",
+      "Lesson Number": "M2.IF.1.2",
+      "Atomic Concept": "Identifying Domain and Range of Functions (from graphs, equations, tables)",
+      "Key Skills": "Determine input values and output values for quadratic, square root, and inverse variation functions",
+      "NC DPI Standard": "NC.M2.F-IF.1"
+    },
+    {
+      "Unit Topic": "Interpreting Functions",
+      "Lesson Number": "M2.IF.1.3",
+      "Atomic Concept": "Relating the Domain of a Function to its Graph and Context",
+      "Key Skills": "Identify reasonable domain restrictions based on the real-world scenario or graph",
+      "NC DPI Standard": "NC.M2.F-IF.5"
+    },
+    {
+      "Unit Topic": "Interpreting Functions",
+      "Lesson Number": "M2.IF.2.1",
+      "Atomic Concept": "Calculating and Interpreting Average Rate of Change of a Function",
+      "Key Skills": "Calculate average rate of change from tables or graphs; Interpret in context",
+      "NC DPI Standard": "NC.M2.F-IF.6"
+    },
+    {
+      "Unit Topic": "Interpreting Functions",
+      "Lesson Number": "M2.IF.3.1",
+      "Atomic Concept": "Analyzing Key Features of Quadratic Functions from Graphs/Tables",
+      "Key Skills": "Identify intercepts, intervals of increasing/decreasing, positive/negative, max/min, end behavior, symmetry",
+      "NC DPI Standard": "NC.M2.F-IF.4, NC.M2.F-IF.7a"
+    },
+    {
+      "Unit Topic": "Interpreting Functions",
+      "Lesson Number": "M2.IF.3.2",
+      "Atomic Concept": "Analyzing Key Features of Square Root Functions from Graphs/Tables",
+      "Key Skills": "Identify domain/range, endpoints, intervals of increasing/decreasing",
+      "NC DPI Standard": "NC.M2.F-IF.4, NC.M2.F-IF.7b"
+    },
+    {
+      "Unit Topic": "Interpreting Functions",
+      "Lesson Number": "M2.IF.3.3",
+      "Atomic Concept": "Analyzing Key Features of Inverse Variation Functions from Graphs/Tables",
+      "Key Skills": "Identify asymptotes, intervals of increasing/decreasing, domain/range",
+      "NC DPI Standard": "NC.M2.F-IF.4, NC.M2.F-IF.7b"
+    },
+    {
+      "Unit Topic": "Interpreting Functions",
+      "Lesson Number": "M2.IF.4.1",
+      "Atomic Concept": "Graphing Quadratic Functions Given an Expression, Table, or Verbal Description",
+      "Key Skills": "Create graphs of parabolas from different representations",
+      "NC DPI Standard": "NC.M2.F-IF.7a"
+    },
+    {
+      "Unit Topic": "Interpreting Functions",
+      "Lesson Number": "M2.IF.4.2",
+      "Atomic Concept": "Graphing Square Root Functions Given an Expression, Table, or Verbal Description",
+      "Key Skills": "Create graphs of square root functions from different representations",
+      "NC DPI Standard": "NC.M2.F-IF.7b"
+    },
+    {
+      "Unit Topic": "Interpreting Functions",
+      "Lesson Number": "M2.IF.4.3",
+      "Atomic Concept": "Graphing Inverse Variation Functions Given an Expression, Table, or Verbal Description",
+      "Key Skills": "Create graphs of hyperbolas from different representations",
+      "NC DPI Standard": "NC.M2.F-IF.7b"
+    },
+    {
+      "Unit Topic": "Interpreting Functions",
+      "Lesson Number": "M2.IF.5.1",
+      "Atomic Concept": "Comparing Properties of Two Functions Represented in Different Ways",
+      "Key Skills": "Compare rates of change, intercepts, max/min, domain/range for functions represented graphically, tabularly, or algebraically",
+      "NC DPI Standard": "NC.M2.F-IF.9"
+    },
+    {
+      "Unit Topic": "Interpreting Functions",
+      "Lesson Number": "M2.IF.6.1",
+      "Atomic Concept": "Writing a Function that Describes a Relationship between Two Quantities",
+      "Key Skills": "Model real-world situations with equations in two variables",
+      "NC DPI Standard": "NC.M2.F-BF.1"
+    },
+    {
+      "Unit Topic": "Building Functions",
+      "Lesson Number": "M2.BF.1.1",
+      "Atomic Concept": "Combining Functions Using Addition and Subtraction",
+      "Key Skills": "Perform (f+g)(x) and (f-g)(x) for given functions",
+      "NC DPI Standard": "NC.M2.F-BF.1"
+    },
+    {
+      "Unit Topic": "Building Functions",
+      "Lesson Number": "M2.BF.1.2",
+      "Atomic Concept": "Combining Functions Using Multiplication and Division",
+      "Key Skills": "Perform (f • g)(x) and (f/g)(x) for given functions",
+      "NC DPI Standard": "NC.M2.F-BF.1"
+    },
+    {
+      "Unit Topic": "Building Functions",
+      "Lesson Number": "M2.BF.2.1",
+      "Atomic Concept": "Understanding Inverse Functions (Concept and Notation)",
+      "Key Skills": "Define inverse functions; Understand that they \"undo\" each other; Use f⁻¹(x) notation",
+      "NC DPI Standard": "NC.M2.F-BF.4"
+    },
+    {
+      "Unit Topic": "Building Functions",
+      "Lesson Number": "M2.BF.2.2",
+      "Atomic Concept": "Finding the Inverse of a Function Algebraically",
+      "Key Skills": "Swap x and y and solve for y to find the inverse equation",
+      "NC DPI Standard": "NC.M2.F-BF.4"
+    },
+    {
+      "Unit Topic": "Building Functions",
+      "Lesson Number": "M2.BF.2.3",
+      "Atomic Concept": "Graphing Inverse Functions (Reflection over y=x)",
+      "Key Skills": "Graph a function and its inverse; Identify symmetry across the line y=x",
+      "NC DPI Standard": "NC.M2.F-BF.4"
+    },
+    {
+      "Unit Topic": "Building Functions",
+      "Lesson Number": "M2.BF.2.4",
+      "Atomic Concept": "Restricting Domain to Ensure an Inverse Function Exists",
+      "Key Skills": "Identify domains for which a function (e.g., quadratic) has an inverse",
+      "NC DPI Standard": "NC.M2.F-BF.4"
+    },
+    {
+      "Unit Topic": "Building Functions",
+      "Lesson Number": "M2.BF.3.1",
+      "Atomic Concept": "Constructing Functions to Model Linear Relationships from Context",
+      "Key Skills": "Write linear equations from tables, graphs, or verbal descriptions to model situations",
+      "NC DPI Standard": "NC.M2.F-BF.1"
+    },
+    {
+      "Unit Topic": "Building Functions",
+      "Lesson Number": "M2.BF.3.2",
+      "Atomic Concept": "Constructing Functions to Model Quadratic Relationships from Context",
+      "Key Skills": "Write quadratic equations from tables, graphs, or verbal descriptions to model situations",
+      "NC DPI Standard": "NC.M2.F-BF.1"
+    },
+    {
+      "Unit Topic": "Building Functions",
+      "Lesson Number": "M2.BF.3.3",
+      "Atomic Concept": "Constructing Functions to Model Square Root Relationships from Context",
+      "Key Skills": "Write square root equations from tables, graphs, or verbal descriptions to model situations",
+      "NC DPI Standard": "NC.M2.F-BF.1"
+    },
+    {
+      "Unit Topic": "Building Functions",
+      "Lesson Number": "M2.BF.3.4",
+      "Atomic Concept": "Constructing Functions to Model Inverse Variation Relationships from Context",
+      "Key Skills": "Identify inverse relationship; Write equations for inverse variation functions",
+      "NC DPI Standard": "NC.M2.F-BF.1"
+    },
+    {
+      "Unit Topic": "Building Functions",
+      "Lesson Number": "M2.BF.4.1",
+      "Atomic Concept": "Determining an Explicit Expression or Recursive Process from Context",
+      "Key Skills": "Translate real-world scenarios into explicit formulas (f(n) = ...) or recursive rules (f(n) = f(n-1) + ...)",
+      "NC DPI Standard": "NC.M2.F-BF.1"
+    },
+    {
+      "Unit Topic": "Building Functions",
+      "Lesson Number": "M2.BF.4.2",
+      "Atomic Concept": "Determining Steps for Calculation from a Context (Order of Operations)",
+      "Key Skills": "Break down complex problems into a sequence of mathematical operations",
+      "NC DPI Standard": "NC.M2.F-BF.1"
+    },
+    {
+      "Unit Topic": "Congruence",
+      "Lesson Number": "M2.GEO.CON.1.1",
+      "Atomic Concept": "Understanding Rigid Motions (Isometries)",
+      "Key Skills": "Define rigid motion; Identify transformations that preserve distance and angle measure",
+      "NC DPI Standard": "NC.M2.G-CO.2"
+    },
+    {
+      "Unit Topic": "Congruence",
+      "Lesson Number": "M2.GEO.CON.1.2",
+      "Atomic Concept": "Understanding Translations (Vector and Coordinate Rules)",
+      "Key Skills": "Define translation; Represent translations using vectors or coordinate rules",
+      "NC DPI Standard": "NC.M2.G-CO.2, NC.M2.G-CO.4"
+    },
+    {
+      "Unit Topic": "Congruence",
+      "Lesson Number": "M2.GEO.CON.1.3",
+      "Atomic Concept": "Performing and Graphing Translations",
+      "Key Skills": "Translate figures on the coordinate plane",
+      "NC DPI Standard": "NC.M2.G-CO.2"
+    },
+    {
+      "Unit Topic": "Congruence",
+      "Lesson Number": "M2.GEO.CON.2.1",
+      "Atomic Concept": "Understanding Reflections Across Axes and Lines",
+      "Key Skills": "Define reflection; Identify lines of reflection (x-axis, y-axis, y=x, y=-x)",
+      "NC DPI Standard": "NC.M2.G-CO.2, NC.M2.G-CO.4"
+    },
+    {
+      "Unit Topic": "Congruence",
+      "Lesson Number": "M2.GEO.CON.2.2",
+      "Atomic Concept": "Performing and Graphing Reflections",
+      "Key Skills": "Reflect figures across lines on the coordinate plane",
+      "NC DPI Standard": "NC.M2.G-CO.2"
+    },
+    {
+      "Unit Topic": "Congruence",
+      "Lesson Number": "M2.GEO.CON.3.1",
+      "Atomic Concept": "Understanding Rotations About the Origin (90°, 180°, 270°)",
+      "Key Skills": "Define rotation; Understand angle and direction of rotation",
+      "NC DPI Standard": "NC.M2.G-CO.2, NC.M2.G-CO.4"
+    },
+    {
+      "Unit Topic": "Congruence",
+      "Lesson Number": "M2.GEO.CON.3.2",
+      "Atomic Concept": "Performing and Graphing Rotations About the Origin",
+      "Key Skills": "Rotate figures on the coordinate plane using rules for specific angles",
+      "NC DPI Standard": "NC.M2.G-CO.2"
+    },
+    {
+      "Unit Topic": "Congruence",
+      "Lesson Number": "M2.GEO.CON.4.1",
+      "Atomic Concept": "Understanding Compositions of Rigid Motions",
+      "Key Skills": "Perform a sequence of two or more rigid transformations",
+      "NC DPI Standard": "NC.M2.G-CO.5"
+    },
+    {
+      "Unit Topic": "Congruence",
+      "Lesson Number": "M2.GEO.CON.4.2",
+      "Atomic Concept": "Identifying Congruent Figures Based on Rigid Motions",
+      "Key Skills": "Determine if two figures are congruent by identifying a sequence of rigid motions",
+      "NC DPI Standard": "NC.M2.G-CO.6"
+    },
+    {
+      "Unit Topic": "Congruence",
+      "Lesson Number": "M2.GEO.CON.5.1",
+      "Atomic Concept": "Proving Triangle Congruence Criteria (SSS, SAS) using Rigid Motions",
+      "Key Skills": "Understand how SSS and SAS follow from the definition of congruence based on rigid motions",
+      "NC DPI Standard": "NC.M2.G-CO.7, NC.M2.G-CO.8"
+    },
+    {
+      "Unit Topic": "Congruence",
+      "Lesson Number": "M2.GEO.CON.5.2",
+      "Atomic Concept": "Proving Triangle Congruence Criteria (ASA, AAS, HL) using Rigid Motions",
+      "Key Skills": "Understand how ASA, AAS, and HL follow from the definition of congruence based on rigid motions",
+      "NC DPI Standard": "NC.M2.G-CO.7, NC.M2.G-CO.8"
+    },
+    {
+      "Unit Topic": "Congruence",
+      "Lesson Number": "M2.GEO.CON.6.1",
+      "Atomic Concept": "Using Congruence Criteria to Prove Triangle Congruence",
+      "Key Skills": "Apply SSS, SAS, ASA, AAS, HL to prove triangles congruent in two-column or paragraph proofs",
+      "NC DPI Standard": "NC.M2.G-CO.8"
+    },
+    {
+      "Unit Topic": "Congruence",
+      "Lesson Number": "M2.GEO.CON.6.2",
+      "Atomic Concept": "Using CPCTC (Corresponding Parts of Congruent Triangles are Congruent) in Proofs",
+      "Key Skills": "Deduce additional congruent parts once triangles are proven congruent",
+      "NC DPI Standard": "NC.M2.G-CO.9"
+    },
+    {
+      "Unit Topic": "Congruence",
+      "Lesson Number": "M2.GEO.CON.7.1",
+      "Atomic Concept": "Proving Theorems about Lines and Angles (Perpendicular Bisector, Angle Bisector)",
+      "Key Skills": "Prove basic geometric theorems using deductive reasoning and postulates",
+      "NC DPI Standard": "NC.M2.G-CO.9"
+    },
+    {
+      "Unit Topic": "Congruence",
+      "Lesson Number": "M2.GEO.CON.7.2",
+      "Atomic Concept": "Proving Theorems about Parallelograms",
+      "Key Skills": "Prove properties of parallelograms (e.g., opposite sides/angles are congruent, diagonals bisect each other)",
+      "NC DPI Standard": "NC.M2.G-CO.11"
+    },
+    {
+      "Unit Topic": "Similarity, Right Triangles, & Trigonometry",
+      "Lesson Number": "M2.SRT.1.1",
+      "Atomic Concept": "Understanding Dilations (Center, Scale Factor)",
+      "Key Skills": "Define dilation; Determine coordinates of dilated figures",
+      "NC DPI Standard": "NC.M2.G-SRT.1"
+    },
+    {
+      "Unit Topic": "Similarity, Right Triangles, & Trigonometry",
+      "Lesson Number": "M2.SRT.1.2",
+      "Atomic Concept": "Understanding and Performing Similarity Transformations",
+      "Key Skills": "Identify transformations that preserve shape but not size; Perform sequences involving dilations",
+      "NC DPI Standard": "NC.M2.G-SRT.1, NC.M2.G-SRT.2"
+    },
+    {
+      "Unit Topic": "Similarity, Right Triangles, & Trigonometry",
+      "Lesson Number": "M2.SRT.1.3",
+      "Atomic Concept": "Determining if Two Figures are Similar (Identifying Similarity Transformations)",
+      "Key Skills": "Identify a sequence of transformations to show similarity; Understand proportional side lengths and congruent angles",
+      "NC DPI Standard": "NC.M2.G-SRT.2"
+    },
+    {
+      "Unit Topic": "Similarity, Right Triangles, & Trigonometry",
+      "Lesson Number": "M2.SRT.2.1",
+      "Atomic Concept": "Proving Triangles Similar using AA (Angle-Angle) Similarity",
+      "Key Skills": "Apply AA criterion to prove triangle similarity; Identify corresponding angles",
+      "NC DPI Standard": "NC.M2.G-SRT.3"
+    },
+    {
+      "Unit Topic": "Similarity, Right Triangles, & Trigonometry",
+      "Lesson Number": "M2.SRT.2.2",
+      "Atomic Concept": "Proving Triangles Similar using SSS (Side-Side-Side) Similarity",
+      "Key Skills": "Apply SSS criterion; Check proportionality of all three pairs of sides",
+      "NC DPI Standard": "NC.M2.G-SRT.3"
+    },
+    {
+      "Unit Topic": "Similarity, Right Triangles, & Trigonometry",
+      "Lesson Number": "M2.SRT.2.3",
+      "Atomic Concept": "Proving Triangles Similar using SAS (Side-Angle-Side) Similarity",
+      "Key Skills": "Apply SAS criterion; Check proportionality of two sides and included angle congruence",
+      "NC DPI Standard": "NC.M2.G-SRT.3"
+    },
+    {
+      "Unit Topic": "Similarity, Right Triangles, & Trigonometry",
+      "Lesson Number": "M2.SRT.3.1",
+      "Atomic Concept": "Using Similarity to Find Missing Side Lengths in Triangles",
+      "Key Skills": "Set up and solve proportions from similar triangles",
+      "NC DPI Standard": "NC.M2.G-SRT.2"
+    },
+    {
+      "Unit Topic": "Similarity, Right Triangles, & Trigonometry",
+      "Lesson Number": "M2.SRT.3.2",
+      "Atomic Concept": "Applying Similarity for Indirect Measurement and Problem Solving",
+      "Key Skills": "Use similar triangles to find inaccessible lengths or heights in real-world contexts",
+      "NC DPI Standard": "NC.M2.G-SRT.5"
+    },
+    {
+      "Unit Topic": "Similarity, Right Triangles, & Trigonometry",
+      "Lesson Number": "M2.SRT.4.1",
+      "Atomic Concept": "Understanding and Applying the Geometric Mean Theorems in Right Triangles",
+      "Key Skills": "Apply altitude and leg rules to find missing lengths in right triangles",
+      "NC DPI Standard": "NC.M2.G-SRT.4"
+    },
+    {
+      "Unit Topic": "Similarity, Right Triangles, & Trigonometry",
+      "Lesson Number": "M2.SRT.4.2",
+      "Atomic Concept": "Proving the Pythagorean Theorem using Triangle Similarity",
+      "Key Skills": "Demonstrate the proof of the Pythagorean Theorem using properties of similar right triangles",
+      "NC DPI Standard": "NC.M2.G-SRT.4"
+    },
+    {
+      "Unit Topic": "Similarity, Right Triangles, & Trigonometry",
+      "Lesson Number": "M2.SRT.5.1",
+      "Atomic Concept": "Understanding Special Right Triangles (45-45-90)",
+      "Key Skills": "Apply side ratios to find missing lengths in 45-45-90 triangles",
+      "NC DPI Standard": "NC.M2.G-SRT.8"
+    },
+    {
+      "Unit Topic": "Similarity, Right Triangles, & Trigonometry",
+      "Lesson Number": "M2.SRT.5.2",
+      "Atomic Concept": "Understanding Special Right Triangles (30-60-90)",
+      "Key Skills": "Apply side ratios to find missing lengths in 30-60-90 triangles",
+      "NC DPI Standard": "NC.M2.G-SRT.8"
+    },
+    {
+      "Unit Topic": "Similarity, Right Triangles, & Trigonometry",
+      "Lesson Number": "M2.SRT.6.1",
+      "Atomic Concept": "Introduction to Trigonometric Ratios (Sine, Cosine, Tangent) in Right Triangles",
+      "Key Skills": "Define SOH CAH TOA; Identify opposite, adjacent, hypotenuse",
+      "NC DPI Standard": "NC.M2.G-SRT.6"
+    },
+    {
+      "Unit Topic": "Similarity, Right Triangles, & Trigonometry",
+      "Lesson Number": "M2.SRT.6.2",
+      "Atomic Concept": "Understanding the Relationship Between Sine and Cosine of Complementary Angles",
+      "Key Skills": "Recognize that sin(θ) = cos(90°-θ)",
+      "NC DPI Standard": "NC.M2.G-SRT.7"
+    },
+    {
+      "Unit Topic": "Similarity, Right Triangles, & Trigonometry",
+      "Lesson Number": "M2.SRT.7.1",
+      "Atomic Concept": "Using Trigonometric Ratios to Find Missing Side Lengths in Right Triangles",
+      "Key Skills": "Set up and solve trigonometric equations to find unknown sides",
+      "NC DPI Standard": "NC.M2.G-SRT.8"
+    },
+    {
+      "Unit Topic": "Similarity, Right Triangles, & Trigonometry",
+      "Lesson Number": "M2.SRT.7.2",
+      "Atomic Concept": "Using Inverse Trigonometric Ratios to Find Missing Angle Measures in Right Triangles",
+      "Key Skills": "Apply sin⁻¹, cos⁻¹, tan⁻¹ to find unknown angles",
+      "NC DPI Standard": "NC.M2.G-SRT.8"
+    },
+    {
+      "Unit Topic": "Similarity, Right Triangles, & Trigonometry",
+      "Lesson Number": "M2.SRT.8.1",
+      "Atomic Concept": "Solving Right Triangles (Finding all missing sides and angles)",
+      "Key Skills": "Combine Pythagorean Theorem, trig ratios, and angle sum to solve entire triangles",
+      "NC DPI Standard": "NC.M2.G-SRT.8"
+    },
+    {
+      "Unit Topic": "Similarity, Right Triangles, & Trigonometry",
+      "Lesson Number": "M2.SRT.9.1",
+      "Atomic Concept": "Applying Angles of Elevation and Depression in Real-World Contexts",
+      "Key Skills": "Solve problems involving angle of elevation/depression scenarios",
+      "NC DPI Standard": "NC.M2.G-SRT.8"
+    },
+    {
+      "Unit Topic": "Circles",
+      "Lesson Number": "M2.CIR.1.1",
+      "Atomic Concept": "Understanding Basic Circle Terminology",
+      "Key Skills": "Define radius, diameter, chord, secant, tangent, arc, center, circumference",
+      "NC DPI Standard": "NC.M2.G-C.2"
+    },
+    {
+      "Unit Topic": "Circles",
+      "Lesson Number": "M2.CIR.1.2",
+      "Atomic Concept": "Understanding and Applying Properties of Tangent Lines to Circles",
+      "Key Skills": "Prove that the tangent line is perpendicular to the radius at the point of tangency; Use properties to solve problems",
+      "NC DPI Standard": "NC.M2.G-C.2"
+    },
+    {
+      "Unit Topic": "Circles",
+      "Lesson Number": "M2.CIR.2.1",
+      "Atomic Concept": "Understanding Central Angles and Arc Measure",
+      "Key Skills": "Define central angle; Relate central angle measure to arc measure (minor, major, semicircle)",
+      "NC DPI Standard": "NC.M2.G-C.2"
+    },
+    {
+      "Unit Topic": "Circles",
+      "Lesson Number": "M2.CIR.2.2",
+      "Atomic Concept": "Understanding Inscribed Angles and Their Properties",
+      "Key Skills": "Define inscribed angle; Relate inscribed angle measure to intercepted arc measure",
+      "NC DPI Standard": "NC.M2.G-C.2"
+    },
+    {
+      "Unit Topic": "Circles",
+      "Lesson Number": "M2.CIR.2.3",
+      "Atomic Concept": "Understanding Angles Formed by Tangents and Chords",
+      "Key Skills": "Relate the measure of an angle formed by a tangent and a chord to the intercepted arc",
+      "NC DPI Standard": "NC.M2.G-C.2"
+    },
+    {
+      "Unit Topic": "Circles",
+      "Lesson Number": "M2.CIR.2.4",
+      "Atomic Concept": "Understanding Angles Formed by Intersecting Chords (Inside the Circle)",
+      "Key Skills": "Relate the measure of an angle formed by two chords intersecting inside a circle to the intercepted arcs",
+      "NC DPI Standard": "NC.M2.G-C.2"
+    },
+    {
+      "Unit Topic": "Circles",
+      "Lesson Number": "M2.CIR.2.5",
+      "Atomic Concept": "Understanding Angles Formed by Secants and/or Tangents (Outside the Circle)",
+      "Key Skills": "Relate the measure of an angle formed by two secants, two tangents, or a secant and a tangent intersecting outside a circle to the intercepted arcs",
+      "NC DPI Standard": "NC.M2.G-C.2"
+    },
+    {
+      "Unit Topic": "Circles",
+      "Lesson Number": "M2.CIR.3.1",
+      "Atomic Concept": "Understanding Segment Lengths Formed by Two Chords",
+      "Key Skills": "Apply the intersecting chords theorem to find unknown segment lengths",
+      "NC DPI Standard": "NC.M2.G-C.2"
+    },
+    {
+      "Unit Topic": "Circles",
+      "Lesson Number": "M2.CIR.3.2",
+      "Atomic Concept": "Understanding Segment Lengths Formed by Secants and/or Tangents",
+      "Key Skills": "Apply theorems about segments formed by secants and tangents intersecting outside a circle",
+      "NC DPI Standard": "NC.M2.G-C.2"
+    },
+    {
+      "Unit Topic": "Circles",
+      "Lesson Number": "M2.CIR.4.1",
+      "Atomic Concept": "Calculating Arc Length",
+      "Key Skills": "Use the formula for arc length in degrees or radians",
+      "NC DPI Standard": "NC.M2.G-C.5"
+    },
+    {
+      "Unit Topic": "Circles",
+      "Lesson Number": "M2.CIR.4.2",
+      "Atomic Concept": "Calculating Area of Sectors of Circles",
+      "Key Skills": "Use the formula for the area of a sector in degrees or radians",
+      "NC DPI Standard": "NC.M2.G-C.5"
+    },
+    {
+      "Unit Topic": "Circles",
+      "Lesson Number": "M2.CIR.5.1",
+      "Atomic Concept": "Writing the Equation of a Circle (Standard Form)",
+      "Key Skills": "Derive the equation of a circle; Write equation given center and radius",
+      "NC DPI Standard": "NC.M2.G-GPE.1"
+    },
+    {
+      "Unit Topic": "Circles",
+      "Lesson Number": "M2.CIR.5.2",
+      "Atomic Concept": "Graphing Circles from Standard Form",
+      "Key Skills": "Identify center and radius from equation; Graph circles on the coordinate plane",
+      "NC DPI Standard": "NC.M2.G-GPE.1"
+    },
+    {
+      "Unit Topic": "Circles",
+      "Lesson Number": "M2.CIR.5.3",
+      "Atomic Concept": "Completing the Square to find the Equation of a Circle",
+      "Key Skills": "Convert the general form of a circle's equation to standard form",
+      "NC DPI Standard": "NC.M2.G-GPE.1"
+    },
+    {
+      "Unit Topic": "Making Inference & Justifying Conclusions",
+      "Lesson Number": "M2.STATS.1.1",
+      "Atomic Concept": "Understanding Types of Statistical Studies (Surveys, Experiments, Observational)",
+      "Key Skills": "Differentiate between study types; Identify advantages and disadvantages",
+      "NC DPI Standard": "NC.M2.S-IC.3"
+    },
+    {
+      "Unit Topic": "Making Inference & Justifying Conclusions",
+      "Lesson Number": "M2.STATS.1.2",
+      "Atomic Concept": "Understanding Random Sampling and Random Assignment",
+      "Key Skills": "Explain the purpose of random selection in sampling; Understand random assignment in experiments",
+      "NC DPI Standard": "NC.M2.S-IC.3"
+    },
+    {
+      "Unit Topic": "Making Inference & Justifying Conclusions",
+      "Lesson Number": "M2.STATS.2.1",
+      "Atomic Concept": "Analyzing and Interpreting Data Distributions (Shape, Center, Spread)",
+      "Key Skills": "Describe the overall pattern of a distribution; Identify outliers",
+      "NC DPI Standard": "NC.M2.S-ID.2"
+    },
+    {
+      "Unit Topic": "Making Inference & Justifying Conclusions",
+      "Lesson Number": "M2.STATS.2.2",
+      "Atomic Concept": "Choosing Appropriate Measures of Center and Variability",
+      "Key Skills": "Select mean/median and standard deviation/IQR based on distribution shape",
+      "NC DPI Standard": "NC.M2.S-ID.2"
+    },
+    {
+      "Unit Topic": "Making Inference & Justifying Conclusions",
+      "Lesson Number": "M2.STATS.2.3",
+      "Atomic Concept": "Comparing Data Distributions Visually (Box Plots, Histograms)",
+      "Key Skills": "Compare shape, center, and spread of two or more data sets presented graphically",
+      "NC DPI Standard": "NC.M2.S-ID.2"
+    },
+    {
+      "Unit Topic": "Making Inference & Justifying Conclusions",
+      "Lesson Number": "M2.STATS.3.1",
+      "Atomic Concept": "Interpreting Two-Way Frequency Tables",
+      "Key Skills": "Read and interpret data from two-way tables; Find marginal and joint frequencies",
+      "NC DPI Standard": "NC.M2.S-ID.5"
+    },
+    {
+      "Unit Topic": "Making Inference & Justifying Conclusions",
+      "Lesson Number": "M2.STATS.3.2",
+      "Atomic Concept": "Calculating and Interpreting Conditional Probabilities from Two-Way Tables",
+      "Key Skills": "Compute conditional probabilities; Understand independence based on conditional probabilities",
+      "NC DPI Standard": "NC.M2.S-ID.5"
+    },
+    {
+      "Unit Topic": "Making Inference & Justifying Conclusions",
+      "Lesson Number": "M2.STATS.4.1",
+      "Atomic Concept": "Understanding Correlation and Causation",
+      "Key Skills": "Differentiate between correlation and causation; Recognize confounding variables",
+      "NC DPI Standard": "NC.M2.S-ID.9"
+    },
+    {
+      "Unit Topic": "Making Inference & Justifying Conclusions",
+      "Lesson Number": "M2.STATS.5.1",
+      "Atomic Concept": "Evaluating Statistical Claims and Data-Based Conclusions",
+      "Key Skills": "Critically evaluate the validity of conclusions drawn from data; Identify potential biases",
+      "NC DPI Standard": "NC.M2.S-IC.6"
+    },
+    {
+      "Unit Topic": "Conditional Probability & Rules for Probability",
+      "Lesson Number": "M2.PROB.1.1",
+      "Atomic Concept": "Review: Basic Probability (Theoretical vs. Experimental) and Sample Space",
+      "Key Skills": "Define probability; Identify sample space and events; Calculate simple probabilities",
+      "NC DPI Standard": "NC.M2.S-CP.1"
+    },
+    {
+      "Unit Topic": "Conditional Probability & Rules for Probability",
+      "Lesson Number": "M2.PROB.1.2",
+      "Atomic Concept": "Understanding Events: Independent vs. Dependent",
+      "Key Skills": "Differentiate between independent and dependent events",
+      "NC DPI Standard": "NC.M2.S-CP.2"
+    },
+    {
+      "Unit Topic": "Conditional Probability & Rules for Probability",
+      "Lesson Number": "M2.PROB.1.3",
+      "Atomic Concept": "Understanding Events: Mutually Exclusive vs. Inclusive",
+      "Key Skills": "Differentiate between mutually exclusive and inclusive events; Use Venn diagrams",
+      "NC DPI Standard": "NC.M2.S-CP.1"
+    },
+    {
+      "Unit Topic": "Conditional Probability & Rules for Probability",
+      "Lesson Number": "M2.PROB.2.1",
+      "Atomic Concept": "Understanding and Calculating Conditional Probability",
+      "Key Skills": "Define conditional probability; Calculate P(A|B)",
+      "NC DPI Standard": "NC.M2.S-CP.3, NC.M2.S-CP.5"
+    },
+    {
+      "Unit Topic": "Conditional Probability & Rules for Probability",
+      "Lesson Number": "M2.PROB.2.2",
+      "Atomic Concept": "Using Two-Way Frequency Tables to Calculate Conditional Probability",
+      "Key Skills": "Extract data from tables to compute conditional probabilities",
+      "NC DPI Standard": "NC.M2.S-CP.4"
+    },
+    {
+      "Unit Topic": "Conditional Probability & Rules for Probability",
+      "Lesson Number": "M2.PROB.2.3",
+      "Atomic Concept": "Recognizing and Explaining Independence in Context (using conditional probability)",
+      "Key Skills": "Determine if events are independent based on P(A|B) = P(A)",
+      "NC DPI Standard": "NC.M2.S-CP.5"
+    },
+    {
+      "Unit Topic": "Conditional Probability & Rules for Probability",
+      "Lesson Number": "M2.PROB.3.1",
+      "Atomic Concept": "Applying the Multiplication Rule for Probability (Independent Events)",
+      "Key Skills": "Calculate P(A and B) for independent events",
+      "NC DPI Standard": "NC.M2.S-CP.2"
+    },
+    {
+      "Unit Topic": "Conditional Probability & Rules for Probability",
+      "Lesson Number": "M2.PROB.3.2",
+      "Atomic Concept": "Applying the Multiplication Rule for Probability (Dependent Events)",
+      "Key Skills": "Calculate P(A and B) for dependent events using P(A and B) = P(A) • P(B|A)",
+      "NC DPI Standard": "NC.M2.S-CP.2"
+    },
+    {
+      "Unit Topic": "Conditional Probability & Rules for Probability",
+      "Lesson Number": "M2.PROB.4.1",
+      "Atomic Concept": "Applying the Addition Rule for Probability (Mutually Exclusive Events)",
+      "Key Skills": "Calculate P(A or B) for mutually exclusive events (P(A)+P(B))",
+      "NC DPI Standard": "NC.M2.S-CP.7"
+    },
+    {
+      "Unit Topic": "Conditional Probability & Rules for Probability",
+      "Lesson Number": "M2.PROB.4.2",
+      "Atomic Concept": "Applying the Addition Rule for Probability (Inclusive Events)",
+      "Key Skills": "Calculate P(A or B) for inclusive events (P(A)+P(B)-P(A and B))",
+      "NC DPI Standard": "NC.M2.S-CP.7"
+    },
+    {
+      "Unit Topic": "Conditional Probability & Rules for Probability",
+      "Lesson Number": "M2.PROB.5.1",
+      "Atomic Concept": "Understanding the Fundamental Counting Principle",
+      "Key Skills": "Use the principle to find the number of possible outcomes",
+      "NC DPI Standard": "NC.M2.S-CP.9"
+    },
+    {
+      "Unit Topic": "Conditional Probability & Rules for Probability",
+      "Lesson Number": "M2.PROB.5.2",
+      "Atomic Concept": "Understanding and Calculating Permutations (Order Matters)",
+      "Key Skills": "Use permutation formula and notation; Solve problems involving ordered arrangements",
+      "NC DPI Standard": "NC.M2.S-CP.9"
+    },
+    {
+      "Unit Topic": "Conditional Probability & Rules for Probability",
+      "Lesson Number": "M2.PROB.5.3",
+      "Atomic Concept": "Understanding and Calculating Combinations (Order Does Not Matter)",
+      "Key Skills": "Use combination formula and notation; Solve problems involving unordered selections",
+      "NC DPI Standard": "NC.M2.S-CP.9"
+    },
+    {
+      "Unit Topic": "Conditional Probability & Rules for Probability",
+      "Lesson Number": "M2.PROB.5.4",
+      "Atomic Concept": "Using Counting Principles in Probability Calculations",
+      "Key Skills": "Apply permutations and combinations to find probabilities of complex events",
+      "NC DPI Standard": "NC.M2.S-CP.9"
+    }
+  ]
