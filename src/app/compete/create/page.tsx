@@ -419,7 +419,9 @@ function TopicTreeNode({
                     onChange={() => onToggleConcept(c.id)}
                     className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                   />
-                  <span className="text-sm text-gray-700">{c.name}</span>
+                  <span className="text-sm text-gray-700">
+                    {c.name ? `${c.lesson_number} — ${c.name}` : c.lesson_number}
+                  </span>
                 </label>
               );
             })
