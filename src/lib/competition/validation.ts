@@ -19,9 +19,34 @@ export interface ValidationResult {
 // -----------------------------------------------------------------------------
 
 /**
+ * Convert a mixed-number entry ("<whole> <num>/<den>") to an improper
+ * fraction so it survives the whitespace-stripping that individual validators
+ * perform. Without this, "2 3/4" would become "23/4" (concatenation) instead
+ * of "11/4". NC EOG students are trained to enter mixed numbers this way.
+ *
+ *   "2 3/4"  → "11/4"        "-1 1/2" → "-3/2"
+ *
+ * Returns the input unchanged when it isn't a mixed number.
+ */
+function convertMixedNumber(s: string): string {
+  // Match: optional negative, whole number, space, fraction
+  const mixed = s.trim().match(/^(-?)(\d+)\s+(\d+)\/(\d+)$/);
+  if (mixed) {
+    const sign = mixed[1] === '-' ? -1 : 1;
+    const whole = parseInt(mixed[2], 10);
+    const num = parseInt(mixed[3], 10);
+    const den = parseInt(mixed[4], 10);
+    const improper = sign * (whole * den + num);
+    return `${improper}/${den}`;
+  }
+  return s;
+}
+
+/**
  * Pre-normalization applied to every answer before type-specific parsing.
  *
  * Handles the most common copy-paste / typography issues:
+ *   - Mixed numbers ("2 3/4") → improper fractions ("11/4")
  *   - Unicode dashes (en-dash, em-dash, minus-sign, hyphen variants) → ASCII '-'
  *   - Unicode comparison operators (≤, ≥) → '<=', '>='
  *   - Unicode multiplication / division (×, ÷) → '*', '/'
@@ -48,6 +73,12 @@ export function prenormalize(input: string): string {
   // Multiplication / division operators
   s = s.replace(/[×·⋅∙]/g, '*');
   s = s.replace(/÷/g, '/');
+
+  // Mixed number → improper fraction. Run AFTER Unicode minus/÷ have been
+  // folded to ASCII (so "-2 3/4" and "2 3÷4" convert), and BEFORE any
+  // validator strips the space that separates the whole number from the
+  // fraction — otherwise "2 3/4" collapses to "23/4".
+  s = convertMixedNumber(s);
 
   // Smart quotes / apostrophes
   s = s.replace(/[‘’ʼ]/g, "'");
@@ -676,6 +707,14 @@ export function validateAnswer(
     case 'fraction':
       return validateFraction(submitted, correct);
     case 'number_or_fraction':
+    // Multi-shape numeric types: the answer could be an integer, decimal, or
+    // fraction and any equivalent form should match. validateNumberOrFraction
+    // compares parsed numeric values, so "0.75" = "3/4" = "2 3/4"-style input.
+    case 'decimal_or_fraction':
+    case 'fraction_or_decimal':
+    case 'decimal_or_integer':
+    case 'integer_or_decimal':
+    case 'integer_or_fraction':
       return validateNumberOrFraction(submitted, correct);
     case 'ordered_pair':
       return validateOrderedPair(submitted, correct);
