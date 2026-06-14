@@ -387,7 +387,7 @@ export function QuestionDisplay({
       
       {/* Question Card */}
       <div className="bg-white rounded-2xl p-6 mb-6 shadow-xl max-w-2xl mx-auto">
-        <p className="text-2xl text-slate-800 text-center leading-relaxed">
+        <p className="text-2xl text-slate-800 text-center leading-relaxed" style={{ whiteSpace: 'pre-wrap' }}>
           {question.question_text}
         </p>
       </div>
