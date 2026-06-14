@@ -16,6 +16,245 @@ Deploy: `vercel --prod` (Git webhook blocked — manual only)
 
 ---
 
+## The Trio Workflow
+
+Every build task follows this exact pattern. Never deviate from it.
+
+```
+Claude Chat (this session)
+    → Plans, designs, writes prompts, analyzes results
+    → Does NOT write code directly into the repo
+
+Claude Code (separate terminal)
+    → Receives precise prompts from Claude Chat
+    → Reads files, writes code, runs pnpm build, commits, pushes
+    → Reports back with summary of what changed
+
+Eddy (you)
+    → Verifies in browser or PowerShell
+    → Reports results back to Claude Chat
+    → Makes final decisions on product direction
+```
+
+### Why this separation matters
+
+- **Claude Chat** has full conversation context, product knowledge,
+  and can reason across multiple files and sessions
+- **Claude Code** executes precisely in the local repo with file
+  access, can run builds, and commits atomically
+- **Eddy** is the ground truth — only you can verify what actually
+  renders in the browser, what feels right pedagogically, and what
+  a real teacher or student would experience
+
+### How to write a Claude Code prompt
+
+Claude Chat writes the prompt. It must include:
+
+1. **Read these files first** — list exact file paths to read before
+   writing any code. Claude Code has no memory of previous sessions.
+
+2. **Task description** — what needs to change and why
+
+3. **Exact specification** — what the code should do, including:
+   - Function signatures
+   - Expected inputs/outputs
+   - Edge cases to handle
+   - What NOT to change
+
+4. **Verification steps** — how to confirm it worked
+   (console.log, npx tsx test, pnpm build check)
+
+5. **Commit message** — exact message to use
+
+### Example prompt structure
+
+```
+Read: src/lib/competition/validation.ts
+
+BUG: Mixed number input "2 3/4" is parsed as "23/4" instead of "11/4".
+
+Fix: Add convertMixedNumber() before whitespace stripping:
+  Pattern: "<integer> <numerator>/<denominator>"
+  "2 3/4" → (2×4+3)/4 = 11/4
+
+[full specification...]
+
+Verify:
+  validateAnswer("2 3/4", "11/4", "decimal_or_fraction") → true
+  validateAnswer("-1 1/2", "-3/2", "decimal_or_fraction") → true
+
+pnpm build, commit "fix: accept mixed number input in validator", push.
+```
+
+### What Claude Chat does NOT do
+
+- Does not write `git commit` commands for code changes
+- Does not write TypeScript/React directly into the chat
+- Does not assume Claude Code remembers anything from a prior session
+- Does not send vague prompts like "fix the validator" — always specific
+
+### What Claude Code does NOT do
+
+- Does not make product decisions
+- Does not change scope beyond what the prompt specifies
+- Does not skip `pnpm build` — every session ends with a clean build
+- Does not push without committing with a descriptive message
+
+
+---
+
+## Claude Code Prompt Template
+
+Every prompt sent to Claude Code must follow this exact template.
+Copy it, fill in each section, remove unused sections.
+Never send a vague prompt — Claude Code has no memory of prior sessions.
+
+---
+
+```
+## CONTEXT
+[1-2 sentences explaining what this feature/fix is part of and why it matters.
+ Reference the product: "MathAthlone is a real-time math competition platform."]
+
+## READ FIRST
+Before writing any code, read these files:
+- [exact/path/to/file1.ts] — [what to look for, e.g. "find the GENERATORS map"]
+- [exact/path/to/file2.tsx] — [what to look for, e.g. "find the Export CSV button"]
+- [exact/path/to/file3.ts] — [what to look for, e.g. "find HeatWithMeta type"]
+
+## TASK
+[One sentence: what needs to be built or fixed.]
+
+## SPECIFICATION
+
+### What to CREATE (new files)
+[List each new file with full path and describe its purpose and content.
+ Include function signatures, types, expected behavior.]
+
+### What to UPDATE (existing files)
+[List each file to change. Describe exactly what to find and what to change.
+ Quote the existing code pattern to find, then describe the replacement.
+ Use "Find X, replace with Y" format.]
+
+### What NOT to change
+- [specific thing to leave alone]
+- [another thing to leave alone]
+- Do NOT refactor anything outside the described scope
+- Do NOT add new dependencies without asking
+
+## CONSTRAINTS
+- Stack: Next.js 14 / TypeScript / Supabase / Tailwind
+- No new npm/pnpm packages unless specified
+- All TypeScript must be strict — no `any` unless pre-existing
+- PowerShell is the only CLI — all scripts must work on Windows
+- BOM-free UTF-8 for any file writes
+
+## EDGE CASES
+[List specific inputs or conditions that must be handled correctly.
+ Example: "When generator returns undefined, fall back to empty string."]
+
+## VERIFICATION
+After making changes, verify by running:
+  [exact command to test, e.g. npx tsx --eval "..."]
+Expected output:
+  [exact expected output]
+
+## BUILD & COMMIT
+1. pnpm build — must be clean (zero TypeScript errors, zero warnings)
+2. Commit: "[type]: [description]"
+   Types: feat / fix / docs / refactor / test / chore
+3. Push to origin/main
+```
+
+---
+
+### Template usage rules
+
+**Always include:**
+- READ FIRST — Claude Code has no memory, must read files fresh
+- TASK — one sentence only, forces clarity
+- VERIFICATION — confirms it worked without Eddy having to check manually
+- BUILD & COMMIT — every session ends with a clean build and push
+
+**Include when relevant:**
+- SPECIFICATION → CREATE (new files)
+- SPECIFICATION → UPDATE (existing files)
+- EDGE CASES (when input validation matters)
+- CONSTRAINTS (when stack decisions could vary)
+
+**Never include:**
+- Vague instructions like "make it better" or "fix the issue"
+- Multiple unrelated tasks in one prompt (split into separate prompts)
+- Instructions to skip pnpm build
+- Instructions to use a different stack than Next.js/TypeScript/Supabase
+
+---
+
+### Prompt size guidance
+
+| Task type | Prompt length | Notes |
+|---|---|---|
+| Bug fix (1 file) | 10-20 lines | Short is fine if specification is precise |
+| Feature (2-4 files) | 30-60 lines | Include all file paths and types |
+| Large feature (5+ files) | 60-100 lines | Consider splitting into Phase 1 / Phase 2 |
+| Never | 100+ lines | Split the task — Claude Code loses focus |
+
+---
+
+### Real prompt examples from this project
+
+**Short bug fix (validator):**
+```
+Read: src/lib/competition/validation.ts
+
+BUG: Mixed number "2 3/4" parsed as "23/4" — space stripped before
+fraction parsing. Fix by adding convertMixedNumber() before whitespace
+stripping. Pattern: "<integer> <num>/<den>" → improper fraction.
+
+Also: decimal_or_fraction falls through to validateText — route it
+to validateNumberOrFraction instead.
+
+Verify:
+  validateAnswer("2 3/4", "11/4", "decimal_or_fraction") → true
+  validateAnswer("-1 1/2", "-3/2", "decimal_or_fraction") → true
+
+pnpm build, commit "fix: mixed number input + decimal_or_fraction routing", push.
+```
+
+**Medium feature (assessment generator):**
+```
+Read:
+1. src/lib/competition/generators.ts — GENERATORS map structure
+2. src/app/dashboard/teacher/page.tsx — Quick Actions section
+3. src/lib/competition/heat-service.ts — HeatWithMeta type
+
+CONTEXT: MathAthlone needs a standalone assessment generator
+as a sibling action to Create Heat.
+
+CREATE src/lib/assessment/assembler.ts
+[...full type definitions and function spec...]
+
+CREATE src/app/assessment/generate/page.tsx
+[...step-by-step UI spec...]
+
+UPDATE src/app/dashboard/teacher/page.tsx
+Add "Generate Assessment" card next to "Create Heat" in Quick Actions.
+Link to /assessment/generate.
+
+pnpm build, commit "feat: standalone assessment generator", push.
+```
+
+**What NOT to send:**
+```
+❌ "Fix the heat lobby so it starts properly"
+❌ "Make the assessment look better"
+❌ "Update the generators"
+❌ "Can you look at the validation file and see what's wrong"
+```
+
+
+---
+
 ## Session History References
 
 | Topic | Transcript / Chat |
