@@ -16,7 +16,7 @@ new_sqlite_classes = ["HeatRoom"]
 # ── Environment variables ──────────────────────────────────────────────────────
 # Set these via `wrangler secret put` — do NOT commit real values here.
 [vars]
-SUPABASE_URL = "https://your-project-ref.supabase.co"
+SUPABASE_URL = "https://yhqxxgqfpgcertsqibps.supabase.co"
 ENVIRONMENT = "production"
 
 # ── Secrets (set via CLI) ──────────────────────────────────────────────────────
