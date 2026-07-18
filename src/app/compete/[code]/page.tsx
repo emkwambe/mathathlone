@@ -868,7 +868,7 @@ function LobbyView({
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-1.5">
-                        <CountryFlag countryCode={p.country_code} size="sm" />
+                        <CountryFlag code={p.country_code} size="sm" />
                         <p className="text-sm text-white font-medium truncate">{p.display_name}</p>
                       </div>
                       <div className="flex items-center gap-1.5 mt-0.5">

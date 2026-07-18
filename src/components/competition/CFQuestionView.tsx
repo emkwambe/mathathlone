@@ -296,7 +296,7 @@ export default function CFQuestionView({
                     >
                       {idx + 1}
                     </span>
-                    <CountryFlag countryCode={p.countryCode} size="sm" />
+                    <CountryFlag code={p.countryCode} size="sm" />
                     <span className="flex-1 text-sm text-white font-medium truncate">
                       {p.displayName}
                       {isMe && (

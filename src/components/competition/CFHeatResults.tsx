@@ -105,7 +105,7 @@ export default function CFHeatResults({
               return (
                 <div key={p.userId} className="flex flex-col items-center gap-2">
                   <div className="flex flex-col items-center gap-1">
-                    <CountryFlag countryCode={p.countryCode} size="md" />
+                    <CountryFlag code={p.countryCode} size="md" />
                     <p className="text-xs text-white font-semibold text-center max-w-[80px] truncate">
                       {p.displayName}
                     </p>
@@ -195,7 +195,7 @@ export default function CFHeatResults({
                   >
                     {medalIcon(rank) ?? rank}
                   </span>
-                  <CountryFlag countryCode={p.countryCode} size="sm" />
+                  <CountryFlag code={p.countryCode} size="sm" />
                   <span className="flex-1 text-sm text-white font-medium truncate">
                     {p.displayName}
                     {isMe && (
