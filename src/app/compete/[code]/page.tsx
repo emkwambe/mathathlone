@@ -46,7 +46,11 @@ import {
   useHeatParticipants,
   useHeatRealtime,
 } from '@/lib/competition/heat-realtime';
+import { useHeatRoom } from '@/lib/competition/heat-realtime-cf';
+import { CountryFlag } from '@/components/competition/CountryFlag';
 import CompetitionView from '@/components/competition/CompetitionView';
+import CFQuestionView from '@/components/competition/CFQuestionView';
+import CFHeatResults from '@/components/competition/CFHeatResults';
 import TeacherMonitor from '@/components/competition/TeacherMonitor';
 import StudentResults from '@/components/competition/StudentResults';
 import TeacherResults from '@/components/competition/TeacherResults';
@@ -134,14 +138,54 @@ export default function HeatLobbyPage() {
   const [startError, setStartError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
-  // ── Realtime: live heat status + participant roster ────────────────────
+  // ── Realtime: live heat status + participant roster (Supabase — DB truth) ─
   const { status: liveStatus } = useHeatRealtime(heat?.id ?? null);
-  const { participants, loading: participantsLoading } = useHeatParticipants(heat?.id ?? null);
+  const { participants: dbParticipants, loading: participantsLoading } = useHeatParticipants(heat?.id ?? null);
   const participantsLoaded = !participantsLoading;
 
-  // Effective status: prefer the live channel, fall back to initial load
-  const effectiveStatus: HeatStatus | null =
-    (liveStatus as HeatStatus | null) ?? heat?.status ?? null;
+  // ── Cloudflare HeatRoom — server-authoritative competition feed ───────────
+  const cfHeat = useHeatRoom({
+    heatId: heat?.id ?? null,
+    userId: user?.id ?? null,
+    displayName: user?.display_name ?? 'Mathlete',
+    countryCode: (user as any)?.country_code ?? 'US',
+  });
+
+  // During active/complete phases use CF participants (have scores + ranks).
+  // During lobby use DB participants (authoritative join order from Supabase).
+  const isActiveOrComplete = (() => {
+    const s = (liveStatus as HeatStatus | null) ?? heat?.status ?? null;
+    return s ? ([...['active', 'in_progress'], ...['complete', 'finished', 'calculating']].includes(s)) : false;
+  })();
+
+  // Unified participant shape used throughout the page
+  const participants = isActiveOrComplete
+    ? cfHeat.participants.map((p) => ({
+        id: p.userId,
+        athlete_id: p.userId,
+        display_name: p.displayName,
+        country_code: p.countryCode,
+        score: p.score,
+        rank: p.rankInHeat,
+      }))
+    : dbParticipants.map((p) => ({
+        id: p.id,
+        athlete_id: p.athlete_id,
+        display_name: p.display_name,
+        country_code: (p as any).country_code ?? 'US',
+        score: null,
+        rank: null,
+      }));
+
+  // Effective status: prefer the live CF phase during active, else Supabase
+  const effectiveStatus: HeatStatus | null = (() => {
+    const cfPhase = cfHeat.phase;
+    if (cfPhase === 'active') return 'active';
+    if (cfPhase === 'countdown') return 'countdown';
+    if (cfPhase === 'calculating') return 'calculating';
+    if (cfPhase === 'complete') return 'complete';
+    return (liveStatus as HeatStatus | null) ?? heat?.status ?? null;
+  })();
 
   // ── Redirect unauthenticated users to login (preserving target) ─────────
   useEffect(() => {
@@ -508,13 +552,25 @@ export default function HeatLobbyPage() {
       );
     }
 
-    // Student → gameplay. Need their participation row from the live roster
-    // to resolve participation_id (no need for an extra DB round-trip).
+    // Student → gameplay via Cloudflare HeatRoom.
+    // If the CF hook has a current question, render the new question view.
+    // Fall back to the legacy CompetitionView while the CF connection is
+    // establishing (connectionState === 'connecting').
+    if (cfHeat.currentQuestion) {
+      return (
+        <CFQuestionView
+          question={cfHeat.currentQuestion}
+          participants={cfHeat.participants}
+          lastAnswerAck={cfHeat.lastAnswerAck}
+          currentUserId={user?.id ?? ''}
+          submitAnswer={cfHeat.submitAnswer}
+          connectionState={cfHeat.connectionState}
+        />
+      );
+    }
+    // CF not yet connected — fall back to legacy view while connecting
     const myParticipation = participants.find((p) => p.athlete_id === user?.id);
     if (!myParticipation) {
-      // BUG 5: if the participants list has loaded and the student isn't in
-      // it, they joined after the Heat started — surface a clear message
-      // rather than spinning "Syncing your slot…" forever.
       if (participantsLoaded) {
         return (
           <FullScreenMessage
@@ -563,8 +619,18 @@ export default function HeatLobbyPage() {
       );
     }
 
-    // Student → personal results. Reuse the live participants array to
-    // resolve participation_id without an extra fetch.
+    // Student → results. Use CF participants if available (have scores + ranks),
+    // otherwise fall back to the legacy StudentResults component.
+    if (cfHeat.participants.length > 0 && user) {
+      return (
+        <CFHeatResults
+          heatCode={heat.code}
+          participants={cfHeat.participants}
+          currentUserId={user.id}
+          totalQuestions={heat.question_count}
+        />
+      );
+    }
     const myParticipation = participants.find((p) => p.athlete_id === user?.id);
     if (!myParticipation || !user) {
       return (
@@ -611,6 +677,7 @@ export default function HeatLobbyPage() {
         id: p.id,
         athlete_id: p.athlete_id,
         display_name: p.display_name,
+        country_code: p.country_code ?? 'US',
       }))}
       onStart={handleStart}
       starting={startingHeat}
@@ -630,6 +697,7 @@ interface LobbyParticipant {
   id: string;
   athlete_id: string;
   display_name: string;
+  country_code: string;
 }
 
 function LobbyView({
@@ -780,7 +848,7 @@ function LobbyView({
             <p className="text-white/40 text-sm italic">No one's joined yet.</p>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-              {participants.map((p) => {
+              {participants.map((p, idx) => {
                 const isCurrent = p.athlete_id === currentUserId;
                 return (
                   <div
@@ -791,15 +859,22 @@ function LobbyView({
                         : 'border-white/10 bg-white/5'
                     }`}
                   >
+                    {/* Join order badge */}
                     <div className="relative flex-shrink-0">
                       <div className="w-9 h-9 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white text-xs font-bold">
                         {initialsOf(p.display_name)}
                       </div>
                       <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-400 rounded-full ring-2 ring-indigo-900" />
                     </div>
-                    <div className="min-w-0">
-                      <p className="text-sm text-white font-medium truncate">{p.display_name}</p>
-                      {isCurrent && <p className="text-[10px] text-emerald-300 leading-none">you</p>}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-1.5">
+                        <CountryFlag countryCode={p.country_code} size="sm" />
+                        <p className="text-sm text-white font-medium truncate">{p.display_name}</p>
+                      </div>
+                      <div className="flex items-center gap-1.5 mt-0.5">
+                        {isCurrent && <p className="text-[10px] text-emerald-300 leading-none">you</p>}
+                        <p className="text-[10px] text-white/30 leading-none">#{idx + 1}</p>
+                      </div>
                     </div>
                   </div>
                 );
