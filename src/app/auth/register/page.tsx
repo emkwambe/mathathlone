@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useState, useEffect, useRef } from 'react';
+import { Suspense, useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { createSupabaseBrowser } from '@/lib/supabase/client';
@@ -25,21 +25,43 @@ const COUNTRIES = [
   { code: 'EG', name: 'Egypt' },
 ];
 
-const GRADES = [5, 6, 7, 8, 9, 10, 11, 12];
+// FIX-3: Grade range extended to 3-12 to match the official division rulebook
+const GRADES = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
+const MONTHS = [
+  { value: '01', label: 'January' }, { value: '02', label: 'February' },
+  { value: '03', label: 'March' },   { value: '04', label: 'April' },
+  { value: '05', label: 'May' },     { value: '06', label: 'June' },
+  { value: '07', label: 'July' },    { value: '08', label: 'August' },
+  { value: '09', label: 'September' },{ value: '10', label: 'October' },
+  { value: '11', label: 'November' }, { value: '12', label: 'December' },
+];
+
+function getDaysInMonth(month: string, year: string): number {
+  if (!month || !year) return 31;
+  return new Date(parseInt(year), parseInt(month), 0).getDate();
+}
 
 function RegisterPageInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const initialRole = searchParams.get('role') as 'athlete' | 'teacher' || 'athlete';
+  // FIX-2: role starts as null so user must explicitly choose; URL param pre-selects but does not skip step
+  const initialRole = (searchParams.get('role') as 'athlete' | 'teacher') || null;
 
   // Form state
   const [step, setStep] = useState<'role' | 'details' | 'fairplay'>('role');
-  const [role, setRole] = useState<'athlete' | 'teacher'>(initialRole);
+  const [role, setRole] = useState<'athlete' | 'teacher' | null>(initialRole);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [countryCode, setCountryCode] = useState('US');
-  const [dateOfBirth, setDateOfBirth] = useState('');
+  // FIX-4: Split DOB into 3 dropdowns for frictionless mobile/desktop entry
+  const [dobMonth, setDobMonth] = useState('');
+  const [dobDay, setDobDay] = useState('');
+  const [dobYear, setDobYear] = useState('');
+  const dateOfBirth = dobYear && dobMonth && dobDay
+    ? `${dobYear}-${dobMonth}-${dobDay.padStart(2, '0')}`
+    : '';
   const [gradeLevel, setGradeLevel] = useState(7);
   const [classCode, setClassCode] = useState('');
 
@@ -53,14 +75,31 @@ function RegisterPageInner() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // FIX-1: On mount of the fairplay step, check if content overflows.
+  // If scrollHeight <= clientHeight there is nothing to scroll — unlock immediately.
+  useEffect(() => {
+    if (step !== 'fairplay') return;
+    setHasScrolledToBottom(false);
+    setFairPlayAcknowledged(false);
+    setParentConsent(false);
+    const raf = requestAnimationFrame(() => {
+      if (!fairPlayRef.current) return;
+      const { scrollHeight, clientHeight } = fairPlayRef.current;
+      if (scrollHeight <= clientHeight) {
+        setHasScrolledToBottom(true);
+      }
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [step]);
+
   // Check if user is minor (under 18)
-  const isMinor = () => {
+  const isMinor = useCallback(() => {
     if (!dateOfBirth) return true;
     const today = new Date();
     const birth = new Date(dateOfBirth);
     const age = today.getFullYear() - birth.getFullYear();
     return age < 18;
-  };
+  }, [dateOfBirth]);
 
   // Handle Fair Play scroll detection
   const handleScroll = () => {
@@ -73,6 +112,7 @@ function RegisterPageInner() {
 
   // Handle registration
   const handleRegister = async () => {
+    if (!role) return;
     setError('');
     setLoading(true);
 
@@ -205,9 +245,11 @@ function RegisterPageInner() {
                   <div className="text-sm text-gray-500">I run competitions</div>
                 </button>
               </div>
+              {/* FIX-2: Continue disabled until role is explicitly selected */}
               <button
-                onClick={() => setStep('details')}
-                className="w-full mt-6 py-3 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
+                onClick={() => role && setStep('details')}
+                disabled={!role}
+                className="w-full mt-6 py-3 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition"
               >
                 Continue
               </button>
@@ -284,17 +326,47 @@ function RegisterPageInner() {
 
                 {role === 'athlete' && (
                   <>
+                    {/* FIX-4: 3-dropdown DOB picker for frictionless entry */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         Date of Birth
                       </label>
-                      <input
-                        type="date"
-                        value={dateOfBirth}
-                        onChange={(e) => setDateOfBirth(e.target.value)}
-                        required
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                      />
+                      <div className="grid grid-cols-3 gap-2">
+                        <select
+                          value={dobMonth}
+                          onChange={(e) => { setDobMonth(e.target.value); setDobDay(''); }}
+                          required
+                          className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm"
+                        >
+                          <option value="">Month</option>
+                          {MONTHS.map((m) => (
+                            <option key={m.value} value={m.value}>{m.label}</option>
+                          ))}
+                        </select>
+                        <select
+                          value={dobDay}
+                          onChange={(e) => setDobDay(e.target.value)}
+                          required
+                          disabled={!dobMonth}
+                          className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm disabled:bg-gray-100"
+                        >
+                          <option value="">Day</option>
+                          {Array.from({ length: getDaysInMonth(dobMonth, dobYear) }, (_, i) => String(i + 1)).map((d) => (
+                            <option key={d} value={d}>{d}</option>
+                          ))}
+                        </select>
+                        <select
+                          value={dobYear}
+                          onChange={(e) => setDobYear(e.target.value)}
+                          required
+                          className="px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm"
+                        >
+                          <option value="">Year</option>
+                          {Array.from({ length: 30 }, (_, i) => String(new Date().getFullYear() - 5 - i)).map((y) => (
+                            <option key={y} value={y}>{y}</option>
+                          ))}
+                        </select>
+                      </div>
                     </div>
 
                     <div>

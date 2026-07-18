@@ -12,6 +12,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import LiveStats from '@/components/landing/LiveStats';
 
 // ────────────────────────────────────────────────────────────
 // ANIMATED COUNTER (intersection observer)
@@ -290,7 +291,7 @@ export default function LandingPage() {
             <div className="lg:col-span-3">
               <div className="slide-up inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 text-sm text-white/80 mb-6">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                1,247 mathletes competing right now
+                <LiveStats stat="competingNow" suffix=" mathletes competing right now" />
               </div>
 
               <h1 className="slide-up slide-up-1 text-5xl md:text-6xl lg:text-7xl font-extrabold text-white leading-[1.08] mb-6">
