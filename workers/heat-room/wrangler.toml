@@ -1,0 +1,24 @@
+name = "mathathlone-heat-room"
+main = "src/index.ts"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+account_id = "078fac3f0858379e6ceae8f4c5874059"
+
+# ── Durable Objects ────────────────────────────────────────────────────────────
+[[durable_objects.bindings]]
+name = "HEAT_ROOM"
+class_name = "HeatRoom"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["HeatRoom"]
+
+# ── Environment variables ──────────────────────────────────────────────────────
+# Set these via `wrangler secret put` — do NOT commit real values here.
+[vars]
+SUPABASE_URL = "https://your-project-ref.supabase.co"
+ENVIRONMENT = "production"
+
+# ── Secrets (set via CLI) ──────────────────────────────────────────────────────
+# wrangler secret put SUPABASE_SERVICE_ROLE_KEY
+# wrangler secret put HEAT_ROOM_SECRET   (shared secret for Next.js → Worker auth)

@@ -1,0 +1,21 @@
+{
+  "name": "heat-room",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "deploy:staging": "wrangler deploy --env staging",
+    "type-check": "tsc --noEmit",
+    "tail": "wrangler tail"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "MathAthlone HeatRoom Durable Object — server-authoritative real-time heat management",
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260718.1",
+    "typescript": "^7.0.2",
+    "wrangler": "^4.112.0"
+  }
+}
