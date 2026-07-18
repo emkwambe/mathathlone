@@ -120,7 +120,7 @@ export default function HeatLobbyPage() {
   }, [params]);
 
   const supabase = useMemo(() => createClient(), []);
-  const { user, loading: authLoading, isAuthenticated } = useAuth();
+  const { user, profile, loading: authLoading, isAuthenticated } = useAuth();
 
   // ── Heat metadata (one-time fetch with JOINs) ───────────────────────────
   const [heat, setHeat] = useState<HeatWithMeta | null>(null);
@@ -147,8 +147,8 @@ export default function HeatLobbyPage() {
   const cfHeat = useHeatRoom({
     heatId: heat?.id ?? null,
     userId: user?.id ?? null,
-    displayName: user?.display_name ?? 'Mathlete',
-    countryCode: (user as any)?.country_code ?? 'US',
+    displayName: profile?.display_name ?? 'Mathlete',
+    countryCode: profile?.country_code ?? 'US',
   });
 
   // During active/complete phases use CF participants (have scores + ranks).
