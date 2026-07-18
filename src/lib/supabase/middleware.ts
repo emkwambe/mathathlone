@@ -95,7 +95,12 @@ export async function updateSession(request: NextRequest): Promise<NextResponse>
   // (populated by the Supabase custom access token hook). If the hook is not
   // yet enabled, user_metadata.role falls back to the value set at sign-up.
   if (user) {
-    const userRole: string = (user.user_metadata?.role as string) ?? '';
+    // Read role from JWT custom claim first (requires Supabase custom access token hook).
+    // Fall back to user_metadata.role, then user_metadata.desired_role (set at signup).
+    const userRole: string =
+      (user.user_metadata?.role as string) ||
+      (user.user_metadata?.desired_role as string) ||
+      '';
     for (const { prefix, roles } of ROLE_PROTECTED_ROUTES) {
       if (path.startsWith(prefix) && !roles.includes(userRole)) {
         return NextResponse.redirect(new URL('/403', request.url));
