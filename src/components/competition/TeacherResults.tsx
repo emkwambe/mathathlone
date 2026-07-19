@@ -23,6 +23,8 @@ import {
   Gem,
   Loader2,
   Medal,
+  RefreshCw,
+  Rocket,
   Scroll,
   Target,
   TrendingUp,
@@ -709,14 +711,28 @@ export default function TeacherResults({ heatId, heatCode, integrityLevel }: Tea
           </div>
         )}
 
-        {/* Back to dashboard */}
-        <div className="mb-6">
+        {/* Post-heat navigation */}
+        <div className="mb-6 flex flex-wrap gap-3">
           <Link
             href="/dashboard/teacher"
             className="inline-flex items-center gap-2 px-4 py-2.5 min-h-[44px] rounded-xl bg-white/10 border border-white/15 text-white/80 hover:text-white hover:bg-white/15 text-sm transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to dashboard
+          </Link>
+          <Link
+            href="/compete/create"
+            className="inline-flex items-center gap-2 px-4 py-2.5 min-h-[44px] rounded-xl bg-indigo-600 hover:bg-indigo-500 border border-indigo-400/30 text-white text-sm font-medium transition-colors"
+          >
+            <Rocket className="w-4 h-4" />
+            Start New Heat
+          </Link>
+          <Link
+            href={`/compete/create?repeat=${heatCode}`}
+            className="inline-flex items-center gap-2 px-4 py-2.5 min-h-[44px] rounded-xl bg-emerald-700 hover:bg-emerald-600 border border-emerald-500/30 text-white text-sm font-medium transition-colors"
+          >
+            <RefreshCw className="w-4 h-4" />
+            Run Again
           </Link>
         </div>
 

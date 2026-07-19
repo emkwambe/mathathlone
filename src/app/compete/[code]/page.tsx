@@ -143,6 +143,12 @@ export default function HeatLobbyPage() {
   const { participants: dbParticipants, loading: participantsLoading } = useHeatParticipants(heat?.id ?? null);
   const participantsLoaded = !participantsLoading;
 
+  // ── CF timeout: if CF hasn't delivered a question within 5s of active
+  // status, fall back to the legacy CompetitionView so the student isn't
+  // stuck on an infinite spinner after a reload/rejoin.
+  const [cfTimedOut, setCfTimedOut] = useState(false);
+  const cfTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   // ── Cloudflare HeatRoom — server-authoritative competition feed ───────────
   const cfHeat = useHeatRoom({
     heatId: heat?.id ?? null,
@@ -194,6 +200,33 @@ export default function HeatLobbyPage() {
       router.push(`/auth/login?next=${encodeURIComponent(`/compete/${code}`)}`);
     }
   }, [authLoading, isAuthenticated, router, code]);
+
+  // ── CF timeout: start a 5-second timer when heat goes active and student
+  // is not the teacher. If CF hasn't delivered a question by then, fall back
+  // to legacy CompetitionView (DB-driven) so the student isn't stuck.
+  useEffect(() => {
+    const isActive = effectiveStatus && ACTIVE_STATUSES.includes(effectiveStatus);
+    if (!isActive || isTeacher || cfHeat.currentQuestion) {
+      // Clear any running timer if question arrived or heat is no longer active
+      if (cfTimeoutRef.current) {
+        clearTimeout(cfTimeoutRef.current);
+        cfTimeoutRef.current = null;
+      }
+      if (cfHeat.currentQuestion) setCfTimedOut(false);
+      return;
+    }
+    if (cfTimeoutRef.current) return; // already running
+    cfTimeoutRef.current = setTimeout(() => {
+      setCfTimedOut(true);
+      cfTimeoutRef.current = null;
+    }, 5000);
+    return () => {
+      if (cfTimeoutRef.current) {
+        clearTimeout(cfTimeoutRef.current);
+        cfTimeoutRef.current = null;
+      }
+    };
+  }, [effectiveStatus, isTeacher, cfHeat.currentQuestion]);
 
   // ── Load Heat by code (with retries + status-aware error mapping) ──────
   // BUG 0 fix: when the teacher just created the Heat, the row may not yet
@@ -554,8 +587,6 @@ export default function HeatLobbyPage() {
 
     // Student → gameplay via Cloudflare HeatRoom.
     // If the CF hook has a current question, render the new question view.
-    // Fall back to the legacy CompetitionView while the CF connection is
-    // establishing (connectionState === 'connecting').
     if (cfHeat.currentQuestion) {
       return (
         <CFQuestionView
@@ -568,10 +599,15 @@ export default function HeatLobbyPage() {
         />
       );
     }
-    // CF not yet connected — fall back to legacy view while connecting
-    const myParticipation = participants.find((p) => p.athlete_id === user?.id);
-    if (!myParticipation) {
-      if (participantsLoaded) {
+    // CF not yet connected — check DB participation while waiting.
+    // After 5 seconds without a CF question, fall back to legacy view.
+    const myParticipation = dbParticipants.find((p) => p.athlete_id === user?.id);
+    if (cfTimedOut || myParticipation) {
+      // We have DB confirmation of participation (or CF timed out).
+      // Use legacy CompetitionView which drives off Supabase directly.
+      const partId = myParticipation?.id ?? '';
+      if (!partId) {
+        // Timed out AND not in DB — genuinely not a participant.
         return (
           <FullScreenMessage
             icon={<AlertTriangle className="w-10 h-10 text-amber-300" />}
@@ -581,18 +617,19 @@ export default function HeatLobbyPage() {
           />
         );
       }
-      return <FullScreenSpinner label="Syncing your slot…" />;
+      return (
+        <CompetitionView
+          heatId={heat.id}
+          heatCode={heat.code}
+          participationId={partId}
+          durationSeconds={heat.duration_seconds}
+          integrityLevel={heat.integrity_level ?? 'practice'}
+          isAssessment={(heat as { is_assessment?: boolean }).is_assessment ?? false}
+        />
+      );
     }
-    return (
-      <CompetitionView
-        heatId={heat.id}
-        heatCode={heat.code}
-        participationId={myParticipation.id}
-        durationSeconds={heat.duration_seconds}
-        integrityLevel={heat.integrity_level ?? 'practice'}
-        isAssessment={(heat as { is_assessment?: boolean }).is_assessment ?? false}
-      />
-    );
+    // Still waiting for CF or DB — show brief spinner (max 5s before timeout above)
+    return <FullScreenSpinner label="Syncing your slot…" />;
   }
 
   // 3. Calculating
