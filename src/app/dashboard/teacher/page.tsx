@@ -57,6 +57,9 @@ export default async function TeacherDashboard() {
             Math<span className="text-amber-500">Athlone</span>
           </Link>
           <div className="flex items-center gap-4">
+            <Link href="/leaderboard" className="text-sm text-gray-500 hover:text-blue-600 transition">
+              Leaderboard
+            </Link>
             <span className="text-gray-600">{profile.display_name}</span>
             <form action="/auth/signout" method="POST">
               <button className="text-sm text-gray-500 hover:text-gray-700">
@@ -79,7 +82,7 @@ export default async function TeacherDashboard() {
         </div>
 
         {/* Quick Actions */}
-        <div className="mb-8 grid gap-4 md:grid-cols-2">
+        <div className="mb-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {/* Start Heat */}
           <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white flex flex-col">
             <h2 className="text-2xl font-bold mb-2">🏁 Start a Heat</h2>
@@ -105,6 +108,20 @@ export default async function TeacherDashboard() {
               className="inline-block self-start px-6 py-3 bg-white text-emerald-700 font-semibold rounded-lg hover:bg-emerald-50 transition"
             >
               Generate Assessment
+            </Link>
+          </div>
+
+          {/* Create League */}
+          <div className="bg-gradient-to-r from-violet-700 to-purple-700 rounded-2xl p-8 text-white flex flex-col">
+            <h2 className="text-2xl font-bold mb-2">🏟️ Create a League</h2>
+            <p className="text-violet-200 mb-6 flex-1">
+              Run a season-long bracket competition for your class or school. ELO ratings, standings, and championship points included.
+            </p>
+            <Link
+              href="/league/create"
+              className="inline-block self-start px-6 py-3 bg-white text-violet-700 font-semibold rounded-lg hover:bg-violet-50 transition"
+            >
+              Create League
             </Link>
           </div>
         </div>

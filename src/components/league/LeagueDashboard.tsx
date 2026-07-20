@@ -841,7 +841,8 @@ const MOCK_SPLITS: SeasonSplit[] = [
   { id: 's3', name: 'Spring Split', status: 'active', start_date: '2026-03-09', end_date: '2026-05-29' },
 ];
 
-const SeasonTimeline: React.FC = () => {
+const SeasonTimeline: React.FC<{ splits?: SeasonSplit[] }> = ({ splits }) => {
+  const displaySplits = splits && splits.length > 0 ? splits : MOCK_SPLITS;
   const statusColors: Record<string, { bg: string; text: string; dot: string }> = {
     upcoming: { bg: 'rgba(107,114,128,0.1)', text: '#6b7280', dot: '#6b7280' },
     active: { bg: 'rgba(99,102,241,0.1)', text: '#818cf8', dot: '#6366f1' },
@@ -863,7 +864,7 @@ const SeasonTimeline: React.FC = () => {
         2025–2026 Season
       </h3>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-        {MOCK_SPLITS.map((split, i) => {
+        {displaySplits.map((split, i) => {
           const colors = statusColors[split.status];
           return (
             <div
@@ -889,7 +890,7 @@ const SeasonTimeline: React.FC = () => {
                     boxShadow: split.status === 'active' ? `0 0 10px ${colors.dot}55` : undefined,
                   }}
                 />
-                {i < MOCK_SPLITS.length - 1 && (
+                {i < displaySplits.length - 1 && (
                   <div
                     style={{
                       width: 2,
@@ -1014,11 +1015,39 @@ const SeasonTimeline: React.FC = () => {
 // MAIN DASHBOARD
 // ────────────────────────────────────────────────────────────
 
-export default function LeagueDashboard() {
+interface LeagueDashboardProps {
+  /** When provided, real data replaces mock data. */
+  leagueMeta?: {
+    id: string;
+    name: string;
+    level: string;
+    region: string;
+    bracketName: string | null;
+    bracketFormat: string | null;
+  };
+  initialStandings?: StandingRow[];
+  initialBracket?: BracketMatch[];
+  initialChampionship?: ChampionshipEntry[];
+  initialSplits?: SeasonSplit[];
+}
+
+export default function LeagueDashboard({
+  leagueMeta,
+  initialStandings,
+  initialBracket,
+  initialChampionship,
+  initialSplits,
+}: LeagueDashboardProps = {}) {
   const [activeTab, setActiveTab] = useState<TabId>('bracket');
-  const [bracketData] = useState<BracketMatch[]>(generateMockBracket);
-  const [standingsData] = useState<StandingRow[]>(generateMockStandings);
-  const [championshipData] = useState<ChampionshipEntry[]>(generateMockChampionship);
+  const [bracketData] = useState<BracketMatch[]>(
+    initialBracket && initialBracket.length > 0 ? initialBracket : generateMockBracket
+  );
+  const [standingsData] = useState<StandingRow[]>(
+    initialStandings && initialStandings.length > 0 ? initialStandings : generateMockStandings
+  );
+  const [championshipData] = useState<ChampionshipEntry[]>(
+    initialChampionship && initialChampionship.length > 0 ? initialChampionship : generateMockChampionship
+  );
 
   const tabs: Array<{ id: TabId; label: string; icon: string }> = [
     { id: 'bracket', label: 'Bracket', icon: '🏆' },
@@ -1065,11 +1094,13 @@ export default function LeagueDashboard() {
               letterSpacing: '-0.02em',
             }}
           >
-            District 7 — D1 Playoffs
+            {leagueMeta ? leagueMeta.name : 'District 7 — D1 Playoffs'}
           </h1>
         </div>
         <p style={{ fontSize: 13, color: '#6b7280', margin: 0 }}>
-          Spring Split 2026 • Single Elimination • 8 Mathletes
+          {leagueMeta
+            ? `${leagueMeta.region ? leagueMeta.region + ' • ' : ''}${leagueMeta.level}${leagueMeta.bracketFormat ? ' • ' + leagueMeta.bracketFormat : ''} • ${standingsData.length} Mathletes`
+            : 'Spring Split 2026 • Single Elimination • 8 Mathletes'}
         </p>
       </div>
 
@@ -1132,7 +1163,7 @@ export default function LeagueDashboard() {
         {activeTab === 'bracket' && <BracketView matches={bracketData} />}
         {activeTab === 'standings' && <StandingsTable standings={standingsData} />}
         {activeTab === 'championship' && <ChampionshipTracker entries={championshipData} />}
-        {activeTab === 'season' && <SeasonTimeline />}
+        {activeTab === 'season' && <SeasonTimeline splits={initialSplits} />}
       </div>
 
       {/* Footer */}
