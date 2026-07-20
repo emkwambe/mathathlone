@@ -815,6 +815,21 @@ export default function CreateHeatPage() {
       // BUG 0 fix retained — 500ms wait before redirect so the heats row +
       // heat_questions inserts propagate to the read replica.
       await new Promise((r) => setTimeout(r, 500));
+
+      // Pre-load the heat into the Cloudflare HeatRoom Durable Object so
+      // WebSocket connections succeed immediately when the lobby opens.
+      // Fire-and-forget with a best-effort timeout — if it fails the lobby
+      // still works via the Supabase fallback transport.
+      try {
+        const initRes = await fetch(`/api/heat/${heat.id}/init`, { method: 'POST' });
+        if (!initRes.ok) {
+          const body = await initRes.json().catch(() => ({}));
+          console.warn('[CreateHeat] CF init non-fatal:', body);
+        }
+      } catch (initErr) {
+        console.warn('[CreateHeat] CF init error (non-fatal):', initErr);
+      }
+
       router.push(`/compete/${heat.code}`);
     } catch (err: any) {
       console.error('[CreateHeat] failed:', err);
