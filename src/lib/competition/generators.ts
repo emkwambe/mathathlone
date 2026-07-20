@@ -632,7 +632,8 @@ export function generate_write_linear_eq(difficulty: DifficultyLevel): Generated
   const b = randomInt(-8, 8);
   
   const signB = b >= 0 ? '+' : '-';
-  const equation = b === 0 ? `y = ${m}x` : `y = ${m}x ${signB} ${Math.abs(b)}`;
+  const slopePart = m === 1 ? 'x' : m === -1 ? '-x' : `${m}x`;
+  const equation = b === 0 ? `y = ${slopePart}` : `y = ${slopePart} ${signB} ${Math.abs(b)}`;
   
   return {
     question_latex: `\\text{Write the equation with slope } ${m} \\text{ and y-intercept } ${b}`,
@@ -660,7 +661,8 @@ export function generate_write_linear_eq_points(difficulty: DifficultyLevel): Ge
   const y2 = m * x2 + b;
   
   const signB = b >= 0 ? '+' : '-';
-  const equation = b === 0 ? `y = ${m}x` : `y = ${m}x ${signB} ${Math.abs(b)}`;
+  const slopePart = m === 1 ? 'x' : m === -1 ? '-x' : `${m}x`;
+  const equation = b === 0 ? `y = ${slopePart}` : `y = ${slopePart} ${signB} ${Math.abs(b)}`;
   
   return {
     question_latex: `\\text{Write the equation through } (${x1}, ${y1}) \\text{ and } (${x2}, ${y2})`,
@@ -715,7 +717,8 @@ export function generate_convert_linear_forms(difficulty: DifficultyLevel): Gene
   
   const signC = C >= 0 ? '' : '-';
   const standard = `${A}x + y = ${C}`;
-  const slopeInt = `y = ${m}x ${formatConst(b)}`;
+  const slopePart = m === 1 ? 'x' : m === -1 ? '-x' : `${m}x`;
+  const slopeInt = `y = ${slopePart} ${formatConst(b)}`;
   
   return {
     question_latex: `\\text{Convert } ${standard} \\text{ to slope-intercept form}`,
@@ -816,7 +819,8 @@ export function generate_write_parallel_perp_eq(difficulty: DifficultyLevel): Ge
   const newB = y1 - newM * x1;
   
   const signB = newB >= 0 ? '+' : '-';
-  const equation = newB === 0 ? `y = ${newM}x` : `y = ${newM}x ${signB} ${Math.abs(newB)}`;
+  const slopePart = newM === 1 ? 'x' : newM === -1 ? '-x' : `${newM}x`;
+  const equation = newB === 0 ? `y = ${slopePart}` : `y = ${slopePart} ${signB} ${Math.abs(newB)}`;
   const type = isParallel ? 'parallel' : 'perpendicular';
   
   return {

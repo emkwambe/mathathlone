@@ -304,6 +304,13 @@ export default function CompetitionView({
   >(null);
   const [submitting, setSubmitting] = useState(false);
 
+  // ── Format hint gating ──────────────────────────────────────────────────
+  // Show the format hint only after the student has made at least one wrong
+  // attempt on the current question. This prevents the hint from leaking the
+  // answer type before the student has tried. Reset whenever the question index
+  // changes (i.e. on advance to next question).
+  const [hadWrongAttempt, setHadWrongAttempt] = useState(false);
+
   // ── Global timer ────────────────────────────────────────────────────────
   // If we restored from a snapshot, decrement from "duration - elapsed since
   // heatStartedAt" so the clock doesn't jump forward.
@@ -624,6 +631,7 @@ export default function CompetitionView({
       const advance = () => {
         setAnswer('');
         setSubmitting(false);
+        setHadWrongAttempt(false); // reset hint gate for next question
         if (currentIndex >= questions.length - 1) {
           setPhase('finished');
         } else {
@@ -631,6 +639,9 @@ export default function CompetitionView({
           questionDisplayedAtRef.current = Date.now();
         }
       };
+
+      // Gate format hint: reveal after first wrong attempt
+      if (!isCorrect) setHadWrongAttempt(true);
 
       // Assessment mode: no correct/incorrect feedback, no points animation.
       // Advance to the next question silently and immediately.
@@ -665,6 +676,7 @@ export default function CompetitionView({
       participationId,
       supabase,
       isAssessment,
+      hadWrongAttempt,
     ]
   );
 
@@ -991,10 +1003,10 @@ export default function CompetitionView({
                   onChange={setAnswer}
                   onSubmit={() => handleSubmit(answer)}
                   disabled={submitting || !!feedback}
-                  hint={formatHintFor(
+                  hint={hadWrongAttempt ? formatHintFor(
                     currentQuestion.answer_type,
                     currentQuestion.question_generators?.generator_type ?? null
-                  )}
+                  ) : ''}
                 />
                 {/* Hint moved BELOW input, ABOVE submit — see FreeTextInput.
                     Rendered only when non-empty. */}

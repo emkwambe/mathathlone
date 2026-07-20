@@ -118,10 +118,9 @@ export default async function TeacherDashboard() {
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
               {classes.map((cls: any) => (
-                <Link
+                <div
                   key={cls.id}
-                  href={`/class/${cls.id}`}
-                  className="p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:shadow-sm transition"
+                  className="p-4 border border-gray-200 rounded-lg"
                 >
                   <h3 className="font-semibold text-gray-900">{cls.name}</h3>
                   <p className="text-sm text-gray-500">Grade {cls.grade_level}</p>
@@ -133,7 +132,8 @@ export default async function TeacherDashboard() {
                       {cls.join_code}
                     </span>
                   </div>
-                </Link>
+                  <p className="text-xs text-gray-400 mt-2">Class roster coming soon</p>
+                </div>
               ))}
             </div>
           </div>
