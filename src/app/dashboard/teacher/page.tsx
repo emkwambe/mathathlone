@@ -76,9 +76,13 @@ export default async function TeacherDashboard() {
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             Welcome, {profile.display_name}! 👩‍🏫
           </h1>
-          <p className="text-gray-600">
-            {profile.schools?.name} • {profile.schools?.district}, {profile.schools?.state}
-          </p>
+          {profile.schools?.name && (
+            <p className="text-gray-600">
+              {profile.schools.name}
+              {profile.schools.district ? ` • ${profile.schools.district}` : ''}
+              {profile.schools.state ? `, ${profile.schools.state}` : ''}
+            </p>
+          )}
         </div>
 
         {/* Quick Actions */}

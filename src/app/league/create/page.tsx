@@ -175,7 +175,7 @@ export default function CreateLeaguePage() {
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
               >
                 {[4, 8, 16, 32].map((n) => (
-                  <option key={n} value={n}>{n} athletes</option>
+                  <option key={n} value={n}>{n} Mathletes</option>
                 ))}
               </select>
             </div>

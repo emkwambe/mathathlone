@@ -80,6 +80,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       region: region?.trim() || null,
       season_id: activeSeason?.id ?? null,
       max_schools: max_participants ?? 8,
+      created_by: user.id,
     })
     .select('id')
     .single();
