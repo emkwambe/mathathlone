@@ -794,8 +794,8 @@ export function generate_perp_line_slope(difficulty: DifficultyLevel): Generated
 // Self-test:
 //   parallel to y=2x, through (1,3)  → m=2,  b=3-2·1=1  → "y = 2x + 1"
 //   parallel to y=-3x, through (0,4) → m=-3, b=4       → "y = -3x + 4"
-//   perp to y=x,    through (2,5)    → m=-1, b=5-(-1)·2=7 → "y = -1x + 7"
-//   perp to y=-x,   through (3,1)    → m=1,  b=1-1·3=-2  → "y = 1x - 2"
+//   perp to y=x,    through (2,5)    → m=-1, b=5-(-1)·2=7 → "y = -x + 7"
+//   perp to y=-x,   through (3,1)    → m=1,  b=1-1·3=-2  → "y = x - 2"
 //
 // The perpendicular slope of m is -1/m. For arbitrary integer m other than ±1,
 // the perpendicular is fractional ("-1/2", "-1/3"), which our equation
