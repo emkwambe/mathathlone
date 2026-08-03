@@ -578,8 +578,9 @@ const BracketView: React.FC<{ matches: BracketMatch[]; isClassroom?: boolean }> 
 const StandingsTable: React.FC<{
   standings: StandingRow[];
   isClassroom?: boolean;
+  isDistrict?: boolean;
   advancementSlots?: number;
-}> = ({ standings, isClassroom, advancementSlots }) => {
+}> = ({ standings, isClassroom, isDistrict, advancementSlots }) => {
   const medalColors: Record<number, string> = {
     1: '#fbbf24',
     2: '#94a3b8',
@@ -634,7 +635,7 @@ const StandingsTable: React.FC<{
       >
         <thead>
           <tr>
-            {['#', 'Mathlete', 'W-L-D', 'PTS', 'AVG CTA', 'BEST', 'ELO', 'Δ', 'HEATS', '🥇'].map(
+            {['#', 'Mathlete', ...(isDistrict ? ['School'] : []), 'W-L-D', 'PTS', 'AVG CTA', 'BEST', 'ELO', 'Δ', 'HEATS', '🥇'].map(
               (h, i) => (
                 <th
                   key={h}
@@ -704,7 +705,7 @@ const StandingsTable: React.FC<{
                         <div style={{ fontSize: 13, fontWeight: 600, color: '#e5e7eb' }}>
                           {isClassroom ? firstName(row.athlete.name) : row.athlete.name}
                         </div>
-                        {!isClassroom && (
+                        {!isClassroom && !isDistrict && (
                           <div style={{ fontSize: 10, color: '#6b7280' }}>
                             {row.athlete.school}
                           </div>
@@ -712,6 +713,11 @@ const StandingsTable: React.FC<{
                       </div>
                     </div>
                   </td>
+                  {isDistrict && (
+                    <td style={{ padding: '10px 12px', fontSize: 12, color: '#9ca3af' }}>
+                      {row.athlete.school || '—'}
+                    </td>
+                  )}
                   <td style={{ padding: '10px 12px', textAlign: 'center', fontSize: 13, fontFamily: "'JetBrains Mono', monospace", color: '#9ca3af' }}>
                     {row.wins}-{row.losses}-{row.draws}
                   </td>
@@ -739,7 +745,7 @@ const StandingsTable: React.FC<{
                 </tr>
                 {showCutLine && (
                   <tr key={`cut-${row.athlete.id}`}>
-                    <td colSpan={10} style={{ padding: 0 }}>
+                    <td colSpan={isDistrict ? 11 : 10} style={{ padding: 0 }}>
                       <div
                         style={{
                           height: 2,
@@ -1001,6 +1007,7 @@ interface LeagueDashboardProps {
       targetLeagueName: string;
       slotsAllocated: number;
     } | null;
+    contentScope?: any;
   };
   initialStandings?: StandingRow[];
   initialBracket?: BracketMatch[];
@@ -1030,6 +1037,7 @@ export default function LeagueDashboard({
   );
 
   const isClassroom = leagueMeta?.level === 'classroom';
+  const isDistrict = leagueMeta?.level === 'district';
   const advancement = leagueMeta?.advancementInfo ?? null;
 
   const tabs: Array<{ id: TabId; label: string; icon: string }> = [
@@ -1160,6 +1168,7 @@ export default function LeagueDashboard({
           <StandingsTable
             standings={standingsData}
             isClassroom={isClassroom}
+            isDistrict={isDistrict}
             advancementSlots={advancement?.slotsAllocated}
           />
         )}

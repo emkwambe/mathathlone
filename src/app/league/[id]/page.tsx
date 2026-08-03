@@ -16,6 +16,8 @@ import { notFound } from 'next/navigation';
 import { createSupabaseServer } from '@/lib/supabase/server';
 import LeagueDashboard from '@/components/league/LeagueDashboard';
 import BracketGenerateButton from '@/components/league/BracketGenerateButton';
+import StartLeagueHeatButton from '@/components/league/StartLeagueHeatButton';
+import RosterImportButton from '@/components/league/RosterImportButton';
 
 export const revalidate = 60; // ISR — refresh every 60 s
 
@@ -33,7 +35,7 @@ export default async function LeaguePage({ params }: PageProps) {
   // ── 1. League meta ────────────────────────────────────────────────────────
   const { data: league, error: leagueErr } = await supabase
     .from('leagues')
-    .select('id, name, level, region, season_id, division_id, created_by')
+    .select('id, name, level, region, season_id, division_id, created_by, content_scope')
     .eq('id', leagueId)
     .maybeSingle();
 
@@ -248,6 +250,7 @@ export default async function LeaguePage({ params }: PageProps) {
     bracketFormat: bracket?.format ?? null,
     bracketId: bracket?.id ?? null,
     advancementInfo,
+    contentScope: (league as any).content_scope ?? null,
   };
 
   // Is the current user the league owner (teacher / admin)?
@@ -261,10 +264,20 @@ export default async function LeaguePage({ params }: PageProps) {
           <span className="text-xs text-indigo-300 font-medium tracking-wide uppercase">
             Teacher Controls
           </span>
-          <BracketGenerateButton
-            leagueId={leagueId}
-            hasBracket={bracket !== null}
-          />
+          <div className="flex items-center gap-2">
+            <RosterImportButton
+              leagueId={leagueId}
+              leagueName={league.name}
+            />
+            <StartLeagueHeatButton
+              leagueId={leagueId}
+              contentScope={(league as any).content_scope ?? null}
+            />
+            <BracketGenerateButton
+              leagueId={leagueId}
+              hasBracket={bracket !== null}
+            />
+          </div>
         </div>
       )}
       <LeagueDashboard
