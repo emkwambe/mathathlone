@@ -105,12 +105,12 @@ src/
 ## Scripts
 
 ```bash
-npm run dev          # Start development server
-npm run build        # Build for production
-npm run lint         # Run ESLint
-npm run type-check   # Run TypeScript check
-npm run test         # Run tests
-npm run db:generate  # Generate Supabase types
+pnpm dev          # Start development server
+pnpm build        # Build for production
+pnpm lint         # Run ESLint
+pnpm type-check   # Run TypeScript check
+pnpm db:generate  # Generate Supabase types
+pnpm seed:nc      # Seed NC demo data (schools, mathletes, leagues)
 ```
 
 ## Environment Variables
@@ -120,6 +120,10 @@ npm run db:generate  # Generate Supabase types
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anonymous key |
 | `NEXT_PUBLIC_APP_URL` | Application URL |
+| `SUPABASE_SERVICE_ROLE_KEY` | Used for bulk roster imports and admin operations |
+| `NEXT_PUBLIC_HEAT_WORKER_URL` | Cloudflare HeatRoom worker URL |
+| `HEAT_WORKER_URL` | Server-side worker URL |
+| `HEAT_ROOM_SECRET` | Shared secret for Next.js → Worker auth |
 
 ## Documentation
 

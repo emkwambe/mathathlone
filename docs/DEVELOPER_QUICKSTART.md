@@ -1,6 +1,6 @@
 # MathAthlone — Developer Quick-Start
 
-> Last updated: Sprint 4–6 (July 2026)
+> Last updated: Sprint 11 (August 2026)
 
 This guide gets a new developer from zero to a running local environment in under 15 minutes.
 
@@ -98,7 +98,7 @@ Navigate to `http://localhost:3000`. Sign in with any seeded teacher account:
 mathathlone-app/
 ├── src/
 │   ├── app/                    # Next.js App Router pages
-│   │   ├── api/league/         # League engine API routes (Sprint 4)
+│   │   ├── api/league/         # League engine API routes (Sprint 4-9)
 │   │   ├── compete/            # Heat creation and live competition
 │   │   ├── dashboard/          # Role-based dashboards
 │   │   └── league/[id]/        # League page
@@ -112,7 +112,7 @@ mathathlone-app/
 │   └── types/
 │       └── database.ts         # Hand-maintained TypeScript types
 ├── supabase/
-│   ├── migrations/             # 037 SQL migration files
+│   ├── migrations/             # 047 SQL migration files
 │   └── mathathlone-schema.sql  # Full schema dump
 ├── scripts/
 │   ├── seed-mathathlone-nc.ts  # NC demo data seed
@@ -140,7 +140,7 @@ python3 scripts/generator_evaluator.py --course NCG7 --sample 20
 
 ```bash
 # Create a new migration file
-touch supabase/migrations/038_your_change.sql
+touch supabase/migrations/043_your_change.sql
 
 # Apply it to the remote DB (requires Supabase CLI login)
 supabase db push
