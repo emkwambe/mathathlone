@@ -48,15 +48,30 @@ export interface AssessmentDocument {
   showAnswerKey: boolean;
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Page-budget targets (US Letter, 0.75in margins, 11pt Georgia):
+//   • Question pages  ≤ 4  (≈ 9 in of printable height per page)
+//   • Answer key      ≤ 2  (fits on 1 page for ≤16 Qs, 2 pages for 17–20)
+//   • Total           ≤ 6
+//
+// Workspace line height ≈ 0.28 in each.  FR question block ≈ 0.5 in overhead.
+// MC question block ≈ 0.6 in each (question + 2-col options + answer box).
+// ─────────────────────────────────────────────────────────────────────────────
 const CONFIGS: Record<AssessmentType, {
   total: number; frRatio: number;
   mcPts: number; frPts: number; wsLines: number;
 }> = {
-  review:   { total: 10, frRatio: 0.4, mcPts: 2, frPts: 4, wsLines: 4 },
-  quiz:     { total: 12, frRatio: 0.4, mcPts: 3, frPts: 5, wsLines: 6 },
-  homework: { total: 8,  frRatio: 0.6, mcPts: 2, frPts: 4, wsLines: 5 },
-  test:     { total: 20, frRatio: 0.5, mcPts: 3, frPts: 5, wsLines: 8 },
-  makeup:   { total: 20, frRatio: 0.5, mcPts: 3, frPts: 5, wsLines: 8 },
+  //                total  frRatio  mcPts  frPts  wsLines
+  // review:  8 Q   → ~5 MC (3.0in) + ~3 FR (3×1.5in=4.5in) ≈ 2 pages
+  review:   { total: 8,  frRatio: 0.375, mcPts: 2, frPts: 4, wsLines: 3 },
+  // quiz:   12 Q   → ~7 MC (4.2in) + ~5 FR (5×1.5in=7.5in) ≈ 3 pages
+  quiz:     { total: 12, frRatio: 0.417, mcPts: 3, frPts: 5, wsLines: 4 },
+  // homework: 8 Q  → ~3 MC (1.8in) + ~5 FR (5×1.7in=8.5in) ≈ 3 pages
+  homework: { total: 8,  frRatio: 0.625, mcPts: 2, frPts: 4, wsLines: 4 },
+  // test:   16 Q   → ~8 MC (4.8in) + ~8 FR (8×1.7in=13.6in) ≈ 4 pages
+  test:     { total: 16, frRatio: 0.5,   mcPts: 3, frPts: 5, wsLines: 5 },
+  // makeup: 16 Q   → same as test
+  makeup:   { total: 16, frRatio: 0.5,   mcPts: 3, frPts: 5, wsLines: 5 },
 };
 
 const TITLES: Record<AssessmentType, string> = {
