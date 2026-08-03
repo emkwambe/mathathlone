@@ -41,10 +41,10 @@ export default function AssessmentDoc({ doc }: { doc: AssessmentDocument }) {
           🖨 Print / Save PDF
         </button>
         <a
-          href="/compete/create"
+          href="/assessment/generate"
           className="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
         >
-          ← Back
+          ← Back to Assessment Generator
         </a>
         <p className="text-xs text-gray-500">
           After printing, choose &lsquo;Save as PDF&rsquo; in the print dialog.

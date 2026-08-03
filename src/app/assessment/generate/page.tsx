@@ -613,6 +613,14 @@ export default function GenerateAssessmentPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4">
       <div className="max-w-3xl mx-auto">
+        {/* Breadcrumb */}
+        <nav className="mb-6 flex items-center gap-2 text-sm text-gray-400">
+          <a href="/dashboard/teacher" className="hover:text-indigo-600 transition-colors">
+            Dashboard
+          </a>
+          <ChevronRight className="w-4 h-4" />
+          <span className="text-gray-700 font-medium">Generate Assessment</span>
+        </nav>
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
@@ -882,7 +890,7 @@ export default function GenerateAssessmentPage() {
           <div className="flex gap-3">
             <button
               type="button"
-              onClick={() => router.back()}
+              onClick={() => router.push('/dashboard/teacher')}
               className="px-6 py-3 rounded-xl border border-gray-200 text-gray-600 font-medium hover:bg-gray-50 transition-all"
               disabled={generating}
             >
