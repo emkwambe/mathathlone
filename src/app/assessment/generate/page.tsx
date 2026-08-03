@@ -38,12 +38,7 @@ import {
 
 import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { GENERATORS } from '@/lib/competition/generators';
-import {
-  assembleAssessment,
-  type AssessmentType,
-  type AssessmentDocument,
-} from '@/lib/assessment/assembler';
+import type { AssessmentType, AssessmentDocument } from '@/lib/assessment/assembler';
 
 // -----------------------------------------------------------------------------
 // TYPES  (mirrors compete/create/page.tsx)
@@ -275,7 +270,7 @@ export default function GenerateAssessmentPage() {
       router.push('/auth/login?next=/assessment/generate');
       return;
     }
-    if (!hasRole(['teacher', 'school_admin', 'platform_admin'])) {
+    if (!hasRole(['teacher', 'parent', 'school_admin', 'platform_admin'])) {
       router.push('/403');
     }
   }, [authLoading, isAuthenticated, hasRole, router]);
@@ -549,6 +544,8 @@ export default function GenerateAssessmentPage() {
     !!difficultyProfile;
 
   // ── Generate handler ────────────────────────────────────────────────────
+  // Assembly now runs server-side via POST /api/assessment/generate so that
+  // the GENERATORS registry (9 000+ lines) is never bundled into the browser.
   const handleGenerate = useCallback(async () => {
     if (!selectedCourse || !enoughConcepts) {
       setError(`Select at least ${MIN_CONCEPTS} concepts to generate an assessment.`);
@@ -558,50 +555,30 @@ export default function GenerateAssessmentPage() {
     setGenerating(true);
     try {
       const conceptIds = Array.from(selectedConceptIds);
-
-      // Pull the active generators registered for the selected concepts.
-      const { data: gens, error: genErr } = await supabase
-        .from('question_generators')
-        .select('generator_type, concept_id, is_active')
-        .in('concept_id', conceptIds)
-        .eq('is_active', true);
-
-      if (genErr) {
-        throw new Error(`Couldn't load question generators: ${genErr.message}`);
-      }
-
-      // Keep only generator types the code actually implements, deduped.
-      const known = new Set(Object.keys(GENERATORS));
-      const generatorTypes = Array.from(
-        new Set(
-          ((gens ?? []) as Array<{ generator_type: string }>)
-            .map((g) => g.generator_type)
-            .filter((t) => t && known.has(t))
-        )
-      );
-
-      if (generatorTypes.length === 0) {
-        setError(
-          'No active question generators are available for the selected concepts. ' +
-            'Try selecting more concepts or a different topic.'
-        );
-        setGenerating(false);
-        return;
-      }
-
       const difficulty =
         DIFFICULTY_PROFILES.find((p) => p.key === difficultyProfile)?.difficulty ?? 2;
 
-      const doc: AssessmentDocument = assembleAssessment(
-        generatorTypes,
-        [difficulty],
-        docType,
-        selectedCourse.name,
-        selectedTopicSummary.map((t) => t.name)
-      );
+      const res = await fetch('/api/assessment/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          conceptIds,
+          docType,
+          difficulty,
+          courseName: selectedCourse.name,
+          topicNames: selectedTopicSummary.map((t) => t.name),
+        }),
+      });
 
-      // Hand the document to the preview route via sessionStorage (too large
-      // and structured to round-trip through a URL).
+      const payload = await res.json();
+
+      if (!res.ok) {
+        throw new Error(payload?.error ?? `Server error ${res.status}`);
+      }
+
+      const doc: AssessmentDocument = payload.doc;
+
+      // Hand the document to the preview route via sessionStorage.
       window.sessionStorage.setItem('mathathlone:assessment:doc', JSON.stringify(doc));
       router.push('/assessment/preview');
     } catch (err: any) {
@@ -613,7 +590,6 @@ export default function GenerateAssessmentPage() {
     selectedCourse,
     enoughConcepts,
     selectedConceptIds,
-    supabase,
     difficultyProfile,
     docType,
     selectedTopicSummary,

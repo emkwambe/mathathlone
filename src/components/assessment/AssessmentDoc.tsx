@@ -199,21 +199,37 @@ export default function AssessmentDoc({ doc }: { doc: AssessmentDocument }) {
           .sidebar {
             display: none !important;
           }
+          /*
+           * Suppress the browser's built-in page header/footer (URL, date,
+           * page number) that some browsers inject via @page margin boxes.
+           * Setting all margin boxes to empty strings removes them.
+           */
           @page {
             size: letter portrait;
             margin: 0.75in;
+            /* Chrome/Edge: clear all margin-box content */
+            @top-left   { content: ''; }
+            @top-center { content: ''; }
+            @top-right  { content: ''; }
+            @bottom-left   { content: ''; }
+            @bottom-center { content: ''; }
+            @bottom-right  { content: ''; }
           }
           body {
             font-size: 11pt;
             font-family: Georgia, 'Times New Roman', serif;
             color: black;
             background: white;
+            /* Prevent any inherited counter from adding page numbers */
+            counter-reset: none;
           }
           .break-inside-avoid {
             page-break-inside: avoid;
+            break-inside: avoid;
           }
           .break-before-page {
             page-break-before: always;
+            break-before: page;
           }
         }
       `}</style>
