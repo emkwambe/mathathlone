@@ -36,6 +36,31 @@ export default async function TeacherDashboard() {
     .eq('teacher_id', user.id)
     .eq('is_active', true);
 
+  // For each class, look up its classroom league (level = 'classroom', name matches class)
+  // We join via league_memberships → leagues to find which classroom league belongs to each class.
+  // Since classroom leagues are named after the class, we match by school_id + level + name.
+  // More robustly: query all classroom leagues for this teacher's school and match by name.
+  let classLeagueMap: Record<string, { id: string; name: string }> = {};
+  if (profile.school_id && classes && classes.length > 0) {
+    const { data: classroomLeagues } = await supabase
+      .from('leagues')
+      .select('id, name')
+      .eq('school_id', profile.school_id)
+      .eq('level', 'classroom');
+
+    if (classroomLeagues) {
+      // Map by normalised name: match league name to class name
+      for (const league of classroomLeagues) {
+        const matchingClass = (classes as any[]).find(
+          (cls) => cls.name === league.name || league.name.includes(cls.name)
+        );
+        if (matchingClass) {
+          classLeagueMap[matchingClass.id] = { id: league.id, name: league.name };
+        }
+      }
+    }
+  }
+
   // Get recent heats created by this teacher
   const { data: recentHeats } = await supabase
     .from('heats')
@@ -76,11 +101,11 @@ export default async function TeacherDashboard() {
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             Welcome, {profile.display_name}! 👩‍🏫
           </h1>
-          {profile.schools?.name && (
+          {(profile as any).schools?.name && (
             <p className="text-gray-600">
-              {profile.schools.name}
-              {profile.schools.district ? ` • ${profile.schools.district}` : ''}
-              {profile.schools.state ? `, ${profile.schools.state}` : ''}
+              {(profile as any).schools.name}
+              {(profile as any).schools.district ? ` • ${(profile as any).schools.district}` : ''}
+              {(profile as any).schools.state ? `, ${(profile as any).schools.state}` : ''}
             </p>
           )}
         </div>
@@ -138,24 +163,40 @@ export default async function TeacherDashboard() {
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {classes.map((cls: any) => (
-                <div
-                  key={cls.id}
-                  className="p-4 border border-gray-200 rounded-lg"
-                >
-                  <h3 className="font-semibold text-gray-900">{cls.name}</h3>
-                  <p className="text-sm text-gray-500">Grade {cls.grade_level}</p>
-                  <div className="flex items-center justify-between mt-3">
-                    <span className="text-sm text-gray-600">
-                      {cls.class_enrollments?.[0]?.count || 0} mathletes
-                    </span>
-                    <span className="text-xs font-mono bg-gray-100 px-2 py-1 rounded">
-                      {cls.join_code}
-                    </span>
+              {(classes as any[]).map((cls) => {
+                const league = classLeagueMap[cls.id] ?? null;
+                return (
+                  <div
+                    key={cls.id}
+                    className="p-4 border border-gray-200 rounded-lg flex flex-col gap-3"
+                  >
+                    <div>
+                      <h3 className="font-semibold text-gray-900">{cls.name}</h3>
+                      <p className="text-sm text-gray-500">Grade {cls.grade_level}</p>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">
+                        {cls.class_enrollments?.[0]?.count || 0} mathletes
+                      </span>
+                      <span className="text-xs font-mono bg-gray-100 px-2 py-1 rounded">
+                        {cls.join_code}
+                      </span>
+                    </div>
+                    {/* Classroom league link */}
+                    {league ? (
+                      <Link
+                        href={`/league/${league.id}`}
+                        className="flex items-center justify-between px-3 py-2 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-lg transition text-sm font-medium text-indigo-700"
+                      >
+                        <span>🏫 View Classroom League</span>
+                        <span className="text-indigo-400">→</span>
+                      </Link>
+                    ) : (
+                      <p className="text-xs text-gray-400">No classroom league yet</p>
+                    )}
                   </div>
-                  <p className="text-xs text-gray-400 mt-2">Class roster coming soon</p>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         )}
@@ -163,10 +204,10 @@ export default async function TeacherDashboard() {
         {/* Recent Heats */}
         <div className="bg-white rounded-xl shadow-sm p-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Recent Heats</h2>
-          
+
           {recentHeats && recentHeats.length > 0 ? (
             <div className="space-y-3">
-              {recentHeats.map((heat: any) => (
+              {(recentHeats as any[]).map((heat) => (
                 <Link
                   key={heat.id}
                   href={`/compete/${heat.code}`}

@@ -3,7 +3,14 @@
 // =============================================================================
 // Creates a new league row. Called from the /league/create client form.
 //
-// Body: { name, level, region, format, max_participants }
+// Body:
+//   name             string   required
+//   level            string   required — classroom|school|district|regional|state|national
+//   region           string   optional
+//   format           string   optional — bracket format
+//   league_type      string   optional — showdown|campaign|season
+//   content_scope    object   optional — { type, course_code, course_name, unit_code, unit_name }
+//   max_participants number   optional — open integer; omitted for district+
 //
 // The route:
 //   1. Authenticates the caller (must be a teacher or platform_admin)
@@ -14,13 +21,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServer } from '@/lib/supabase/server';
 
-const VALID_LEVELS = ['school', 'district', 'regional', 'state', 'national'] as const;
-const VALID_FORMATS = [
-  'single_elimination',
-  'double_elimination',
-  'round_robin',
-  'swiss',
+const VALID_LEVELS = [
+  'classroom', 'school', 'district', 'regional', 'state', 'national',
 ] as const;
+
+const VALID_FORMATS = [
+  'single_elimination', 'double_elimination', 'round_robin', 'swiss',
+] as const;
+
+const VALID_LEAGUE_TYPES = ['showdown', 'campaign', 'season'] as const;
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const supabase = await createSupabaseServer();
@@ -50,10 +59,21 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
   }
 
-  const { name, level, region, format, max_participants } = body;
+  const {
+    name,
+    level,
+    region,
+    format,
+    league_type,
+    content_scope,
+    max_participants,
+  } = body;
 
   if (!name || typeof name !== 'string' || name.trim().length < 3) {
-    return NextResponse.json({ error: 'League name must be at least 3 characters.' }, { status: 400 });
+    return NextResponse.json(
+      { error: 'League name must be at least 3 characters.' },
+      { status: 400 }
+    );
   }
 
   if (!VALID_LEVELS.includes(level)) {
@@ -63,7 +83,31 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     );
   }
 
-  // ── Look up active season (optional — leagues can exist without one) ──────
+  if (format && !VALID_FORMATS.includes(format)) {
+    return NextResponse.json(
+      { error: `Invalid bracket format. Must be one of: ${VALID_FORMATS.join(', ')}` },
+      { status: 400 }
+    );
+  }
+
+  if (league_type && !VALID_LEAGUE_TYPES.includes(league_type)) {
+    return NextResponse.json(
+      { error: `Invalid league type. Must be one of: ${VALID_LEAGUE_TYPES.join(', ')}` },
+      { status: 400 }
+    );
+  }
+
+  if (max_participants !== undefined && max_participants !== null) {
+    const n = Number(max_participants);
+    if (!Number.isInteger(n) || n < 4 || n > 512) {
+      return NextResponse.json(
+        { error: 'max_participants must be an integer between 4 and 512.' },
+        { status: 400 }
+      );
+    }
+  }
+
+  // ── Look up active season (optional) ──────────────────────────────────────
   const { data: activeSeason } = await supabase
     .from('seasons')
     .select('id')
@@ -75,12 +119,18 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const { data: league, error: insertErr } = await supabase
     .from('leagues')
     .insert({
-      name: name.trim(),
+      name:             name.trim(),
       level,
-      region: region?.trim() || null,
-      season_id: activeSeason?.id ?? null,
-      max_schools: max_participants ?? 8,
-      created_by: user.id,
+      region:           region?.trim() || null,
+      season_id:        activeSeason?.id ?? null,
+      // Legacy column — keep in sync with max_participants
+      max_schools:      max_participants ?? 8,
+      // New Sprint 5b columns
+      bracket_format:   format ?? 'single_elimination',
+      league_type:      league_type ?? 'showdown',
+      content_scope:    content_scope ?? null,
+      max_participants: max_participants ?? null,
+      created_by:       user.id,
     })
     .select('id')
     .single();

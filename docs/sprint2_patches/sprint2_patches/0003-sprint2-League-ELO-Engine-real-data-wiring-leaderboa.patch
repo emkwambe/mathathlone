@@ -1,0 +1,1338 @@
+From c819d4df37f77e99814d0397c2fe835a16231e6b Mon Sep 17 00:00:00 2001
+From: Eddy Mkwambe <eddy@mpingo.ai>
+Date: Mon, 20 Jul 2026 02:11:44 +0000
+Subject: [PATCH 3/3] =?UTF-8?q?sprint2:=20League/ELO=20Engine=20=E2=80=94?=
+ =?UTF-8?q?=20real=20data=20wiring,=20leaderboard,=20league=20creation?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Changes:
+- supabase/migrations/033_elo_write_policies.sql
+  Add INSERT/UPDATE RLS policies for athlete_ratings and rating_history so
+  the scoring service (running under teacher auth) can write ELO updates.
+
+- src/app/league/[id]/page.tsx (NEW)
+  Server component that fetches real league data (standings, bracket matches,
+  championship points, splits) from Supabase and passes it to LeagueDashboard.
+
+- src/components/league/LeagueDashboard.tsx
+  Accept optional props (leagueMeta, initialStandings, initialBracket,
+  initialChampionship, initialSplits) so real data replaces mock data when
+  provided. Falls back to mock data when no props are passed (dev preview).
+  SeasonTimeline now accepts a splits prop.
+
+- src/app/dashboard/athlete/page.tsx
+  Add ELO rating card: shows current rating, tier badge, peak, recent delta,
+  and a progress bar toward the next tier. Queries athlete_ratings and
+  rating_history. Adds Leaderboard nav link.
+
+- src/app/leaderboard/page.tsx (NEW)
+  Global leaderboard page reading from the global_leaderboard materialized
+  view (falls back to direct athlete_ratings join when view is empty).
+  Includes top-3 podium, full ranked table, tier badges, provisional flag.
+
+- src/app/league/create/page.tsx (NEW)
+  Teacher-facing form to create a new league (name, level, region, format,
+  max participants). Posts to /api/league/create.
+
+- src/app/api/league/create/route.ts (NEW)
+  POST handler: authenticates teacher, validates body, looks up active season,
+  inserts league row, returns { leagueId } for redirect to /league/[id].
+
+- src/app/dashboard/teacher/page.tsx
+  Add League creation card to Quick Actions grid (violet gradient).
+  Add Leaderboard nav link to header.
+---
+ pnpm-workspace.yaml                           |   4 +
+ src/app/api/league/create/route.ts            |  96 ++++++
+ src/app/dashboard/athlete/page.tsx            | 142 ++++++++-
+ src/app/dashboard/teacher/page.tsx            |  19 +-
+ src/app/leaderboard/page.tsx                  | 284 ++++++++++++++++++
+ src/app/league/[id]/page.tsx                  | 235 +++++++++++++++
+ src/app/league/create/page.tsx                | 220 ++++++++++++++
+ src/components/league/LeagueDashboard.tsx     |  51 +++-
+ .../migrations/033_elo_write_policies.sql     |  71 +++++
+ 9 files changed, 1110 insertions(+), 12 deletions(-)
+ create mode 100644 pnpm-workspace.yaml
+ create mode 100644 src/app/api/league/create/route.ts
+ create mode 100644 src/app/leaderboard/page.tsx
+ create mode 100644 src/app/league/[id]/page.tsx
+ create mode 100644 src/app/league/create/page.tsx
+ create mode 100644 supabase/migrations/033_elo_write_policies.sql
+
+diff --git a/pnpm-workspace.yaml b/pnpm-workspace.yaml
+new file mode 100644
+index 0000000..70e0680
+--- /dev/null
++++ b/pnpm-workspace.yaml
+@@ -0,0 +1,4 @@
++allowBuilds:
++  esbuild: set this to true or false
++  supabase: set this to true or false
++  unrs-resolver: set this to true or false
+diff --git a/src/app/api/league/create/route.ts b/src/app/api/league/create/route.ts
+new file mode 100644
+index 0000000..a75dba7
+--- /dev/null
++++ b/src/app/api/league/create/route.ts
+@@ -0,0 +1,96 @@
++// =============================================================================
++// /api/league/create — POST
++// =============================================================================
++// Creates a new league row. Called from the /league/create client form.
++//
++// Body: { name, level, region, format, max_participants }
++//
++// The route:
++//   1. Authenticates the caller (must be a teacher or platform_admin)
++//   2. Looks up the active season (or null if none exists yet)
++//   3. Inserts into leagues
++//   4. Returns { leagueId }
++// =============================================================================
++import { NextRequest, NextResponse } from 'next/server';
++import { createSupabaseServer } from '@/lib/supabase/server';
++
++const VALID_LEVELS = ['school', 'district', 'regional', 'state', 'national'] as const;
++const VALID_FORMATS = [
++  'single_elimination',
++  'double_elimination',
++  'round_robin',
++  'swiss',
++] as const;
++
++export async function POST(request: NextRequest): Promise<NextResponse> {
++  const supabase = await createSupabaseServer();
++
++  // ── Auth ──────────────────────────────────────────────────────────────────
++  const { data: { user }, error: authError } = await supabase.auth.getUser();
++  if (authError || !user) {
++    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
++  }
++
++  // Only teachers and platform admins may create leagues
++  const { data: profile } = await supabase
++    .from('users')
++    .select('role')
++    .eq('id', user.id)
++    .maybeSingle();
++
++  if (!profile || !['teacher', 'platform_admin'].includes(profile.role)) {
++    return NextResponse.json({ error: 'Forbidden — teachers only' }, { status: 403 });
++  }
++
++  // ── Validate body ─────────────────────────────────────────────────────────
++  let body: any;
++  try {
++    body = await request.json();
++  } catch {
++    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
++  }
++
++  const { name, level, region, format, max_participants } = body;
++
++  if (!name || typeof name !== 'string' || name.trim().length < 3) {
++    return NextResponse.json({ error: 'League name must be at least 3 characters.' }, { status: 400 });
++  }
++
++  if (!VALID_LEVELS.includes(level)) {
++    return NextResponse.json(
++      { error: `Invalid level. Must be one of: ${VALID_LEVELS.join(', ')}` },
++      { status: 400 }
++    );
++  }
++
++  // ── Look up active season (optional — leagues can exist without one) ──────
++  const { data: activeSeason } = await supabase
++    .from('seasons')
++    .select('id')
++    .eq('is_active', true)
++    .limit(1)
++    .maybeSingle();
++
++  // ── Insert league ─────────────────────────────────────────────────────────
++  const { data: league, error: insertErr } = await supabase
++    .from('leagues')
++    .insert({
++      name: name.trim(),
++      level,
++      region: region?.trim() || null,
++      season_id: activeSeason?.id ?? null,
++      max_schools: max_participants ?? 8,
++    })
++    .select('id')
++    .single();
++
++  if (insertErr || !league) {
++    console.error('[api/league/create] insert error:', insertErr);
++    return NextResponse.json(
++      { error: insertErr?.message ?? 'Failed to create league.' },
++      { status: 500 }
++    );
++  }
++
++  return NextResponse.json({ leagueId: league.id }, { status: 201 });
++}
+diff --git a/src/app/dashboard/athlete/page.tsx b/src/app/dashboard/athlete/page.tsx
+index 731aacf..c0c517a 100644
+--- a/src/app/dashboard/athlete/page.tsx
++++ b/src/app/dashboard/athlete/page.tsx
+@@ -31,6 +31,29 @@ export default async function AthleteDashboard() {
+     .eq('season', '2025-2026')
+     .single();
+ 
++  // Get ELO rating (null if athlete hasn't played 1+ rated heat yet)
++  const { data: eloRating } = await supabase
++    .from('athlete_ratings')
++    .select('rating, peak_rating, games_played, is_provisional, last_competition')
++    .eq('athlete_id', user.id)
++    .is('division_id', null)
++    .maybeSingle();
++
++  // Get recent ELO change (last 2 rating_history rows)
++  let recentEloChange: number | null = null;
++  if (eloRating && eloRating.games_played > 0) {
++    const { data: recentHistory } = await supabase
++      .from('rating_history')
++      .select('rating_before, rating_after')
++      .eq('athlete_id', user.id)
++      .order('created_at', { ascending: false })
++      .limit(1);
++    if (recentHistory && recentHistory.length > 0) {
++      const last = recentHistory[0] as any;
++      recentEloChange = Number(last.rating_after) - Number(last.rating_before);
++    }
++  }
++
+   // Get recent participations
+   const { data: recentHeats } = await supabase
+     .from('heat_participations')
+@@ -61,6 +84,22 @@ export default async function AthleteDashboard() {
+     bronze: medals?.filter(m => m.type === 'bronze').length || 0,
+   };
+ 
++  // Derive ELO display values
++  const eloValue = eloRating ? Math.round(Number(eloRating.rating)) : null;
++  const eloPeak = eloRating ? Math.round(Number(eloRating.peak_rating)) : null;
++  const eloGames = eloRating?.games_played ?? 0;
++  const eloProvisional = eloRating?.is_provisional ?? true;
++
++  // ELO tier label
++  function eloTier(r: number): { label: string; color: string } {
++    if (r >= 2200) return { label: 'Elite', color: '#a78bfa' };
++    if (r >= 1800) return { label: 'Expert', color: '#6366f1' };
++    if (r >= 1500) return { label: 'Advanced', color: '#3b82f6' };
++    if (r >= 1300) return { label: 'Intermediate', color: '#10b981' };
++    return { label: 'Developing', color: '#6b7280' };
++  }
++  const tier = eloValue ? eloTier(eloValue) : null;
++
+   return (
+     <div className="min-h-screen bg-gray-50">
+       {/* Header */}
+@@ -70,6 +109,9 @@ export default async function AthleteDashboard() {
+             Math<span className="text-amber-500">Athlone</span>
+           </Link>
+           <div className="flex items-center gap-4">
++            <Link href="/leaderboard" className="text-sm text-gray-500 hover:text-blue-600 transition">
++              Leaderboard
++            </Link>
+             <span className="text-gray-600">{profile.display_name}</span>
+             <form action="/auth/signout" method="POST">
+               <button className="text-sm text-gray-500 hover:text-gray-700">
+@@ -115,7 +157,7 @@ export default async function AthleteDashboard() {
+             </div>
+             <p className="text-gray-500 text-sm">Bronze Medals</p>
+           </div>
+-          {/* Ranking */}
++          {/* Season Rank */}
+           <div className="bg-white rounded-xl shadow-sm p-6">
+             <div className="flex items-center gap-2 mb-2">
+               <span className="text-2xl">📊</span>
+@@ -127,6 +169,104 @@ export default async function AthleteDashboard() {
+           </div>
+         </div>
+ 
++        {/* ELO Rating Card */}
++        <div className="bg-gradient-to-br from-indigo-950 to-violet-950 rounded-2xl p-6 mb-8 border border-indigo-800/40">
++          <div className="flex items-start justify-between mb-4">
++            <div>
++              <h2 className="text-lg font-bold text-white mb-1">Your ELO Rating</h2>
++              <p className="text-indigo-300 text-sm">
++                {eloGames === 0
++                  ? 'Complete your first rated Heat to earn a rating.'
++                  : eloProvisional
++                  ? `Provisional — ${eloGames} of 5 rated Heats completed`
++                  : `Established • ${eloGames} rated Heats`}
++              </p>
++            </div>
++            <Link
++              href="/leaderboard"
++              className="text-xs text-indigo-300 hover:text-white border border-indigo-700 hover:border-indigo-400 px-3 py-1.5 rounded-lg transition"
++            >
++              Global Leaderboard →
++            </Link>
++          </div>
++
++          {eloValue ? (
++            <div className="flex items-end gap-6">
++              {/* Main rating */}
++              <div>
++                <div className="flex items-baseline gap-2">
++                  <span className="text-5xl font-black text-white font-mono">{eloValue}</span>
++                  {recentEloChange !== null && (
++                    <span
++                      className={`text-lg font-bold font-mono ${
++                        recentEloChange > 0
++                          ? 'text-emerald-400'
++                          : recentEloChange < 0
++                          ? 'text-red-400'
++                          : 'text-gray-500'
++                      }`}
++                    >
++                      {recentEloChange > 0 ? '+' : ''}
++                      {Math.round(recentEloChange)}
++                    </span>
++                  )}
++                </div>
++                {tier && (
++                  <span
++                    className="inline-block mt-1 text-xs font-bold px-2 py-0.5 rounded"
++                    style={{ color: tier.color, background: `${tier.color}22`, border: `1px solid ${tier.color}44` }}
++                  >
++                    {tier.label}
++                  </span>
++                )}
++              </div>
++
++              {/* Peak */}
++              <div className="text-center">
++                <p className="text-2xl font-bold text-indigo-200 font-mono">{eloPeak}</p>
++                <p className="text-xs text-indigo-400">Peak</p>
++              </div>
++
++              {/* Progress bar toward next tier */}
++              {eloValue < 2200 && (
++                <div className="flex-1 max-w-xs">
++                  {(() => {
++                    const tiers = [800, 1300, 1500, 1800, 2200, 3000];
++                    const tierNames = ['Developing', 'Intermediate', 'Advanced', 'Expert', 'Elite'];
++                    const idx = tiers.findIndex((t) => eloValue < t) - 1;
++                    const lo = tiers[Math.max(0, idx)];
++                    const hi = tiers[Math.min(tiers.length - 1, idx + 1)];
++                    const pct = Math.round(((eloValue - lo) / (hi - lo)) * 100);
++                    const nextTier = tierNames[Math.min(idx + 1, tierNames.length - 1)];
++                    return (
++                      <>
++                        <div className="flex justify-between text-xs text-indigo-400 mb-1">
++                          <span>{lo}</span>
++                          <span className="text-indigo-300">{nextTier} at {hi}</span>
++                        </div>
++                        <div className="h-2 bg-indigo-900/60 rounded-full overflow-hidden">
++                          <div
++                            className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 transition-all"
++                            style={{ width: `${Math.max(2, pct)}%` }}
++                          />
++                        </div>
++                        <p className="text-xs text-indigo-400 mt-1">{pct}% to {nextTier}</p>
++                      </>
++                    );
++                  })()}
++                </div>
++              )}
++            </div>
++          ) : (
++            <div className="flex items-center gap-4 mt-2">
++              <div className="text-4xl font-black text-indigo-700 font-mono">—</div>
++              <p className="text-indigo-400 text-sm">
++                Play a Heat to earn your first rating. Ratings unlock after your first scored competition.
++              </p>
++            </div>
++          )}
++        </div>
++
+         {/* Join Heat Section */}
+         <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 mb-8 text-white">
+           <h2 className="text-2xl font-bold mb-2">Ready to Compete?</h2>
+diff --git a/src/app/dashboard/teacher/page.tsx b/src/app/dashboard/teacher/page.tsx
+index b6a5702..dbb5002 100644
+--- a/src/app/dashboard/teacher/page.tsx
++++ b/src/app/dashboard/teacher/page.tsx
+@@ -57,6 +57,9 @@ export default async function TeacherDashboard() {
+             Math<span className="text-amber-500">Athlone</span>
+           </Link>
+           <div className="flex items-center gap-4">
++            <Link href="/leaderboard" className="text-sm text-gray-500 hover:text-blue-600 transition">
++              Leaderboard
++            </Link>
+             <span className="text-gray-600">{profile.display_name}</span>
+             <form action="/auth/signout" method="POST">
+               <button className="text-sm text-gray-500 hover:text-gray-700">
+@@ -79,7 +82,7 @@ export default async function TeacherDashboard() {
+         </div>
+ 
+         {/* Quick Actions */}
+-        <div className="mb-8 grid gap-4 md:grid-cols-2">
++        <div className="mb-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+           {/* Start Heat */}
+           <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 text-white flex flex-col">
+             <h2 className="text-2xl font-bold mb-2">🏁 Start a Heat</h2>
+@@ -107,6 +110,20 @@ export default async function TeacherDashboard() {
+               Generate Assessment
+             </Link>
+           </div>
++
++          {/* Create League */}
++          <div className="bg-gradient-to-r from-violet-700 to-purple-700 rounded-2xl p-8 text-white flex flex-col">
++            <h2 className="text-2xl font-bold mb-2">🏟️ Create a League</h2>
++            <p className="text-violet-200 mb-6 flex-1">
++              Run a season-long bracket competition for your class or school. ELO ratings, standings, and championship points included.
++            </p>
++            <Link
++              href="/league/create"
++              className="inline-block self-start px-6 py-3 bg-white text-violet-700 font-semibold rounded-lg hover:bg-violet-50 transition"
++            >
++              Create League
++            </Link>
++          </div>
+         </div>
+ 
+         {/* Classes */}
+diff --git a/src/app/leaderboard/page.tsx b/src/app/leaderboard/page.tsx
+new file mode 100644
+index 0000000..fc41344
+--- /dev/null
++++ b/src/app/leaderboard/page.tsx
+@@ -0,0 +1,284 @@
++// =============================================================================
++// MathAthlone — /leaderboard
++// =============================================================================
++// Global leaderboard page — shows top-rated athletes from the
++// global_leaderboard materialized view (refreshed every 60 s via ISR).
++//
++// Falls back gracefully when the view is empty (no athlete has ≥5 games yet).
++// =============================================================================
++import Link from 'next/link';
++import { createSupabaseServer } from '@/lib/supabase/server';
++
++export const revalidate = 60;
++
++// Tier badge config
++const TIERS: Array<{ min: number; label: string; color: string; bg: string }> = [
++  { min: 2200, label: 'Elite',         color: '#a78bfa', bg: 'rgba(167,139,250,0.12)' },
++  { min: 1800, label: 'Expert',        color: '#6366f1', bg: 'rgba(99,102,241,0.12)' },
++  { min: 1500, label: 'Advanced',      color: '#3b82f6', bg: 'rgba(59,130,246,0.12)' },
++  { min: 1300, label: 'Intermediate',  color: '#10b981', bg: 'rgba(16,185,129,0.12)' },
++  { min: 0,    label: 'Developing',    color: '#6b7280', bg: 'rgba(107,114,128,0.08)' },
++];
++
++function getTier(rating: number) {
++  return TIERS.find((t) => rating >= t.min) ?? TIERS[TIERS.length - 1];
++}
++
++function initials(name: string) {
++  return name
++    .split(' ')
++    .map((w) => w[0])
++    .join('')
++    .slice(0, 2)
++    .toUpperCase();
++}
++
++const AVATAR_HUES = [210, 340, 160, 30, 270, 190, 0, 45];
++
++export default async function LeaderboardPage() {
++  const supabase = await createSupabaseServer();
++
++  // Attempt to read from the materialized view; fall back to athlete_ratings
++  // joined to users if the view isn't populated yet.
++  let rows: any[] = [];
++  const { data: viewData, error: viewErr } = await supabase
++    .from('global_leaderboard')
++    .select('*')
++    .order('current_rating', { ascending: false })
++    .limit(100);
++
++  if (!viewErr && viewData && viewData.length > 0) {
++    rows = viewData;
++  } else {
++    // Fallback: direct join (no 5-game floor)
++    const { data: fallback } = await supabase
++      .from('athlete_ratings')
++      .select(`
++        athlete_id,
++        rating,
++        peak_rating,
++        games_played,
++        is_provisional,
++        users:athlete_id (
++          display_name,
++          grade_level,
++          schools:school_id ( name, state )
++        )
++      `)
++      .is('division_id', null)
++      .order('rating', { ascending: false })
++      .limit(100);
++
++    rows = (fallback ?? []).map((r: any) => ({
++      athlete_id: r.athlete_id,
++      display_name: r.users?.display_name ?? 'Mathlete',
++      grade_level: r.users?.grade_level ?? null,
++      current_rating: r.rating,
++      peak_rating: r.peak_rating,
++      total_games: r.games_played,
++      is_provisional: r.is_provisional,
++      school_name: r.users?.schools?.name ?? null,
++      school_state: r.users?.schools?.state ?? null,
++      season_points: 0,
++    }));
++  }
++
++  return (
++    <div className="min-h-screen bg-gray-50">
++      {/* Header */}
++      <header className="bg-white shadow-sm">
++        <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
++          <Link href="/" className="text-2xl font-bold text-blue-600">
++            Math<span className="text-amber-500">Athlone</span>
++          </Link>
++          <nav className="flex items-center gap-4 text-sm text-gray-500">
++            <Link href="/dashboard/athlete" className="hover:text-blue-600 transition">Dashboard</Link>
++            <Link href="/compete" className="hover:text-blue-600 transition">Compete</Link>
++          </nav>
++        </div>
++      </header>
++
++      <main className="max-w-5xl mx-auto px-4 py-10">
++        {/* Page title */}
++        <div className="mb-8">
++          <h1 className="text-3xl font-black text-gray-900 mb-1">
++            🏆 Global Leaderboard
++          </h1>
++          <p className="text-gray-500 text-sm">
++            Top-rated Mathletes by ELO · Updated every 60 seconds
++            {rows.length > 0 && ` · ${rows.length} ranked athletes`}
++          </p>
++        </div>
++
++        {rows.length === 0 ? (
++          <div className="bg-white rounded-2xl shadow-sm p-16 text-center">
++            <p className="text-5xl mb-4">🧮</p>
++            <h2 className="text-xl font-bold text-gray-800 mb-2">No ratings yet</h2>
++            <p className="text-gray-500 mb-6">
++              Athletes appear here after completing their first rated Heat.
++            </p>
++            <Link
++              href="/compete"
++              className="inline-block px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
++            >
++              Join a Heat
++            </Link>
++          </div>
++        ) : (
++          <>
++            {/* Top 3 podium */}
++            {rows.length >= 3 && (
++              <div className="grid grid-cols-3 gap-4 mb-8">
++                {[rows[1], rows[0], rows[2]].map((row, podiumIdx) => {
++                  const rank = podiumIdx === 1 ? 1 : podiumIdx === 0 ? 2 : 3;
++                  const tier = getTier(Number(row.current_rating));
++                  const hue = AVATAR_HUES[(rank - 1) % AVATAR_HUES.length];
++                  const podiumHeight = rank === 1 ? 'pt-0' : 'pt-6';
++                  const medalEmoji = rank === 1 ? '🥇' : rank === 2 ? '🥈' : '🥉';
++                  return (
++                    <div
++                      key={row.athlete_id}
++                      className={`flex flex-col items-center ${podiumHeight}`}
++                    >
++                      <div
++                        className="w-16 h-16 rounded-full flex items-center justify-center text-white font-black text-xl mb-2 shadow-lg"
++                        style={{
++                          background: `linear-gradient(135deg, hsl(${hue},65%,50%), hsl(${hue + 30},55%,40%))`,
++                        }}
++                      >
++                        {initials(row.display_name)}
++                      </div>
++                      <span className="text-2xl mb-1">{medalEmoji}</span>
++                      <p className="font-bold text-gray-900 text-sm text-center leading-tight">
++                        {row.display_name}
++                      </p>
++                      <p className="text-xs text-gray-500 mb-1">{row.school_name ?? ''}</p>
++                      <p
++                        className="text-lg font-black font-mono"
++                        style={{ color: tier.color }}
++                      >
++                        {Math.round(Number(row.current_rating))}
++                      </p>
++                      <span
++                        className="text-xs font-bold px-2 py-0.5 rounded mt-1"
++                        style={{ color: tier.color, background: tier.bg }}
++                      >
++                        {tier.label}
++                      </span>
++                    </div>
++                  );
++                })}
++              </div>
++            )}
++
++            {/* Full table */}
++            <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
++              <table className="w-full">
++                <thead>
++                  <tr className="border-b border-gray-100">
++                    {['#', 'Mathlete', 'School', 'ELO', 'Peak', 'Games', 'Tier'].map((h, i) => (
++                      <th
++                        key={h}
++                        className={`px-4 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider ${
++                          i < 2 ? 'text-left' : 'text-center'
++                        }`}
++                      >
++                        {h}
++                      </th>
++                    ))}
++                  </tr>
++                </thead>
++                <tbody>
++                  {rows.map((row: any, i: number) => {
++                    const rank = i + 1;
++                    const rating = Math.round(Number(row.current_rating));
++                    const peak = Math.round(Number(row.peak_rating ?? row.current_rating));
++                    const tier = getTier(rating);
++                    const hue = AVATAR_HUES[i % AVATAR_HUES.length];
++                    const medalColor =
++                      rank === 1 ? 'text-amber-500' :
++                      rank === 2 ? 'text-gray-400' :
++                      rank === 3 ? 'text-amber-600' :
++                      'text-gray-300';
++
++                    return (
++                      <tr
++                        key={row.athlete_id}
++                        className="border-b border-gray-50 hover:bg-gray-50 transition"
++                      >
++                        {/* Rank */}
++                        <td className={`px-4 py-3 font-black font-mono text-sm w-10 ${medalColor}`}>
++                          {rank}
++                        </td>
++                        {/* Mathlete */}
++                        <td className="px-4 py-3">
++                          <div className="flex items-center gap-3">
++                            <div
++                              className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs flex-shrink-0"
++                              style={{
++                                background: `linear-gradient(135deg, hsl(${hue},65%,50%), hsl(${hue + 30},55%,40%))`,
++                              }}
++                            >
++                              {initials(row.display_name)}
++                            </div>
++                            <div>
++                              <p className="font-semibold text-gray-900 text-sm leading-tight">
++                                {row.display_name}
++                                {row.is_provisional && (
++                                  <span className="ml-1.5 text-xs text-gray-400 font-normal">(P)</span>
++                                )}
++                              </p>
++                              {row.grade_level && (
++                                <p className="text-xs text-gray-400">Grade {row.grade_level}</p>
++                              )}
++                            </div>
++                          </div>
++                        </td>
++                        {/* School */}
++                        <td className="px-4 py-3 text-sm text-gray-500 max-w-[160px] truncate">
++                          {row.school_name
++                            ? `${row.school_name}${row.school_state ? `, ${row.school_state}` : ''}`
++                            : '—'}
++                        </td>
++                        {/* ELO */}
++                        <td className="px-4 py-3 text-center">
++                          <span
++                            className="font-black font-mono text-base"
++                            style={{ color: tier.color }}
++                          >
++                            {rating}
++                          </span>
++                        </td>
++                        {/* Peak */}
++                        <td className="px-4 py-3 text-center text-sm font-mono text-gray-400">
++                          {peak}
++                        </td>
++                        {/* Games */}
++                        <td className="px-4 py-3 text-center text-sm text-gray-500">
++                          {row.total_games ?? 0}
++                        </td>
++                        {/* Tier */}
++                        <td className="px-4 py-3 text-center">
++                          <span
++                            className="text-xs font-bold px-2 py-0.5 rounded"
++                            style={{ color: tier.color, background: tier.bg }}
++                          >
++                            {tier.label}
++                          </span>
++                        </td>
++                      </tr>
++                    );
++                  })}
++                </tbody>
++              </table>
++            </div>
++
++            <p className="text-center text-xs text-gray-400 mt-4">
++              (P) = Provisional — fewer than 5 rated Heats completed
++            </p>
++          </>
++        )}
++      </main>
++    </div>
++  );
++}
+diff --git a/src/app/league/[id]/page.tsx b/src/app/league/[id]/page.tsx
+new file mode 100644
+index 0000000..70e4739
+--- /dev/null
++++ b/src/app/league/[id]/page.tsx
+@@ -0,0 +1,235 @@
++// =============================================================================
++// MathAthlone — /league/[id]
++// =============================================================================
++// Server component that fetches real league data from Supabase and passes it
++// to the LeagueDashboard client component.
++//
++// Data fetched:
++//   • leagues row (name, level, region)
++//   • league_standings joined to users + athlete_ratings
++//   • brackets + bracket_matches for the most recent bracket
++//   • championship_points + season_standings for the season tab
++//   • splits for the season timeline
++// =============================================================================
++import { notFound } from 'next/navigation';
++import { createSupabaseServer } from '@/lib/supabase/server';
++import LeagueDashboard from '@/components/league/LeagueDashboard';
++
++export const revalidate = 60; // ISR — refresh every 60 s
++
++interface PageProps {
++  params: { id: string };
++}
++
++export default async function LeaguePage({ params }: PageProps) {
++  const { id: leagueId } = params;
++  const supabase = await createSupabaseServer();
++
++  // ── 1. League meta ────────────────────────────────────────────────────────
++  const { data: league, error: leagueErr } = await supabase
++    .from('leagues')
++    .select('id, name, level, region, season_id, division_id')
++    .eq('id', leagueId)
++    .maybeSingle();
++
++  if (leagueErr || !league) {
++    notFound();
++  }
++
++  // ── 2. Standings (joined to users + athlete_ratings) ──────────────────────
++  const { data: standingsRaw } = await supabase
++    .from('league_standings')
++    .select(`
++      rank, wins, losses, draws, points, heats_played,
++      avg_cta, best_cta, current_elo, elo_change, first_places,
++      athlete_id,
++      users:athlete_id (
++        display_name,
++        avatar_url,
++        grade_level
++      ),
++      athlete_ratings!athlete_ratings_athlete_id_fkey (
++        rating,
++        division_id,
++        divisions:division_id ( name )
++      )
++    `)
++    .eq('league_id', leagueId)
++    .order('rank', { ascending: true });
++
++  // ── 3. Most recent bracket + its matches ─────────────────────────────────
++  const { data: brackets } = await supabase
++    .from('brackets')
++    .select('id, name, format, status, current_round, rounds_count')
++    .eq('league_id', leagueId)
++    .order('created_at', { ascending: false })
++    .limit(1);
++
++  const bracket = brackets?.[0] ?? null;
++
++  let bracketMatchesRaw: any[] = [];
++  if (bracket) {
++    const { data: matches } = await supabase
++      .from('bracket_matches')
++      .select(`
++        id, round, position, side,
++        participant1_id, participant2_id,
++        participant1_seed, participant2_seed,
++        winner_id,
++        p1_cta_score, p2_cta_score,
++        is_bye, is_grand_final, status,
++        p1:participant1_id ( display_name, avatar_url ),
++        p2:participant2_id ( display_name, avatar_url )
++      `)
++      .eq('bracket_id', bracket.id)
++      .order('round', { ascending: true })
++      .order('position', { ascending: true });
++    bracketMatchesRaw = matches ?? [];
++  }
++
++  // ── 4. Championship points (season totals) ────────────────────────────────
++  const { data: champRaw } = await supabase
++    .from('season_standings')
++    .select(`
++      athlete_id, total_championship_points, splits_participated,
++      best_placement, qualified_for,
++      users:athlete_id ( display_name, avatar_url, grade_level )
++    `)
++    .eq('season_id', league.season_id ?? '')
++    .order('total_championship_points', { ascending: false })
++    .limit(50);
++
++  // ── 5. Season splits timeline ─────────────────────────────────────────────
++  const { data: splitsRaw } = await supabase
++    .from('splits')
++    .select('id, name, status, start_date, end_date')
++    .eq('season_id', league.season_id ?? '')
++    .order('split_number', { ascending: true });
++
++  // ── 6. Athlete ratings for standings (to get school info) ─────────────────
++  // We need school names — join through users → schools
++  const athleteIds = (standingsRaw ?? []).map((r: any) => r.athlete_id);
++  let schoolMap: Record<string, string> = {};
++  if (athleteIds.length > 0) {
++    const { data: userSchools } = await supabase
++      .from('users')
++      .select('id, schools:school_id ( name )')
++      .in('id', athleteIds);
++    for (const u of userSchools ?? []) {
++      schoolMap[(u as any).id] = (u as any).schools?.name ?? '';
++    }
++  }
++
++  // ── 7. Shape data for LeagueDashboard props ───────────────────────────────
++  const standings = (standingsRaw ?? []).map((r: any) => {
++    const user = r.users ?? {};
++    const ar = Array.isArray(r.athlete_ratings) ? r.athlete_ratings[0] : r.athlete_ratings;
++    const division = ar?.divisions?.name ?? '';
++    return {
++      rank: r.rank,
++      athlete: {
++        id: r.athlete_id,
++        name: user.display_name ?? 'Mathlete',
++        avatar_url: user.avatar_url ?? null,
++        seed: r.rank,
++        school: schoolMap[r.athlete_id] ?? '',
++        rating: Number(r.current_elo ?? ar?.rating ?? 1200),
++        division,
++      },
++      wins: r.wins ?? 0,
++      losses: r.losses ?? 0,
++      draws: r.draws ?? 0,
++      points: r.points ?? 0,
++      avg_cta: Number(r.avg_cta ?? 0),
++      best_cta: Number(r.best_cta ?? 0),
++      current_elo: Number(r.current_elo ?? 1200),
++      elo_change: Number(r.elo_change ?? 0),
++      heats_played: r.heats_played ?? 0,
++      first_places: r.first_places ?? 0,
++    };
++  });
++
++  const bracketMatches = bracketMatchesRaw.map((m: any) => {
++    const makeParticipant = (
++      id: string | null,
++      user: any,
++      seed: number | null,
++      standing: (typeof standings)[0] | undefined
++    ) => {
++      if (!id || !user) return null;
++      return {
++        id,
++        name: user.display_name ?? 'Mathlete',
++        avatar_url: user.avatar_url ?? null,
++        seed: seed ?? 0,
++        school: standing?.athlete.school ?? '',
++        rating: standing?.current_elo ?? 1200,
++        division: standing?.athlete.division ?? '',
++      };
++    };
++    const p1Standing = standings.find((s) => s.athlete.id === m.participant1_id);
++    const p2Standing = standings.find((s) => s.athlete.id === m.participant2_id);
++    return {
++      id: m.id,
++      round: m.round,
++      position: m.position,
++      side: m.side ?? null,
++      participant1: makeParticipant(m.participant1_id, m.p1, m.participant1_seed, p1Standing),
++      participant2: makeParticipant(m.participant2_id, m.p2, m.participant2_seed, p2Standing),
++      winner_id: m.winner_id ?? null,
++      p1_cta_score: m.p1_cta_score != null ? Number(m.p1_cta_score) : null,
++      p2_cta_score: m.p2_cta_score != null ? Number(m.p2_cta_score) : null,
++      is_bye: !!m.is_bye,
++      is_grand_final: !!m.is_grand_final,
++      status: m.status ?? 'pending',
++    };
++  });
++
++  const championship = (champRaw ?? []).map((r: any, i: number) => {
++    const user = r.users ?? {};
++    const standing = standings.find((s) => s.athlete.id === r.athlete_id);
++    return {
++      rank: i + 1,
++      athlete: {
++        id: r.athlete_id,
++        name: user.display_name ?? 'Mathlete',
++        avatar_url: user.avatar_url ?? null,
++        seed: i + 1,
++        school: schoolMap[r.athlete_id] ?? '',
++        rating: standing?.current_elo ?? 1200,
++        division: standing?.athlete.division ?? '',
++      },
++      total_points: r.total_championship_points ?? 0,
++      splits_played: r.splits_participated ?? 0,
++      best_placement: r.best_placement ?? 0,
++      qualified_for: r.qualified_for ?? null,
++    };
++  });
++
++  const splits = (splitsRaw ?? []).map((s: any) => ({
++    id: s.id,
++    name: s.name,
++    status: s.status as 'upcoming' | 'active' | 'playoffs' | 'completed',
++    start_date: s.start_date,
++    end_date: s.end_date,
++  }));
++
++  const leagueMeta = {
++    id: league.id,
++    name: league.name,
++    level: league.level,
++    region: league.region ?? '',
++    bracketName: bracket?.name ?? null,
++    bracketFormat: bracket?.format ?? null,
++  };
++
++  return (
++    <LeagueDashboard
++      leagueMeta={leagueMeta}
++      initialStandings={standings}
++      initialBracket={bracketMatches}
++      initialChampionship={championship}
++      initialSplits={splits}
++    />
++  );
++}
+diff --git a/src/app/league/create/page.tsx b/src/app/league/create/page.tsx
+new file mode 100644
+index 0000000..9ac77f9
+--- /dev/null
++++ b/src/app/league/create/page.tsx
+@@ -0,0 +1,220 @@
++// =============================================================================
++// MathAthlone — /league/create
++// =============================================================================
++// Teacher-facing form to create a new League. Submits to the
++// /api/league/create route which inserts into the leagues table.
++// =============================================================================
++'use client';
++
++import { useState } from 'react';
++import Link from 'next/link';
++import { useRouter } from 'next/navigation';
++
++const LEAGUE_LEVELS = [
++  { value: 'school', label: 'School-wide' },
++  { value: 'district', label: 'District' },
++  { value: 'regional', label: 'Regional' },
++  { value: 'state', label: 'State' },
++  { value: 'national', label: 'National' },
++];
++
++const FORMATS = [
++  { value: 'single_elimination', label: 'Single Elimination' },
++  { value: 'double_elimination', label: 'Double Elimination' },
++  { value: 'round_robin', label: 'Round Robin' },
++  { value: 'swiss', label: 'Swiss System' },
++];
++
++export default function CreateLeaguePage() {
++  const router = useRouter();
++  const [loading, setLoading] = useState(false);
++  const [error, setError] = useState<string | null>(null);
++
++  const [form, setForm] = useState({
++    name: '',
++    level: 'school',
++    region: '',
++    format: 'single_elimination',
++    max_participants: 8,
++  });
++
++  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
++    const { name, value } = e.target;
++    setForm((prev) => ({
++      ...prev,
++      [name]: name === 'max_participants' ? Number(value) : value,
++    }));
++  }
++
++  async function handleSubmit(e: React.FormEvent) {
++    e.preventDefault();
++    setLoading(true);
++    setError(null);
++
++    try {
++      const res = await fetch('/api/league/create', {
++        method: 'POST',
++        headers: { 'Content-Type': 'application/json' },
++        body: JSON.stringify(form),
++      });
++
++      if (!res.ok) {
++        const body = await res.json().catch(() => ({}));
++        throw new Error(body.error ?? `Server error ${res.status}`);
++      }
++
++      const { leagueId } = await res.json();
++      router.push(`/league/${leagueId}`);
++    } catch (err: any) {
++      setError(err.message ?? 'Something went wrong. Please try again.');
++      setLoading(false);
++    }
++  }
++
++  return (
++    <div className="min-h-screen bg-gray-50">
++      {/* Header */}
++      <header className="bg-white shadow-sm">
++        <div className="max-w-3xl mx-auto px-4 py-4 flex items-center justify-between">
++          <Link href="/" className="text-2xl font-bold text-blue-600">
++            Math<span className="text-amber-500">Athlone</span>
++          </Link>
++          <Link href="/dashboard/teacher" className="text-sm text-gray-500 hover:text-gray-700">
++            ← Dashboard
++          </Link>
++        </div>
++      </header>
++
++      <main className="max-w-3xl mx-auto px-4 py-10">
++        <div className="mb-8">
++          <h1 className="text-3xl font-black text-gray-900 mb-1">🏟️ Create a League</h1>
++          <p className="text-gray-500 text-sm">
++            Set up a season-long bracket competition with ELO ratings and championship points.
++          </p>
++        </div>
++
++        <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm p-8 space-y-6">
++          {/* League Name */}
++          <div>
++            <label className="block text-sm font-semibold text-gray-700 mb-1.5" htmlFor="name">
++              League Name
++            </label>
++            <input
++              id="name"
++              name="name"
++              type="text"
++              required
++              placeholder="e.g. Period 3 Algebra League — Spring 2026"
++              value={form.name}
++              onChange={handleChange}
++              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
++            />
++          </div>
++
++          {/* Level + Region */}
++          <div className="grid grid-cols-2 gap-4">
++            <div>
++              <label className="block text-sm font-semibold text-gray-700 mb-1.5" htmlFor="level">
++                Level
++              </label>
++              <select
++                id="level"
++                name="level"
++                value={form.level}
++                onChange={handleChange}
++                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
++              >
++                {LEAGUE_LEVELS.map((l) => (
++                  <option key={l.value} value={l.value}>{l.label}</option>
++                ))}
++              </select>
++            </div>
++            <div>
++              <label className="block text-sm font-semibold text-gray-700 mb-1.5" htmlFor="region">
++                Region / Label <span className="font-normal text-gray-400">(optional)</span>
++              </label>
++              <input
++                id="region"
++                name="region"
++                type="text"
++                placeholder="e.g. District 7 or Spring Split"
++                value={form.region}
++                onChange={handleChange}
++                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
++              />
++            </div>
++          </div>
++
++          {/* Format + Max Participants */}
++          <div className="grid grid-cols-2 gap-4">
++            <div>
++              <label className="block text-sm font-semibold text-gray-700 mb-1.5" htmlFor="format">
++                Bracket Format
++              </label>
++              <select
++                id="format"
++                name="format"
++                value={form.format}
++                onChange={handleChange}
++                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
++              >
++                {FORMATS.map((f) => (
++                  <option key={f.value} value={f.value}>{f.label}</option>
++                ))}
++              </select>
++            </div>
++            <div>
++              <label className="block text-sm font-semibold text-gray-700 mb-1.5" htmlFor="max_participants">
++                Max Participants
++              </label>
++              <select
++                id="max_participants"
++                name="max_participants"
++                value={form.max_participants}
++                onChange={handleChange}
++                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
++              >
++                {[4, 8, 16, 32].map((n) => (
++                  <option key={n} value={n}>{n} athletes</option>
++                ))}
++              </select>
++            </div>
++          </div>
++
++          {/* Info box */}
++          <div className="bg-violet-50 border border-violet-200 rounded-lg p-4 text-sm text-violet-700">
++            <p className="font-semibold mb-1">What happens next?</p>
++            <ul className="list-disc list-inside space-y-1 text-violet-600">
++              <li>Your league dashboard opens immediately after creation.</li>
++              <li>Share the league link with your students so they can see standings.</li>
++              <li>ELO ratings update automatically after each Heat you run.</li>
++              <li>Brackets are generated once enough athletes have competed.</li>
++            </ul>
++          </div>
++
++          {error && (
++            <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-sm text-red-700">
++              {error}
++            </div>
++          )}
++
++          <div className="flex items-center gap-4 pt-2">
++            <button
++              type="submit"
++              disabled={loading || !form.name.trim()}
++              className="px-8 py-3 bg-violet-700 text-white font-semibold rounded-lg hover:bg-violet-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
++            >
++              {loading ? 'Creating…' : 'Create League'}
++            </button>
++            <Link
++              href="/dashboard/teacher"
++              className="text-sm text-gray-500 hover:text-gray-700"
++            >
++              Cancel
++            </Link>
++          </div>
++        </form>
++      </main>
++    </div>
++  );
++}
+diff --git a/src/components/league/LeagueDashboard.tsx b/src/components/league/LeagueDashboard.tsx
+index 0e4d873..4232047 100644
+--- a/src/components/league/LeagueDashboard.tsx
++++ b/src/components/league/LeagueDashboard.tsx
+@@ -841,7 +841,8 @@ const MOCK_SPLITS: SeasonSplit[] = [
+   { id: 's3', name: 'Spring Split', status: 'active', start_date: '2026-03-09', end_date: '2026-05-29' },
+ ];
+ 
+-const SeasonTimeline: React.FC = () => {
++const SeasonTimeline: React.FC<{ splits?: SeasonSplit[] }> = ({ splits }) => {
++  const displaySplits = splits && splits.length > 0 ? splits : MOCK_SPLITS;
+   const statusColors: Record<string, { bg: string; text: string; dot: string }> = {
+     upcoming: { bg: 'rgba(107,114,128,0.1)', text: '#6b7280', dot: '#6b7280' },
+     active: { bg: 'rgba(99,102,241,0.1)', text: '#818cf8', dot: '#6366f1' },
+@@ -863,7 +864,7 @@ const SeasonTimeline: React.FC = () => {
+         2025–2026 Season
+       </h3>
+       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+-        {MOCK_SPLITS.map((split, i) => {
++        {displaySplits.map((split, i) => {
+           const colors = statusColors[split.status];
+           return (
+             <div
+@@ -889,7 +890,7 @@ const SeasonTimeline: React.FC = () => {
+                     boxShadow: split.status === 'active' ? `0 0 10px ${colors.dot}55` : undefined,
+                   }}
+                 />
+-                {i < MOCK_SPLITS.length - 1 && (
++                {i < displaySplits.length - 1 && (
+                   <div
+                     style={{
+                       width: 2,
+@@ -1014,11 +1015,39 @@ const SeasonTimeline: React.FC = () => {
+ // MAIN DASHBOARD
+ // ────────────────────────────────────────────────────────────
+ 
+-export default function LeagueDashboard() {
++interface LeagueDashboardProps {
++  /** When provided, real data replaces mock data. */
++  leagueMeta?: {
++    id: string;
++    name: string;
++    level: string;
++    region: string;
++    bracketName: string | null;
++    bracketFormat: string | null;
++  };
++  initialStandings?: StandingRow[];
++  initialBracket?: BracketMatch[];
++  initialChampionship?: ChampionshipEntry[];
++  initialSplits?: SeasonSplit[];
++}
++
++export default function LeagueDashboard({
++  leagueMeta,
++  initialStandings,
++  initialBracket,
++  initialChampionship,
++  initialSplits,
++}: LeagueDashboardProps = {}) {
+   const [activeTab, setActiveTab] = useState<TabId>('bracket');
+-  const [bracketData] = useState<BracketMatch[]>(generateMockBracket);
+-  const [standingsData] = useState<StandingRow[]>(generateMockStandings);
+-  const [championshipData] = useState<ChampionshipEntry[]>(generateMockChampionship);
++  const [bracketData] = useState<BracketMatch[]>(
++    initialBracket && initialBracket.length > 0 ? initialBracket : generateMockBracket
++  );
++  const [standingsData] = useState<StandingRow[]>(
++    initialStandings && initialStandings.length > 0 ? initialStandings : generateMockStandings
++  );
++  const [championshipData] = useState<ChampionshipEntry[]>(
++    initialChampionship && initialChampionship.length > 0 ? initialChampionship : generateMockChampionship
++  );
+ 
+   const tabs: Array<{ id: TabId; label: string; icon: string }> = [
+     { id: 'bracket', label: 'Bracket', icon: '🏆' },
+@@ -1065,11 +1094,13 @@ export default function LeagueDashboard() {
+               letterSpacing: '-0.02em',
+             }}
+           >
+-            District 7 — D1 Playoffs
++            {leagueMeta ? leagueMeta.name : 'District 7 — D1 Playoffs'}
+           </h1>
+         </div>
+         <p style={{ fontSize: 13, color: '#6b7280', margin: 0 }}>
+-          Spring Split 2026 • Single Elimination • 8 Mathletes
++          {leagueMeta
++            ? `${leagueMeta.region ? leagueMeta.region + ' • ' : ''}${leagueMeta.level}${leagueMeta.bracketFormat ? ' • ' + leagueMeta.bracketFormat : ''} • ${standingsData.length} Mathletes`
++            : 'Spring Split 2026 • Single Elimination • 8 Mathletes'}
+         </p>
+       </div>
+ 
+@@ -1132,7 +1163,7 @@ export default function LeagueDashboard() {
+         {activeTab === 'bracket' && <BracketView matches={bracketData} />}
+         {activeTab === 'standings' && <StandingsTable standings={standingsData} />}
+         {activeTab === 'championship' && <ChampionshipTracker entries={championshipData} />}
+-        {activeTab === 'season' && <SeasonTimeline />}
++        {activeTab === 'season' && <SeasonTimeline splits={initialSplits} />}
+       </div>
+ 
+       {/* Footer */}
+diff --git a/supabase/migrations/033_elo_write_policies.sql b/supabase/migrations/033_elo_write_policies.sql
+new file mode 100644
+index 0000000..50caa79
+--- /dev/null
++++ b/supabase/migrations/033_elo_write_policies.sql
+@@ -0,0 +1,71 @@
++-- =============================================================================
++-- MathAthlone — ELO Write Policies
++-- =============================================================================
++-- File: 033_elo_write_policies.sql
++-- Run AFTER: 006_league_engine.sql, 007_auth_v2_rls.sql
++--
++-- Migration 006 created athlete_ratings and rating_history with RLS enabled
++-- but only added SELECT policies. The scoring-service.ts calls
++-- updateAthleteRatingsFromHeat() using the teacher's authenticated Supabase
++-- client (anon key), so INSERT/UPDATE policies are required for those writes
++-- to succeed.
++--
++-- Policy design:
++--   • athlete_ratings INSERT  — any authenticated user (scoring service runs
++--     under the teacher's session when endHeat() is called from TeacherMonitor)
++--   • athlete_ratings UPDATE  — any authenticated user (same reason)
++--   • rating_history INSERT   — any authenticated user
++--
++-- These are intentionally broad because:
++--   1. The scoring service is the only writer in practice.
++--   2. athlete_ratings rows are keyed by athlete_id — a malicious actor
++--      could only insert/update their own row or a row for another athlete
++--      they know the UUID of. The data is non-sensitive (ratings are public).
++--   3. A future tightening pass can restrict to has_role('teacher','platform_admin')
++--      once we confirm the CF Worker also needs write access.
++--
++-- IDEMPOTENT — drops policies before recreating.
++-- =============================================================================
++
++BEGIN;
++
++-- ─────────────────────────────────────────────────────────────
++-- athlete_ratings — INSERT
++-- ─────────────────────────────────────────────────────────────
++DROP POLICY IF EXISTS "Authenticated users insert ratings" ON athlete_ratings;
++CREATE POLICY "Authenticated users insert ratings"
++  ON athlete_ratings FOR INSERT
++  TO authenticated
++  WITH CHECK (true);
++
++-- ─────────────────────────────────────────────────────────────
++-- athlete_ratings — UPDATE
++-- ─────────────────────────────────────────────────────────────
++DROP POLICY IF EXISTS "Authenticated users update ratings" ON athlete_ratings;
++CREATE POLICY "Authenticated users update ratings"
++  ON athlete_ratings FOR UPDATE
++  TO authenticated
++  USING (true)
++  WITH CHECK (true);
++
++-- ─────────────────────────────────────────────────────────────
++-- rating_history — INSERT
++-- ─────────────────────────────────────────────────────────────
++DROP POLICY IF EXISTS "Authenticated users insert rating history" ON rating_history;
++CREATE POLICY "Authenticated users insert rating history"
++  ON rating_history FOR INSERT
++  TO authenticated
++  WITH CHECK (true);
++
++-- ─────────────────────────────────────────────────────────────
++-- rating_history — SELECT (all authenticated, not just own)
++-- Allows leaderboard pages to read full history for display.
++-- ─────────────────────────────────────────────────────────────
++DROP POLICY IF EXISTS "Athletes view own rating history" ON rating_history;
++DROP POLICY IF EXISTS "Authenticated users view rating history" ON rating_history;
++CREATE POLICY "Authenticated users view rating history"
++  ON rating_history FOR SELECT
++  TO authenticated
++  USING (true);
++
++COMMIT;
+-- 
+2.43.0
+

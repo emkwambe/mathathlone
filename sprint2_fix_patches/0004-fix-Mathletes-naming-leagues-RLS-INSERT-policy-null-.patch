@@ -1,0 +1,142 @@
+From 07ecca965a3d89d71959d8540cb86e4d55e0edc3 Mon Sep 17 00:00:00 2001
+From: Eddy Mkwambe <eddy@mpingo.ai>
+Date: Mon, 20 Jul 2026 03:46:08 +0000
+Subject: [PATCH 4/4] fix: Mathletes naming, leagues RLS INSERT policy, null
+ school guard
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+- league/create/page.tsx: rename '8 athletes' → '8 Mathletes' in Max
+  Participants dropdown to match app-wide terminology
+- dashboard/teacher/page.tsx: guard school/district/state display so
+  teachers without a linked school don't see '· ,' placeholder text
+- supabase/migrations/034_leagues_write_policies.sql (NEW): add
+  INSERT policy for teachers/platform_admins on leagues table (fixes
+  'new row violates row-level security policy for table leagues' error),
+  plus SELECT for all authenticated users and UPDATE for creator only.
+  Also adds created_by column to leagues so ownership is tracked.
+- api/league/create/route.ts: set created_by: user.id on insert so the
+  UPDATE policy can correctly identify the league owner.
+---
+ src/app/api/league/create/route.ts            |  1 +
+ src/app/dashboard/teacher/page.tsx            | 10 +++-
+ src/app/league/create/page.tsx                |  2 +-
+ .../migrations/034_leagues_write_policies.sql | 59 +++++++++++++++++++
+ 4 files changed, 68 insertions(+), 4 deletions(-)
+ create mode 100644 supabase/migrations/034_leagues_write_policies.sql
+
+diff --git a/src/app/api/league/create/route.ts b/src/app/api/league/create/route.ts
+index a75dba7..b8a3bda 100644
+--- a/src/app/api/league/create/route.ts
++++ b/src/app/api/league/create/route.ts
+@@ -80,6 +80,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
+       region: region?.trim() || null,
+       season_id: activeSeason?.id ?? null,
+       max_schools: max_participants ?? 8,
++      created_by: user.id,
+     })
+     .select('id')
+     .single();
+diff --git a/src/app/dashboard/teacher/page.tsx b/src/app/dashboard/teacher/page.tsx
+index dbb5002..1c88127 100644
+--- a/src/app/dashboard/teacher/page.tsx
++++ b/src/app/dashboard/teacher/page.tsx
+@@ -76,9 +76,13 @@ export default async function TeacherDashboard() {
+           <h1 className="text-3xl font-bold text-gray-900 mb-2">
+             Welcome, {profile.display_name}! 👩‍🏫
+           </h1>
+-          <p className="text-gray-600">
+-            {profile.schools?.name} • {profile.schools?.district}, {profile.schools?.state}
+-          </p>
++          {profile.schools?.name && (
++            <p className="text-gray-600">
++              {profile.schools.name}
++              {profile.schools.district ? ` • ${profile.schools.district}` : ''}
++              {profile.schools.state ? `, ${profile.schools.state}` : ''}
++            </p>
++          )}
+         </div>
+ 
+         {/* Quick Actions */}
+diff --git a/src/app/league/create/page.tsx b/src/app/league/create/page.tsx
+index 9ac77f9..9ca2ac5 100644
+--- a/src/app/league/create/page.tsx
++++ b/src/app/league/create/page.tsx
+@@ -175,7 +175,7 @@ export default function CreateLeaguePage() {
+                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
+               >
+                 {[4, 8, 16, 32].map((n) => (
+-                  <option key={n} value={n}>{n} athletes</option>
++                  <option key={n} value={n}>{n} Mathletes</option>
+                 ))}
+               </select>
+             </div>
+diff --git a/supabase/migrations/034_leagues_write_policies.sql b/supabase/migrations/034_leagues_write_policies.sql
+new file mode 100644
+index 0000000..be66312
+--- /dev/null
++++ b/supabase/migrations/034_leagues_write_policies.sql
+@@ -0,0 +1,59 @@
++-- =============================================================================
++-- MathAthlone — Leagues Write Policies
++-- =============================================================================
++-- File: 034_leagues_write_policies.sql
++-- Run AFTER: 002_league_system.sql
++--
++-- The leagues table was created with RLS enabled but no INSERT policy for
++-- teachers. This migration adds:
++--   • leagues INSERT  — teachers and platform_admins
++--   • leagues SELECT  — all authenticated users (for /league/[id] page)
++--   • leagues UPDATE  — only the teacher who created it (via created_by)
++--
++-- Note: The leagues table in migration 002 does not have a created_by column.
++-- We add one here so teachers can manage their own leagues.
++--
++-- IDEMPOTENT — uses IF NOT EXISTS / IF EXISTS guards.
++-- =============================================================================
++
++BEGIN;
++
++-- Add created_by column to leagues if it doesn't exist
++ALTER TABLE leagues
++  ADD COLUMN IF NOT EXISTS created_by UUID REFERENCES auth.users(id);
++
++-- ─────────────────────────────────────────────────────────────
++-- leagues — SELECT (all authenticated users)
++-- ─────────────────────────────────────────────────────────────
++DROP POLICY IF EXISTS "Authenticated users view leagues" ON leagues;
++CREATE POLICY "Authenticated users view leagues"
++  ON leagues FOR SELECT
++  TO authenticated
++  USING (true);
++
++-- ─────────────────────────────────────────────────────────────
++-- leagues — INSERT (teachers and platform_admins only)
++-- ─────────────────────────────────────────────────────────────
++DROP POLICY IF EXISTS "Teachers insert leagues" ON leagues;
++CREATE POLICY "Teachers insert leagues"
++  ON leagues FOR INSERT
++  TO authenticated
++  WITH CHECK (
++    EXISTS (
++      SELECT 1 FROM users
++      WHERE users.id = auth.uid()
++        AND users.role IN ('teacher', 'platform_admin')
++    )
++  );
++
++-- ─────────────────────────────────────────────────────────────
++-- leagues — UPDATE (creator only)
++-- ─────────────────────────────────────────────────────────────
++DROP POLICY IF EXISTS "League creator can update" ON leagues;
++CREATE POLICY "League creator can update"
++  ON leagues FOR UPDATE
++  TO authenticated
++  USING (created_by = auth.uid())
++  WITH CHECK (created_by = auth.uid());
++
++COMMIT;
+-- 
+2.43.0
+

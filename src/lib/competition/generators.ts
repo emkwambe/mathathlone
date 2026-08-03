@@ -2130,6 +2130,35 @@ export function generate_g7_proportional_solve(difficulty: DifficultyLevel): Gen
     answer = newInput * k;
   }
 
+  // EOG PATCH: chain-ratio DOK 3 pattern (difficulty 3-4 only)
+  if (difficulty >= 3 && Math.random() < 0.45) {
+    // A:B = p:q, B:C = r:s — find A:C or find C given A
+    const p = randomInt(2, 5);
+    const q = randomInt(2, 6);
+    const r = q; // B is the shared link
+    const s = randomInt(2, 6);
+    // A:C = (p*r) : (q*s) simplified
+    const [acN, acD] = simplifyFraction(p * r, q * s);
+    const givenA = p * randomInt(2, 5);
+    const givenC = Math.round((givenA * q * s) / (p * r));
+    const chainScenarios = [
+      { text: `If ${p} apples cost the same as ${q} oranges, and ${r} oranges cost the same as ${s} bananas, how many bananas have the same value as ${givenA} apples?`, ans: givenC, unit: 'bananas' },
+      { text: `A gear with ${p} teeth meshes with one that has ${q} teeth. That gear meshes with a third gear with ${s} teeth (the second has ${r} teeth). If the first gear turns ${givenA} times, how many times does the third gear turn?`, ans: givenC, unit: 'turns' },
+    ];
+    const csc = chainScenarios[randomInt(0, chainScenarios.length - 1)]!;
+    return g7Wrap(difficulty, 'g7_proportional_solve', 'M7.RP.2.1', 'Solving Proportions in Real-World Problems', {
+      question: csc.text,
+      answer: String(csc.ans),
+      solution_steps: [
+        `Ratio A:B = ${p}:${q}`,
+        `Ratio B:C = ${r}:${s}`,
+        `Chain: A:C = (${p}×${r}):(${q}×${s}) = ${p*r}:${q*s} = ${acN}:${acD}`,
+        `Given A = ${givenA}: C = ${givenA} × ${acD}/${acN} = ${csc.ans} ${csc.unit}`,
+      ],
+      answer_type: 'decimal',
+    });
+  }
+
   return g7Wrap(difficulty, 'g7_proportional_solve', 'M7.RP.2.1', 'Solving Proportions in Real-World Problems', {
     question: `${sc.setup(known1, known2)} ${sc.ask(newInput)}`,
     answer: String(answer),
@@ -2782,6 +2811,29 @@ export function generate_g7_theoretical_probability(difficulty: DifficultyLevel)
   const sectors = [4, 5, 6, 8][randomInt(0, 3)]!;
   const favorable = randomInt(1, sectors - 1);
   const [rn, rd] = simplifyFraction(favorable, sectors);
+
+  // EOG PATCH: complement-of-sum pattern (DOK 2) — only at difficulty >= 2
+  if (difficulty >= 2 && Math.random() < 0.4) {
+    const groupA = randomInt(2, 5);
+    const groupB = randomInt(2, 5);
+    const groupC = randomInt(2, 5);
+    const totalTiles = groupA + groupB + groupC;
+    const notA = groupB + groupC;
+    const [cn, cd] = simplifyFraction(notA, totalTiles);
+    const colorSets = [['red', 'blue', 'green'], ['yellow', 'purple', 'orange'], ['small', 'medium', 'large']] as const;
+    const pick = colorSets[randomInt(0, 2)]!;
+    return g7Wrap(difficulty, 'g7_theoretical_probability', 'M7.SP.3.3', 'Theoretical Probability', {
+      question: `A bag contains ${groupA} ${pick[0]}, ${groupB} ${pick[1]}, and ${groupC} ${pick[2]} tiles. What is the probability of NOT drawing a ${pick[0]} tile?`,
+      answer: `${cn}/${cd}`,
+      solution_steps: [
+        `Total tiles: ${groupA} + ${groupB} + ${groupC} = ${totalTiles}`,
+        `P(${pick[0]}) = ${groupA}/${totalTiles}`,
+        `P(not ${pick[0]}) = 1 − ${groupA}/${totalTiles} = ${notA}/${totalTiles} = ${cn}/${cd}`,
+      ],
+      answer_type: 'fraction',
+    });
+  }
+
   return g7Wrap(difficulty, 'g7_theoretical_probability', 'M7.SP.3.3', 'Theoretical Probability', {
     question: `A spinner is divided into ${sectors} equal sectors. ${favorable} sector${favorable === 1 ? ' is' : 's are'} shaded. What is the probability of landing on a shaded sector?`,
     answer: `${rn}/${rd}`,
@@ -2905,6 +2957,175 @@ export function generate_g7_compound_probability(difficulty: DifficultyLevel): G
       `Independent events: P(A and B) = P(A) × P(B) = ${num}/${den} = ${rn}/${rd}`,
     ],
     answer_type: 'fraction',
+  });
+}
+
+// =============================================================================
+// EOG PATCH: NEW G7 GENERATORS (3 new functions from NCDPI 2026 audit)
+// =============================================================================
+
+// PATCH A: M7.NS.1.3 — Rational Number Word Problems (5 sub-patterns)
+export function generate_g7_ns_rational_word_problem(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Sub-pattern 1: mean of signed numbers
+  if (difficulty === 1 || (difficulty === 2 && Math.random() < 0.5)) {
+    const vals = Array.from({ length: 4 }, () => randomInt(-8, 8));
+    const sum = vals.reduce((a, b) => a + b, 0);
+    const mean = sum / 4;
+    const meanStr = Number.isInteger(mean) ? String(mean) : (Math.round(mean * 100) / 100).toString();
+    return g7Wrap(difficulty, 'g7_ns_rational_word_problem', 'M7.NS.1.3', 'Rational Number Word Problems', {
+      question: `The temperatures (in °F) recorded over 4 days were ${vals.join(', ')}. What was the mean temperature?`,
+      answer: meanStr,
+      solution_steps: [
+        `Sum: ${vals.join(' + ')} = ${sum}`,
+        `Mean = ${sum} ÷ 4 = ${meanStr}`,
+      ],
+      answer_type: 'decimal',
+    });
+  }
+  // Sub-pattern 2: tax then divide
+  if (difficulty === 2 || (difficulty === 3 && Math.random() < 0.5)) {
+    const price = randomInt(10, 60);
+    const taxPct = [5, 6, 7, 8, 9, 10][randomInt(0, 5)]!;
+    const total = Math.round(price * (1 + taxPct / 100) * 100) / 100;
+    const people = randomInt(2, 5);
+    const share = Math.round((total / people) * 100) / 100;
+    return g7Wrap(difficulty, 'g7_ns_rational_word_problem', 'M7.NS.1.3', 'Rational Number Word Problems', {
+      question: `A meal costs $${price}. With ${taxPct}% tax, the total is split equally among ${people} people. How much does each person pay (in dollars)?`,
+      answer: String(share),
+      solution_steps: [
+        `Tax: $${price} × ${taxPct}% = $${Math.round(price * taxPct / 100 * 100) / 100}`,
+        `Total: $${total}`,
+        `Per person: $${total} ÷ ${people} = $${share}`,
+      ],
+      answer_type: 'decimal',
+    });
+  }
+  // Sub-pattern 3: elevation change
+  if (difficulty === 3 || (difficulty === 4 && Math.random() < 0.5)) {
+    const start = randomInt(-200, -10);
+    const change = randomInt(5, 50);
+    const steps = randomInt(2, 5);
+    const end = start + change * steps;
+    return g7Wrap(difficulty, 'g7_ns_rational_word_problem', 'M7.NS.1.3', 'Rational Number Word Problems', {
+      question: `A submarine is at ${start} feet relative to sea level. It rises ${change} feet per minute for ${steps} minutes. What is its new depth?`,
+      answer: String(end),
+      solution_steps: [
+        `Total rise: ${change} × ${steps} = ${change * steps} feet`,
+        `New depth: ${start} + ${change * steps} = ${end} feet`,
+      ],
+      answer_type: 'integer',
+    });
+  }
+  // Sub-pattern 4: fraction of a negative quantity (DOK 3)
+  const whole = randomInt(2, 8);
+  const frac = [1/2, 1/3, 2/3, 1/4, 3/4][randomInt(0, 4)]!;
+  const fracStr = [['1','2'],['1','3'],['2','3'],['1','4'],['3','4']][randomInt(0, 4)]!;
+  const debt = -(whole * parseInt(fracStr[1]!));
+  const portion = Math.round(debt * frac);
+  return g7Wrap(difficulty, 'g7_ns_rational_word_problem', 'M7.NS.1.3', 'Rational Number Word Problems', {
+    question: `A business owes $${Math.abs(debt)}. It pays off ${fracStr[0]}/${fracStr[1]} of the debt. How much does it still owe (as a negative number)?`,
+    answer: String(debt - portion),
+    solution_steps: [
+      `Debt: $${Math.abs(debt)} (represented as ${debt})`,
+      `Paid: ${fracStr[0]}/${fracStr[1]} × ${debt} = ${portion}`,
+      `Remaining: ${debt} − ${portion} = ${debt - portion}`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// PATCH B: M7.G.5.1 — Angle in a Rectangle Diagonal (DOK 3)
+export function generate_g7_geo_angle_rectangle_diagonal(difficulty: DifficultyLevel): GeneratedQuestion {
+  // A diagonal of a rectangle creates two right triangles.
+  // The diagonal bisects the rectangle — the two base angles of the triangle sum to 90°.
+  // Given one acute angle of the triangle, find the other.
+  const angleA = randomInt(25, 65); // degrees, one acute angle
+  const angleB = 90 - angleA;       // the complementary angle
+
+  if (difficulty <= 2) {
+    // Direct: given angle at one corner, find angle at the other corner
+    return g7Wrap(difficulty, 'g7_geo_angle_rectangle_diagonal', 'M7.G.5.1', 'Angles in Rectangles', {
+      question: `A diagonal is drawn in a rectangle. The diagonal makes a ${angleA}° angle with the longer side. What angle does the diagonal make with the shorter side?`,
+      answer: String(angleB),
+      solution_steps: [
+        `A rectangle has 90° corners.`,
+        `The diagonal creates a right triangle inside the rectangle.`,
+        `The two acute angles of a right triangle sum to 90°.`,
+        `${angleA}° + x = 90° → x = ${angleB}°`,
+      ],
+      answer_type: 'integer',
+    });
+  }
+  // DOK 3: two diagonals cross — find the angle between them given one triangle angle
+  // Diagonals of a rectangle bisect each other; the angle between diagonals = 2 × base angle
+  const diagAngle = 2 * angleA;
+  const supplementAngle = 180 - diagAngle;
+  return g7Wrap(difficulty, 'g7_geo_angle_rectangle_diagonal', 'M7.G.5.1', 'Angles in Rectangles', {
+    question: `Both diagonals of a rectangle are drawn. One diagonal makes a ${angleA}° angle with the base. What is the acute angle formed where the two diagonals intersect?`,
+    answer: String(Math.min(diagAngle, supplementAngle)),
+    solution_steps: [
+      `Each diagonal makes ${angleA}° with the base on one side.`,
+      `The diagonals are symmetric, so the angle between them = 2 × ${angleA}° = ${diagAngle}°.`,
+      `The supplementary angle = 180° − ${diagAngle}° = ${supplementAngle}°.`,
+      `Acute angle = ${Math.min(diagAngle, supplementAngle)}°`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// PATCH C: M7.SP.2.2 — Box Plot Comparison (equal IQR / unequal range scenario)
+export function generate_g7_vis_box_plot_comparison(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Generate two data sets with equal IQR but different ranges (or vice versa)
+  // to match the EOG pattern of asking which measure differs.
+  const q1A = randomInt(10, 30);
+  const q3A = q1A + randomInt(8, 20);  // IQR for A
+  const iqrA = q3A - q1A;
+  const minA = q1A - randomInt(3, 10);
+  const maxA = q3A + randomInt(3, 10);
+  const medA = randomInt(q1A + 1, q3A - 1);
+
+  // Dataset B: same IQR, different range
+  const q1B = randomInt(10, 30);
+  const q3B = q1B + iqrA;  // same IQR
+  const minB = q1B - randomInt(12, 20);  // wider range
+  const maxB = q3B + randomInt(12, 20);
+  const medB = randomInt(q1B + 1, q3B - 1);
+
+  const rangeA = maxA - minA;
+  const rangeB = maxB - minB;
+
+  if (difficulty <= 2) {
+    // Which dataset has the greater range?
+    const greater = rangeA > rangeB ? 'A' : 'B';
+    return g7Wrap(difficulty, 'g7_vis_box_plot_comparison', 'M7.SP.2.2', 'Box Plot Comparison', {
+      question: `Dataset A: min=${minA}, Q1=${q1A}, median=${medA}, Q3=${q3A}, max=${maxA}. Dataset B: min=${minB}, Q1=${q1B}, median=${medB}, Q3=${q3B}, max=${maxB}. Which dataset has the greater range?`,
+      answer: greater,
+      solution_steps: [
+        `Range A = ${maxA} − ${minA} = ${rangeA}`,
+        `Range B = ${maxB} − ${minB} = ${rangeB}`,
+        `${rangeA} ${rangeA > rangeB ? '>' : '<'} ${rangeB} → Dataset ${greater} has the greater range.`,
+      ],
+      answer_type: 'text',
+    });
+  }
+  // DOK 3: Both datasets have equal IQR — which statement is TRUE?
+  const options = [
+    `A: Dataset A has a greater IQR than Dataset B`,
+    `B: Dataset B has a greater IQR than Dataset A`,
+    `C: Both datasets have the same IQR`,
+    `D: Dataset A has a greater range than Dataset B`,
+  ];
+  const correctOpt = rangeA > rangeB ? 'D' : 'C';
+  return g7Wrap(difficulty, 'g7_vis_box_plot_comparison', 'M7.SP.2.2', 'Box Plot Comparison', {
+    question: `Dataset A: min=${minA}, Q1=${q1A}, median=${medA}, Q3=${q3A}, max=${maxA}. Dataset B: min=${minB}, Q1=${q1B}, median=${medB}, Q3=${q3B}, max=${maxB}. Which statement is TRUE? ${options.join(' | ')}`,
+    answer: correctOpt,
+    solution_steps: [
+      `IQR A = Q3 − Q1 = ${q3A} − ${q1A} = ${iqrA}`,
+      `IQR B = Q3 − Q1 = ${q3B} − ${q1B} = ${iqrA}`,
+      `IQRs are equal → A and B are false.`,
+      `Range A = ${rangeA}, Range B = ${rangeB} → ${correctOpt === 'D' ? 'D is true' : 'C is true (equal IQRs)'}`,
+    ],
+    answer_type: 'MC',
   });
 }
 
@@ -5525,6 +5746,1295 @@ export function generate_m3_confidence_interval(difficulty: DifficultyLevel): Ge
 }
 
 // =============================================================================
+
+// =============================================================================
+// 44 new generators covering the remaining M3 concepts not yet in generators.ts
+// All use the g7Wrap() helper and the m3_ prefix.
+// =============================================================================
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BATCH 6: Functions — Rate of Change, Operations, Piecewise (FNI)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// M3.FNI.2.1 — Average Rate of Change
+export function generate_m3_average_rate_of_change(difficulty: DifficultyLevel): GeneratedQuestion {
+  const a = randomNonZeroInt(-3, 3);
+  const b = randomInt(-6, 6);
+  const c = randomInt(-8, 8);
+  // pick two x values
+  const x1 = randomInt(-4, 0);
+  const x2 = x1 + randomInt(1, 4);
+  const form = difficulty === 1 ? 'linear' : difficulty === 2 ? 'quadratic' : 'cubic';
+  let f1: number, f2: number, questionStr: string;
+  if (form === 'linear') {
+    f1 = a * x1 + b;
+    f2 = a * x2 + b;
+    questionStr = `f(x) = ${a}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)}`;
+  } else if (form === 'quadratic') {
+    f1 = a * x1 * x1 + b * x1 + c;
+    f2 = a * x2 * x2 + b * x2 + c;
+    questionStr = `f(x) = ${a}x² ${b >= 0 ? '+' : '-'} ${Math.abs(b)}x ${c >= 0 ? '+' : '-'} ${Math.abs(c)}`;
+  } else {
+    f1 = x1 * x1 * x1 + a * x1;
+    f2 = x2 * x2 * x2 + a * x2;
+    questionStr = `f(x) = x³ ${a >= 0 ? '+' : '-'} ${Math.abs(a)}x`;
+  }
+  const numerator = f2 - f1;
+  const denominator = x2 - x1;
+  // simplify fraction
+  const gcdVal = (p: number, q: number): number => (q === 0 ? Math.abs(p) : gcdVal(q, p % q));
+  const g = gcdVal(Math.abs(numerator), Math.abs(denominator));
+  const answerStr = denominator === 0 ? 'undefined' : (numerator % denominator === 0)
+    ? String(numerator / denominator)
+    : `${numerator / g}/${denominator / g}`;
+  return g7Wrap(difficulty, 'm3_average_rate_of_change', 'M3.FNI.2.1', 'Average Rate of Change', {
+    question: `For ${questionStr}, find the average rate of change from x = ${x1} to x = ${x2}.`,
+    answer: answerStr,
+    solution_steps: [
+      `AROC = [f(${x2}) - f(${x1})] / (${x2} - ${x1})`,
+      `f(${x1}) = ${f1}, f(${x2}) = ${f2}`,
+      `AROC = (${f2} - ${f1}) / (${x2} - ${x1}) = ${numerator} / ${denominator} = ${answerStr}`,
+    ],
+    answer_type: 'integer_or_fraction',
+  });
+}
+
+// M3.FNI.3.1 — Function Operations (f+g, f-g, f·g)
+export function generate_m3_function_operations(difficulty: DifficultyLevel): GeneratedQuestion {
+  const a = randomNonZeroInt(-4, 4);
+  const b = randomNonZeroInt(-6, 6);
+  const c = randomNonZeroInt(-4, 4);
+  const d = randomInt(-6, 6);
+  const x = randomNonZeroInt(-4, 4);
+  const ops = ['+', '-', '·'] as const;
+  const op = ops[difficulty === 1 ? 0 : difficulty === 2 ? 1 : 2]!;
+  const fx = a * x + b;
+  const gx = c * x + d;
+  let result: number, opLabel: string;
+  if (op === '+') { result = fx + gx; opLabel = '(f + g)'; }
+  else if (op === '-') { result = fx - gx; opLabel = '(f - g)'; }
+  else { result = fx * gx; opLabel = '(f · g)'; }
+  return g7Wrap(difficulty, 'm3_function_operations', 'M3.FNI.3.1', 'Function Operations', {
+    question: `Let f(x) = ${a}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)} and g(x) = ${c}x ${d >= 0 ? '+' : '-'} ${Math.abs(d)}. Evaluate ${opLabel}(${x}).`,
+    answer: String(result),
+    solution_steps: [
+      `f(${x}) = ${a}(${x}) ${b >= 0 ? '+' : '-'} ${Math.abs(b)} = ${fx}`,
+      `g(${x}) = ${c}(${x}) ${d >= 0 ? '+' : '-'} ${Math.abs(d)} = ${gx}`,
+      `${opLabel}(${x}) = ${fx} ${op === '·' ? '×' : op} ${gx} = ${result}`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// M3.FNI.3.4 — Evaluate Composition (f∘g)(a)
+export function generate_m3_compose_evaluate(difficulty: DifficultyLevel): GeneratedQuestion {
+  const fA = randomNonZeroInt(-3, 3);
+  const fB = randomInt(-5, 5);
+  const gA = randomNonZeroInt(-3, 3);
+  const gB = randomInt(-5, 5);
+  const x = randomNonZeroInt(-3, 3);
+  const gx = gA * x + gB;
+  const fgx = fA * gx + fB;
+  return g7Wrap(difficulty, 'm3_compose_evaluate', 'M3.FNI.3.4', 'Evaluating Composition of Functions', {
+    question: `Let f(x) = ${fA}x ${fB >= 0 ? '+' : '-'} ${Math.abs(fB)} and g(x) = ${gA}x ${gB >= 0 ? '+' : '-'} ${Math.abs(gB)}. Find (f ∘ g)(${x}).`,
+    answer: String(fgx),
+    solution_steps: [
+      `Step 1: Find g(${x}) = ${gA}(${x}) ${gB >= 0 ? '+' : '-'} ${Math.abs(gB)} = ${gx}`,
+      `Step 2: Find f(g(${x})) = f(${gx}) = ${fA}(${gx}) ${fB >= 0 ? '+' : '-'} ${Math.abs(fB)} = ${fgx}`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// M3.FNI.4.2 — Find Inverse Function
+export function generate_m3_find_inverse(difficulty: DifficultyLevel): GeneratedQuestion {
+  const a = randomNonZeroInt(-4, 4);
+  const b = randomInt(-8, 8);
+  // f(x) = ax + b → f⁻¹(x) = (x - b) / a
+  const invNum = -b;
+  const invDen = a;
+  const gcdVal = (p: number, q: number): number => (q === 0 ? Math.abs(p) : gcdVal(q, p % q));
+  const g = gcdVal(Math.abs(invNum), Math.abs(invDen));
+  let answerStr: string;
+  if (invDen === 1) {
+    answerStr = invNum === 0 ? 'x' : `x ${invNum > 0 ? '+' : '-'} ${Math.abs(invNum)}`;
+  } else if (invDen === -1) {
+    answerStr = invNum === 0 ? '-x' : `-x ${invNum > 0 ? '+' : '-'} ${Math.abs(invNum)}`;
+  } else {
+    const numPart = invNum === 0 ? '' : ` ${invNum > 0 ? '+' : '-'} ${Math.abs(invNum / g)}`;
+    answerStr = `(x${numPart}) / ${invDen / g}`;
+    // simpler form
+    answerStr = `(x ${invNum >= 0 ? '+' : '-'} ${Math.abs(invNum)}) / ${invDen}`;
+    if (invNum === 0) answerStr = `x / ${invDen}`;
+  }
+  return g7Wrap(difficulty, 'm3_find_inverse', 'M3.FNI.4.2', 'Finding the Inverse Function', {
+    question: `Find f⁻¹(x) for f(x) = ${a}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)}.`,
+    answer: answerStr,
+    solution_steps: [
+      `Replace f(x) with y: y = ${a}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)}`,
+      `Swap x and y: x = ${a}y ${b >= 0 ? '+' : '-'} ${Math.abs(b)}`,
+      `Solve for y: ${a}y = x ${b >= 0 ? '-' : '+'} ${Math.abs(b)}`,
+      `y = f⁻¹(x) = ${answerStr}`,
+    ],
+    answer_type: 'expression',
+  });
+}
+
+// M3.FNI.4.4 — Verify Inverse Functions
+export function generate_m3_verify_inverse(difficulty: DifficultyLevel): GeneratedQuestion {
+  const a = randomNonZeroInt(-4, 4);
+  const b = randomInt(-8, 8);
+  const x = randomNonZeroInt(-4, 4);
+  // f(x) = ax + b, g(x) = (x - b)/a
+  const gx = (x - b) / a;
+  const fgx = a * gx + b; // should be x
+  const fx = a * x + b;
+  const gfx = (fx - b) / a; // should be x
+  return g7Wrap(difficulty, 'm3_verify_inverse', 'M3.FNI.4.4', 'Verifying Inverse Functions', {
+    question: `Let f(x) = ${a}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)} and g(x) = (x ${b >= 0 ? '-' : '+'} ${Math.abs(b)}) / ${a}. Verify that g = f⁻¹ by computing (f ∘ g)(${x}).`,
+    answer: String(x),
+    solution_steps: [
+      `g(${x}) = (${x} ${b >= 0 ? '-' : '+'} ${Math.abs(b)}) / ${a} = ${gx}`,
+      `f(g(${x})) = f(${gx}) = ${a}(${gx}) ${b >= 0 ? '+' : '-'} ${Math.abs(b)} = ${fgx}`,
+      `(f ∘ g)(${x}) = ${fgx} = ${x} ✓ — confirms g is the inverse of f.`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// M3.FNI.5.2 — Evaluate Piecewise Function
+export function generate_m3_piecewise_evaluate(difficulty: DifficultyLevel): GeneratedQuestion {
+  const a = randomNonZeroInt(-3, 3);
+  const b = randomInt(-5, 5);
+  const c = randomNonZeroInt(-3, 3);
+  const d = randomInt(-5, 5);
+  const cutoff = randomInt(-2, 2);
+  // f(x) = ax + b if x < cutoff; cx + d if x >= cutoff
+  const useAbove = difficulty >= 2 ? Math.random() < 0.5 : false;
+  const x = useAbove
+    ? cutoff + randomInt(1, 3)
+    : cutoff - randomInt(1, 3);
+  const result = x < cutoff ? a * x + b : c * x + d;
+  const piece = x < cutoff ? `${a}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)}` : `${c}x ${d >= 0 ? '+' : '-'} ${Math.abs(d)}`;
+  const cond = x < cutoff ? `x < ${cutoff}` : `x ≥ ${cutoff}`;
+  return g7Wrap(difficulty, 'm3_piecewise_evaluate', 'M3.FNI.5.2', 'Evaluating a Piecewise Function', {
+    question: `f(x) = { ${a}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)}, if x < ${cutoff}; ${c}x ${d >= 0 ? '+' : '-'} ${Math.abs(d)}, if x ≥ ${cutoff} }. Find f(${x}).`,
+    answer: String(result),
+    solution_steps: [
+      `x = ${x}. Since ${x} ${x < cutoff ? '<' : '≥'} ${cutoff}, use the piece: ${piece}`,
+      `f(${x}) = ${piece.replace('x', `(${x})`)} = ${result}`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BATCH 7: Exponential & Logarithmic — Conversions, Rules, Equations (EL)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// M3.EL.3.2 — Convert between exponential and logarithmic form
+export function generate_m3_log_exp_convert(difficulty: DifficultyLevel): GeneratedQuestion {
+  const bases = [2, 3, 4, 5, 10];
+  const base = bases[randomInt(0, difficulty === 1 ? 2 : 4)]!;
+  const exp = randomInt(1, difficulty === 1 ? 3 : 5);
+  const result = Math.pow(base, exp);
+  const toLog = Math.random() < 0.5;
+  if (toLog) {
+    return g7Wrap(difficulty, 'm3_log_exp_convert', 'M3.EL.3.2', 'Converting Exponential to Logarithmic Form', {
+      question: `Rewrite ${base}^${exp} = ${result} in logarithmic form.`,
+      answer: `log_${base}(${result}) = ${exp}`,
+      solution_steps: [
+        `b^x = y  ↔  log_b(y) = x`,
+        `${base}^${exp} = ${result}  →  log_${base}(${result}) = ${exp}`,
+      ],
+      answer_type: 'expression',
+    });
+  } else {
+    return g7Wrap(difficulty, 'm3_log_exp_convert', 'M3.EL.3.2', 'Converting Logarithmic to Exponential Form', {
+      question: `Rewrite log_${base}(${result}) = ${exp} in exponential form.`,
+      answer: `${base}^${exp} = ${result}`,
+      solution_steps: [
+        `log_b(y) = x  ↔  b^x = y`,
+        `log_${base}(${result}) = ${exp}  →  ${base}^${exp} = ${result}`,
+      ],
+      answer_type: 'expression',
+    });
+  }
+}
+
+// M3.EL.3.3 — Evaluate logarithms
+export function generate_m3_evaluate_log(difficulty: DifficultyLevel): GeneratedQuestion {
+  const bases = [2, 3, 5, 10];
+  const base = bases[randomInt(0, difficulty === 1 ? 1 : 3)]!;
+  const exp = randomInt(1, difficulty === 1 ? 3 : 5);
+  const arg = Math.pow(base, exp);
+  return g7Wrap(difficulty, 'm3_evaluate_log', 'M3.EL.3.3', 'Evaluating Logarithms', {
+    question: `Evaluate: log_${base}(${arg})`,
+    answer: String(exp),
+    solution_steps: [
+      `Ask: ${base} to what power equals ${arg}?`,
+      `${base}^${exp} = ${arg}`,
+      `Therefore log_${base}(${arg}) = ${exp}`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// M3.EL.4.1 — Log product/quotient rules
+export function generate_m3_log_product_quotient(difficulty: DifficultyLevel): GeneratedQuestion {
+  const base = [2, 3, 10][randomInt(0, 2)]!;
+  const m = randomInt(1, 4);
+  const n = randomInt(1, 4);
+  const useProduct = Math.random() < 0.5;
+  if (useProduct) {
+    const result = m + n;
+    return g7Wrap(difficulty, 'm3_log_product_quotient', 'M3.EL.4.1', 'Logarithm Product Rule', {
+      question: `Simplify: log_${base}(${base ** m}) + log_${base}(${base ** n})`,
+      answer: String(result),
+      solution_steps: [
+        `Product Rule: log_b(M) + log_b(N) = log_b(M·N)`,
+        `= log_${base}(${base ** m} · ${base ** n}) = log_${base}(${base ** (m + n)})`,
+        `= ${result}`,
+      ],
+      answer_type: 'integer',
+    });
+  } else {
+    const result = m - n;
+    return g7Wrap(difficulty, 'm3_log_product_quotient', 'M3.EL.4.1', 'Logarithm Quotient Rule', {
+      question: `Simplify: log_${base}(${base ** m}) - log_${base}(${base ** n})`,
+      answer: String(result),
+      solution_steps: [
+        `Quotient Rule: log_b(M) - log_b(N) = log_b(M/N)`,
+        `= log_${base}(${base ** m} / ${base ** n}) = log_${base}(${base ** (m - n)})`,
+        `= ${result}`,
+      ],
+      answer_type: 'integer',
+    });
+  }
+}
+
+// M3.EL.4.2 — Log power rule and change of base
+export function generate_m3_log_power_change_base(difficulty: DifficultyLevel): GeneratedQuestion {
+  if (difficulty <= 2) {
+    // Power rule: log_b(x^p) = p·log_b(x)
+    const base = [2, 3, 10][randomInt(0, 2)]!;
+    const p = randomInt(2, 5);
+    const x = base ** randomInt(1, 3);
+    const result = p * Math.log(x) / Math.log(base);
+    return g7Wrap(difficulty, 'm3_log_power_change_base', 'M3.EL.4.2', 'Logarithm Power Rule', {
+      question: `Simplify: log_${base}(${x}^${p})`,
+      answer: String(result),
+      solution_steps: [
+        `Power Rule: log_b(x^p) = p · log_b(x)`,
+        `= ${p} · log_${base}(${x})`,
+        `log_${base}(${x}) = ${Math.log(x) / Math.log(base)}`,
+        `= ${p} · ${Math.log(x) / Math.log(base)} = ${result}`,
+      ],
+      answer_type: 'integer_or_decimal',
+    });
+  } else {
+    // Change of base: log_b(x) = log(x)/log(b)
+    const fromBase = [4, 8, 9, 27][randomInt(0, 3)]!;
+    const toBase = 2;
+    const exp = randomInt(1, 3);
+    const arg = fromBase ** exp;
+    const result = Math.log(arg) / Math.log(toBase);
+    return g7Wrap(difficulty, 'm3_log_power_change_base', 'M3.EL.4.2', 'Change of Base Formula', {
+      question: `Use the change of base formula to evaluate: log_${fromBase}(${arg})`,
+      answer: String(result),
+      solution_steps: [
+        `Change of Base: log_b(x) = log(x) / log(b)`,
+        `log_${fromBase}(${arg}) = log(${arg}) / log(${fromBase})`,
+        `= log_${toBase}(${arg}) / log_${toBase}(${fromBase})`,
+        `= ${Math.log(arg) / Math.log(toBase)} / ${Math.log(fromBase) / Math.log(toBase)} = ${result}`,
+      ],
+      answer_type: 'integer_or_decimal',
+    });
+  }
+}
+
+// M3.EL.4.3 — Expand/condense logarithms
+export function generate_m3_expand_condense_logs(difficulty: DifficultyLevel): GeneratedQuestion {
+  const base = [2, 3, 10][randomInt(0, 2)]!;
+  const p = randomInt(2, 4);
+  const q = randomInt(2, 4);
+  const expand = difficulty <= 2;
+  if (expand) {
+    return g7Wrap(difficulty, 'm3_expand_condense_logs', 'M3.EL.4.3', 'Expanding Logarithms', {
+      question: `Expand: log_${base}(x^${p} · y^${q})`,
+      answer: `${p} log_${base}(x) + ${q} log_${base}(y)`,
+      solution_steps: [
+        `Product Rule: log_b(MN) = log_b(M) + log_b(N)`,
+        `= log_${base}(x^${p}) + log_${base}(y^${q})`,
+        `Power Rule: log_b(x^p) = p·log_b(x)`,
+        `= ${p} log_${base}(x) + ${q} log_${base}(y)`,
+      ],
+      answer_type: 'expression',
+    });
+  } else {
+    return g7Wrap(difficulty, 'm3_expand_condense_logs', 'M3.EL.4.3', 'Condensing Logarithms', {
+      question: `Condense into a single logarithm: ${p} log_${base}(x) + ${q} log_${base}(y)`,
+      answer: `log_${base}(x^${p} y^${q})`,
+      solution_steps: [
+        `Power Rule: p·log_b(x) = log_b(x^p)`,
+        `= log_${base}(x^${p}) + log_${base}(y^${q})`,
+        `Product Rule: log_b(M) + log_b(N) = log_b(MN)`,
+        `= log_${base}(x^${p} · y^${q})`,
+      ],
+      answer_type: 'expression',
+    });
+  }
+}
+
+// M3.EL.5.1 — Solve exponential equation (common base)
+export function generate_m3_solve_exp_common_base(difficulty: DifficultyLevel): GeneratedQuestion {
+  const base = [2, 3, 5][randomInt(0, 2)]!;
+  const lhsExp = randomInt(1, 3);
+  const rhsExp = randomInt(1, 4);
+  // base^(ax + b) = base^c → ax + b = c
+  const a = randomNonZeroInt(1, 3);
+  const b = randomInt(-4, 4);
+  const c = a * rhsExp + b; // so that x = rhsExp is the answer
+  const lhsVal = Math.pow(base, lhsExp);
+  const rhsVal = Math.pow(base, c);
+  return g7Wrap(difficulty, 'm3_solve_exp_common_base', 'M3.EL.5.1', 'Solving Exponential Equations (Common Base)', {
+    question: `Solve: ${base}^(${a}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)}) = ${base}^${c}`,
+    answer: String(rhsExp),
+    solution_steps: [
+      `Both sides have base ${base}, so equate the exponents:`,
+      `${a}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)} = ${c}`,
+      `${a}x = ${c - b}`,
+      `x = ${rhsExp}`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// M3.EL.5.2 — Solve exponential equation (log method)
+export function generate_m3_solve_exp_log_method(difficulty: DifficultyLevel): GeneratedQuestion {
+  const base = [2, 3, 5][randomInt(0, 2)]!;
+  const a = randomNonZeroInt(1, 3);
+  const c = randomInt(2, 20);
+  // a · base^x = c → x = log(c/a) / log(base)
+  const ratio = c / a;
+  const x = Math.log(ratio) / Math.log(base);
+  const xRounded = +x.toFixed(3);
+  return g7Wrap(difficulty, 'm3_solve_exp_log_method', 'M3.EL.5.2', 'Solving Exponential Equations (Logarithm Method)', {
+    question: `Solve: ${a} · ${base}^x = ${c}. Round to 3 decimal places.`,
+    answer: String(xRounded),
+    solution_steps: [
+      `Divide both sides by ${a}: ${base}^x = ${ratio}`,
+      `Take log of both sides: x · ln(${base}) = ln(${ratio})`,
+      `x = ln(${ratio}) / ln(${base}) ≈ ${xRounded}`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// M3.EL.6.1 — Solve logarithmic equation (convert to exponential)
+export function generate_m3_solve_log_eq(difficulty: DifficultyLevel): GeneratedQuestion {
+  const base = [2, 3, 5, 10][randomInt(0, 3)]!;
+  const a = randomNonZeroInt(1, 3);
+  const rhs = randomInt(1, 3);
+  const rhsVal = Math.pow(base, rhs);
+  // log_base(ax + c) = rhs → ax + c = base^rhs
+  const c = randomInt(-5, 5);
+  const x = (rhsVal - c) / a;
+  if (!Number.isInteger(x) || x <= 0) return generate_m3_solve_log_eq(difficulty);
+  return g7Wrap(difficulty, 'm3_solve_log_eq', 'M3.EL.6.1', 'Solving Logarithmic Equations', {
+    question: `Solve: log_${base}(${a}x ${c >= 0 ? '+' : '-'} ${Math.abs(c)}) = ${rhs}`,
+    answer: String(x),
+    solution_steps: [
+      `Convert to exponential form: ${a}x ${c >= 0 ? '+' : '-'} ${Math.abs(c)} = ${base}^${rhs} = ${rhsVal}`,
+      `${a}x = ${rhsVal} ${c >= 0 ? '-' : '+'} ${Math.abs(c)} = ${rhsVal - c}`,
+      `x = ${x}`,
+      `Check: argument ${a}(${x}) ${c >= 0 ? '+' : '-'} ${Math.abs(c)} = ${a * x + c} > 0 ✓`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// M3.EL.6.2 — Solve log equation (condense and equate arguments)
+export function generate_m3_solve_log_eq_condense(difficulty: DifficultyLevel): GeneratedQuestion {
+  const base = [2, 3, 10][randomInt(0, 2)]!;
+  // log_b(x + a) = log_b(c) → x + a = c
+  const a = randomInt(-5, 5);
+  const c = randomInt(2, 15);
+  const x = c - a;
+  if (x <= 0) return generate_m3_solve_log_eq_condense(difficulty);
+  return g7Wrap(difficulty, 'm3_solve_log_eq_condense', 'M3.EL.6.2', 'Solving Logarithmic Equations (Equate Arguments)', {
+    question: `Solve: log_${base}(x ${a >= 0 ? '+' : '-'} ${Math.abs(a)}) = log_${base}(${c})`,
+    answer: String(x),
+    solution_steps: [
+      `Both sides have the same base, so equate arguments:`,
+      `x ${a >= 0 ? '+' : '-'} ${Math.abs(a)} = ${c}`,
+      `x = ${c} ${a >= 0 ? '-' : '+'} ${Math.abs(a)} = ${x}`,
+      `Check: x = ${x} > 0 ✓`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// M3.EL.8.1 — Compound interest / exponential growth
+export function generate_m3_compound_interest(difficulty: DifficultyLevel): GeneratedQuestion {
+  const P = [500, 1000, 2000, 5000][randomInt(0, 3)]!;
+  const r = [0.04, 0.05, 0.06, 0.08][randomInt(0, 3)]!;
+  const t = randomInt(2, 10);
+  const n = difficulty <= 2 ? 1 : [4, 12][randomInt(0, 1)]!;
+  const A = P * Math.pow(1 + r / n, n * t);
+  const ARounded = +A.toFixed(2);
+  const nLabel = n === 1 ? 'annually' : n === 4 ? 'quarterly' : 'monthly';
+  return g7Wrap(difficulty, 'm3_compound_interest', 'M3.EL.8.1', 'Compound Interest', {
+    question: `$${P} is invested at ${(r * 100).toFixed(0)}% annual interest, compounded ${nLabel}, for ${t} years. Find the final amount A = P(1 + r/n)^(nt). Round to 2 decimal places.`,
+    answer: String(ARounded),
+    solution_steps: [
+      `A = ${P}(1 + ${r}/${n})^(${n}·${t})`,
+      `= ${P}(${1 + r / n})^${n * t}`,
+      `≈ $${ARounded}`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// M3.EL.8.2 — Logarithmic models (pH, Richter, decibels)
+export function generate_m3_log_model(difficulty: DifficultyLevel): GeneratedQuestion {
+  const type = ['pH', 'Richter', 'decibel'][randomInt(0, 2)]!;
+  if (type === 'pH') {
+    const exp = randomInt(3, 9);
+    const H = Math.pow(10, -exp);
+    return g7Wrap(difficulty, 'm3_log_model', 'M3.EL.8.2', 'Logarithmic Models — pH', {
+      question: `The concentration of hydrogen ions is [H⁺] = 10^(-${exp}) mol/L. Calculate the pH using pH = -log[H⁺].`,
+      answer: String(exp),
+      solution_steps: [
+        `pH = -log(10^(-${exp}))`,
+        `= -(-${exp}) · log(10)`,
+        `= ${exp}`,
+      ],
+      answer_type: 'integer',
+    });
+  } else if (type === 'Richter') {
+    const mag = randomInt(4, 8);
+    const I = Math.pow(10, mag);
+    return g7Wrap(difficulty, 'm3_log_model', 'M3.EL.8.2', 'Logarithmic Models — Richter Scale', {
+      question: `An earthquake has intensity I = 10^${mag} (relative to reference intensity I₀ = 1). Find the Richter magnitude M = log(I/I₀).`,
+      answer: String(mag),
+      solution_steps: [
+        `M = log(10^${mag} / 1) = log(10^${mag}) = ${mag}`,
+      ],
+      answer_type: 'integer',
+    });
+  } else {
+    const dB = [60, 70, 80, 90, 100][randomInt(0, 4)]!;
+    const I_ratio = Math.pow(10, dB / 10);
+    return g7Wrap(difficulty, 'm3_log_model', 'M3.EL.8.2', 'Logarithmic Models — Decibels', {
+      question: `A sound has intensity I = 10^${dB / 10} · I₀. Find the decibel level using β = 10 · log(I/I₀).`,
+      answer: String(dB),
+      solution_steps: [
+        `β = 10 · log(10^${dB / 10})`,
+        `= 10 · ${dB / 10}`,
+        `= ${dB} dB`,
+      ],
+      answer_type: 'integer',
+    });
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BATCH 8: Polynomial & Rational Functions (PR)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// M3.PR.2.1 — Polynomial long division
+export function generate_m3_polynomial_long_division(difficulty: DifficultyLevel): GeneratedQuestion {
+  // (ax² + bx + c) ÷ (x + d) — ensure no remainder for clean answers
+  const d = randomNonZeroInt(-4, 4);
+  const q1 = randomNonZeroInt(-3, 3); // leading coeff of quotient
+  const q0 = randomInt(-5, 5);        // constant of quotient
+  // dividend = (x + d)(q1·x + q0) = q1·x² + (q0 + d·q1)x + d·q0
+  const a = q1;
+  const b = q0 + d * q1;
+  const c = d * q0;
+  const bSign = b >= 0 ? '+' : '-';
+  const cSign = c >= 0 ? '+' : '-';
+  const quotient = q0 >= 0
+    ? `${q1}x + ${q0}`
+    : `${q1}x - ${Math.abs(q0)}`;
+  return g7Wrap(difficulty, 'm3_polynomial_long_division', 'M3.PR.2.1', 'Polynomial Long Division', {
+    question: `Divide: (${a}x² ${bSign} ${Math.abs(b)}x ${cSign} ${Math.abs(c)}) ÷ (x ${d >= 0 ? '+' : '-'} ${Math.abs(d)})`,
+    answer: quotient,
+    solution_steps: [
+      `Dividend: ${a}x² ${bSign} ${Math.abs(b)}x ${cSign} ${Math.abs(c)}, Divisor: x ${d >= 0 ? '+' : '-'} ${Math.abs(d)}`,
+      `First term: ${a}x² ÷ x = ${q1}x`,
+      `Multiply: ${q1}x · (x ${d >= 0 ? '+' : '-'} ${Math.abs(d)}) = ${q1}x² ${(q1 * d) >= 0 ? '+' : '-'} ${Math.abs(q1 * d)}x`,
+      `Subtract and bring down: ${q0 >= 0 ? '+' : '-'}${Math.abs(q0)}x ${cSign} ${Math.abs(c)}`,
+      `Next term: ${q0}x ÷ x = ${q0}`,
+      `Quotient: ${quotient}, Remainder: 0`,
+    ],
+    answer_type: 'expression',
+  });
+}
+
+// M3.PR.2.2 — Synthetic division
+export function generate_m3_synthetic_division(difficulty: DifficultyLevel): GeneratedQuestion {
+  const k = randomNonZeroInt(-4, 4);
+  const q1 = randomNonZeroInt(-3, 3);
+  const q0 = randomInt(-5, 5);
+  // P(x) = (x - k)(q1·x + q0) = q1·x² + (q0 - k·q1)x + (-k·q0)
+  const a = q1;
+  const b = q0 - k * q1;
+  const c = -k * q0;
+  const bSign = b >= 0 ? '+' : '-';
+  const cSign = c >= 0 ? '+' : '-';
+  const quotient = q0 >= 0 ? `${q1}x + ${q0}` : `${q1}x - ${Math.abs(q0)}`;
+  return g7Wrap(difficulty, 'm3_synthetic_division', 'M3.PR.2.2', 'Synthetic Division', {
+    question: `Use synthetic division to divide P(x) = ${a}x² ${bSign} ${Math.abs(b)}x ${cSign} ${Math.abs(c)} by (x ${k >= 0 ? '-' : '+'} ${Math.abs(k)}).`,
+    answer: quotient,
+    solution_steps: [
+      `Synthetic division with k = ${k}:`,
+      `Coefficients: ${a} | ${b} | ${c}`,
+      `Bring down ${a}. Multiply: ${a} × ${k} = ${a * k}. Add: ${b} + ${a * k} = ${q0}.`,
+      `Multiply: ${q0} × ${k} = ${q0 * k}. Add: ${c} + ${q0 * k} = 0 (no remainder).`,
+      `Quotient: ${quotient}`,
+    ],
+    answer_type: 'expression',
+  });
+}
+
+// M3.PR.2.3 — Remainder Theorem
+export function generate_m3_remainder_theorem(difficulty: DifficultyLevel): GeneratedQuestion {
+  const a = randomNonZeroInt(-3, 3);
+  const b = randomInt(-6, 6);
+  const c = randomInt(-8, 8);
+  const k = randomNonZeroInt(-4, 4);
+  // P(x) = ax² + bx + c, remainder when divided by (x - k) = P(k)
+  const remainder = a * k * k + b * k + c;
+  const bSign = b >= 0 ? '+' : '-';
+  const cSign = c >= 0 ? '+' : '-';
+  return g7Wrap(difficulty, 'm3_remainder_theorem', 'M3.PR.2.3', 'Remainder Theorem', {
+    question: `Use the Remainder Theorem to find the remainder when P(x) = ${a}x² ${bSign} ${Math.abs(b)}x ${cSign} ${Math.abs(c)} is divided by (x ${k >= 0 ? '-' : '+'} ${Math.abs(k)}).`,
+    answer: String(remainder),
+    solution_steps: [
+      `Remainder Theorem: remainder = P(k) where divisor is (x - k).`,
+      `k = ${k}`,
+      `P(${k}) = ${a}(${k})² ${bSign} ${Math.abs(b)}(${k}) ${cSign} ${Math.abs(c)}`,
+      `= ${a * k * k} ${bSign} ${Math.abs(b * k)} ${cSign} ${Math.abs(c)} = ${remainder}`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// M3.PR.3.1 — Rational Root Theorem (list possible roots)
+export function generate_m3_rational_roots_list(difficulty: DifficultyLevel): GeneratedQuestion {
+  const leadingCoeffs = [1, 2, 3];
+  const constants = [2, 3, 4, 6];
+  const p = constants[randomInt(0, 3)]!;
+  const q = leadingCoeffs[randomInt(0, 2)]!;
+  // factors of p
+  const factorsP = Array.from({ length: p }, (_, i) => i + 1).filter(n => p % n === 0);
+  const factorsQ = Array.from({ length: q }, (_, i) => i + 1).filter(n => q % n === 0);
+  const possibleRoots: string[] = [];
+  for (const fp of factorsP) {
+    for (const fq of factorsQ) {
+      const r = fp / fq;
+      if (!possibleRoots.includes(String(r))) possibleRoots.push(String(r));
+      if (!possibleRoots.includes(String(-r))) possibleRoots.push(String(-r));
+    }
+  }
+  possibleRoots.sort((a, b) => parseFloat(a) - parseFloat(b));
+  return g7Wrap(difficulty, 'm3_rational_roots_list', 'M3.PR.3.1', 'Rational Root Theorem', {
+    question: `A polynomial has leading coefficient ${q} and constant term ${p}. List all possible rational roots using the Rational Root Theorem (±p/q format). How many possible rational roots are there?`,
+    answer: String(possibleRoots.length),
+    solution_steps: [
+      `Possible rational roots = ±(factors of constant) / (factors of leading coeff)`,
+      `Factors of ${p}: ${factorsP.join(', ')}`,
+      `Factors of ${q}: ${factorsQ.join(', ')}`,
+      `Possible roots: ${possibleRoots.join(', ')}`,
+      `Total: ${possibleRoots.length} possible rational roots`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// M3.PR.4.1 — Find zeros of polynomial (given one factor)
+export function generate_m3_polynomial_zeros_find(difficulty: DifficultyLevel): GeneratedQuestion {
+  // P(x) = (x - r1)(x - r2)(x - r3) — find all zeros
+  const r1 = randomNonZeroInt(-4, 4);
+  let r2 = randomNonZeroInt(-4, 4);
+  while (r2 === r1) r2 = randomNonZeroInt(-4, 4);
+  let r3 = randomNonZeroInt(-4, 4);
+  while (r3 === r1 || r3 === r2) r3 = randomNonZeroInt(-4, 4);
+  // expand: (x-r1)(x-r2) = x² - (r1+r2)x + r1r2
+  const A = -(r1 + r2 + r3);
+  const B = r1 * r2 + r1 * r3 + r2 * r3;
+  const C = -(r1 * r2 * r3);
+  const ASign = A >= 0 ? '+' : '-';
+  const BSign = B >= 0 ? '+' : '-';
+  const CSign = C >= 0 ? '+' : '-';
+  const zeros = [r1, r2, r3].sort((a, b) => a - b);
+  return g7Wrap(difficulty, 'm3_polynomial_zeros_find', 'M3.PR.4.1', 'Finding Zeros of a Polynomial', {
+    question: `Find all real zeros of P(x) = x³ ${ASign} ${Math.abs(A)}x² ${BSign} ${Math.abs(B)}x ${CSign} ${Math.abs(C)}. Enter the zeros separated by commas.`,
+    answer: zeros.join(', '),
+    solution_steps: [
+      `Test rational roots. Try x = ${r1}: P(${r1}) = 0 ✓`,
+      `Factor out (x - ${r1}) using synthetic division.`,
+      `Resulting quadratic: x² ${-(r2 + r3) >= 0 ? '+' : '-'} ${Math.abs(-(r2 + r3))}x ${(r2 * r3) >= 0 ? '+' : '-'} ${Math.abs(r2 * r3)}`,
+      `Factor: (x - ${r2})(x - ${r3})`,
+      `Zeros: x = ${zeros.join(', ')}`,
+    ],
+    answer_type: 'text',
+  });
+}
+
+// M3.PR.5.1 — Domain of rational function
+export function generate_m3_rational_domain(difficulty: DifficultyLevel): GeneratedQuestion {
+  const r1 = randomNonZeroInt(-5, 5);
+  let r2 = randomNonZeroInt(-5, 5);
+  while (r2 === r1) r2 = randomNonZeroInt(-5, 5);
+  const useTwo = difficulty >= 2;
+  if (!useTwo) {
+    return g7Wrap(difficulty, 'm3_rational_domain', 'M3.PR.5.1', 'Domain of a Rational Function', {
+      question: `Find the domain of f(x) = 1 / (x ${r1 >= 0 ? '-' : '+'} ${Math.abs(r1)}). Express as "all real numbers except x = ___".`,
+      answer: String(r1),
+      solution_steps: [
+        `Set denominator ≠ 0: x ${r1 >= 0 ? '-' : '+'} ${Math.abs(r1)} ≠ 0`,
+        `x ≠ ${r1}`,
+        `Domain: all real numbers except x = ${r1}`,
+      ],
+      answer_type: 'integer',
+    });
+  } else {
+    const small = Math.min(r1, r2);
+    const large = Math.max(r1, r2);
+    return g7Wrap(difficulty, 'm3_rational_domain', 'M3.PR.5.1', 'Domain of a Rational Function', {
+      question: `Find the domain of f(x) = (x + 1) / ((x ${r1 >= 0 ? '-' : '+'} ${Math.abs(r1)})(x ${r2 >= 0 ? '-' : '+'} ${Math.abs(r2)})). How many values are excluded from the domain?`,
+      answer: '2',
+      solution_steps: [
+        `Set denominator ≠ 0: (x ${r1 >= 0 ? '-' : '+'} ${Math.abs(r1)})(x ${r2 >= 0 ? '-' : '+'} ${Math.abs(r2)}) ≠ 0`,
+        `x ≠ ${r1} and x ≠ ${r2}`,
+        `2 values excluded from domain.`,
+      ],
+      answer_type: 'integer',
+    });
+  }
+}
+
+// M3.PR.5.2 — Vertical asymptotes
+export function generate_m3_vertical_asymptote(difficulty: DifficultyLevel): GeneratedQuestion {
+  const r = randomNonZeroInt(-5, 5);
+  return g7Wrap(difficulty, 'm3_vertical_asymptote', 'M3.PR.5.2', 'Vertical Asymptotes of Rational Functions', {
+    question: `Find the vertical asymptote(s) of f(x) = (x + 3) / (x ${r >= 0 ? '-' : '+'} ${Math.abs(r)}).`,
+    answer: `x = ${r}`,
+    solution_steps: [
+      `Set denominator = 0: x ${r >= 0 ? '-' : '+'} ${Math.abs(r)} = 0`,
+      `x = ${r}`,
+      `Check numerator at x = ${r}: ${r} + 3 = ${r + 3} ≠ 0, so no cancellation.`,
+      `Vertical asymptote: x = ${r}`,
+    ],
+    answer_type: 'equation',
+  });
+}
+
+// M3.PR.5.3 — Horizontal asymptote
+export function generate_m3_horizontal_asymptote(difficulty: DifficultyLevel): GeneratedQuestion {
+  const cases = ['deg_less', 'deg_equal', 'deg_greater'] as const;
+  const caseType = cases[difficulty - 1] ?? 'deg_equal';
+  if (caseType === 'deg_less') {
+    return g7Wrap(difficulty, 'm3_horizontal_asymptote', 'M3.PR.5.3', 'Horizontal Asymptote (deg numerator < deg denominator)', {
+      question: `Find the horizontal asymptote of f(x) = (3x + 1) / (x² - 4).`,
+      answer: 'y = 0',
+      solution_steps: [
+        `Degree of numerator = 1, degree of denominator = 2.`,
+        `Since deg(numerator) < deg(denominator), HA is y = 0.`,
+      ],
+      answer_type: 'equation',
+    });
+  } else if (caseType === 'deg_equal') {
+    const a = randomNonZeroInt(1, 5);
+    const b = randomNonZeroInt(1, 5);
+    return g7Wrap(difficulty, 'm3_horizontal_asymptote', 'M3.PR.5.3', 'Horizontal Asymptote (equal degrees)', {
+      question: `Find the horizontal asymptote of f(x) = (${a}x² + 3) / (${b}x² - 1).`,
+      answer: `y = ${a}/${b}`,
+      solution_steps: [
+        `Degree of numerator = degree of denominator = 2.`,
+        `HA = ratio of leading coefficients = ${a}/${b}.`,
+        `Horizontal asymptote: y = ${a}/${b}`,
+      ],
+      answer_type: 'equation',
+    });
+  } else {
+    return g7Wrap(difficulty, 'm3_horizontal_asymptote', 'M3.PR.5.3', 'No Horizontal Asymptote (slant)', {
+      question: `Does f(x) = (x² + 2x) / (x - 1) have a horizontal asymptote? Enter "none" if not.`,
+      answer: 'none',
+      solution_steps: [
+        `Degree of numerator (2) > degree of denominator (1).`,
+        `No horizontal asymptote — there is a slant (oblique) asymptote instead.`,
+      ],
+      answer_type: 'text',
+    });
+  }
+}
+
+// M3.PR.5.4 — Holes in rational functions
+export function generate_m3_rational_hole(difficulty: DifficultyLevel): GeneratedQuestion {
+  const r = randomNonZeroInt(-4, 4);
+  const a = randomNonZeroInt(-3, 3);
+  // f(x) = (x - r)(ax + b) / (x - r)(x + c) — hole at x = r
+  const b = randomInt(-4, 4);
+  const c = randomNonZeroInt(-4, 4);
+  const yHole = (a * r + b) / (r + c);
+  if (!isFinite(yHole) || r + c === 0) return generate_m3_rational_hole(difficulty);
+  const yRounded = +yHole.toFixed(2);
+  return g7Wrap(difficulty, 'm3_rational_hole', 'M3.PR.5.4', 'Holes in Rational Functions', {
+    question: `Find the hole in f(x) = ((x ${r >= 0 ? '-' : '+'} ${Math.abs(r)})(${a}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)})) / ((x ${r >= 0 ? '-' : '+'} ${Math.abs(r)})(x ${c >= 0 ? '+' : '-'} ${Math.abs(c)})). Enter as (x, y).`,
+    answer: `(${r}, ${yRounded})`,
+    solution_steps: [
+      `Cancel common factor (x ${r >= 0 ? '-' : '+'} ${Math.abs(r)}) from numerator and denominator.`,
+      `Hole occurs at x = ${r}.`,
+      `Simplified: f(x) = (${a}x ${b >= 0 ? '+' : '-'} ${Math.abs(b)}) / (x ${c >= 0 ? '+' : '-'} ${Math.abs(c)})`,
+      `y-coordinate: f(${r}) = (${a * r + b}) / (${r + c}) = ${yRounded}`,
+      `Hole at (${r}, ${yRounded})`,
+    ],
+    answer_type: 'ordered_pair',
+  });
+}
+
+// M3.PR.6.1 — Solve rational equation
+export function generate_m3_solve_rational_equation(difficulty: DifficultyLevel): GeneratedQuestion {
+  // a/(x - r) = b → x = r + a/b
+  const a = randomNonZeroInt(2, 8);
+  const b = randomNonZeroInt(2, 6);
+  const r = randomNonZeroInt(-4, 4);
+  const x = r + a / b;
+  if (!Number.isInteger(x)) return generate_m3_solve_rational_equation(difficulty);
+  return g7Wrap(difficulty, 'm3_solve_rational_equation', 'M3.PR.6.1', 'Solving Rational Equations', {
+    question: `Solve: ${a} / (x ${r >= 0 ? '-' : '+'} ${Math.abs(r)}) = ${b}`,
+    answer: String(x),
+    solution_steps: [
+      `Multiply both sides by (x ${r >= 0 ? '-' : '+'} ${Math.abs(r)}):`,
+      `${a} = ${b}(x ${r >= 0 ? '-' : '+'} ${Math.abs(r)})`,
+      `${a} = ${b}x ${(b * r) >= 0 ? '-' : '+'} ${Math.abs(b * r)}`,
+      `${b}x = ${a} ${(b * r) >= 0 ? '+' : '-'} ${Math.abs(b * r)} = ${a + b * r}`,
+      `x = ${x}`,
+      `Check: denominator at x = ${x}: ${x} ${r >= 0 ? '-' : '+'} ${Math.abs(r)} = ${x - r} ≠ 0 ✓`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// M3.PR.6.2 — Polynomial inequality (sign chart)
+export function generate_m3_polynomial_inequality(difficulty: DifficultyLevel): GeneratedQuestion {
+  const r1 = randomNonZeroInt(-4, 0);
+  const r2 = randomNonZeroInt(1, 4);
+  // (x - r1)(x - r2) > 0 → x < r1 or x > r2
+  return g7Wrap(difficulty, 'm3_polynomial_inequality', 'M3.PR.6.2', 'Polynomial Inequality (Sign Chart)', {
+    question: `Solve: (x ${r1 >= 0 ? '-' : '+'} ${Math.abs(r1)})(x ${r2 >= 0 ? '-' : '+'} ${Math.abs(r2)}) > 0. Express in interval notation.`,
+    answer: `(-∞, ${r1}) ∪ (${r2}, ∞)`,
+    solution_steps: [
+      `Zeros: x = ${r1} and x = ${r2}`,
+      `Test intervals: x < ${r1}, ${r1} < x < ${r2}, x > ${r2}`,
+      `Sign chart: (+)(+) > 0 for x < ${r1}; (-)(+) < 0 for ${r1} < x < ${r2}; (+)(+) > 0 for x > ${r2}`,
+      `Solution: (-∞, ${r1}) ∪ (${r2}, ∞)`,
+    ],
+    answer_type: 'interval',
+  });
+}
+
+// M3.PR.6.3 — Rational inequality (sign chart)
+export function generate_m3_rational_inequality(difficulty: DifficultyLevel): GeneratedQuestion {
+  const r = randomNonZeroInt(-4, 4);
+  const d = randomNonZeroInt(-4, 4);
+  while (d === r) { /* retry handled by caller if needed */ }
+  // (x - r) / (x - d) > 0
+  const small = Math.min(r, d);
+  const large = Math.max(r, d);
+  return g7Wrap(difficulty, 'm3_rational_inequality', 'M3.PR.6.3', 'Rational Inequality (Sign Chart)', {
+    question: `Solve: (x ${r >= 0 ? '-' : '+'} ${Math.abs(r)}) / (x ${d >= 0 ? '-' : '+'} ${Math.abs(d)}) > 0. Express in interval notation.`,
+    answer: `(-∞, ${small}) ∪ (${large}, ∞)`,
+    solution_steps: [
+      `Critical values: numerator zero at x = ${r}; denominator zero at x = ${d}`,
+      `Test intervals: x < ${small}, ${small} < x < ${large}, x > ${large}`,
+      `Both factors same sign for x < ${small} and x > ${large} → positive`,
+      `Solution: (-∞, ${small}) ∪ (${large}, ∞)`,
+    ],
+    answer_type: 'interval',
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BATCH 9: Trigonometry — Conversions, Reference Angles, Identities, Laws (TRIG)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// M3.TRIG.1.2 — Convert degrees to/from radians
+export function generate_m3_degrees_to_radians(difficulty: DifficultyLevel): GeneratedQuestion {
+  const degAngles = [30, 45, 60, 90, 120, 135, 150, 180, 210, 240, 270, 300, 315, 330];
+  const radLabels: Record<number, string> = {
+    30: 'π/6', 45: 'π/4', 60: 'π/3', 90: 'π/2',
+    120: '2π/3', 135: '3π/4', 150: '5π/6', 180: 'π',
+    210: '7π/6', 240: '4π/3', 270: '3π/2', 300: '5π/3',
+    315: '7π/4', 330: '11π/6',
+  };
+  const deg = degAngles[randomInt(0, degAngles.length - 1)]!;
+  const rad = radLabels[deg]!;
+  const toRad = Math.random() < 0.5;
+  if (toRad) {
+    return g7Wrap(difficulty, 'm3_degrees_to_radians', 'M3.TRIG.1.2', 'Converting Degrees to Radians', {
+      question: `Convert ${deg}° to radians.`,
+      answer: rad,
+      solution_steps: [
+        `Multiply by π/180: ${deg}° × (π/180) = ${rad}`,
+      ],
+      answer_type: 'expression',
+    });
+  } else {
+    return g7Wrap(difficulty, 'm3_degrees_to_radians', 'M3.TRIG.1.2', 'Converting Radians to Degrees', {
+      question: `Convert ${rad} to degrees.`,
+      answer: String(deg),
+      solution_steps: [
+        `Multiply by 180/π: ${rad} × (180/π) = ${deg}°`,
+      ],
+      answer_type: 'integer',
+    });
+  }
+}
+
+// M3.TRIG.2.3 — Reference angle and trig value
+export function generate_m3_reference_angle_trig(difficulty: DifficultyLevel): GeneratedQuestion {
+  const specialAngles = [
+    { deg: 120, ref: 60, sin: '√3/2', cos: '-1/2', tan: '-√3', quad: 'II' },
+    { deg: 135, ref: 45, sin: '√2/2', cos: '-√2/2', tan: '-1', quad: 'II' },
+    { deg: 150, ref: 30, sin: '1/2', cos: '-√3/2', tan: '-1/√3', quad: 'II' },
+    { deg: 210, ref: 30, sin: '-1/2', cos: '-√3/2', tan: '1/√3', quad: 'III' },
+    { deg: 225, ref: 45, sin: '-√2/2', cos: '-√2/2', tan: '1', quad: 'III' },
+    { deg: 240, ref: 60, sin: '-√3/2', cos: '-1/2', tan: '√3', quad: 'III' },
+    { deg: 300, ref: 60, sin: '-√3/2', cos: '1/2', tan: '-√3', quad: 'IV' },
+    { deg: 315, ref: 45, sin: '-√2/2', cos: '√2/2', tan: '-1', quad: 'IV' },
+    { deg: 330, ref: 30, sin: '-1/2', cos: '√3/2', tan: '-1/√3', quad: 'IV' },
+  ];
+  const entry = specialAngles[randomInt(0, specialAngles.length - 1)]!;
+  const fns = ['sin', 'cos', 'tan'] as const;
+  const fn = fns[randomInt(0, 2)]!;
+  const answer = fn === 'sin' ? entry.sin : fn === 'cos' ? entry.cos : entry.tan;
+  return g7Wrap(difficulty, 'm3_reference_angle_trig', 'M3.TRIG.2.3', 'Reference Angle and Trig Value', {
+    question: `Find the exact value of ${fn}(${entry.deg}°) using a reference angle.`,
+    answer,
+    solution_steps: [
+      `${entry.deg}° is in Quadrant ${entry.quad}. Reference angle = ${entry.ref}°.`,
+      `${fn}(${entry.ref}°) = ${fn === 'sin' ? Math.sin(entry.ref * Math.PI / 180).toFixed(4) : fn === 'cos' ? Math.cos(entry.ref * Math.PI / 180).toFixed(4) : Math.tan(entry.ref * Math.PI / 180).toFixed(4)}`,
+      `In Q${entry.quad}: ${fn === 'sin' ? (entry.quad === 'II' ? 'sin > 0' : 'sin < 0') : fn === 'cos' ? (entry.quad === 'IV' ? 'cos > 0' : 'cos < 0') : (entry.quad === 'III' ? 'tan > 0' : 'tan < 0')}`,
+      `${fn}(${entry.deg}°) = ${answer}`,
+    ],
+    answer_type: 'expression',
+  });
+}
+
+// M3.TRIG.5.1 — Trig identity simplification
+export function generate_m3_trig_identity_simplify(difficulty: DifficultyLevel): GeneratedQuestion {
+  const problems = [
+    {
+      q: 'Simplify: sin²(x) + cos²(x)',
+      a: '1',
+      steps: ['Pythagorean Identity: sin²(x) + cos²(x) = 1'],
+    },
+    {
+      q: 'Simplify: sin(x) / cos(x)',
+      a: 'tan(x)',
+      steps: ['Quotient Identity: sin(x)/cos(x) = tan(x)'],
+    },
+    {
+      q: 'Simplify: 1 - sin²(x)',
+      a: 'cos²(x)',
+      steps: ['Pythagorean Identity: sin²(x) + cos²(x) = 1 → 1 - sin²(x) = cos²(x)'],
+    },
+    {
+      q: 'Simplify: 1/cos(x)',
+      a: 'sec(x)',
+      steps: ['Reciprocal Identity: 1/cos(x) = sec(x)'],
+    },
+    {
+      q: 'Simplify: 1 - cos²(x)',
+      a: 'sin²(x)',
+      steps: ['Pythagorean Identity: sin²(x) + cos²(x) = 1 → 1 - cos²(x) = sin²(x)'],
+    },
+    {
+      q: 'Simplify: cos(x)/sin(x)',
+      a: 'cot(x)',
+      steps: ['Quotient Identity: cos(x)/sin(x) = cot(x)'],
+    },
+  ];
+  const idx = randomInt(0, problems.length - 1);
+  const p = problems[idx]!;
+  return g7Wrap(difficulty, 'm3_trig_identity_simplify', 'M3.TRIG.5.1', 'Trig Identity Simplification', {
+    question: p.q,
+    answer: p.a,
+    solution_steps: p.steps,
+    answer_type: 'expression',
+  });
+}
+
+// M3.TRIG.7.2 — Law of Cosines
+export function generate_m3_law_of_cosines(difficulty: DifficultyLevel): GeneratedQuestion {
+  // SAS: find missing side c given a, b, C
+  const a = randomInt(5, 15);
+  const b = randomInt(5, 15);
+  const C_deg = [30, 45, 60, 90, 120][randomInt(0, 4)]!;
+  const C_rad = C_deg * Math.PI / 180;
+  const c2 = a * a + b * b - 2 * a * b * Math.cos(C_rad);
+  const c = +Math.sqrt(c2).toFixed(2);
+  return g7Wrap(difficulty, 'm3_law_of_cosines', 'M3.TRIG.7.2', 'Law of Cosines', {
+    question: `In triangle ABC, a = ${a}, b = ${b}, and angle C = ${C_deg}°. Find side c using the Law of Cosines. Round to 2 decimal places.`,
+    answer: String(c),
+    solution_steps: [
+      `Law of Cosines: c² = a² + b² - 2ab·cos(C)`,
+      `c² = ${a}² + ${b}² - 2(${a})(${b})·cos(${C_deg}°)`,
+      `c² = ${a * a} + ${b * b} - ${2 * a * b}·${+Math.cos(C_rad).toFixed(4)}`,
+      `c² ≈ ${+c2.toFixed(4)}`,
+      `c ≈ ${c}`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// M3.TRIG.8.1 — Area of triangle using (1/2)ab·sin(C)
+export function generate_m3_triangle_area_trig(difficulty: DifficultyLevel): GeneratedQuestion {
+  const a = randomInt(4, 15);
+  const b = randomInt(4, 15);
+  const C_deg = [30, 45, 60, 90, 120][randomInt(0, 4)]!;
+  const C_rad = C_deg * Math.PI / 180;
+  const area = 0.5 * a * b * Math.sin(C_rad);
+  const areaRounded = +area.toFixed(2);
+  return g7Wrap(difficulty, 'm3_triangle_area_trig', 'M3.TRIG.8.1', 'Triangle Area Using Sine', {
+    question: `Find the area of a triangle with sides a = ${a}, b = ${b}, and included angle C = ${C_deg}°. Use Area = (1/2)ab·sin(C). Round to 2 decimal places.`,
+    answer: String(areaRounded),
+    solution_steps: [
+      `Area = (1/2) · a · b · sin(C)`,
+      `= (1/2) · ${a} · ${b} · sin(${C_deg}°)`,
+      `= (1/2) · ${a} · ${b} · ${+Math.sin(C_rad).toFixed(4)}`,
+      `≈ ${areaRounded}`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BATCH 10: Geometry — Circles, Distance, Dilation (GEO.CIR)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// M3.GEO.CIR.1.1 — Distance formula to classify triangle
+export function generate_m3_distance_formula_classify(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Generate a right triangle with clean integer coordinates
+  const x1 = 0, y1 = 0;
+  const a = randomInt(3, 8);
+  const b = randomInt(3, 8);
+  const x2 = a, y2 = 0;
+  const x3 = 0, y3 = b;
+  const d12 = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+  const d23 = Math.sqrt((x3 - x2) ** 2 + (y3 - y2) ** 2);
+  const d13 = Math.sqrt((x3 - x1) ** 2 + (y3 - y1) ** 2);
+  // classify
+  const sides = [+d12.toFixed(3), +d23.toFixed(3), +d13.toFixed(3)].sort((a, b) => a - b);
+  const isRight = Math.abs(sides[0]! ** 2 + sides[1]! ** 2 - sides[2]! ** 2) < 0.01;
+  const isIso = sides[0] === sides[1] || sides[1] === sides[2];
+  const classification = isRight ? 'right' : isIso ? 'isosceles' : 'scalene';
+  return g7Wrap(difficulty, 'm3_distance_formula_classify', 'M3.GEO.CIR.1.1', 'Distance Formula — Classify Triangle', {
+    question: `Triangle has vertices A(${x1}, ${y1}), B(${x2}, ${y2}), C(${x3}, ${y3}). Use the distance formula to classify the triangle as scalene, isosceles, or right.`,
+    answer: classification,
+    solution_steps: [
+      `AB = √((${x2}-${x1})² + (${y2}-${y1})²) = ${+d12.toFixed(2)}`,
+      `BC = √((${x3}-${x2})² + (${y3}-${y2})²) = ${+d23.toFixed(2)}`,
+      `AC = √((${x3}-${x1})² + (${y3}-${y1})²) = ${+d13.toFixed(2)}`,
+      `Check: AB² + AC² = ${+(d12 ** 2).toFixed(2)} + ${+(d13 ** 2).toFixed(2)} = ${+(d12 ** 2 + d13 ** 2).toFixed(2)} ≈ BC²? ${isRight ? 'Yes → right triangle' : 'No'}`,
+      `Classification: ${classification}`,
+    ],
+    answer_type: 'text',
+  });
+}
+
+// M3.GEO.CIR.2.1 — Write circle equation
+export function generate_m3_circle_equation_write(difficulty: DifficultyLevel): GeneratedQuestion {
+  const h = randomInt(-5, 5);
+  const k = randomInt(-5, 5);
+  const r = randomInt(1, 8);
+  const hSign = h >= 0 ? '-' : '+';
+  const kSign = k >= 0 ? '-' : '+';
+  return g7Wrap(difficulty, 'm3_circle_equation_write', 'M3.GEO.CIR.2.1', 'Writing the Equation of a Circle', {
+    question: `Write the equation of a circle with center (${h}, ${k}) and radius ${r}.`,
+    answer: `(x ${hSign} ${Math.abs(h)})² + (y ${kSign} ${Math.abs(k)})² = ${r * r}`,
+    solution_steps: [
+      `Standard form: (x - h)² + (y - k)² = r²`,
+      `Center (h, k) = (${h}, ${k}), radius r = ${r}`,
+      `(x ${hSign} ${Math.abs(h)})² + (y ${kSign} ${Math.abs(k)})² = ${r * r}`,
+    ],
+    answer_type: 'equation',
+  });
+}
+
+// M3.GEO.CIR.2.2 — Identify center and radius from circle equation
+export function generate_m3_circle_equation_read(difficulty: DifficultyLevel): GeneratedQuestion {
+  const h = randomInt(-5, 5);
+  const k = randomInt(-5, 5);
+  const r = randomInt(1, 8);
+  const hSign = h >= 0 ? '-' : '+';
+  const kSign = k >= 0 ? '-' : '+';
+  return g7Wrap(difficulty, 'm3_circle_equation_read', 'M3.GEO.CIR.2.2', 'Reading Center and Radius from Circle Equation', {
+    question: `The equation of a circle is (x ${hSign} ${Math.abs(h)})² + (y ${kSign} ${Math.abs(k)})² = ${r * r}. What is the radius?`,
+    answer: String(r),
+    solution_steps: [
+      `Standard form: (x - h)² + (y - k)² = r²`,
+      `r² = ${r * r}`,
+      `r = √${r * r} = ${r}`,
+      `Center = (${h}, ${k}), Radius = ${r}`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// M3.GEO.CIR.2.3 — Complete the square to find center/radius
+export function generate_m3_circle_complete_square(difficulty: DifficultyLevel): GeneratedQuestion {
+  const h = randomInt(-4, 4);
+  const k = randomInt(-4, 4);
+  const r = randomInt(2, 6);
+  // (x-h)² + (y-k)² = r² → x² - 2hx + h² + y² - 2ky + k² = r²
+  // → x² + y² - 2hx - 2ky + (h² + k² - r²) = 0
+  const D = -2 * h;
+  const E = -2 * k;
+  const F = h * h + k * k - r * r;
+  const DSign = D >= 0 ? '+' : '-';
+  const ESign = E >= 0 ? '+' : '-';
+  const FSign = F >= 0 ? '+' : '-';
+  return g7Wrap(difficulty, 'm3_circle_complete_square', 'M3.GEO.CIR.2.3', 'Completing the Square — Circle Equation', {
+    question: `Convert x² + y² ${DSign} ${Math.abs(D)}x ${ESign} ${Math.abs(E)}y ${FSign} ${Math.abs(F)} = 0 to standard form. What is the radius?`,
+    answer: String(r),
+    solution_steps: [
+      `Group: (x² ${DSign} ${Math.abs(D)}x) + (y² ${ESign} ${Math.abs(E)}y) = ${-F}`,
+      `Complete the square: add (${Math.abs(D / 2)})² = ${(D / 2) ** 2} and (${Math.abs(E / 2)})² = ${(E / 2) ** 2}`,
+      `(x ${h >= 0 ? '-' : '+'} ${Math.abs(h)})² + (y ${k >= 0 ? '-' : '+'} ${Math.abs(k)})² = ${r * r}`,
+      `Center = (${h}, ${k}), Radius = ${r}`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// M3.GEO.CIR.3.3 — Inscribed angle theorem
+export function generate_m3_inscribed_angle(difficulty: DifficultyLevel): GeneratedQuestion {
+  const arc = [60, 80, 100, 120, 140, 160, 180][randomInt(0, 6)]!;
+  const inscribed = arc / 2;
+  return g7Wrap(difficulty, 'm3_inscribed_angle', 'M3.GEO.CIR.3.3', 'Inscribed Angle Theorem', {
+    question: `An inscribed angle intercepts an arc of ${arc}°. What is the measure of the inscribed angle?`,
+    answer: String(inscribed),
+    solution_steps: [
+      `Inscribed Angle Theorem: inscribed angle = (1/2) × intercepted arc`,
+      `Inscribed angle = (1/2) × ${arc}° = ${inscribed}°`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// M3.GEO.CIR.5.1 — Dilation with non-origin center
+export function generate_m3_dilation_non_origin(difficulty: DifficultyLevel): GeneratedQuestion {
+  const cx = randomInt(-3, 3);
+  const cy = randomInt(-3, 3);
+  const k = [2, 3, 0.5][randomInt(0, 2)]!;
+  const px = randomInt(-4, 4);
+  const py = randomInt(-4, 4);
+  // D(cx,cy,k)(px,py) = (cx + k(px - cx), cy + k(py - cy))
+  const rx = cx + k * (px - cx);
+  const ry = cy + k * (py - cy);
+  return g7Wrap(difficulty, 'm3_dilation_non_origin', 'M3.GEO.CIR.5.1', 'Dilation with Non-Origin Center', {
+    question: `Apply a dilation with center (${cx}, ${cy}) and scale factor ${k} to point P(${px}, ${py}). What are the coordinates of the image P'?`,
+    answer: `(${rx}, ${ry})`,
+    solution_steps: [
+      `Formula: P' = (cx + k(px - cx), cy + k(py - cy))`,
+      `P'x = ${cx} + ${k}(${px} - ${cx}) = ${cx} + ${k}(${px - cx}) = ${rx}`,
+      `P'y = ${cy} + ${k}(${py} - ${cy}) = ${cy} + ${k}(${py - cy}) = ${ry}`,
+      `P' = (${rx}, ${ry})`,
+    ],
+    answer_type: 'ordered_pair',
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BATCH 11: Arc Length and Sector Area (CIR)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// M3.CIR.4.1 — Arc length
+export function generate_m3_arc_length(difficulty: DifficultyLevel): GeneratedQuestion {
+  const r = randomInt(3, 12);
+  const useRadians = difficulty >= 2;
+  if (useRadians) {
+    const thetaFracs = [[1, 6], [1, 4], [1, 3], [1, 2], [2, 3], [3, 4], [5, 6]] as const;
+    const [num, den] = thetaFracs[randomInt(0, thetaFracs.length - 1)]!;
+    const theta = (num * Math.PI) / den;
+    const s = r * theta;
+    const sRounded = +s.toFixed(2);
+    return g7Wrap(difficulty, 'm3_arc_length', 'M3.CIR.4.1', 'Arc Length (Radians)', {
+      question: `Find the arc length of a circle with radius ${r} and central angle θ = ${num}π/${den} radians. Round to 2 decimal places.`,
+      answer: String(sRounded),
+      solution_steps: [
+        `Arc length formula: s = rθ`,
+        `s = ${r} · (${num}π/${den})`,
+        `= ${r} · ${+theta.toFixed(4)}`,
+        `≈ ${sRounded}`,
+      ],
+      answer_type: 'decimal',
+    });
+  } else {
+    const deg = [30, 45, 60, 90, 120, 180][randomInt(0, 5)]!;
+    const s = (deg / 360) * 2 * Math.PI * r;
+    const sRounded = +s.toFixed(2);
+    return g7Wrap(difficulty, 'm3_arc_length', 'M3.CIR.4.1', 'Arc Length (Degrees)', {
+      question: `Find the arc length of a circle with radius ${r} and central angle ${deg}°. Use s = (θ/360)·2πr. Round to 2 decimal places.`,
+      answer: String(sRounded),
+      solution_steps: [
+        `s = (${deg}/360) · 2π · ${r}`,
+        `= ${+(deg / 360).toFixed(4)} · ${+(2 * Math.PI * r).toFixed(4)}`,
+        `≈ ${sRounded}`,
+      ],
+      answer_type: 'decimal',
+    });
+  }
+}
+
+// M3.CIR.4.2 — Sector area
+export function generate_m3_sector_area(difficulty: DifficultyLevel): GeneratedQuestion {
+  const r = randomInt(3, 12);
+  const useRadians = difficulty >= 2;
+  if (useRadians) {
+    const thetaFracs = [[1, 6], [1, 4], [1, 3], [1, 2], [2, 3], [3, 4]] as const;
+    const [num, den] = thetaFracs[randomInt(0, thetaFracs.length - 1)]!;
+    const theta = (num * Math.PI) / den;
+    const A = 0.5 * r * r * theta;
+    const ARounded = +A.toFixed(2);
+    return g7Wrap(difficulty, 'm3_sector_area', 'M3.CIR.4.2', 'Sector Area (Radians)', {
+      question: `Find the area of a sector with radius ${r} and central angle θ = ${num}π/${den} radians. Use A = (1/2)r²θ. Round to 2 decimal places.`,
+      answer: String(ARounded),
+      solution_steps: [
+        `A = (1/2) · r² · θ`,
+        `= (1/2) · ${r * r} · ${+theta.toFixed(4)}`,
+        `≈ ${ARounded}`,
+      ],
+      answer_type: 'decimal',
+    });
+  } else {
+    const deg = [30, 45, 60, 90, 120][randomInt(0, 4)]!;
+    const A = (deg / 360) * Math.PI * r * r;
+    const ARounded = +A.toFixed(2);
+    return g7Wrap(difficulty, 'm3_sector_area', 'M3.CIR.4.2', 'Sector Area (Degrees)', {
+      question: `Find the area of a sector with radius ${r} and central angle ${deg}°. Use A = (θ/360)·πr². Round to 2 decimal places.`,
+      answer: String(ARounded),
+      solution_steps: [
+        `A = (${deg}/360) · π · ${r}²`,
+        `= ${+(deg / 360).toFixed(4)} · π · ${r * r}`,
+        `≈ ${ARounded}`,
+      ],
+      answer_type: 'decimal',
+    });
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BATCH 12: Probability & Statistics — Expected Value, Binomial, z-scores (PS)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// M3.PS.2.2 — Expected value E(X)
+export function generate_m3_expected_value(difficulty: DifficultyLevel): GeneratedQuestion {
+  // Simple discrete distribution with 3-4 outcomes
+  const n = difficulty <= 2 ? 3 : 4;
+  // generate probabilities that sum to 1
+  const rawP = Array.from({ length: n }, () => randomInt(1, 4));
+  const total = rawP.reduce((s, v) => s + v, 0);
+  const probs = rawP.map(p => +(p / total).toFixed(2));
+  // adjust last to make sum exactly 1
+  const sumSoFar = probs.slice(0, -1).reduce((s, v) => s + v, 0);
+  probs[n - 1] = +(1 - sumSoFar).toFixed(2);
+  const values = Array.from({ length: n }, (_, i) => randomInt(1, 6) * (i + 1));
+  const EX = +values.reduce((s, v, i) => s + v * probs[i]!, 0).toFixed(2);
+  const tableStr = values.map((v, i) => `x=${v}, P=${probs[i]}`).join('; ');
+  return g7Wrap(difficulty, 'm3_expected_value', 'M3.PS.2.2', 'Expected Value E(X)', {
+    question: `A random variable X has the distribution: ${tableStr}. Find E(X) = Σ[x·P(x)]. Round to 2 decimal places.`,
+    answer: String(EX),
+    solution_steps: [
+      `E(X) = Σ[x · P(x)]`,
+      ...values.map((v, i) => `${v} × ${probs[i]} = ${+(v * probs[i]!).toFixed(4)}`),
+      `E(X) = ${EX}`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// M3.PS.2.3 — Binomial probability
+export function generate_m3_binomial_probability(difficulty: DifficultyLevel): GeneratedQuestion {
+  const n = randomInt(4, 8);
+  const k = randomInt(1, n - 1);
+  const pOptions = [0.25, 0.3, 0.4, 0.5, 0.6, 0.7, 0.75];
+  const p = pOptions[randomInt(0, pOptions.length - 1)]!;
+  const q = 1 - p;
+  // C(n,k)
+  const comb = (a: number, b: number): number => {
+    if (b === 0 || b === a) return 1;
+    let result = 1;
+    for (let i = 0; i < b; i++) {
+      result = result * (a - i) / (i + 1);
+    }
+    return Math.round(result);
+  };
+  const C = comb(n, k);
+  const prob = C * Math.pow(p, k) * Math.pow(q, n - k);
+  const probRounded = +prob.toFixed(4);
+  return g7Wrap(difficulty, 'm3_binomial_probability', 'M3.PS.2.3', 'Binomial Probability', {
+    question: `In a binomial experiment with n = ${n} trials and p = ${p}, find P(X = ${k}). Use P(X=k) = C(n,k)·p^k·(1-p)^(n-k). Round to 4 decimal places.`,
+    answer: String(probRounded),
+    solution_steps: [
+      `P(X = ${k}) = C(${n},${k}) · ${p}^${k} · ${q}^${n - k}`,
+      `C(${n},${k}) = ${C}`,
+      `${p}^${k} = ${+Math.pow(p, k).toFixed(6)}`,
+      `${q}^${n - k} = ${+Math.pow(q, n - k).toFixed(6)}`,
+      `P(X = ${k}) = ${C} · ${+Math.pow(p, k).toFixed(6)} · ${+Math.pow(q, n - k).toFixed(6)} ≈ ${probRounded}`,
+    ],
+    answer_type: 'decimal',
+  });
+}
+
+// M3.PS.3.2 — z-score calculation
+export function generate_m3_zscore_calculate(difficulty: DifficultyLevel): GeneratedQuestion {
+  const mu = randomInt(50, 80);
+  const sigma = randomInt(5, 15);
+  const x = mu + randomNonZeroInt(-3, 3) * sigma;
+  const z = (x - mu) / sigma;
+  return g7Wrap(difficulty, 'm3_zscore_calculate', 'M3.PS.3.2', 'z-Score Calculation', {
+    question: `A normal distribution has μ = ${mu} and σ = ${sigma}. Find the z-score for x = ${x}. Use z = (x - μ) / σ.`,
+    answer: String(z),
+    solution_steps: [
+      `z = (x - μ) / σ`,
+      `z = (${x} - ${mu}) / ${sigma}`,
+      `z = ${x - mu} / ${sigma}`,
+      `z = ${z}`,
+    ],
+    answer_type: 'integer_or_decimal',
+  });
+}
+
+// M3.PS.3.3 — z-score probability (Empirical Rule)
+export function generate_m3_zscore_probability(difficulty: DifficultyLevel): GeneratedQuestion {
+  const mu = randomInt(60, 80);
+  const sigma = randomInt(5, 10);
+  const sd = [1, 2, 3][randomInt(0, 2)]!;
+  const lower = mu - sd * sigma;
+  const upper = mu + sd * sigma;
+  const pct = sd === 1 ? '68' : sd === 2 ? '95' : '99.7';
+  return g7Wrap(difficulty, 'm3_zscore_probability', 'M3.PS.3.3', 'z-Score Probability (Empirical Rule)', {
+    question: `A normal distribution has μ = ${mu} and σ = ${sigma}. Using the Empirical Rule, what percent of data falls between ${lower} and ${upper}?`,
+    answer: `${pct}%`,
+    solution_steps: [
+      `${lower} = μ - ${sd}σ = ${mu} - ${sd}(${sigma})`,
+      `${upper} = μ + ${sd}σ = ${mu} + ${sd}(${sigma})`,
+      `This is within ${sd} standard deviation(s) of the mean.`,
+      `Empirical Rule: ${sd === 1 ? '68%' : sd === 2 ? '95%' : '99.7%'} of data falls within ${sd}σ of the mean.`,
+    ],
+    answer_type: 'percent',
+  });
+}
+
+// =============================================================================
+
 // =============================================================================
 // MATH FUNDAMENTALS — CROSS-DIVISION POOL (pool: math_fundamentals)
 // =============================================================================
@@ -7514,8 +9024,12 @@ export const GENERATORS: Record<string, (difficulty: DifficultyLevel) => Generat
   g7_theoretical_probability:     generate_g7_theoretical_probability,
   g7_experimental_probability:    generate_g7_experimental_probability,
   g7_compound_probability:        generate_g7_compound_probability,
+  // EOG PATCH generators (3 new — NCDPI 2026 audit)
+  g7_ns_rational_word_problem:    generate_g7_ns_rational_word_problem,
+  g7_geo_angle_rectangle_diagonal: generate_g7_geo_angle_rectangle_diagonal,
+  g7_vis_box_plot_comparison:     generate_g7_vis_box_plot_comparison,
 
-  // ─── NC GRADE 8 (Contenders division) ──────────────────────────────────────
+  // ─── NC GRADE 8 (Contenders division) ──────────────────────────────────────────
   // BATCH 1: Real Number System (5)
   g8_eval_roots:                  generate_g8_eval_roots,
   g8_solve_square_eq:             generate_g8_solve_square_eq,
@@ -7610,6 +9124,53 @@ export const GENERATORS: Record<string, (difficulty: DifficultyLevel) => Generat
   m3_law_of_sines:                generate_m3_law_of_sines,
   m3_normal_distribution:         generate_m3_normal_distribution,
   m3_confidence_interval:         generate_m3_confidence_interval,
+  // BATCH 6-12: NC Math 3 Backfill (Sprint 7)
+  m3_average_rate_of_change:       generate_m3_average_rate_of_change,
+  m3_function_operations:          generate_m3_function_operations,
+  m3_compose_evaluate:             generate_m3_compose_evaluate,
+  m3_find_inverse:                 generate_m3_find_inverse,
+  m3_verify_inverse:               generate_m3_verify_inverse,
+  m3_piecewise_evaluate:           generate_m3_piecewise_evaluate,
+  m3_log_exp_convert:              generate_m3_log_exp_convert,
+  m3_evaluate_log:                 generate_m3_evaluate_log,
+  m3_log_product_quotient:         generate_m3_log_product_quotient,
+  m3_log_power_change_base:        generate_m3_log_power_change_base,
+  m3_expand_condense_logs:         generate_m3_expand_condense_logs,
+  m3_solve_exp_common_base:        generate_m3_solve_exp_common_base,
+  m3_solve_exp_log_method:         generate_m3_solve_exp_log_method,
+  m3_solve_log_eq:                 generate_m3_solve_log_eq,
+  m3_solve_log_eq_condense:        generate_m3_solve_log_eq_condense,
+  m3_compound_interest:            generate_m3_compound_interest,
+  m3_log_model:                    generate_m3_log_model,
+  m3_polynomial_long_division:     generate_m3_polynomial_long_division,
+  m3_synthetic_division:           generate_m3_synthetic_division,
+  m3_remainder_theorem:            generate_m3_remainder_theorem,
+  m3_rational_roots_list:          generate_m3_rational_roots_list,
+  m3_polynomial_zeros_find:        generate_m3_polynomial_zeros_find,
+  m3_rational_domain:              generate_m3_rational_domain,
+  m3_vertical_asymptote:           generate_m3_vertical_asymptote,
+  m3_horizontal_asymptote:         generate_m3_horizontal_asymptote,
+  m3_rational_hole:                generate_m3_rational_hole,
+  m3_solve_rational_equation:      generate_m3_solve_rational_equation,
+  m3_polynomial_inequality:        generate_m3_polynomial_inequality,
+  m3_rational_inequality:          generate_m3_rational_inequality,
+  m3_degrees_to_radians:           generate_m3_degrees_to_radians,
+  m3_reference_angle_trig:         generate_m3_reference_angle_trig,
+  m3_trig_identity_simplify:       generate_m3_trig_identity_simplify,
+  m3_law_of_cosines:               generate_m3_law_of_cosines,
+  m3_triangle_area_trig:           generate_m3_triangle_area_trig,
+  m3_distance_formula_classify:    generate_m3_distance_formula_classify,
+  m3_circle_equation_write:        generate_m3_circle_equation_write,
+  m3_circle_equation_read:         generate_m3_circle_equation_read,
+  m3_circle_complete_square:       generate_m3_circle_complete_square,
+  m3_inscribed_angle:              generate_m3_inscribed_angle,
+  m3_dilation_non_origin:          generate_m3_dilation_non_origin,
+  m3_arc_length:                   generate_m3_arc_length,
+  m3_sector_area:                  generate_m3_sector_area,
+  m3_expected_value:               generate_m3_expected_value,
+  m3_binomial_probability:         generate_m3_binomial_probability,
+  m3_zscore_calculate:             generate_m3_zscore_calculate,
+  m3_zscore_probability:           generate_m3_zscore_probability,
 
   // ─── MATH FUNDAMENTALS (Cross-division pool) ───────────────────────────────
   // BATCH 1: Number Basics & Arithmetic (5)

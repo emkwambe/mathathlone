@@ -1,0 +1,170 @@
+From 659d1473025c378aebbfc2a4847a2bc4cb5fd30a Mon Sep 17 00:00:00 2001
+From: Eddy Mkwambe <eddy@mpingo.ai>
+Date: Sun, 19 Jul 2026 02:09:26 +0000
+Subject: [PATCH 1/2] fix: add post-heat navigation buttons and CF timeout
+ fallback for active heat rejoin
+
+---
+ src/app/compete/[code]/page.tsx               | 71 ++++++++++++++-----
+ src/components/competition/TeacherResults.tsx | 20 +++++-
+ 2 files changed, 72 insertions(+), 19 deletions(-)
+
+diff --git a/src/app/compete/[code]/page.tsx b/src/app/compete/[code]/page.tsx
+index d3407e2..7a9ab0c 100644
+--- a/src/app/compete/[code]/page.tsx
++++ b/src/app/compete/[code]/page.tsx
+@@ -143,6 +143,12 @@ export default function HeatLobbyPage() {
+   const { participants: dbParticipants, loading: participantsLoading } = useHeatParticipants(heat?.id ?? null);
+   const participantsLoaded = !participantsLoading;
+ 
++  // ── CF timeout: if CF hasn't delivered a question within 5s of active
++  // status, fall back to the legacy CompetitionView so the student isn't
++  // stuck on an infinite spinner after a reload/rejoin.
++  const [cfTimedOut, setCfTimedOut] = useState(false);
++  const cfTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
++
+   // ── Cloudflare HeatRoom — server-authoritative competition feed ───────────
+   const cfHeat = useHeatRoom({
+     heatId: heat?.id ?? null,
+@@ -195,6 +201,33 @@ export default function HeatLobbyPage() {
+     }
+   }, [authLoading, isAuthenticated, router, code]);
+ 
++  // ── CF timeout: start a 5-second timer when heat goes active and student
++  // is not the teacher. If CF hasn't delivered a question by then, fall back
++  // to legacy CompetitionView (DB-driven) so the student isn't stuck.
++  useEffect(() => {
++    const isActive = effectiveStatus && ACTIVE_STATUSES.includes(effectiveStatus);
++    if (!isActive || isTeacher || cfHeat.currentQuestion) {
++      // Clear any running timer if question arrived or heat is no longer active
++      if (cfTimeoutRef.current) {
++        clearTimeout(cfTimeoutRef.current);
++        cfTimeoutRef.current = null;
++      }
++      if (cfHeat.currentQuestion) setCfTimedOut(false);
++      return;
++    }
++    if (cfTimeoutRef.current) return; // already running
++    cfTimeoutRef.current = setTimeout(() => {
++      setCfTimedOut(true);
++      cfTimeoutRef.current = null;
++    }, 5000);
++    return () => {
++      if (cfTimeoutRef.current) {
++        clearTimeout(cfTimeoutRef.current);
++        cfTimeoutRef.current = null;
++      }
++    };
++  }, [effectiveStatus, isTeacher, cfHeat.currentQuestion]);
++
+   // ── Load Heat by code (with retries + status-aware error mapping) ──────
+   // BUG 0 fix: when the teacher just created the Heat, the row may not yet
+   // be visible to a follow-up SELECT (RLS, replication, prepared-statement
+@@ -554,8 +587,6 @@ export default function HeatLobbyPage() {
+ 
+     // Student → gameplay via Cloudflare HeatRoom.
+     // If the CF hook has a current question, render the new question view.
+-    // Fall back to the legacy CompetitionView while the CF connection is
+-    // establishing (connectionState === 'connecting').
+     if (cfHeat.currentQuestion) {
+       return (
+         <CFQuestionView
+@@ -568,10 +599,15 @@ export default function HeatLobbyPage() {
+         />
+       );
+     }
+-    // CF not yet connected — fall back to legacy view while connecting
+-    const myParticipation = participants.find((p) => p.athlete_id === user?.id);
+-    if (!myParticipation) {
+-      if (participantsLoaded) {
++    // CF not yet connected — check DB participation while waiting.
++    // After 5 seconds without a CF question, fall back to legacy view.
++    const myParticipation = dbParticipants.find((p) => p.athlete_id === user?.id);
++    if (cfTimedOut || myParticipation) {
++      // We have DB confirmation of participation (or CF timed out).
++      // Use legacy CompetitionView which drives off Supabase directly.
++      const partId = myParticipation?.id ?? '';
++      if (!partId) {
++        // Timed out AND not in DB — genuinely not a participant.
+         return (
+           <FullScreenMessage
+             icon={<AlertTriangle className="w-10 h-10 text-amber-300" />}
+@@ -581,18 +617,19 @@ export default function HeatLobbyPage() {
+           />
+         );
+       }
+-      return <FullScreenSpinner label="Syncing your slot…" />;
++      return (
++        <CompetitionView
++          heatId={heat.id}
++          heatCode={heat.code}
++          participationId={partId}
++          durationSeconds={heat.duration_seconds}
++          integrityLevel={heat.integrity_level ?? 'practice'}
++          isAssessment={(heat as { is_assessment?: boolean }).is_assessment ?? false}
++        />
++      );
+     }
+-    return (
+-      <CompetitionView
+-        heatId={heat.id}
+-        heatCode={heat.code}
+-        participationId={myParticipation.id}
+-        durationSeconds={heat.duration_seconds}
+-        integrityLevel={heat.integrity_level ?? 'practice'}
+-        isAssessment={(heat as { is_assessment?: boolean }).is_assessment ?? false}
+-      />
+-    );
++    // Still waiting for CF or DB — show brief spinner (max 5s before timeout above)
++    return <FullScreenSpinner label="Syncing your slot…" />;
+   }
+ 
+   // 3. Calculating
+diff --git a/src/components/competition/TeacherResults.tsx b/src/components/competition/TeacherResults.tsx
+index 648c7a8..fa72b9f 100644
+--- a/src/components/competition/TeacherResults.tsx
++++ b/src/components/competition/TeacherResults.tsx
+@@ -23,6 +23,8 @@ import {
+   Gem,
+   Loader2,
+   Medal,
++  RefreshCw,
++  Rocket,
+   Scroll,
+   Target,
+   TrendingUp,
+@@ -709,8 +711,8 @@ export default function TeacherResults({ heatId, heatCode, integrityLevel }: Tea
+           </div>
+         )}
+ 
+-        {/* Back to dashboard */}
+-        <div className="mb-6">
++        {/* Post-heat navigation */}
++        <div className="mb-6 flex flex-wrap gap-3">
+           <Link
+             href="/dashboard/teacher"
+             className="inline-flex items-center gap-2 px-4 py-2.5 min-h-[44px] rounded-xl bg-white/10 border border-white/15 text-white/80 hover:text-white hover:bg-white/15 text-sm transition-colors"
+@@ -718,6 +720,20 @@ export default function TeacherResults({ heatId, heatCode, integrityLevel }: Tea
+             <ArrowLeft className="w-4 h-4" />
+             Back to dashboard
+           </Link>
++          <Link
++            href="/compete/create"
++            className="inline-flex items-center gap-2 px-4 py-2.5 min-h-[44px] rounded-xl bg-indigo-600 hover:bg-indigo-500 border border-indigo-400/30 text-white text-sm font-medium transition-colors"
++          >
++            <Rocket className="w-4 h-4" />
++            Start New Heat
++          </Link>
++          <Link
++            href={`/compete/create?repeat=${heatCode}`}
++            className="inline-flex items-center gap-2 px-4 py-2.5 min-h-[44px] rounded-xl bg-emerald-700 hover:bg-emerald-600 border border-emerald-500/30 text-white text-sm font-medium transition-colors"
++          >
++            <RefreshCw className="w-4 h-4" />
++            Run Again
++          </Link>
+         </div>
+ 
+         {/* Full leaderboard */}
+-- 
+2.43.0
+

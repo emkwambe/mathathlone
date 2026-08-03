@@ -1,0 +1,1473 @@
+From c13b2bce97a22b0ee5d81a633f5d6bf05941f461 Mon Sep 17 00:00:00 2001
+From: Eddy Mkwambe <eddy@mpingo.ai>
+Date: Mon, 20 Jul 2026 06:41:42 +0000
+Subject: [PATCH] feat(league): classroom league rendering, teacher/athlete
+ dashboard wiring
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+- /league/[id]: fetch league_advancement for classroom leagues and pass
+  advancementInfo (targetLeagueName + slotsAllocated) to LeagueDashboard
+- LeagueDashboard: full rewrite with classroom-aware rendering
+  - levelIcon() returns 🏫 for classroom, 🏙️ for district, etc.
+  - AdvancementBanner component shows 'Top N advance to <School League>'
+    for classroom-level leagues only
+  - BracketMatchCard: isClassroom prop renders first-name-only in slots
+  - StandingsTable: isClassroom renders first names + advancement cut-line
+    drawn after the last advancing slot
+  - SeasonTimeline: Championship Path highlights current level dynamically
+    (Classroom → School → District → Regional → State → National)
+- Teacher dashboard: for each class card, look up its classroom league
+  by school_id + level='classroom' + name match, and render a
+  '🏫 View Classroom League →' link if found
+- Athlete dashboard:
+  - ELO query: removed .is('division_id', null) filter; now orders by
+    games_played DESC so the ADV-division row is returned correctly
+  - New classroomStanding query fetches rank/wins/losses/points from
+    league_standings joined to leagues where level='classroom'
+  - New Classroom League card shows rank, wins, losses, points with a
+    'View Bracket →' link to /league/[id]
+---
+ src/app/dashboard/athlete/page.tsx        |  52 +-
+ src/app/dashboard/teacher/page.tsx        |  87 ++-
+ src/app/league/[id]/page.tsx              |  30 +-
+ src/components/league/LeagueDashboard.tsx | 855 ++++++++++------------
+ 4 files changed, 540 insertions(+), 484 deletions(-)
+
+diff --git a/src/app/dashboard/athlete/page.tsx b/src/app/dashboard/athlete/page.tsx
+index c0c517a..3ba60f4 100644
+--- a/src/app/dashboard/athlete/page.tsx
++++ b/src/app/dashboard/athlete/page.tsx
+@@ -31,12 +31,24 @@ export default async function AthleteDashboard() {
+     .eq('season', '2025-2026')
+     .single();
+ 
+-  // Get ELO rating (null if athlete hasn't played 1+ rated heat yet)
++  // Get ELO rating — match the ADV division row (or any division row as fallback)
+   const { data: eloRating } = await supabase
+     .from('athlete_ratings')
+     .select('rating, peak_rating, games_played, is_provisional, last_competition')
+     .eq('athlete_id', user.id)
+-    .is('division_id', null)
++    .order('games_played', { ascending: false })
++    .limit(1)
++    .maybeSingle();
++
++  // Get the mathlete's classroom league standing
++  const { data: classroomStanding } = await supabase
++    .from('league_standings')
++    .select(`
++      rank, wins, losses, points, heats_played,
++      leagues!league_standings_league_id_fkey ( id, name, level )
++    `)
++    .eq('athlete_id', user.id)
++    .eq('leagues.level', 'classroom')
+     .maybeSingle();
+ 
+   // Get recent ELO change (last 2 rating_history rows)
+@@ -267,6 +279,42 @@ export default async function AthleteDashboard() {
+           )}
+         </div>
+ 
++        {/* Classroom League Standing Card */}
++        {classroomStanding && (classroomStanding as any).leagues && (
++          <div className="bg-white rounded-xl shadow-sm p-6 mb-8 border border-indigo-100">
++            <div className="flex items-center justify-between mb-4">
++              <div>
++                <h2 className="text-lg font-semibold text-gray-900">🏫 Classroom League</h2>
++                <p className="text-sm text-gray-500">{(classroomStanding as any).leagues?.name}</p>
++              </div>
++              <Link
++                href={`/league/${(classroomStanding as any).leagues?.id}`}
++                className="text-sm font-medium text-indigo-600 hover:text-indigo-800 border border-indigo-200 hover:border-indigo-400 px-3 py-1.5 rounded-lg transition"
++              >
++                View Bracket →
++              </Link>
++            </div>
++            <div className="grid grid-cols-4 gap-4">
++              <div className="text-center">
++                <p className="text-3xl font-black text-indigo-600">#{(classroomStanding as any).rank ?? '—'}</p>
++                <p className="text-xs text-gray-500 mt-1">Rank</p>
++              </div>
++              <div className="text-center">
++                <p className="text-3xl font-black text-emerald-600">{(classroomStanding as any).wins ?? 0}</p>
++                <p className="text-xs text-gray-500 mt-1">Wins</p>
++              </div>
++              <div className="text-center">
++                <p className="text-3xl font-black text-red-500">{(classroomStanding as any).losses ?? 0}</p>
++                <p className="text-xs text-gray-500 mt-1">Losses</p>
++              </div>
++              <div className="text-center">
++                <p className="text-3xl font-black text-amber-500">{(classroomStanding as any).points ?? 0}</p>
++                <p className="text-xs text-gray-500 mt-1">Points</p>
++              </div>
++            </div>
++          </div>
++        )}
++
+         {/* Join Heat Section */}
+         <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 mb-8 text-white">
+           <h2 className="text-2xl font-bold mb-2">Ready to Compete?</h2>
+diff --git a/src/app/dashboard/teacher/page.tsx b/src/app/dashboard/teacher/page.tsx
+index 1c88127..33afd8f 100644
+--- a/src/app/dashboard/teacher/page.tsx
++++ b/src/app/dashboard/teacher/page.tsx
+@@ -36,6 +36,31 @@ export default async function TeacherDashboard() {
+     .eq('teacher_id', user.id)
+     .eq('is_active', true);
+ 
++  // For each class, look up its classroom league (level = 'classroom', name matches class)
++  // We join via league_memberships → leagues to find which classroom league belongs to each class.
++  // Since classroom leagues are named after the class, we match by school_id + level + name.
++  // More robustly: query all classroom leagues for this teacher's school and match by name.
++  let classLeagueMap: Record<string, { id: string; name: string }> = {};
++  if (profile.school_id && classes && classes.length > 0) {
++    const { data: classroomLeagues } = await supabase
++      .from('leagues')
++      .select('id, name')
++      .eq('school_id', profile.school_id)
++      .eq('level', 'classroom');
++
++    if (classroomLeagues) {
++      // Map by normalised name: match league name to class name
++      for (const league of classroomLeagues) {
++        const matchingClass = (classes as any[]).find(
++          (cls) => cls.name === league.name || league.name.includes(cls.name)
++        );
++        if (matchingClass) {
++          classLeagueMap[matchingClass.id] = { id: league.id, name: league.name };
++        }
++      }
++    }
++  }
++
+   // Get recent heats created by this teacher
+   const { data: recentHeats } = await supabase
+     .from('heats')
+@@ -76,11 +101,11 @@ export default async function TeacherDashboard() {
+           <h1 className="text-3xl font-bold text-gray-900 mb-2">
+             Welcome, {profile.display_name}! 👩‍🏫
+           </h1>
+-          {profile.schools?.name && (
++          {(profile as any).schools?.name && (
+             <p className="text-gray-600">
+-              {profile.schools.name}
+-              {profile.schools.district ? ` • ${profile.schools.district}` : ''}
+-              {profile.schools.state ? `, ${profile.schools.state}` : ''}
++              {(profile as any).schools.name}
++              {(profile as any).schools.district ? ` • ${(profile as any).schools.district}` : ''}
++              {(profile as any).schools.state ? `, ${(profile as any).schools.state}` : ''}
+             </p>
+           )}
+         </div>
+@@ -138,24 +163,40 @@ export default async function TeacherDashboard() {
+             </div>
+ 
+             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+-              {classes.map((cls: any) => (
+-                <div
+-                  key={cls.id}
+-                  className="p-4 border border-gray-200 rounded-lg"
+-                >
+-                  <h3 className="font-semibold text-gray-900">{cls.name}</h3>
+-                  <p className="text-sm text-gray-500">Grade {cls.grade_level}</p>
+-                  <div className="flex items-center justify-between mt-3">
+-                    <span className="text-sm text-gray-600">
+-                      {cls.class_enrollments?.[0]?.count || 0} mathletes
+-                    </span>
+-                    <span className="text-xs font-mono bg-gray-100 px-2 py-1 rounded">
+-                      {cls.join_code}
+-                    </span>
++              {(classes as any[]).map((cls) => {
++                const league = classLeagueMap[cls.id] ?? null;
++                return (
++                  <div
++                    key={cls.id}
++                    className="p-4 border border-gray-200 rounded-lg flex flex-col gap-3"
++                  >
++                    <div>
++                      <h3 className="font-semibold text-gray-900">{cls.name}</h3>
++                      <p className="text-sm text-gray-500">Grade {cls.grade_level}</p>
++                    </div>
++                    <div className="flex items-center justify-between">
++                      <span className="text-sm text-gray-600">
++                        {cls.class_enrollments?.[0]?.count || 0} mathletes
++                      </span>
++                      <span className="text-xs font-mono bg-gray-100 px-2 py-1 rounded">
++                        {cls.join_code}
++                      </span>
++                    </div>
++                    {/* Classroom league link */}
++                    {league ? (
++                      <Link
++                        href={`/league/${league.id}`}
++                        className="flex items-center justify-between px-3 py-2 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 rounded-lg transition text-sm font-medium text-indigo-700"
++                      >
++                        <span>🏫 View Classroom League</span>
++                        <span className="text-indigo-400">→</span>
++                      </Link>
++                    ) : (
++                      <p className="text-xs text-gray-400">No classroom league yet</p>
++                    )}
+                   </div>
+-                  <p className="text-xs text-gray-400 mt-2">Class roster coming soon</p>
+-                </div>
+-              ))}
++                );
++              })}
+             </div>
+           </div>
+         )}
+@@ -163,10 +204,10 @@ export default async function TeacherDashboard() {
+         {/* Recent Heats */}
+         <div className="bg-white rounded-xl shadow-sm p-6">
+           <h2 className="text-lg font-semibold text-gray-900 mb-4">Recent Heats</h2>
+-          
++
+           {recentHeats && recentHeats.length > 0 ? (
+             <div className="space-y-3">
+-              {recentHeats.map((heat: any) => (
++              {(recentHeats as any[]).map((heat) => (
+                 <Link
+                   key={heat.id}
+                   href={`/compete/${heat.code}`}
+diff --git a/src/app/league/[id]/page.tsx b/src/app/league/[id]/page.tsx
+index 70e4739..88621f5 100644
+--- a/src/app/league/[id]/page.tsx
++++ b/src/app/league/[id]/page.tsx
+@@ -10,6 +10,7 @@
+ //   • brackets + bracket_matches for the most recent bracket
+ //   • championship_points + season_standings for the season tab
+ //   • splits for the season timeline
++//   • league_advancement row (for classroom leagues — advancement banner)
+ // =============================================================================
+ import { notFound } from 'next/navigation';
+ import { createSupabaseServer } from '@/lib/supabase/server';
+@@ -106,8 +107,7 @@ export default async function LeaguePage({ params }: PageProps) {
+     .eq('season_id', league.season_id ?? '')
+     .order('split_number', { ascending: true });
+ 
+-  // ── 6. Athlete ratings for standings (to get school info) ─────────────────
+-  // We need school names — join through users → schools
++  // ── 6. School names for standings ────────────────────────────────────────
+   const athleteIds = (standingsRaw ?? []).map((r: any) => r.athlete_id);
+   let schoolMap: Record<string, string> = {};
+   if (athleteIds.length > 0) {
+@@ -120,7 +120,28 @@ export default async function LeaguePage({ params }: PageProps) {
+     }
+   }
+ 
+-  // ── 7. Shape data for LeagueDashboard props ───────────────────────────────
++  // ── 7. Advancement info (classroom leagues only) ─────────────────────────
++  // Fetch the league_advancement row where this league is the source, and
++  // join the target league name so the banner can say "Top N → School League"
++  let advancementInfo: { targetLeagueName: string; slotsAllocated: number } | null = null;
++  if (league.level === 'classroom') {
++    const { data: advRow } = await supabase
++      .from('league_advancement')
++      .select(`
++        slots_allocated,
++        target:target_league_id ( name )
++      `)
++      .eq('source_league_id', leagueId)
++      .maybeSingle();
++    if (advRow) {
++      advancementInfo = {
++        targetLeagueName: (advRow.target as any)?.name ?? 'School League',
++        slotsAllocated: advRow.slots_allocated ?? 2,
++      };
++    }
++  }
++
++  // ── 8. Shape data for LeagueDashboard props ───────────────────────────────
+   const standings = (standingsRaw ?? []).map((r: any) => {
+     const user = r.users ?? {};
+     const ar = Array.isArray(r.athlete_ratings) ? r.athlete_ratings[0] : r.athlete_ratings;
+@@ -217,10 +238,11 @@ export default async function LeaguePage({ params }: PageProps) {
+   const leagueMeta = {
+     id: league.id,
+     name: league.name,
+-    level: league.level,
++    level: league.level as string,
+     region: league.region ?? '',
+     bracketName: bracket?.name ?? null,
+     bracketFormat: bracket?.format ?? null,
++    advancementInfo,
+   };
+ 
+   return (
+diff --git a/src/components/league/LeagueDashboard.tsx b/src/components/league/LeagueDashboard.tsx
+index 4232047..efa94d7 100644
+--- a/src/components/league/LeagueDashboard.tsx
++++ b/src/components/league/LeagueDashboard.tsx
+@@ -7,7 +7,7 @@
+ 
+ 'use client';
+ 
+-import React, { useState, useEffect, useMemo, useCallback } from 'react';
++import React, { useState, useMemo } from 'react';
+ 
+ // ────────────────────────────────────────────────────────────
+ // TYPES
+@@ -73,33 +73,57 @@ interface ChampionshipEntry {
+ type TabId = 'bracket' | 'standings' | 'championship' | 'season';
+ 
+ // ────────────────────────────────────────────────────────────
+-// MOCK DATA (replace with Supabase realtime in production)
++// HELPERS
++// ────────────────────────────────────────────────────────────
++
++/** Return just the first name for classroom-level display. */
++function firstName(fullName: string): string {
++  return fullName.split(' ')[0] ?? fullName;
++}
++
++/** Capitalise the level string for display. */
++function levelLabel(level: string): string {
++  return level.charAt(0).toUpperCase() + level.slice(1);
++}
++
++/** Icon per league level. */
++function levelIcon(level: string): string {
++  switch (level) {
++    case 'classroom': return '🏫';
++    case 'school':    return '🏫';
++    case 'district':  return '🏙️';
++    case 'regional':  return '🗺️';
++    case 'state':     return '🌟';
++    case 'national':  return '🇺🇸';
++    default:          return '🏟️';
++  }
++}
++
++// ────────────────────────────────────────────────────────────
++// MOCK DATA (used when no real data is provided)
+ // ────────────────────────────────────────────────────────────
+ 
+ const MOCK_PARTICIPANTS: Participant[] = [
+-  { id: '1', name: 'Amara Osei', avatar_url: null, seed: 1, school: 'Lincoln MS', rating: 1847, division: 'D1' },
+-  { id: '2', name: 'Jordan Chen', avatar_url: null, seed: 2, school: 'Westlake Prep', rating: 1792, division: 'D1' },
+-  { id: '3', name: 'Priya Sharma', avatar_url: null, seed: 3, school: 'Oak Ridge', rating: 1756, division: 'D1' },
+-  { id: '4', name: 'Marcus Williams', avatar_url: null, seed: 4, school: 'Riverside', rating: 1723, division: 'D1' },
+-  { id: '5', name: 'Yuki Tanaka', avatar_url: null, seed: 5, school: 'Hamilton', rating: 1698, division: 'D1' },
+-  { id: '6', name: 'Sofia Reyes', avatar_url: null, seed: 6, school: 'Cedar Park', rating: 1671, division: 'D1' },
+-  { id: '7', name: 'Kwame Asante', avatar_url: null, seed: 7, school: 'Northside', rating: 1654, division: 'D1' },
+-  { id: '8', name: 'Elena Volkov', avatar_url: null, seed: 8, school: 'Crestwood', rating: 1639, division: 'D1' },
++  { id: '1', name: 'Amara Osei',     avatar_url: null, seed: 1, school: 'Lincoln MS',  rating: 1847, division: 'ADV' },
++  { id: '2', name: 'Jordan Chen',    avatar_url: null, seed: 2, school: 'Westlake Prep',rating: 1792, division: 'ADV' },
++  { id: '3', name: 'Priya Sharma',   avatar_url: null, seed: 3, school: 'Oak Ridge',    rating: 1756, division: 'ADV' },
++  { id: '4', name: 'Marcus Williams',avatar_url: null, seed: 4, school: 'Riverside',    rating: 1723, division: 'ADV' },
++  { id: '5', name: 'Yuki Tanaka',    avatar_url: null, seed: 5, school: 'Hamilton',     rating: 1698, division: 'ADV' },
++  { id: '6', name: 'Sofia Reyes',    avatar_url: null, seed: 6, school: 'Cedar Park',   rating: 1671, division: 'ADV' },
++  { id: '7', name: 'Kwame Asante',   avatar_url: null, seed: 7, school: 'Northside',    rating: 1654, division: 'ADV' },
++  { id: '8', name: 'Elena Volkov',   avatar_url: null, seed: 8, school: 'Crestwood',    rating: 1639, division: 'ADV' },
+ ];
+ 
+ function generateMockBracket(): BracketMatch[] {
+   const p = MOCK_PARTICIPANTS;
+   return [
+-    // QF
+     { id: 'm1', round: 1, position: 0, side: null, participant1: p[0], participant2: p[7], winner_id: '1', p1_cta_score: 94.2, p2_cta_score: 78.1, is_bye: false, is_grand_final: false, status: 'completed' },
+     { id: 'm2', round: 1, position: 1, side: null, participant1: p[3], participant2: p[4], winner_id: '4', p1_cta_score: 81.5, p2_cta_score: 79.3, is_bye: false, is_grand_final: false, status: 'completed' },
+     { id: 'm3', round: 1, position: 2, side: null, participant1: p[1], participant2: p[6], winner_id: '2', p1_cta_score: 91.8, p2_cta_score: 72.4, is_bye: false, is_grand_final: false, status: 'completed' },
+-    { id: 'm4', round: 1, position: 3, side: null, participant1: p[2], participant2: p[5], winner_id: '3', p1_cta_score: 88.6, p2_cta_score: 85.1, is_bye: false, is_grand_final: false, status: 'live' },
+-    // SF
++    { id: 'm4', round: 1, position: 3, side: null, participant1: p[2], participant2: p[5], winner_id: '3', p1_cta_score: 88.6, p2_cta_score: 85.1, is_bye: false, is_grand_final: false, status: 'live'      },
+     { id: 'm5', round: 2, position: 0, side: null, participant1: p[0], participant2: p[3], winner_id: '1', p1_cta_score: 96.1, p2_cta_score: 84.7, is_bye: false, is_grand_final: false, status: 'completed' },
+-    { id: 'm6', round: 2, position: 1, side: null, participant1: p[1], participant2: null, winner_id: null, p1_cta_score: null, p2_cta_score: null, is_bye: false, is_grand_final: false, status: 'pending' },
+-    // Final
+-    { id: 'm7', round: 3, position: 0, side: null, participant1: null, participant2: null, winner_id: null, p1_cta_score: null, p2_cta_score: null, is_bye: false, is_grand_final: true, status: 'pending' },
++    { id: 'm6', round: 2, position: 1, side: null, participant1: p[1], participant2: null, winner_id: null, p1_cta_score: null, p2_cta_score: null, is_bye: false, is_grand_final: false, status: 'pending'   },
++    { id: 'm7', round: 3, position: 0, side: null, participant1: null, participant2: null, winner_id: null, p1_cta_score: null, p2_cta_score: null, is_bye: false, is_grand_final: true,  status: 'pending'   },
+   ];
+ }
+ 
+@@ -109,13 +133,13 @@ function generateMockStandings(): StandingRow[] {
+     athlete: p,
+     wins: 8 - i,
+     losses: i,
+-    draws: Math.floor(Math.random() * 2),
+-    points: (8 - i) * 3 + Math.floor(Math.random() * 2),
+-    avg_cta: 95 - i * 3.5 + Math.random() * 5,
++    draws: 0,
++    points: (8 - i) * 3,
++    avg_cta: 95 - i * 3.5,
+     best_cta: 98 - i * 2,
+     current_elo: p.rating,
+-    elo_change: Math.round((Math.random() - 0.3) * 40),
+-    heats_played: 8 + Math.floor(Math.random() * 3),
++    elo_change: 0,
++    heats_played: 8,
+     first_places: Math.max(0, 5 - i),
+   }));
+ }
+@@ -124,7 +148,7 @@ function generateMockChampionship(): ChampionshipEntry[] {
+   return MOCK_PARTICIPANTS.map((p, i) => ({
+     rank: i + 1,
+     athlete: p,
+-    total_points: 300 - i * 35 + Math.floor(Math.random() * 20),
++    total_points: 300 - i * 35,
+     splits_played: 3,
+     best_placement: i + 1,
+     qualified_for: i < 3 ? 'State' : i < 8 ? 'Regional' : null,
+@@ -171,6 +195,53 @@ const Avatar: React.FC<{ name: string; size?: number; seed?: number }> = ({
+   );
+ };
+ 
++// ────────────────────────────────────────────────────────────
++// ADVANCEMENT BANNER (classroom leagues only)
++// ────────────────────────────────────────────────────────────
++
++const AdvancementBanner: React.FC<{
++  slots: number;
++  targetName: string;
++}> = ({ slots, targetName }) => (
++  <div
++    style={{
++      display: 'flex',
++      alignItems: 'center',
++      gap: 12,
++      padding: '12px 18px',
++      borderRadius: 12,
++      background: 'linear-gradient(90deg, rgba(99,102,241,0.12), rgba(139,92,246,0.08))',
++      border: '1px solid rgba(99,102,241,0.25)',
++      marginBottom: 24,
++    }}
++  >
++    <span style={{ fontSize: 20 }}>🎯</span>
++    <div>
++      <span
++        style={{
++          fontSize: 13,
++          fontWeight: 700,
++          color: '#818cf8',
++          fontFamily: "'DM Sans', sans-serif",
++        }}
++      >
++        Top {slots} advance to{' '}
++        <span style={{ color: '#a78bfa' }}>{targetName}</span>
++      </span>
++      <p
++        style={{
++          fontSize: 11,
++          color: '#6b7280',
++          margin: '2px 0 0',
++          fontFamily: "'DM Sans', sans-serif",
++        }}
++      >
++        Win your classroom bracket to earn a spot in the school-wide competition.
++      </p>
++    </div>
++  </div>
++);
++
+ // ────────────────────────────────────────────────────────────
+ // BRACKET VISUALIZATION
+ // ────────────────────────────────────────────────────────────
+@@ -186,7 +257,8 @@ const BracketMatchCard: React.FC<{
+   y: number;
+   highlightId: string | null;
+   onHover: (id: string | null) => void;
+-}> = ({ match, x, y, highlightId, onHover }) => {
++  isClassroom?: boolean;
++}> = ({ match, x, y, highlightId, onHover, isClassroom }) => {
+   const isLive = match.status === 'live';
+   const isComplete = match.status === 'completed';
+   const isFinal = match.is_grand_final;
+@@ -197,14 +269,19 @@ const BracketMatchCard: React.FC<{
+     ? '#10b981'
+     : 'rgba(255,255,255,0.08)';
+ 
++  const displayName = (p: Participant | null) => {
++    if (!p) return null;
++    return isClassroom ? firstName(p.name) : p.name;
++  };
++
+   const renderSlot = (
+     participant: Participant | null,
+     cta: number | null,
+     isWinner: boolean,
+     isTop: boolean
+   ) => {
+-    const isHighlighted =
+-      participant && highlightId === participant.id;
++    const isHighlighted = participant && highlightId === participant.id;
++    const name = displayName(participant);
+ 
+     return (
+       <div
+@@ -252,7 +329,7 @@ const BracketMatchCard: React.FC<{
+                 textOverflow: 'ellipsis',
+               }}
+             >
+-              {participant.name}
++              {name}
+             </span>
+             {cta !== null && (
+               <span
+@@ -351,24 +428,17 @@ const BracketMatchCard: React.FC<{
+             🏆 FINAL
+           </div>
+         )}
+-        {renderSlot(
+-          match.participant1,
+-          match.p1_cta_score,
+-          match.winner_id === match.participant1?.id,
+-          true
+-        )}
+-        {renderSlot(
+-          match.participant2,
+-          match.p2_cta_score,
+-          match.winner_id === match.participant2?.id,
+-          false
+-        )}
++        {renderSlot(match.participant1, match.p1_cta_score, match.winner_id === match.participant1?.id, true)}
++        {renderSlot(match.participant2, match.p2_cta_score, match.winner_id === match.participant2?.id, false)}
+       </div>
+     </foreignObject>
+   );
+ };
+ 
+-const BracketView: React.FC<{ matches: BracketMatch[] }> = ({ matches }) => {
++const BracketView: React.FC<{ matches: BracketMatch[]; isClassroom?: boolean }> = ({
++  matches,
++  isClassroom,
++}) => {
+   const [highlightId, setHighlightId] = useState<string | null>(null);
+ 
+   const rounds = useMemo(() => {
+@@ -400,7 +470,6 @@ const BracketView: React.FC<{ matches: BracketMatch[] }> = ({ matches }) => {
+   const svgHeight = maxMatchesInRound * (MATCH_H + MATCH_GAP) + 100;
+   const svgWidth = rounds.length * (MATCH_W + ROUND_GAP) + 60;
+ 
+-  // Calculate connector lines
+   const getMatchCenter = (roundIdx: number, posIdx: number, totalInRound: number) => {
+     const roundX = 30 + roundIdx * (MATCH_W + ROUND_GAP);
+     const totalHeight = totalInRound * MATCH_H + (totalInRound - 1) * MATCH_GAP;
+@@ -409,13 +478,30 @@ const BracketView: React.FC<{ matches: BracketMatch[] }> = ({ matches }) => {
+     return { x: roundX, y: matchY, centerY: matchY + MATCH_H / 2 };
+   };
+ 
++  if (matches.length === 0) {
++    return (
++      <div
++        style={{
++          textAlign: 'center',
++          padding: '60px 20px',
++          color: '#4b5563',
++          fontFamily: "'DM Sans', sans-serif",
++        }}
++      >
++        <div style={{ fontSize: 40, marginBottom: 12 }}>🏆</div>
++        <p style={{ fontSize: 15, fontWeight: 600, color: '#6b7280' }}>
++          Bracket not yet generated
++        </p>
++        <p style={{ fontSize: 13, marginTop: 4 }}>
++          The bracket will appear here once the first Heat is completed.
++        </p>
++      </div>
++    );
++  }
++
+   return (
+     <div style={{ overflowX: 'auto', padding: '20px 0' }}>
+-      <svg
+-        width={svgWidth}
+-        height={svgHeight}
+-        style={{ minWidth: svgWidth }}
+-      >
++      <svg width={svgWidth} height={svgHeight} style={{ minWidth: svgWidth }}>
+         <defs>
+           <style>{`
+             @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+@@ -423,69 +509,59 @@ const BracketView: React.FC<{ matches: BracketMatch[] }> = ({ matches }) => {
+         </defs>
+ 
+         {/* Round labels */}
+-        {rounds.map((r, ri) => (
+-          <text
+-            key={`label-${r.round}`}
+-            x={30 + ri * (MATCH_W + ROUND_GAP) + MATCH_W / 2}
+-            y={24}
+-            textAnchor="middle"
+-            fill="#6b7280"
+-            fontSize={11}
+-            fontWeight={700}
+-            fontFamily="'DM Sans', sans-serif"
+-            letterSpacing="0.08em"
+-            textDecoration="uppercase"
+-          >
+-            {roundLabels[ri].toUpperCase()}
+-          </text>
+-        ))}
++        {rounds.map((r, roundIdx) => {
++          const { x } = getMatchCenter(roundIdx, 0, r.matches.length);
++          return (
++            <text
++              key={r.round}
++              x={x + MATCH_W / 2}
++              y={20}
++              textAnchor="middle"
++              fill="#4b5563"
++              fontSize={11}
++              fontWeight={700}
++              fontFamily="DM Sans, sans-serif"
++              letterSpacing="0.08em"
++              textTransform="uppercase"
++            >
++              {roundLabels[roundIdx].toUpperCase()}
++            </text>
++          );
++        })}
+ 
+         {/* Connector lines */}
+-        {rounds.map((r, ri) => {
+-          if (ri >= rounds.length - 1) return null;
+-          const nextRound = rounds[ri + 1];
+-
+-          return r.matches.map((m, mi) => {
+-            const from = getMatchCenter(ri, mi, r.matches.length);
+-            const toPos = Math.floor(mi / 2);
+-            const to = getMatchCenter(ri + 1, toPos, nextRound.matches.length);
+-
+-            const fromX = from.x + MATCH_W;
+-            const toX = to.x;
+-            const midX = fromX + (toX - fromX) / 2;
+-
+-            const isHighlighted =
+-              highlightId &&
+-              (m.participant1?.id === highlightId ||
+-                m.participant2?.id === highlightId ||
+-                m.winner_id === highlightId);
+-
++        {rounds.slice(0, -1).map((r, roundIdx) => {
++          const nextRound = rounds[roundIdx + 1];
++          return r.matches.map((_, matchIdx) => {
++            const from = getMatchCenter(roundIdx, matchIdx, r.matches.length);
++            const toIdx = Math.floor(matchIdx / 2);
++            const to = getMatchCenter(roundIdx + 1, toIdx, nextRound.matches.length);
++            const midX = from.x + MATCH_W + ROUND_GAP / 2;
+             return (
+               <path
+-                key={`line-${r.round}-${mi}`}
+-                d={`M ${fromX} ${from.centerY} H ${midX} V ${to.centerY} H ${toX}`}
++                key={`conn-${roundIdx}-${matchIdx}`}
++                d={`M ${from.x + MATCH_W} ${from.centerY} H ${midX} V ${to.centerY} H ${to.x}`}
++                stroke="rgba(255,255,255,0.06)"
++                strokeWidth={1.5}
+                 fill="none"
+-                stroke={isHighlighted ? '#6366f1' : 'rgba(255,255,255,0.08)'}
+-                strokeWidth={isHighlighted ? 2 : 1}
+-                strokeLinecap="round"
+-                style={{ transition: 'stroke 0.2s, stroke-width 0.2s' }}
+               />
+             );
+           });
+         })}
+ 
+         {/* Match cards */}
+-        {rounds.map((r, ri) =>
+-          r.matches.map((m, mi) => {
+-            const pos = getMatchCenter(ri, mi, r.matches.length);
++        {rounds.map((r, roundIdx) =>
++          r.matches.map((match, matchIdx) => {
++            const { x, y } = getMatchCenter(roundIdx, matchIdx, r.matches.length);
+             return (
+               <BracketMatchCard
+-                key={m.id}
+-                match={m}
+-                x={pos.x}
+-                y={pos.y}
++                key={match.id}
++                match={match}
++                x={x}
++                y={y}
+                 highlightId={highlightId}
+                 onHover={setHighlightId}
++                isClassroom={isClassroom}
+               />
+             );
+           })
+@@ -499,7 +575,11 @@ const BracketView: React.FC<{ matches: BracketMatch[] }> = ({ matches }) => {
+ // STANDINGS TABLE
+ // ────────────────────────────────────────────────────────────
+ 
+-const StandingsTable: React.FC<{ standings: StandingRow[] }> = ({ standings }) => {
++const StandingsTable: React.FC<{
++  standings: StandingRow[];
++  isClassroom?: boolean;
++  advancementSlots?: number;
++}> = ({ standings, isClassroom, advancementSlots }) => {
+   const medalColors: Record<number, string> = {
+     1: '#fbbf24',
+     2: '#94a3b8',
+@@ -508,6 +588,22 @@ const StandingsTable: React.FC<{ standings: StandingRow[] }> = ({ standings }) =
+ 
+   return (
+     <div style={{ overflowX: 'auto' }}>
++      {/* Advancement cut-line label */}
++      {isClassroom && advancementSlots && advancementSlots > 0 && (
++        <div
++          style={{
++            fontSize: 10,
++            fontWeight: 700,
++            color: '#6366f1',
++            textTransform: 'uppercase',
++            letterSpacing: '0.1em',
++            marginBottom: 8,
++            fontFamily: "'DM Sans', sans-serif",
++          }}
++        >
++          Top {advancementSlots} advance ↑
++        </div>
++      )}
+       <table
+         style={{
+           width: '100%',
+@@ -540,150 +636,118 @@ const StandingsTable: React.FC<{ standings: StandingRow[] }> = ({ standings }) =
+           </tr>
+         </thead>
+         <tbody>
+-          {standings.map((row) => {
++          {standings.map((row, idx) => {
+             const medal = medalColors[row.rank];
++            const isAdvancing = isClassroom && advancementSlots && row.rank <= advancementSlots;
++            // Draw cut-line after last advancing slot
++            const showCutLine =
++              isClassroom &&
++              advancementSlots &&
++              idx === advancementSlots - 1 &&
++              standings.length > advancementSlots;
++
+             return (
+-              <tr
+-                key={row.athlete.id}
+-                style={{
+-                  background: row.rank <= 3
+-                    ? 'rgba(99, 102, 241, 0.04)'
+-                    : 'transparent',
+-                  borderRadius: 8,
+-                  transition: 'background 0.15s',
+-                }}
+-                onMouseEnter={(e) =>
+-                  (e.currentTarget.style.background = 'rgba(99, 102, 241, 0.08)')
+-                }
+-                onMouseLeave={(e) =>
+-                  (e.currentTarget.style.background =
+-                    row.rank <= 3 ? 'rgba(99, 102, 241, 0.04)' : 'transparent')
+-                }
+-              >
+-                <td
++              <React.Fragment key={row.athlete.id}>
++                <tr
+                   style={{
+-                    padding: '10px 12px',
+-                    fontSize: 14,
+-                    fontWeight: 800,
+-                    color: medal || '#4b5563',
+-                    fontFamily: "'JetBrains Mono', monospace",
+-                    width: 40,
++                    background: isAdvancing
++                      ? 'rgba(99, 102, 241, 0.06)'
++                      : 'transparent',
++                    borderRadius: 8,
++                    transition: 'background 0.15s',
+                   }}
++                  onMouseEnter={(e) =>
++                    (e.currentTarget.style.background = 'rgba(99, 102, 241, 0.1)')
++                  }
++                  onMouseLeave={(e) =>
++                    (e.currentTarget.style.background = isAdvancing
++                      ? 'rgba(99, 102, 241, 0.06)'
++                      : 'transparent')
++                  }
+                 >
+-                  {row.rank}
+-                </td>
+-                <td style={{ padding: '10px 12px' }}>
+-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+-                    <Avatar name={row.athlete.name} size={30} seed={row.athlete.seed} />
+-                    <div>
++                  <td
++                    style={{
++                      padding: '10px 12px',
++                      fontSize: 14,
++                      fontWeight: 800,
++                      color: medal || '#4b5563',
++                      fontFamily: "'JetBrains Mono', monospace",
++                      width: 40,
++                    }}
++                  >
++                    {row.rank}
++                  </td>
++                  <td style={{ padding: '10px 12px' }}>
++                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
++                      <Avatar name={row.athlete.name} size={30} seed={row.athlete.seed} />
++                      <div>
++                        <div style={{ fontSize: 13, fontWeight: 600, color: '#e5e7eb' }}>
++                          {isClassroom ? firstName(row.athlete.name) : row.athlete.name}
++                        </div>
++                        {!isClassroom && (
++                          <div style={{ fontSize: 10, color: '#6b7280' }}>
++                            {row.athlete.school}
++                          </div>
++                        )}
++                      </div>
++                    </div>
++                  </td>
++                  <td style={{ padding: '10px 12px', textAlign: 'center', fontSize: 13, fontFamily: "'JetBrains Mono', monospace", color: '#9ca3af' }}>
++                    {row.wins}-{row.losses}-{row.draws}
++                  </td>
++                  <td style={{ padding: '10px 12px', textAlign: 'center', fontSize: 14, fontWeight: 700, color: '#e5e7eb', fontFamily: "'JetBrains Mono', monospace" }}>
++                    {row.points}
++                  </td>
++                  <td style={{ padding: '10px 12px', textAlign: 'center', fontSize: 13, fontWeight: 600, color: '#34d399', fontFamily: "'JetBrains Mono', monospace" }}>
++                    {row.avg_cta.toFixed(1)}
++                  </td>
++                  <td style={{ padding: '10px 12px', textAlign: 'center', fontSize: 13, color: '#9ca3af', fontFamily: "'JetBrains Mono', monospace" }}>
++                    {row.best_cta.toFixed(1)}
++                  </td>
++                  <td style={{ padding: '10px 12px', textAlign: 'center', fontSize: 13, fontWeight: 600, color: '#a78bfa', fontFamily: "'JetBrains Mono', monospace" }}>
++                    {row.current_elo}
++                  </td>
++                  <td style={{ padding: '10px 12px', textAlign: 'center', fontSize: 12, fontWeight: 700, color: row.elo_change > 0 ? '#34d399' : row.elo_change < 0 ? '#f87171' : '#6b7280', fontFamily: "'JetBrains Mono', monospace" }}>
++                    {row.elo_change > 0 ? '+' : ''}{row.elo_change}
++                  </td>
++                  <td style={{ padding: '10px 12px', textAlign: 'center', fontSize: 13, color: '#6b7280' }}>
++                    {row.heats_played}
++                  </td>
++                  <td style={{ padding: '10px 12px', textAlign: 'center', fontSize: 13, fontWeight: 600, color: row.first_places > 0 ? '#fbbf24' : '#4b5563' }}>
++                    {row.first_places}
++                  </td>
++                </tr>
++                {showCutLine && (
++                  <tr key={`cut-${row.athlete.id}`}>
++                    <td colSpan={10} style={{ padding: 0 }}>
+                       <div
+                         style={{
+-                          fontSize: 13,
+-                          fontWeight: 600,
+-                          color: '#e5e7eb',
++                          height: 1,
++                          background: 'rgba(99,102,241,0.35)',
++                          margin: '2px 0',
++                          position: 'relative',
+                         }}
+                       >
+-                        {row.athlete.name}
+-                      </div>
+-                      <div style={{ fontSize: 10, color: '#6b7280' }}>
+-                        {row.athlete.school}
++                        <span
++                          style={{
++                            position: 'absolute',
++                            right: 0,
++                            top: -8,
++                            fontSize: 9,
++                            fontWeight: 700,
++                            color: '#6366f1',
++                            textTransform: 'uppercase',
++                            letterSpacing: '0.08em',
++                            fontFamily: "'DM Sans', sans-serif",
++                          }}
++                        >
++                          Advancement cut
++                        </span>
+                       </div>
+-                    </div>
+-                  </div>
+-                </td>
+-                <td
+-                  style={{
+-                    padding: '10px 12px',
+-                    textAlign: 'center',
+-                    fontSize: 13,
+-                    fontFamily: "'JetBrains Mono', monospace",
+-                    color: '#9ca3af',
+-                  }}
+-                >
+-                  {row.wins}-{row.losses}-{row.draws}
+-                </td>
+-                <td
+-                  style={{
+-                    padding: '10px 12px',
+-                    textAlign: 'center',
+-                    fontSize: 14,
+-                    fontWeight: 700,
+-                    color: '#e5e7eb',
+-                    fontFamily: "'JetBrains Mono', monospace",
+-                  }}
+-                >
+-                  {row.points}
+-                </td>
+-                <td
+-                  style={{
+-                    padding: '10px 12px',
+-                    textAlign: 'center',
+-                    fontSize: 13,
+-                    fontWeight: 600,
+-                    color: '#34d399',
+-                    fontFamily: "'JetBrains Mono', monospace",
+-                  }}
+-                >
+-                  {row.avg_cta.toFixed(1)}
+-                </td>
+-                <td
+-                  style={{
+-                    padding: '10px 12px',
+-                    textAlign: 'center',
+-                    fontSize: 13,
+-                    color: '#9ca3af',
+-                    fontFamily: "'JetBrains Mono', monospace",
+-                  }}
+-                >
+-                  {row.best_cta.toFixed(1)}
+-                </td>
+-                <td
+-                  style={{
+-                    padding: '10px 12px',
+-                    textAlign: 'center',
+-                    fontSize: 13,
+-                    fontWeight: 600,
+-                    color: '#a78bfa',
+-                    fontFamily: "'JetBrains Mono', monospace",
+-                  }}
+-                >
+-                  {row.current_elo}
+-                </td>
+-                <td
+-                  style={{
+-                    padding: '10px 12px',
+-                    textAlign: 'center',
+-                    fontSize: 12,
+-                    fontWeight: 700,
+-                    color: row.elo_change > 0 ? '#34d399' : row.elo_change < 0 ? '#f87171' : '#6b7280',
+-                    fontFamily: "'JetBrains Mono', monospace",
+-                  }}
+-                >
+-                  {row.elo_change > 0 ? '+' : ''}
+-                  {row.elo_change}
+-                </td>
+-                <td
+-                  style={{
+-                    padding: '10px 12px',
+-                    textAlign: 'center',
+-                    fontSize: 13,
+-                    color: '#6b7280',
+-                  }}
+-                >
+-                  {row.heats_played}
+-                </td>
+-                <td
+-                  style={{
+-                    padding: '10px 12px',
+-                    textAlign: 'center',
+-                    fontSize: 13,
+-                    fontWeight: 600,
+-                    color: row.first_places > 0 ? '#fbbf24' : '#4b5563',
+-                  }}
+-                >
+-                  {row.first_places}
+-                </td>
+-              </tr>
++                    </td>
++                  </tr>
++                )}
++              </React.Fragment>
+             );
+           })}
+         </tbody>
+@@ -696,9 +760,7 @@ const StandingsTable: React.FC<{ standings: StandingRow[] }> = ({ standings }) =
+ // CHAMPIONSHIP TRACKER
+ // ────────────────────────────────────────────────────────────
+ 
+-const ChampionshipTracker: React.FC<{ entries: ChampionshipEntry[] }> = ({
+-  entries,
+-}) => {
++const ChampionshipTracker: React.FC<{ entries: ChampionshipEntry[] }> = ({ entries }) => {
+   const maxPoints = Math.max(...entries.map((e) => e.total_points), 1);
+ 
+   return (
+@@ -725,7 +787,6 @@ const ChampionshipTracker: React.FC<{ entries: ChampionshipEntry[] }> = ({
+               border: entry.qualified_for
+                 ? `1px solid ${qualColor}33`
+                 : '1px solid rgba(255,255,255,0.04)',
+-              transition: 'transform 0.15s',
+             }}
+           >
+             <span
+@@ -744,82 +805,25 @@ const ChampionshipTracker: React.FC<{ entries: ChampionshipEntry[] }> = ({
+             </span>
+             <Avatar name={entry.athlete.name} size={32} seed={entry.athlete.seed} />
+             <div style={{ flex: 1, minWidth: 0 }}>
+-              <div
+-                style={{
+-                  display: 'flex',
+-                  justifyContent: 'space-between',
+-                  alignItems: 'center',
+-                  marginBottom: 4,
+-                }}
+-              >
+-                <span
+-                  style={{
+-                    fontSize: 13,
+-                    fontWeight: 600,
+-                    color: '#e5e7eb',
+-                    whiteSpace: 'nowrap',
+-                    overflow: 'hidden',
+-                    textOverflow: 'ellipsis',
+-                  }}
+-                >
++              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
++                <span style={{ fontSize: 13, fontWeight: 600, color: '#e5e7eb', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                   {entry.athlete.name}
+                 </span>
+                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                   {entry.qualified_for && (
+-                    <span
+-                      style={{
+-                        fontSize: 9,
+-                        fontWeight: 800,
+-                        color: qualColor,
+-                        textTransform: 'uppercase',
+-                        letterSpacing: '0.1em',
+-                        padding: '2px 6px',
+-                        borderRadius: 4,
+-                        border: `1px solid ${qualColor}44`,
+-                      }}
+-                    >
++                    <span style={{ fontSize: 9, fontWeight: 800, color: qualColor, textTransform: 'uppercase', letterSpacing: '0.1em', padding: '2px 6px', borderRadius: 4, border: `1px solid ${qualColor}44` }}>
+                       {entry.qualified_for}
+                     </span>
+                   )}
+-                  <span
+-                    style={{
+-                      fontSize: 14,
+-                      fontWeight: 700,
+-                      color: '#e5e7eb',
+-                      fontFamily: "'JetBrains Mono', monospace",
+-                    }}
+-                  >
++                  <span style={{ fontSize: 14, fontWeight: 700, color: '#e5e7eb', fontFamily: "'JetBrains Mono', monospace" }}>
+                     {entry.total_points}
+                   </span>
+                 </div>
+               </div>
+-              <div
+-                style={{
+-                  height: 4,
+-                  borderRadius: 2,
+-                  background: 'rgba(255,255,255,0.06)',
+-                  overflow: 'hidden',
+-                }}
+-              >
+-                <div
+-                  style={{
+-                    height: '100%',
+-                    width: `${pct}%`,
+-                    borderRadius: 2,
+-                    background: `linear-gradient(90deg, ${qualColor || '#6366f1'}, ${qualColor || '#8b5cf6'})`,
+-                    transition: 'width 0.6s ease',
+-                  }}
+-                />
++              <div style={{ height: 4, borderRadius: 2, background: 'rgba(255,255,255,0.06)', overflow: 'hidden' }}>
++                <div style={{ height: '100%', width: `${pct}%`, borderRadius: 2, background: `linear-gradient(90deg, ${qualColor || '#6366f1'}, ${qualColor || '#8b5cf6'})`, transition: 'width 0.6s ease' }} />
+               </div>
+-              <div
+-                style={{
+-                  display: 'flex',
+-                  gap: 12,
+-                  marginTop: 4,
+-                  fontSize: 10,
+-                  color: '#6b7280',
+-                }}
+-              >
++              <div style={{ display: 'flex', gap: 12, marginTop: 4, fontSize: 10, color: '#6b7280' }}>
+                 <span>{entry.splits_played} splits</span>
+                 <span>Best: #{entry.best_placement}</span>
+               </div>
+@@ -836,31 +840,32 @@ const ChampionshipTracker: React.FC<{ entries: ChampionshipEntry[] }> = ({
+ // ────────────────────────────────────────────────────────────
+ 
+ const MOCK_SPLITS: SeasonSplit[] = [
+-  { id: 's1', name: 'Fall Split', status: 'completed', start_date: '2025-08-18', end_date: '2025-11-14' },
++  { id: 's1', name: 'Fall Split',   status: 'completed', start_date: '2025-08-18', end_date: '2025-11-14' },
+   { id: 's2', name: 'Winter Split', status: 'completed', start_date: '2025-12-01', end_date: '2026-02-27' },
+-  { id: 's3', name: 'Spring Split', status: 'active', start_date: '2026-03-09', end_date: '2026-05-29' },
++  { id: 's3', name: 'Spring Split', status: 'active',    start_date: '2026-03-09', end_date: '2026-05-29' },
+ ];
+ 
+-const SeasonTimeline: React.FC<{ splits?: SeasonSplit[] }> = ({ splits }) => {
++const SeasonTimeline: React.FC<{
++  splits?: SeasonSplit[];
++  level?: string;
++}> = ({ splits, level }) => {
+   const displaySplits = splits && splits.length > 0 ? splits : MOCK_SPLITS;
+   const statusColors: Record<string, { bg: string; text: string; dot: string }> = {
+-    upcoming: { bg: 'rgba(107,114,128,0.1)', text: '#6b7280', dot: '#6b7280' },
+-    active: { bg: 'rgba(99,102,241,0.1)', text: '#818cf8', dot: '#6366f1' },
+-    playoffs: { bg: 'rgba(245,158,11,0.1)', text: '#fbbf24', dot: '#f59e0b' },
++    upcoming:  { bg: 'rgba(107,114,128,0.1)', text: '#6b7280', dot: '#6b7280' },
++    active:    { bg: 'rgba(99,102,241,0.1)',  text: '#818cf8', dot: '#6366f1' },
++    playoffs:  { bg: 'rgba(245,158,11,0.1)',  text: '#fbbf24', dot: '#f59e0b' },
+     completed: { bg: 'rgba(16,185,129,0.08)', text: '#34d399', dot: '#10b981' },
+   };
+ 
++  // Determine which levels are "reached" based on current level
++  const allLevels = ['Classroom', 'School', 'District', 'Regional', 'State', 'National'];
++  const currentLevelIdx = allLevels.findIndex(
++    (l) => l.toLowerCase() === (level ?? '').toLowerCase()
++  );
++
+   return (
+     <div>
+-      <h3
+-        style={{
+-          fontSize: 16,
+-          fontWeight: 700,
+-          color: '#e5e7eb',
+-          marginBottom: 20,
+-          fontFamily: "'DM Sans', sans-serif",
+-        }}
+-      >
++      <h3 style={{ fontSize: 16, fontWeight: 700, color: '#e5e7eb', marginBottom: 20, fontFamily: "'DM Sans', sans-serif" }}>
+         2025–2026 Season
+       </h3>
+       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+@@ -869,75 +874,25 @@ const SeasonTimeline: React.FC<{ splits?: SeasonSplit[] }> = ({ splits }) => {
+           return (
+             <div
+               key={split.id}
+-              style={{
+-                display: 'flex',
+-                alignItems: 'center',
+-                gap: 16,
+-                padding: '14px 18px',
+-                borderRadius: 12,
+-                background: colors.bg,
+-                border: `1px solid ${colors.dot}22`,
+-              }}
++              style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '14px 18px', borderRadius: 12, background: colors.bg, border: `1px solid ${colors.dot}22` }}
+             >
+-              {/* Timeline dot */}
+               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+-                <div
+-                  style={{
+-                    width: 12,
+-                    height: 12,
+-                    borderRadius: '50%',
+-                    background: colors.dot,
+-                    boxShadow: split.status === 'active' ? `0 0 10px ${colors.dot}55` : undefined,
+-                  }}
+-                />
++                <div style={{ width: 12, height: 12, borderRadius: '50%', background: colors.dot, boxShadow: split.status === 'active' ? `0 0 10px ${colors.dot}55` : undefined }} />
+                 {i < displaySplits.length - 1 && (
+-                  <div
+-                    style={{
+-                      width: 2,
+-                      height: 20,
+-                      background: 'rgba(255,255,255,0.06)',
+-                      position: 'relative',
+-                      top: 4,
+-                    }}
+-                  />
++                  <div style={{ width: 2, height: 20, background: 'rgba(255,255,255,0.06)', position: 'relative', top: 4 }} />
+                 )}
+               </div>
+               <div style={{ flex: 1 }}>
+-                <div
+-                  style={{
+-                    fontSize: 14,
+-                    fontWeight: 600,
+-                    color: '#e5e7eb',
+-                    marginBottom: 2,
+-                  }}
+-                >
++                <div style={{ fontSize: 14, fontWeight: 600, color: '#e5e7eb', marginBottom: 2 }}>
+                   {split.name}
+                 </div>
+                 <div style={{ fontSize: 11, color: '#6b7280' }}>
+-                  {new Date(split.start_date).toLocaleDateString('en-US', {
+-                    month: 'short',
+-                    day: 'numeric',
+-                  })}{' '}
+-                  –{' '}
+-                  {new Date(split.end_date).toLocaleDateString('en-US', {
+-                    month: 'short',
+-                    day: 'numeric',
+-                    year: 'numeric',
+-                  })}
++                  {new Date(split.start_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
++                  {' – '}
++                  {new Date(split.end_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                 </div>
+               </div>
+-              <span
+-                style={{
+-                  fontSize: 10,
+-                  fontWeight: 700,
+-                  color: colors.text,
+-                  textTransform: 'uppercase',
+-                  letterSpacing: '0.1em',
+-                  padding: '3px 10px',
+-                  borderRadius: 6,
+-                  border: `1px solid ${colors.dot}33`,
+-                }}
+-              >
++              <span style={{ fontSize: 10, fontWeight: 700, color: colors.text, textTransform: 'uppercase', letterSpacing: '0.1em', padding: '3px 10px', borderRadius: 6, border: `1px solid ${colors.dot}33` }}>
+                 {split.status}
+               </span>
+             </div>
+@@ -945,66 +900,41 @@ const SeasonTimeline: React.FC<{ splits?: SeasonSplit[] }> = ({ splits }) => {
+         })}
+       </div>
+ 
+-      {/* Season path */}
+-      <div
+-        style={{
+-          marginTop: 28,
+-          padding: 18,
+-          borderRadius: 12,
+-          background: 'rgba(17, 24, 39, 0.6)',
+-          border: '1px solid rgba(255,255,255,0.04)',
+-        }}
+-      >
+-        <div
+-          style={{
+-            fontSize: 11,
+-            fontWeight: 700,
+-            color: '#6b7280',
+-            textTransform: 'uppercase',
+-            letterSpacing: '0.1em',
+-            marginBottom: 14,
+-          }}
+-        >
++      {/* Championship path — highlights current level */}
++      <div style={{ marginTop: 28, padding: 18, borderRadius: 12, background: 'rgba(17, 24, 39, 0.6)', border: '1px solid rgba(255,255,255,0.04)' }}>
++        <div style={{ fontSize: 11, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 14 }}>
+           Championship Path
+         </div>
+-        <div
+-          style={{
+-            display: 'flex',
+-            alignItems: 'center',
+-            gap: 0,
+-            flexWrap: 'wrap',
+-          }}
+-        >
+-          {['Classroom', 'School', 'District', 'Regional', 'State', 'National'].map(
+-            (level, i, arr) => (
+-              <React.Fragment key={level}>
++        <div style={{ display: 'flex', alignItems: 'center', gap: 0, flexWrap: 'wrap' }}>
++          {allLevels.map((lvl, i, arr) => {
++            const isCurrentLevel = i === currentLevelIdx;
++            const isReached = currentLevelIdx >= 0 && i <= currentLevelIdx;
++            return (
++              <React.Fragment key={lvl}>
+                 <div
+                   style={{
+                     padding: '6px 14px',
+                     borderRadius: 6,
+                     fontSize: 11,
+-                    fontWeight: 600,
+-                    color: i <= 2 ? '#e5e7eb' : '#6b7280',
+-                    background: i <= 2 ? 'rgba(99,102,241,0.15)' : 'rgba(255,255,255,0.04)',
+-                    border: `1px solid ${i <= 2 ? 'rgba(99,102,241,0.3)' : 'rgba(255,255,255,0.06)'}`,
++                    fontWeight: isCurrentLevel ? 800 : 600,
++                    color: isCurrentLevel ? '#818cf8' : isReached ? '#e5e7eb' : '#6b7280',
++                    background: isCurrentLevel
++                      ? 'rgba(99,102,241,0.2)'
++                      : isReached
++                      ? 'rgba(99,102,241,0.1)'
++                      : 'rgba(255,255,255,0.04)',
++                    border: `1px solid ${isCurrentLevel ? 'rgba(99,102,241,0.5)' : isReached ? 'rgba(99,102,241,0.2)' : 'rgba(255,255,255,0.06)'}`,
++                    boxShadow: isCurrentLevel ? '0 0 12px rgba(99,102,241,0.2)' : undefined,
+                   }}
+                 >
+-                  {level}
++                  {lvl}
+                 </div>
+                 {i < arr.length - 1 && (
+-                  <span
+-                    style={{
+-                      color: '#4b5563',
+-                      fontSize: 14,
+-                      padding: '0 6px',
+-                    }}
+-                  >
+-                    →
+-                  </span>
++                  <span style={{ color: '#4b5563', fontSize: 14, padding: '0 6px' }}>→</span>
+                 )}
+               </React.Fragment>
+-            )
+-          )}
++            );
++          })}
+         </div>
+       </div>
+     </div>
+@@ -1016,7 +946,6 @@ const SeasonTimeline: React.FC<{ splits?: SeasonSplit[] }> = ({ splits }) => {
+ // ────────────────────────────────────────────────────────────
+ 
+ interface LeagueDashboardProps {
+-  /** When provided, real data replaces mock data. */
+   leagueMeta?: {
+     id: string;
+     name: string;
+@@ -1024,6 +953,10 @@ interface LeagueDashboardProps {
+     region: string;
+     bracketName: string | null;
+     bracketFormat: string | null;
++    advancementInfo?: {
++      targetLeagueName: string;
++      slotsAllocated: number;
++    } | null;
+   };
+   initialStandings?: StandingRow[];
+   initialBracket?: BracketMatch[];
+@@ -1038,7 +971,8 @@ export default function LeagueDashboard({
+   initialChampionship,
+   initialSplits,
+ }: LeagueDashboardProps = {}) {
+-  const [activeTab, setActiveTab] = useState<TabId>('bracket');
++  const [activeTab, setActiveTab] = useState<TabId>('standings');
++
+   const [bracketData] = useState<BracketMatch[]>(
+     initialBracket && initialBracket.length > 0 ? initialBracket : generateMockBracket
+   );
+@@ -1049,13 +983,19 @@ export default function LeagueDashboard({
+     initialChampionship && initialChampionship.length > 0 ? initialChampionship : generateMockChampionship
+   );
+ 
++  const isClassroom = leagueMeta?.level === 'classroom';
++  const advancement = leagueMeta?.advancementInfo ?? null;
++
+   const tabs: Array<{ id: TabId; label: string; icon: string }> = [
+-    { id: 'bracket', label: 'Bracket', icon: '🏆' },
+-    { id: 'standings', label: 'Standings', icon: '📊' },
++    { id: 'bracket',      label: 'Bracket',      icon: '🏆' },
++    { id: 'standings',    label: 'Standings',    icon: '📊' },
+     { id: 'championship', label: 'Championship', icon: '⭐' },
+-    { id: 'season', label: 'Season', icon: '📅' },
++    { id: 'season',       label: 'Season',       icon: '📅' },
+   ];
+ 
++  const icon = leagueMeta ? levelIcon(leagueMeta.level) : '🏟️';
++  const levelDisplay = leagueMeta ? levelLabel(leagueMeta.level) : '';
++
+   return (
+     <div
+       style={{
+@@ -1073,16 +1013,9 @@ export default function LeagueDashboard({
+       />
+ 
+       {/* Header */}
+-      <div style={{ marginBottom: 28 }}>
+-        <div
+-          style={{
+-            display: 'flex',
+-            alignItems: 'center',
+-            gap: 12,
+-            marginBottom: 4,
+-          }}
+-        >
+-          <span style={{ fontSize: 28 }}>🏟️</span>
++      <div style={{ marginBottom: 24 }}>
++        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 4 }}>
++          <span style={{ fontSize: 28 }}>{icon}</span>
+           <h1
+             style={{
+               fontSize: 24,
+@@ -1099,11 +1032,26 @@ export default function LeagueDashboard({
+         </div>
+         <p style={{ fontSize: 13, color: '#6b7280', margin: 0 }}>
+           {leagueMeta
+-            ? `${leagueMeta.region ? leagueMeta.region + ' • ' : ''}${leagueMeta.level}${leagueMeta.bracketFormat ? ' • ' + leagueMeta.bracketFormat : ''} • ${standingsData.length} Mathletes`
++            ? [
++                leagueMeta.region,
++                levelDisplay + ' League',
++                leagueMeta.bracketFormat,
++                `${standingsData.length} Mathletes`,
++              ]
++                .filter(Boolean)
++                .join(' • ')
+             : 'Spring Split 2026 • Single Elimination • 8 Mathletes'}
+         </p>
+       </div>
+ 
++      {/* Advancement banner — classroom only */}
++      {isClassroom && advancement && (
++        <AdvancementBanner
++          slots={advancement.slotsAllocated}
++          targetName={advancement.targetLeagueName}
++        />
++      )}
++
+       {/* Tab bar */}
+       <div
+         style={{
+@@ -1133,16 +1081,9 @@ export default function LeagueDashboard({
+               display: 'flex',
+               alignItems: 'center',
+               gap: 6,
+-              background:
+-                activeTab === tab.id
+-                  ? 'rgba(99, 102, 241, 0.15)'
+-                  : 'transparent',
+-              color:
+-                activeTab === tab.id ? '#818cf8' : '#6b7280',
+-              boxShadow:
+-                activeTab === tab.id
+-                  ? 'inset 0 0 0 1px rgba(99, 102, 241, 0.2)'
+-                  : 'none',
++              background: activeTab === tab.id ? 'rgba(99, 102, 241, 0.15)' : 'transparent',
++              color: activeTab === tab.id ? '#818cf8' : '#6b7280',
++              boxShadow: activeTab === tab.id ? 'inset 0 0 0 1px rgba(99, 102, 241, 0.2)' : 'none',
+             }}
+           >
+             <span style={{ fontSize: 14 }}>{tab.icon}</span>
+@@ -1160,22 +1101,26 @@ export default function LeagueDashboard({
+           padding: 24,
+         }}
+       >
+-        {activeTab === 'bracket' && <BracketView matches={bracketData} />}
+-        {activeTab === 'standings' && <StandingsTable standings={standingsData} />}
+-        {activeTab === 'championship' && <ChampionshipTracker entries={championshipData} />}
+-        {activeTab === 'season' && <SeasonTimeline splits={initialSplits} />}
++        {activeTab === 'bracket' && (
++          <BracketView matches={bracketData} isClassroom={isClassroom} />
++        )}
++        {activeTab === 'standings' && (
++          <StandingsTable
++            standings={standingsData}
++            isClassroom={isClassroom}
++            advancementSlots={advancement?.slotsAllocated}
++          />
++        )}
++        {activeTab === 'championship' && (
++          <ChampionshipTracker entries={championshipData} />
++        )}
++        {activeTab === 'season' && (
++          <SeasonTimeline splits={initialSplits} level={leagueMeta?.level} />
++        )}
+       </div>
+ 
+       {/* Footer */}
+-      <div
+-        style={{
+-          marginTop: 20,
+-          textAlign: 'center',
+-          fontSize: 10,
+-          color: '#374151',
+-          fontWeight: 500,
+-        }}
+-      >
++      <div style={{ marginTop: 20, textAlign: 'center', fontSize: 10, color: '#374151', fontWeight: 500 }}>
+         MathAthlone League Engine • Precision Tools built to stay. • © Mpingo Systems LLC
+       </div>
+     </div>
+-- 
+2.43.0
+

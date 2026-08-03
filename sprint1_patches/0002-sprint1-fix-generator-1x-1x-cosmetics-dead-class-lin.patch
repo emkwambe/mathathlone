@@ -1,0 +1,256 @@
+From 65eab28f1ac7489e3c4a3d65a637d2633b9716e2 Mon Sep 17 00:00:00 2001
+From: Eddy Mkwambe <eddy@mpingo.ai>
+Date: Mon, 20 Jul 2026 01:05:30 +0000
+Subject: [PATCH 2/2] sprint1: fix generator 1x/-1x cosmetics, dead class
+ links, delayed format hints
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+- generators.ts: fix 4 sites (lines 635, 663, 718, 819) where slope=±1
+  produced '1x'/'−1x' instead of 'x'/'−x'. Use same slopePart ternary
+  already established at lines 3247, 3316, 4154.
+
+- teacher/page.tsx: replace /class/[id] <Link> with non-navigable <div>
+  + 'Class roster coming soon' label so teachers no longer hit a 404.
+
+- CompetitionView.tsx: delay format hint (📝 Format: …) until the student
+  has made at least one wrong attempt on the current question. Adds
+  hadWrongAttempt state, resets on question advance, gates the hint prop
+  passed to FreeTextInput. Prevents hint from leaking answer type upfront.
+
+- docs/NEXT_SPRINT_PLAN.md: 3-sprint roadmap added to repo.
+---
+ docs/NEXT_SPRINT_PLAN.md                      | 89 +++++++++++++++++++
+ src/app/dashboard/teacher/page.tsx            |  8 +-
+ .../competition/CompetitionView.tsx           | 16 +++-
+ src/lib/competition/generators.ts             | 12 ++-
+ 4 files changed, 115 insertions(+), 10 deletions(-)
+ create mode 100644 docs/NEXT_SPRINT_PLAN.md
+
+diff --git a/docs/NEXT_SPRINT_PLAN.md b/docs/NEXT_SPRINT_PLAN.md
+new file mode 100644
+index 0000000..85fc6c4
+--- /dev/null
++++ b/docs/NEXT_SPRINT_PLAN.md
+@@ -0,0 +1,89 @@
++# MathAthlone — Next Sprint Plan (Post-Pilot Polish & Scaling)
++
++Based on the `MATHATHLONE_HANDOVER_SUMMARY.md` and `FUTURE_SESSIONS_REFERENCE.md`, the core MVP flow (Teacher creates heat → Students join → Competition → Results) is functional and has been piloted. The next phase must bridge the gap between "technical proof of concept" and "production-ready platform," focusing on UX resilience, remaining feature gaps, and preparing for scale.
++
++Here are 3 focused sprints designed to be executed sequentially. Each sprint is scoped to 1-2 sessions and will end with a Session Compass document to ensure perfect handover.
++
++---
++
++## Sprint 1: Production Resilience & UX Polish
++**Goal:** Fix the remaining edge cases and UX rough edges discovered during the pilot to ensure a flawless experience for the next wave of users.
++
++### Tasks
++1. **Join Window Enforcement:** Update `/compete/page.tsx` and the backend `joinHeat` logic to explicitly reject students trying to join a Heat that has already transitioned out of the `lobby` state (e.g., show "This Heat has already started. Ask your teacher for the next one.") instead of failing silently or showing an infinite spinner.
++2. **Session Keep-Alive / Timeout Handling:** Implement a background heartbeat or token refresh strategy so students don't get logged out if they leave the lobby tab open too long. If the session does expire, gracefully redirect to `/auth/login?next=/compete` instead of hanging.
++3. **Clean Up Dashboard Links:** Remove the stale `/analytics` and `/class/create` links from the teacher dashboard (`src/app/dashboard/teacher/page.tsx`) that currently return 404s.
++4. **Answer Format Hints:** Implement the `ANSWER_TYPE_HINTS` system (e.g., "Enter fractions as 3/4 or mixed numbers as 2 3/4") without leaking the expected answer type (leveraging the new `number_or_fraction` type).
++5. **Cosmetic Generator Fixes:** Fix the 4 generators that currently output `1x` or `-1x` instead of `x` or `-x` when the coefficient is ±1.
++
++### Exit Criteria
++- Students cannot join an active heat and receive a clear error message.
++- Teacher dashboard contains only working links.
++- Answer format hints are visible and helpful without spoiling the question type.
++- A Session Compass document is generated and saved.
++
++---
++
++## Sprint 2: The League & ELO Engine Wiring
++**Goal:** Connect the already-built backend League Engine (`src/lib/league-engine.ts`) to the frontend, replacing mock data with real Supabase queries.
++
++### Tasks
++1. **League Routing:** Create the missing `/league/[id]` dynamic route.
++2. **Dashboard Wiring:** Update `src/components/league/LeagueDashboard.tsx` to replace `generateMockBracket()`, `generateMockStandings()`, and `generateMockChampionship()` with real calls to the `LeagueEngineService`.
++3. **Teacher League Management UI:** Build the UI for teachers to create a new league and assign specific Heats to that league.
++4. **Student League View:** Build the UI for students to view their current league standings, bracket position, and ELO rating history.
++5. **ELO Verification:** Confirm that the RLS policies allow the `EloEngine` to successfully write rating updates to the `athlete_ratings` table at the end of a Heat.
++
++### Exit Criteria
++- The League Dashboard displays real data from the database.
++- Teachers can create leagues and students can view their standings.
++- A Session Compass document is generated and saved.
++
++---
++
++## Sprint 3: Difficulty Calibration & Assessment Framework Prep
++**Goal:** Backfill the new 3-axis difficulty metrics into the database to prepare for the MathPivot assessment framework and ensure Heats pull appropriately scaled questions.
++
++### Tasks
++1. **Backfill Script:** Write and execute `scripts/backfill-three-axis.ts` to read the `three_axis` data (cognitive demand, complexity, context) from the curriculum JSON files and UPSERT it into the `question_generators` table.
++2. **Question Delivery Tuning:** Update `src/lib/competition/question-delivery.ts` to utilize these new columns. Ensure that "Warm-Up" Heats and "Challenge" Heats pull distinctly different generators based on their complexity/demand profiles.
++3. **Validator Cleanup:** Audit the remaining `_or_text` validation types (`decimal_or_text`, `integer_or_text`, etc.) in `src/lib/competition/validation.ts`. Fix routing for any that are actively used by generators, or deprecate them if they are dead code.
++4. **Topic Tree Polish:** Fix the issue where some concepts in the Create Heat topic tree show raw IDs (e.g., `M6.NS.4.1`) instead of description text by backfilling the `description` field in the `atomic_concepts` table.
++
++### Exit Criteria
++- All `question_generators` have populated `cognitive_demand`, `complexity`, and `context` fields.
++- Heat difficulty settings demonstrably affect the types of questions generated.
++- The Create Heat topic tree displays human-readable descriptions for all concepts.
++- A Session Compass document is generated and saved.
++
++---
++
++## Session Compass Template
++
++*To be filled out at the end of every sprint session.*
++
++```markdown
++# MathAthlone — Session Compass & Handover
++
++**Sprint:** [Sprint Name/Number]
++**Date:** [Date]
++
++## 1. What Was Built / Fixed
++- [Feature/Fix 1]: Brief description of the change and the problem it solved.
++- [Feature/Fix 2]: Brief description of the change and the problem it solved.
++
++## 2. Key Files Modified
++- `path/to/file1.ts`: [What changed here]
++- `path/to/file2.tsx`: [What changed here]
++
++## 3. Database / Schema Changes (if any)
++- [Table Name]: [Columns added/modified, or new rows inserted]
++- *Reference:* `supabase/migrations/[migration_file].sql`
++
++## 4. Verification Steps Performed
++- [Test 1]: [Expected outcome] → ✅ Verified
++- [Test 2]: [Expected outcome] → ✅ Verified
++
++## 5. Handover Summary & Next Steps
++[2-3 paragraphs summarizing the current state of the platform, any blockers encountered, and the immediate next steps for the following session.]
++```
+diff --git a/src/app/dashboard/teacher/page.tsx b/src/app/dashboard/teacher/page.tsx
+index dbfedeb..b6a5702 100644
+--- a/src/app/dashboard/teacher/page.tsx
++++ b/src/app/dashboard/teacher/page.tsx
+@@ -118,10 +118,9 @@ export default async function TeacherDashboard() {
+ 
+             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+               {classes.map((cls: any) => (
+-                <Link
++                <div
+                   key={cls.id}
+-                  href={`/class/${cls.id}`}
+-                  className="p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:shadow-sm transition"
++                  className="p-4 border border-gray-200 rounded-lg"
+                 >
+                   <h3 className="font-semibold text-gray-900">{cls.name}</h3>
+                   <p className="text-sm text-gray-500">Grade {cls.grade_level}</p>
+@@ -133,7 +132,8 @@ export default async function TeacherDashboard() {
+                       {cls.join_code}
+                     </span>
+                   </div>
+-                </Link>
++                  <p className="text-xs text-gray-400 mt-2">Class roster coming soon</p>
++                </div>
+               ))}
+             </div>
+           </div>
+diff --git a/src/components/competition/CompetitionView.tsx b/src/components/competition/CompetitionView.tsx
+index db415ff..949fa8e 100644
+--- a/src/components/competition/CompetitionView.tsx
++++ b/src/components/competition/CompetitionView.tsx
+@@ -304,6 +304,13 @@ export default function CompetitionView({
+   >(null);
+   const [submitting, setSubmitting] = useState(false);
+ 
++  // ── Format hint gating ──────────────────────────────────────────────────
++  // Show the format hint only after the student has made at least one wrong
++  // attempt on the current question. This prevents the hint from leaking the
++  // answer type before the student has tried. Reset whenever the question index
++  // changes (i.e. on advance to next question).
++  const [hadWrongAttempt, setHadWrongAttempt] = useState(false);
++
+   // ── Global timer ────────────────────────────────────────────────────────
+   // If we restored from a snapshot, decrement from "duration - elapsed since
+   // heatStartedAt" so the clock doesn't jump forward.
+@@ -624,6 +631,7 @@ export default function CompetitionView({
+       const advance = () => {
+         setAnswer('');
+         setSubmitting(false);
++        setHadWrongAttempt(false); // reset hint gate for next question
+         if (currentIndex >= questions.length - 1) {
+           setPhase('finished');
+         } else {
+@@ -632,6 +640,9 @@ export default function CompetitionView({
+         }
+       };
+ 
++      // Gate format hint: reveal after first wrong attempt
++      if (!isCorrect) setHadWrongAttempt(true);
++
+       // Assessment mode: no correct/incorrect feedback, no points animation.
+       // Advance to the next question silently and immediately.
+       if (isAssessment) {
+@@ -665,6 +676,7 @@ export default function CompetitionView({
+       participationId,
+       supabase,
+       isAssessment,
++      hadWrongAttempt,
+     ]
+   );
+ 
+@@ -991,10 +1003,10 @@ export default function CompetitionView({
+                   onChange={setAnswer}
+                   onSubmit={() => handleSubmit(answer)}
+                   disabled={submitting || !!feedback}
+-                  hint={formatHintFor(
++                  hint={hadWrongAttempt ? formatHintFor(
+                     currentQuestion.answer_type,
+                     currentQuestion.question_generators?.generator_type ?? null
+-                  )}
++                  ) : ''}
+                 />
+                 {/* Hint moved BELOW input, ABOVE submit — see FreeTextInput.
+                     Rendered only when non-empty. */}
+diff --git a/src/lib/competition/generators.ts b/src/lib/competition/generators.ts
+index e4aa0cd..f533dcb 100644
+--- a/src/lib/competition/generators.ts
++++ b/src/lib/competition/generators.ts
+@@ -632,7 +632,8 @@ export function generate_write_linear_eq(difficulty: DifficultyLevel): Generated
+   const b = randomInt(-8, 8);
+   
+   const signB = b >= 0 ? '+' : '-';
+-  const equation = b === 0 ? `y = ${m}x` : `y = ${m}x ${signB} ${Math.abs(b)}`;
++  const slopePart = m === 1 ? 'x' : m === -1 ? '-x' : `${m}x`;
++  const equation = b === 0 ? `y = ${slopePart}` : `y = ${slopePart} ${signB} ${Math.abs(b)}`;
+   
+   return {
+     question_latex: `\\text{Write the equation with slope } ${m} \\text{ and y-intercept } ${b}`,
+@@ -660,7 +661,8 @@ export function generate_write_linear_eq_points(difficulty: DifficultyLevel): Ge
+   const y2 = m * x2 + b;
+   
+   const signB = b >= 0 ? '+' : '-';
+-  const equation = b === 0 ? `y = ${m}x` : `y = ${m}x ${signB} ${Math.abs(b)}`;
++  const slopePart = m === 1 ? 'x' : m === -1 ? '-x' : `${m}x`;
++  const equation = b === 0 ? `y = ${slopePart}` : `y = ${slopePart} ${signB} ${Math.abs(b)}`;
+   
+   return {
+     question_latex: `\\text{Write the equation through } (${x1}, ${y1}) \\text{ and } (${x2}, ${y2})`,
+@@ -715,7 +717,8 @@ export function generate_convert_linear_forms(difficulty: DifficultyLevel): Gene
+   
+   const signC = C >= 0 ? '' : '-';
+   const standard = `${A}x + y = ${C}`;
+-  const slopeInt = `y = ${m}x ${formatConst(b)}`;
++  const slopePart = m === 1 ? 'x' : m === -1 ? '-x' : `${m}x`;
++  const slopeInt = `y = ${slopePart} ${formatConst(b)}`;
+   
+   return {
+     question_latex: `\\text{Convert } ${standard} \\text{ to slope-intercept form}`,
+@@ -816,7 +819,8 @@ export function generate_write_parallel_perp_eq(difficulty: DifficultyLevel): Ge
+   const newB = y1 - newM * x1;
+   
+   const signB = newB >= 0 ? '+' : '-';
+-  const equation = newB === 0 ? `y = ${newM}x` : `y = ${newM}x ${signB} ${Math.abs(newB)}`;
++  const slopePart = newM === 1 ? 'x' : newM === -1 ? '-x' : `${newM}x`;
++  const equation = newB === 0 ? `y = ${slopePart}` : `y = ${slopePart} ${signB} ${Math.abs(newB)}`;
+   const type = isParallel ? 'parallel' : 'perpendicular';
+   
+   return {
+-- 
+2.43.0
+

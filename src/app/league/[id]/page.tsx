@@ -10,10 +10,12 @@
 //   • brackets + bracket_matches for the most recent bracket
 //   • championship_points + season_standings for the season tab
 //   • splits for the season timeline
+//   • league_advancement row (for classroom leagues — advancement banner)
 // =============================================================================
 import { notFound } from 'next/navigation';
 import { createSupabaseServer } from '@/lib/supabase/server';
 import LeagueDashboard from '@/components/league/LeagueDashboard';
+import BracketGenerateButton from '@/components/league/BracketGenerateButton';
 
 export const revalidate = 60; // ISR — refresh every 60 s
 
@@ -25,10 +27,13 @@ export default async function LeaguePage({ params }: PageProps) {
   const { id: leagueId } = params;
   const supabase = await createSupabaseServer();
 
+  // ── 0. Current user (for teacher actions) ────────────────────────────────
+  const { data: { user: currentUser } } = await supabase.auth.getUser();
+
   // ── 1. League meta ────────────────────────────────────────────────────────
   const { data: league, error: leagueErr } = await supabase
     .from('leagues')
-    .select('id, name, level, region, season_id, division_id')
+    .select('id, name, level, region, season_id, division_id, created_by')
     .eq('id', leagueId)
     .maybeSingle();
 
@@ -106,8 +111,7 @@ export default async function LeaguePage({ params }: PageProps) {
     .eq('season_id', league.season_id ?? '')
     .order('split_number', { ascending: true });
 
-  // ── 6. Athlete ratings for standings (to get school info) ─────────────────
-  // We need school names — join through users → schools
+  // ── 6. School names for standings ────────────────────────────────────────
   const athleteIds = (standingsRaw ?? []).map((r: any) => r.athlete_id);
   let schoolMap: Record<string, string> = {};
   if (athleteIds.length > 0) {
@@ -120,7 +124,28 @@ export default async function LeaguePage({ params }: PageProps) {
     }
   }
 
-  // ── 7. Shape data for LeagueDashboard props ───────────────────────────────
+  // ── 7. Advancement info (classroom leagues only) ─────────────────────────
+  // Fetch the league_advancement row where this league is the source, and
+  // join the target league name so the banner can say "Top N → School League"
+  let advancementInfo: { targetLeagueName: string; slotsAllocated: number } | null = null;
+  if (league.level === 'classroom') {
+    const { data: advRow } = await supabase
+      .from('league_advancement')
+      .select(`
+        slots_allocated,
+        target:target_league_id ( name )
+      `)
+      .eq('source_league_id', leagueId)
+      .maybeSingle();
+    if (advRow) {
+      advancementInfo = {
+        targetLeagueName: (advRow.target as any)?.name ?? 'School League',
+        slotsAllocated: advRow.slots_allocated ?? 2,
+      };
+    }
+  }
+
+  // ── 8. Shape data for LeagueDashboard props ───────────────────────────────
   const standings = (standingsRaw ?? []).map((r: any) => {
     const user = r.users ?? {};
     const ar = Array.isArray(r.athlete_ratings) ? r.athlete_ratings[0] : r.athlete_ratings;
@@ -217,19 +242,39 @@ export default async function LeaguePage({ params }: PageProps) {
   const leagueMeta = {
     id: league.id,
     name: league.name,
-    level: league.level,
+    level: league.level as string,
     region: league.region ?? '',
     bracketName: bracket?.name ?? null,
     bracketFormat: bracket?.format ?? null,
+    bracketId: bracket?.id ?? null,
+    advancementInfo,
   };
 
+  // Is the current user the league owner (teacher / admin)?
+  const isLeagueOwner = currentUser != null && (league as any).created_by === currentUser.id;
+
   return (
-    <LeagueDashboard
-      leagueMeta={leagueMeta}
-      initialStandings={standings}
-      initialBracket={bracketMatches}
-      initialChampionship={championship}
-      initialSplits={splits}
-    />
+    <div className="relative">
+      {/* Teacher-only actions bar */}
+      {isLeagueOwner && (
+        <div className="flex items-center justify-between px-4 py-3 bg-indigo-950/60 border-b border-indigo-800/40">
+          <span className="text-xs text-indigo-300 font-medium tracking-wide uppercase">
+            Teacher Controls
+          </span>
+          <BracketGenerateButton
+            leagueId={leagueId}
+            hasBracket={bracket !== null}
+          />
+        </div>
+      )}
+      <LeagueDashboard
+        leagueMeta={leagueMeta}
+        initialStandings={standings}
+        initialBracket={bracketMatches}
+        initialChampionship={championship}
+        initialSplits={splits}
+        isOwner={isLeagueOwner}
+      />
+    </div>
   );
 }

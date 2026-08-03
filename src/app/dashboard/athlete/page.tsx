@@ -31,12 +31,24 @@ export default async function AthleteDashboard() {
     .eq('season', '2025-2026')
     .single();
 
-  // Get ELO rating (null if athlete hasn't played 1+ rated heat yet)
+  // Get ELO rating — match the ADV division row (or any division row as fallback)
   const { data: eloRating } = await supabase
     .from('athlete_ratings')
     .select('rating, peak_rating, games_played, is_provisional, last_competition')
     .eq('athlete_id', user.id)
-    .is('division_id', null)
+    .order('games_played', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  // Get the mathlete's classroom league standing
+  const { data: classroomStanding } = await supabase
+    .from('league_standings')
+    .select(`
+      rank, wins, losses, points, heats_played,
+      leagues!league_standings_league_id_fkey ( id, name, level )
+    `)
+    .eq('athlete_id', user.id)
+    .eq('leagues.level', 'classroom')
     .maybeSingle();
 
   // Get recent ELO change (last 2 rating_history rows)
@@ -266,6 +278,42 @@ export default async function AthleteDashboard() {
             </div>
           )}
         </div>
+
+        {/* Classroom League Standing Card */}
+        {classroomStanding && (classroomStanding as any).leagues && (
+          <div className="bg-white rounded-xl shadow-sm p-6 mb-8 border border-indigo-100">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className="text-lg font-semibold text-gray-900">🏫 Classroom League</h2>
+                <p className="text-sm text-gray-500">{(classroomStanding as any).leagues?.name}</p>
+              </div>
+              <Link
+                href={`/league/${(classroomStanding as any).leagues?.id}`}
+                className="text-sm font-medium text-indigo-600 hover:text-indigo-800 border border-indigo-200 hover:border-indigo-400 px-3 py-1.5 rounded-lg transition"
+              >
+                View Bracket →
+              </Link>
+            </div>
+            <div className="grid grid-cols-4 gap-4">
+              <div className="text-center">
+                <p className="text-3xl font-black text-indigo-600">#{(classroomStanding as any).rank ?? '—'}</p>
+                <p className="text-xs text-gray-500 mt-1">Rank</p>
+              </div>
+              <div className="text-center">
+                <p className="text-3xl font-black text-emerald-600">{(classroomStanding as any).wins ?? 0}</p>
+                <p className="text-xs text-gray-500 mt-1">Wins</p>
+              </div>
+              <div className="text-center">
+                <p className="text-3xl font-black text-red-500">{(classroomStanding as any).losses ?? 0}</p>
+                <p className="text-xs text-gray-500 mt-1">Losses</p>
+              </div>
+              <div className="text-center">
+                <p className="text-3xl font-black text-amber-500">{(classroomStanding as any).points ?? 0}</p>
+                <p className="text-xs text-gray-500 mt-1">Points</p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Join Heat Section */}
         <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 mb-8 text-white">

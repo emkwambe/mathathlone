@@ -1,0 +1,1197 @@
+From 5dfde1689ea6174d34b36f37443ea6811f709e96 Mon Sep 17 00:00:00 2001
+From: Eddy Mkwambe <eddy@mpingo.ai>
+Date: Mon, 20 Jul 2026 07:35:53 +0000
+Subject: [PATCH] feat(dashboards): replace admin/broadcast/parent stubs with
+ full implementations
+
+- Admin: school stats, classroom league grid, teacher table, advancement alert
+- Broadcast: live heats, active leagues, recent results (24h)
+- Parent: linked child ELO/standing/recent heats, graceful no-link state
+- docs: DEVELOPER_QUICKSTART, API_ROUTES_REFERENCE, SPRINT_CHANGELOG
+---
+ docs/API_ROUTES_REFERENCE.md         | 131 ++++++++++++++++
+ docs/DEVELOPER_QUICKSTART.md         | 171 ++++++++++++++++++++
+ docs/SPRINT_CHANGELOG.md             | 117 ++++++++++++++
+ src/app/dashboard/admin/page.tsx     | 214 +++++++++++++++++++++----
+ src/app/dashboard/broadcast/page.tsx | 189 +++++++++++++++++++----
+ src/app/dashboard/parent/page.tsx    | 223 +++++++++++++++++++++++----
+ 6 files changed, 953 insertions(+), 92 deletions(-)
+ create mode 100644 docs/API_ROUTES_REFERENCE.md
+ create mode 100644 docs/DEVELOPER_QUICKSTART.md
+ create mode 100644 docs/SPRINT_CHANGELOG.md
+
+diff --git a/docs/API_ROUTES_REFERENCE.md b/docs/API_ROUTES_REFERENCE.md
+new file mode 100644
+index 0000000..e1eaac3
+--- /dev/null
++++ b/docs/API_ROUTES_REFERENCE.md
+@@ -0,0 +1,131 @@
++# MathAthlone — API Routes Reference
++
++> Sprint 4 additions. All routes require an authenticated Supabase session cookie.
++
++---
++
++## `POST /api/league/heat-complete`
++
++Triggered automatically by `heat-service.ts` when a heat ends and the heat has a `league_id`. Calls `LeagueEngineService.processHeatResult()` to update ELO ratings and league standings.
++
++**Request body:**
++```json
++{
++  "heatId": "uuid",
++  "leagueId": "uuid"
++}
++```
++
++**Success response (200):**
++```json
++{
++  "ok": true,
++  "heatId": "uuid",
++  "leagueId": "uuid",
++  "participantsProcessed": 16
++}
++```
++
++**Error responses:**
++- `400` — missing `heatId` or `leagueId`
++- `404` — heat not found
++- `422` — no finished participations found
++- `500` — engine error (details in `error` field)
++
++**Notes:**
++- Idempotent: calling it twice for the same heat is safe (engine checks `heat_processed` flag).
++- ELO updates use Glicko-2 with a 400-point K-factor for the first 5 games, then standard K=32.
++
++---
++
++## `POST /api/league/bracket/generate`
++
++Generates a bracket for a league. Only the league owner (`created_by = current user`) can call this.
++
++**Request body:**
++```json
++{
++  "leagueId": "uuid",
++  "format": "single_elim",
++  "name": "Playoffs"
++}
++```
++
++`format` must be one of: `single_elim`, `double_elim`, `swiss`, `round_robin`.
++
++**Success response (200):**
++```json
++{
++  "ok": true,
++  "bracketId": "uuid",
++  "format": "single_elim",
++  "rounds": 4,
++  "matchesCreated": 15
++}
++```
++
++**Error responses:**
++- `400` — missing fields or invalid format
++- `403` — caller is not the league owner
++- `404` — league not found
++- `422` — fewer than 2 standings entries (cannot generate bracket)
++- `500` — engine error
++
++**Notes:**
++- If a bracket already exists for the league, it is replaced (old bracket and matches are deleted first).
++- Seeds are assigned by current ELO rating (highest ELO = seed 1).
++
++---
++
++## `POST /api/league/split/close`
++
++Closes the current split for a season and triggers advancement: the top N mathletes from each source league are promoted to the target league (as defined in `league_advancement`).
++
++**Request body:**
++```json
++{
++  "seasonId": "uuid",
++  "splitId": "uuid"
++}
++```
++
++**Success response (200):**
++```json
++{
++  "ok": true,
++  "splitId": "uuid",
++  "advancementsTriggered": 64,
++  "mathletesMoved": 128
++}
++```
++
++**Error responses:**
++- `400` — missing `seasonId` or `splitId`
++- `403` — caller does not have `school_admin` or `platform_admin` role
++- `404` — split not found
++- `422` — split is already closed
++- `500` — engine error
++
++**Notes:**
++- This is an admin-only action. Teachers cannot call it.
++- Advancement inserts rows into `league_memberships` for the target league and creates `league_standings` entries with `rank = 0` (to be recalculated after the first heat).
++
++---
++
++## Existing routes (pre-Sprint 4)
++
++| Route | Method | Description |
++|---|---|---|
++| `/api/heats` | POST | Create a new heat |
++| `/api/heats/[id]/join` | POST | Join a heat lobby |
++| `/api/heats/[id]/submit` | POST | Submit heat answers |
++| `/api/heats/[id]/end` | POST | End a heat (teacher) |
++| `/api/auth/callback` | GET | Supabase OAuth callback |
++
++---
++
++## Authentication
++
++All API routes use `createSupabaseServer()` to get the current user from the session cookie. There is no separate JWT — the Supabase session is the auth token.
++
++For server-to-server calls (e.g., from the Cloudflare scoring worker), use the `SUPABASE_SERVICE_ROLE_KEY` in the `Authorization: Bearer <key>` header.
+diff --git a/docs/DEVELOPER_QUICKSTART.md b/docs/DEVELOPER_QUICKSTART.md
+new file mode 100644
+index 0000000..60f0e64
+--- /dev/null
++++ b/docs/DEVELOPER_QUICKSTART.md
+@@ -0,0 +1,171 @@
++# MathAthlone — Developer Quick-Start
++
++> Last updated: Sprint 4–6 (July 2026)
++
++This guide gets a new developer from zero to a running local environment in under 15 minutes.
++
++---
++
++## Prerequisites
++
++| Tool | Version | Notes |
++|---|---|---|
++| Node.js | 22+ | Use `nvm` or `fnm` |
++| pnpm | 9+ | `npm i -g pnpm` |
++| Supabase CLI | 1.200+ | `brew install supabase/tap/supabase` |
++| Git | any | — |
++
++---
++
++## 1. Clone and install
++
++```bash
++git clone https://github.com/your-org/mathathlone-app.git
++cd mathathlone-app
++pnpm install
++```
++
++---
++
++## 2. Environment variables
++
++Copy the example file and fill in the Supabase credentials:
++
++```bash
++cp .env.example .env.local
++```
++
++Required variables:
++
++```
++NEXT_PUBLIC_SUPABASE_URL=https://yhqxxgqfpgcertsqibps.supabase.co
++NEXT_PUBLIC_SUPABASE_ANON_KEY=<anon key>
++SUPABASE_SERVICE_ROLE_KEY=<service role key>
++```
++
++All three values are in the Supabase dashboard under **Project Settings → API**.
++
++---
++
++## 3. Seed the database
++
++The NC demo data (1,024 mathletes, 16 schools, full league pyramid) is seeded with:
++
++```bash
++pnpm seed:nc
++```
++
++This runs `scripts/seed-mathathlone-nc.ts` and inserts all rows idempotently.
++
++---
++
++## 4. Run the dev server
++
++```bash
++pnpm dev
++```
++
++Navigate to `http://localhost:3000`. Sign in with any seeded teacher account:
++
++| Email | Password | Role |
++|---|---|---|
++| `mshodges@mathathlone.dev` | `MathAthlone2025!` | Teacher |
++| `mrmkwambe@mathathlone.dev` | `MathAthlone2025!` | Teacher |
++| `dev.teacher@test.com` | `MathAthlone2025!` | Teacher (dev) |
++
++---
++
++## 5. Key routes
++
++| Route | Description |
++|---|---|
++| `/` | Public landing page |
++| `/dashboard` | Role-based redirect (athlete/teacher/admin/broadcast/parent) |
++| `/dashboard/teacher` | Teacher dashboard — classes, leagues, create heat |
++| `/dashboard/admin` | School admin — teachers, classroom leagues, school league |
++| `/dashboard/broadcast` | Broadcast host — live heats, active leagues, recent results |
++| `/dashboard/parent` | Parent — linked child's stats and recent heats |
++| `/dashboard/athlete` | Athlete — ELO card, classroom league standing |
++| `/compete/create` | Create a heat (teacher) |
++| `/compete/[id]` | Live heat lobby and competition |
++| `/league/[id]` | League dashboard (standings, bracket, championship, season) |
++
++---
++
++## 6. Project structure
++
++```
++mathathlone-app/
++├── src/
++│   ├── app/                    # Next.js App Router pages
++│   │   ├── api/league/         # League engine API routes (Sprint 4)
++│   │   ├── compete/            # Heat creation and live competition
++│   │   ├── dashboard/          # Role-based dashboards
++│   │   └── league/[id]/        # League page
++│   ├── components/
++│   │   ├── league/             # LeagueDashboard, BracketGenerateButton
++│   │   └── auth/               # MissingProfile, etc.
++│   ├── lib/
++│   │   ├── competition/        # generators.ts, heat-service.ts, visual-generators.ts
++│   │   ├── league/             # league-engine.ts (1,471 lines)
++│   │   └── supabase/           # server.ts, client.ts
++│   └── types/
++│       └── database.ts         # Hand-maintained TypeScript types
++├── supabase/
++│   ├── migrations/             # 037 SQL migration files
++│   └── mathathlone-schema.sql  # Full schema dump
++├── scripts/
++│   ├── seed-mathathlone-nc.ts  # NC demo data seed
++│   └── generator_evaluator.py  # AI-assisted generator auditing
++└── docs/                       # Architecture, curriculum, sprint docs
++```
++
++---
++
++## 7. Running the generator auditor
++
++The Python auditor checks that math generators produce correct answers:
++
++```bash
++# Install dependencies
++pip install openai
++
++# Run the auditor (requires DEEPSEEK_API_KEY or OPENAI_API_KEY)
++python3 scripts/generator_evaluator.py --course NCG7 --sample 20
++```
++
++---
++
++## 8. Adding a new migration
++
++```bash
++# Create a new migration file
++touch supabase/migrations/038_your_change.sql
++
++# Apply it to the remote DB (requires Supabase CLI login)
++supabase db push
++```
++
++Always number migrations sequentially. Never modify existing migration files.
++
++---
++
++## 9. TypeScript types
++
++Types are hand-maintained in `src/types/database.ts`. After adding new columns or tables, update this file manually. The key types are:
++
++- `UserRole` — `'athlete' | 'teacher' | 'school_admin' | ...`
++- `LeagueLevel` — `'classroom' | 'school' | 'district' | 'regional' | 'state' | 'national'`
++- `HeatResult` — passed to `LeagueEngineService.processHeatResult()`
++- `BracketFormat` — `'single_elim' | 'double_elim' | 'swiss' | 'round_robin'`
++
++---
++
++## 10. Common gotchas
++
++| Issue | Fix |
++|---|---|
++| `division_id IS NULL` in ELO queries returns nothing | Seeded mathletes have `division_id = ADV UUID`. Query by `games_played DESC` instead. |
++| `league_id` missing on heats | Run migration `037_heats_league_id.sql` first. |
++| `parent_athlete_links` table missing | Parent dashboard degrades gracefully — child shows "No athlete linked". |
++| `created_by` missing from leagues select | Add `created_by` to the `.select()` call in `/league/[id]/page.tsx`. |
+diff --git a/docs/SPRINT_CHANGELOG.md b/docs/SPRINT_CHANGELOG.md
+new file mode 100644
+index 0000000..ee1a1a1
+--- /dev/null
++++ b/docs/SPRINT_CHANGELOG.md
+@@ -0,0 +1,117 @@
++# MathAthlone — Sprint Changelog
++
++Tracks all production-ready changes by sprint. Each entry lists files changed, what was added, and any DB migrations required.
++
++---
++
++## Sprint 6 — Broadcast, Parent & Admin Dashboards (July 2026)
++
++### Files changed
++
++| File | Change |
++|---|---|
++| `src/app/dashboard/admin/page.tsx` | Full replacement of stub — school stats, classroom league grid, teacher table, advancement alert |
++| `src/app/dashboard/broadcast/page.tsx` | Full replacement of stub — live heats, active leagues, recent results (last 24 h) |
++| `src/app/dashboard/parent/page.tsx` | Full replacement of stub — linked child's ELO, league standing, recent heat results |
++
++### What was added
++
++**Admin dashboard** — school admin now sees:
++- 4 stat cards: mathletes, teachers, classroom leagues, school league status
++- Amber alert when classroom leagues are running but no school league exists yet
++- Clickable grid of all classroom leagues with status badges and advancement slots
++- Full teacher roster table
++
++**Broadcast dashboard** — broadcast hosts now see:
++- Live heats (status = `'active'`) with participant counts and direct links
++- Active leagues across all levels with direct links
++- Recent completed heats from the last 24 hours
++
++**Parent dashboard** — parents now see:
++- Linked child's profile card with ELO rating, league rank, and W/L record
++- Direct link to the child's classroom league
++- Recent heat results table (last 10)
++- Graceful "No athlete linked" state when `parent_athlete_links` has no row
++
++### DB migrations required
++None. Reads from existing tables only.
++
++---
++
++## Sprint 5 — Classroom League UI (July 2026)
++
++### Files changed
++
++| File | Change |
++|---|---|
++| `src/app/league/[id]/page.tsx` | Fetches `league_advancement` row; passes `advancementInfo` to `LeagueDashboard` |
++| `src/components/league/LeagueDashboard.tsx` | Classroom-aware rendering: advancement banner, first-name-only display, advancement cut-line, dynamic Championship Path |
++| `src/components/league/BracketGenerateButton.tsx` | New client component — bracket generation button for league owners |
++| `src/app/dashboard/teacher/page.tsx` | Each class card now has "🏫 View Classroom League →" link |
++| `src/app/dashboard/athlete/page.tsx` | ELO query fixed (was filtering `division_id IS NULL`); classroom league standing card added |
++
++### What was added
++
++- **Advancement banner** on classroom league pages: "🎯 Top N advance to [School League name]"
++- **First-name-only display** in bracket slots and standings for classroom leagues
++- **Indigo gradient cut-line** with violet "▲ Advancement cut" label in standings
++- **Dynamic Championship Path** — current level highlighted in indigo
++- **Level icons** — 🏫 classroom/school, 🏙️ district, 🗺️ regional, 🌟 state
++- **Bracket generate button** — visible to league owner only
++
++### DB migrations required
++None for this sprint.
++
++---
++
++## Sprint 4 — Live League Engine (July 2026)
++
++### Files changed
++
++| File | Change |
++|---|---|
++| `supabase/migrations/037_heats_league_id.sql` | Adds `league_id UUID FK → leagues` to `heats` table |
++| `src/app/api/league/heat-complete/route.ts` | New: `POST /api/league/heat-complete` — triggers ELO update + standings refresh |
++| `src/app/api/league/bracket/generate/route.ts` | New: `POST /api/league/bracket/generate` — generates bracket for a league |
++| `src/app/api/league/split/close/route.ts` | New: `POST /api/league/split/close` — closes split, triggers advancement |
++| `src/lib/competition/heat-service.ts` | `endHeat()` now calls `/api/league/heat-complete` when `league_id` is set; `league_id` added to `Heat` interface and `CreateHeatParams` |
++| `src/app/compete/create/page.tsx` | League selector added (Step 6.5); `selectedLeagueId` passed to `createHeat()` |
++
++### What was added
++
++- **Heat → League wiring**: when a teacher ends a heat that belongs to a league, ELO ratings and standings update automatically
++- **Bracket generation**: teachers can generate a bracket for their league from the league page
++- **Split close / advancement**: admins can close a split to promote top-N mathletes to the next level
++
++### DB migrations required
++```bash
++# Apply migration 037 to add league_id to heats
++supabase db push
++# or manually:
++psql $DATABASE_URL < supabase/migrations/037_heats_league_id.sql
++```
++
++---
++
++## Sprint 3 — NC Demo Data Seed (July 2026)
++
++### What was added
++
++- 1,024 mathletes across 16 NC middle schools, 4 districts (CMS, Union, Wake, Durham), 2 regions (Charlotte, Triangle)
++- 64 classroom leagues, 64 advancement paths, 64 school memberships
++- Glicko-2 ratings initialized at 1200 (ADV division)
++- Standings at zero — ready for first heat
++
++### Script
++```bash
++pnpm seed:nc
++```
++
++### DB migrations required
++Migrations 032–036 (NC school/district/region/state hierarchy).
++
++---
++
++## Earlier Sprints (Sprints 0–2)
++
++See `docs/MVP_BLUEPRINT_SPRINTS.md` for the full history of the heat engine, create-heat flow, lobby, competition, and results pages.
+diff --git a/src/app/dashboard/admin/page.tsx b/src/app/dashboard/admin/page.tsx
+index 457bb6c..b71f168 100644
+--- a/src/app/dashboard/admin/page.tsx
++++ b/src/app/dashboard/admin/page.tsx
+@@ -1,7 +1,18 @@
++// =============================================================================
++// MathAthlone — /dashboard/admin  (School Admin Dashboard)
++// =============================================================================
++// Server component. Fetches:
++//   • Admin profile + school info
++//   • All teachers in the school
++//   • All classroom leagues in the school (with standings counts)
++//   • School-level league (if it exists)
++//   • Pending advancement alert
++// =============================================================================
+ import { redirect } from 'next/navigation';
+ import Link from 'next/link';
+ import { createSupabaseServer } from '@/lib/supabase/server';
+ import MissingProfile from '@/components/auth/MissingProfile';
++import { Users, BookOpen, Trophy, TrendingUp, ArrowRight, CheckCircle2, Clock } from 'lucide-react';
+ 
+ export default async function AdminDashboard() {
+   const supabase = await createSupabaseServer();
+@@ -11,53 +22,196 @@ export default async function AdminDashboard() {
+ 
+   const { data: profile } = await supabase
+     .from('users')
+-    .select('display_name, country_code, school_id')
++    .select('*, schools!users_school_id_fkey ( id, name, district, state )')
+     .eq('id', user.id)
+     .maybeSingle();
+ 
+-  // Render recoverable error instead of redirecting — see athlete/page.tsx
+-  // for why redirecting here would create an infinite middleware loop.
+-  if (!profile) {
+-    return <MissingProfile email={user.email} role="school_admin" />;
+-  }
++  if (!profile) return <MissingProfile email={user.email} role="school_admin" />;
++
++  const schoolId = (profile as any).school_id as string | null;
++  const schoolName = (profile as any).schools?.name ?? 'Your School';
++  const district = (profile as any).schools?.district ?? '';
++
++  const { data: teachers } = schoolId
++    ? await supabase
++        .from('users')
++        .select('id, display_name, email, created_at')
++        .eq('school_id', schoolId)
++        .eq('role', 'teacher')
++        .order('display_name', { ascending: true })
++    : { data: [] };
++
++  const { data: classroomLeagues } = schoolId
++    ? await supabase
++        .from('leagues')
++        .select('id, name, status, league_standings ( count ), league_advancement!league_advancement_source_league_id_fkey ( slots_allocated, target_league_id )')
++        .eq('school_id', schoolId)
++        .eq('level', 'classroom')
++        .order('name', { ascending: true })
++    : { data: [] };
++
++  const { data: schoolLeagues } = schoolId
++    ? await supabase
++        .from('leagues')
++        .select('id, name, status')
++        .eq('school_id', schoolId)
++        .eq('level', 'school')
++        .order('created_at', { ascending: false })
++        .limit(1)
++    : { data: [] };
++
++  const schoolLeague = schoolLeagues?.[0] ?? null;
++
++  const { count: mathleteCount } = schoolId
++    ? await supabase
++        .from('users')
++        .select('id', { count: 'exact', head: true })
++        .eq('school_id', schoolId)
++        .eq('role', 'athlete')
++    : { count: 0 };
++
++  const teacherList = (teachers ?? []) as any[];
++  const classLeagueList = (classroomLeagues ?? []) as any[];
++  const pendingAdvancement = schoolLeague == null && classLeagueList.length > 0;
+ 
+   return (
+-    <div className="min-h-screen bg-gray-50">
+-      <header className="bg-white shadow-sm">
++    <div className="min-h-screen bg-[#0a0f1e] text-white">
++      <header className="border-b border-white/10 bg-[#0d1424]/80 backdrop-blur-sm sticky top-0 z-10">
+         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+-          <Link href="/" className="text-2xl font-bold text-blue-600">
+-            Math<span className="text-amber-500">Athlone</span>
++          <Link href="/" className="text-xl font-bold">
++            Math<span className="text-amber-400">Athlone</span>
+           </Link>
+           <div className="flex items-center gap-4">
+-            <span className="text-gray-600">{profile.display_name}</span>
++            <span className="text-sm text-gray-300">{(profile as any).display_name}</span>
++            <span className="px-2 py-0.5 rounded-full bg-indigo-900/60 text-indigo-300 text-xs font-medium border border-indigo-700/50">
++              School Admin
++            </span>
+             <form action="/auth/signout" method="POST">
+-              <button className="text-sm text-gray-500 hover:text-gray-700">
+-                Sign Out
+-              </button>
++              <button className="text-sm text-gray-400 hover:text-white transition-colors">Sign Out</button>
+             </form>
+           </div>
+         </div>
+       </header>
+ 
+-      <main className="max-w-7xl mx-auto px-4 py-8">
+-        <div className="mb-8">
+-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+-            Welcome, {profile.display_name}! 👤
+-          </h1>
+-          <p className="text-gray-600">
+-            School Administrator
+-          </p>
++      <main className="max-w-7xl mx-auto px-4 py-8 space-y-8">
++        <div>
++          <h1 className="text-3xl font-bold mb-1">{schoolName}</h1>
++          <p className="text-gray-400 text-sm">{district} · School Admin Dashboard</p>
+         </div>
+ 
+-        <div className="bg-white rounded-2xl shadow-sm p-12 text-center">
+-          <h2 className="text-2xl font-bold text-gray-900 mb-3">
+-            School Admin Tools
+-          </h2>
+-          <p className="text-gray-600 max-w-xl mx-auto">
+-            Manage teachers, view school-wide analytics, oversee Heats, and approve regional advancement attestations. Detailed admin tooling is being built — check back soon.
+-          </p>
++        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
++          <StatCard icon={<Users className="w-5 h-5 text-indigo-400" />} label="Mathletes" value={String(mathleteCount ?? 0)} bg="bg-indigo-900/30" />
++          <StatCard icon={<BookOpen className="w-5 h-5 text-emerald-400" />} label="Teachers" value={String(teacherList.length)} bg="bg-emerald-900/30" />
++          <StatCard icon={<Trophy className="w-5 h-5 text-amber-400" />} label="Classroom Leagues" value={String(classLeagueList.length)} bg="bg-amber-900/30" />
++          <StatCard icon={<TrendingUp className="w-5 h-5 text-violet-400" />} label="School League" value={schoolLeague ? 'Active' : 'Not started'} bg="bg-violet-900/30" />
+         </div>
++
++        {pendingAdvancement && (
++          <div className="flex items-start gap-3 p-4 rounded-xl bg-amber-900/30 border border-amber-700/50">
++            <Clock className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
++            <div>
++              <p className="text-sm font-semibold text-amber-300">School League not yet created</p>
++              <p className="text-xs text-amber-400/80 mt-0.5">
++                Classroom leagues are running but no school-level league exists yet. Call{' '}
++                <code className="bg-amber-900/60 px-1 rounded">POST /api/league/split/close</code> to
++                trigger advancement and seed the school league bracket.
++              </p>
++            </div>
++          </div>
++        )}
++
++        {schoolLeague && (
++          <section>
++            <h2 className="text-lg font-semibold mb-3">School League</h2>
++            <Link href={`/league/${schoolLeague.id}`} className="flex items-center justify-between p-4 rounded-xl bg-indigo-900/30 border border-indigo-700/50 hover:bg-indigo-900/50 transition-colors group">
++              <div className="flex items-center gap-3">
++                <Trophy className="w-5 h-5 text-indigo-400" />
++                <div>
++                  <p className="font-semibold text-white">{(schoolLeague as any).name}</p>
++                  <p className="text-xs text-indigo-300 capitalize">{(schoolLeague as any).status}</p>
++                </div>
++              </div>
++              <ArrowRight className="w-4 h-4 text-indigo-400 group-hover:translate-x-1 transition-transform" />
++            </Link>
++          </section>
++        )}
++
++        <section>
++          <h2 className="text-lg font-semibold mb-3">Classroom Leagues</h2>
++          {classLeagueList.length === 0 ? (
++            <p className="text-gray-500 text-sm">No classroom leagues found for this school.</p>
++          ) : (
++            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
++              {classLeagueList.map((league: any) => {
++                const standingCount = league.league_standings?.[0]?.count ?? 0;
++                const adv = league.league_advancement?.[0];
++                return (
++                  <Link key={league.id} href={`/league/${league.id}`} className="flex flex-col gap-2 p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors group">
++                    <div className="flex items-center justify-between">
++                      <p className="font-medium text-sm text-white truncate">{league.name}</p>
++                      <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${league.status === 'active' ? 'bg-emerald-900/60 text-emerald-300 border border-emerald-700/50' : 'bg-gray-800 text-gray-400 border border-gray-700'}`}>
++                        {league.status ?? 'pending'}
++                      </span>
++                    </div>
++                    <div className="flex items-center gap-3 text-xs text-gray-400">
++                      <span>{standingCount} mathletes</span>
++                      {adv && (
++                        <span className="flex items-center gap-1 text-indigo-400">
++                          <TrendingUp className="w-3 h-3" />
++                          Top {adv.slots_allocated} advance
++                        </span>
++                      )}
++                    </div>
++                    <ArrowRight className="w-3.5 h-3.5 text-gray-500 group-hover:text-white group-hover:translate-x-0.5 transition-all self-end" />
++                  </Link>
++                );
++              })}
++            </div>
++          )}
++        </section>
++
++        <section>
++          <h2 className="text-lg font-semibold mb-3">Teachers</h2>
++          {teacherList.length === 0 ? (
++            <p className="text-gray-500 text-sm">No teachers found for this school.</p>
++          ) : (
++            <div className="overflow-hidden rounded-xl border border-white/10">
++              <table className="w-full text-sm">
++                <thead>
++                  <tr className="border-b border-white/10 bg-white/5">
++                    <th className="text-left px-4 py-3 text-xs text-gray-400 font-medium uppercase tracking-wider">Name</th>
++                    <th className="text-left px-4 py-3 text-xs text-gray-400 font-medium uppercase tracking-wider">Email</th>
++                    <th className="text-left px-4 py-3 text-xs text-gray-400 font-medium uppercase tracking-wider">Joined</th>
++                    <th className="px-4 py-3"></th>
++                  </tr>
++                </thead>
++                <tbody>
++                  {teacherList.map((t: any, i: number) => (
++                    <tr key={t.id} className={`border-b border-white/5 ${i % 2 === 0 ? 'bg-transparent' : 'bg-white/[0.02]'}`}>
++                      <td className="px-4 py-3 font-medium text-white">{t.display_name}</td>
++                      <td className="px-4 py-3 text-gray-400">{t.email}</td>
++                      <td className="px-4 py-3 text-gray-500 text-xs">{t.created_at ? new Date(t.created_at).toLocaleDateString() : '—'}</td>
++                      <td className="px-4 py-3 text-right"><CheckCircle2 className="w-4 h-4 text-emerald-500 inline-block" /></td>
++                    </tr>
++                  ))}
++                </tbody>
++              </table>
++            </div>
++          )}
++        </section>
+       </main>
+     </div>
+   );
+-}
+\ No newline at end of file
++}
++
++function StatCard({ icon, label, value, bg }: { icon: React.ReactNode; label: string; value: string; bg: string }) {
++  return (
++    <div className={`rounded-xl p-4 border border-white/10 ${bg}`}>
++      <div className="flex items-center gap-2 mb-2">
++        {icon}
++        <span className="text-xs text-gray-400 font-medium uppercase tracking-wider">{label}</span>
++      </div>
++      <p className="text-2xl font-bold text-white">{value}</p>
++    </div>
++  );
++}
+diff --git a/src/app/dashboard/broadcast/page.tsx b/src/app/dashboard/broadcast/page.tsx
+index 12f90af..35f7e50 100644
+--- a/src/app/dashboard/broadcast/page.tsx
++++ b/src/app/dashboard/broadcast/page.tsx
+@@ -1,7 +1,15 @@
++// =============================================================================
++// MathAthlone — /dashboard/broadcast  (Broadcast Host Dashboard)
++// =============================================================================
++// Read-only overlay dashboard for live event hosts / commentators.
++// Shows: active heats, live standings for all leagues, recent results.
++// No write actions — purely observational.
++// =============================================================================
+ import { redirect } from 'next/navigation';
+ import Link from 'next/link';
+ import { createSupabaseServer } from '@/lib/supabase/server';
+ import MissingProfile from '@/components/auth/MissingProfile';
++import { Radio, Trophy, Zap, ArrowRight, Clock } from 'lucide-react';
+ 
+ export default async function BroadcastDashboard() {
+   const supabase = await createSupabaseServer();
+@@ -11,53 +19,170 @@ export default async function BroadcastDashboard() {
+ 
+   const { data: profile } = await supabase
+     .from('users')
+-    .select('display_name, country_code, school_id')
++    .select('display_name, school_id, schools!users_school_id_fkey ( name )')
+     .eq('id', user.id)
+     .maybeSingle();
+ 
+-  // Render recoverable error instead of redirecting — see athlete/page.tsx
+-  // for why redirecting here would create an infinite middleware loop.
+-  if (!profile) {
+-    return <MissingProfile email={user.email} role="broadcast_host" />;
+-  }
++  if (!profile) return <MissingProfile email={user.email} role="broadcast_host" />;
++
++  const schoolId = (profile as any).school_id as string | null;
++
++  // ── Active heats (status = 'active') ─────────────────────────────────────
++  const { data: activeHeats } = await supabase
++    .from('heats')
++    .select('id, title, status, created_at, heat_participations ( count )')
++    .eq('status', 'active')
++    .order('created_at', { ascending: false })
++    .limit(10);
++
++  // ── Recent completed heats (last 24 h) ───────────────────────────────────
++  const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
++  const { data: recentHeats } = await supabase
++    .from('heats')
++    .select('id, title, status, created_at, heat_participations ( count )')
++    .eq('status', 'completed')
++    .gte('created_at', since)
++    .order('created_at', { ascending: false })
++    .limit(20);
++
++  // ── Top standings across all leagues (school scope if available) ──────────
++  const leagueQuery = supabase
++    .from('leagues')
++    .select('id, name, level, status')
++    .in('status', ['active', 'playoffs'])
++    .order('level', { ascending: true })
++    .limit(12);
++
++  const { data: activeLeagues } = schoolId
++    ? await leagueQuery.eq('school_id', schoolId)
++    : await leagueQuery;
++
++  const heatList = (activeHeats ?? []) as any[];
++  const recentList = (recentHeats ?? []) as any[];
++  const leagueList = (activeLeagues ?? []) as any[];
+ 
+   return (
+-    <div className="min-h-screen bg-gray-50">
+-      <header className="bg-white shadow-sm">
++    <div className="min-h-screen bg-[#0a0f1e] text-white">
++      <header className="border-b border-white/10 bg-[#0d1424]/80 backdrop-blur-sm sticky top-0 z-10">
+         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+-          <Link href="/" className="text-2xl font-bold text-blue-600">
+-            Math<span className="text-amber-500">Athlone</span>
+-          </Link>
++          <div className="flex items-center gap-3">
++            <Link href="/" className="text-xl font-bold">
++              Math<span className="text-amber-400">Athlone</span>
++            </Link>
++            <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-red-900/60 text-red-300 text-xs font-medium border border-red-700/50">
++              <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse" />
++              BROADCAST
++            </span>
++          </div>
+           <div className="flex items-center gap-4">
+-            <span className="text-gray-600">{profile.display_name}</span>
++            <span className="text-sm text-gray-300">{(profile as any).display_name}</span>
+             <form action="/auth/signout" method="POST">
+-              <button className="text-sm text-gray-500 hover:text-gray-700">
+-                Sign Out
+-              </button>
++              <button className="text-sm text-gray-400 hover:text-white transition-colors">Sign Out</button>
+             </form>
+           </div>
+         </div>
+       </header>
+ 
+-      <main className="max-w-7xl mx-auto px-4 py-8">
+-        <div className="mb-8">
+-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+-            Welcome, {profile.display_name}! 📡
+-          </h1>
+-          <p className="text-gray-600">
+-            Broadcast Host
+-          </p>
++      <main className="max-w-7xl mx-auto px-4 py-8 space-y-8">
++        <div>
++          <h1 className="text-3xl font-bold mb-1">Broadcast Center</h1>
++          <p className="text-gray-400 text-sm">Live event overview — read-only</p>
+         </div>
+ 
+-        <div className="bg-white rounded-2xl shadow-sm p-12 text-center">
+-          <h2 className="text-2xl font-bold text-gray-900 mb-3">
+-            Broadcast Studio
+-          </h2>
+-          <p className="text-gray-600 max-w-xl mx-auto">
+-            Host live public Heats, broadcast competitions to a global audience, and manage your viewer base. Broadcast tooling is being built — check back soon.
+-          </p>
+-        </div>
++        {/* ── Active heats ─────────────────────────────────────────────────── */}
++        <section>
++          <div className="flex items-center gap-2 mb-3">
++            <Zap className="w-4 h-4 text-red-400" />
++            <h2 className="text-lg font-semibold">Live Heats</h2>
++            {heatList.length > 0 && (
++              <span className="px-2 py-0.5 rounded-full bg-red-900/60 text-red-300 text-xs font-medium border border-red-700/50">
++                {heatList.length} active
++              </span>
++            )}
++          </div>
++          {heatList.length === 0 ? (
++            <div className="p-6 rounded-xl bg-white/5 border border-white/10 text-center text-gray-500 text-sm">
++              No heats currently live.
++            </div>
++          ) : (
++            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
++              {heatList.map((h: any) => (
++                <Link key={h.id} href={`/compete/${h.id}`} className="flex items-center justify-between p-4 rounded-xl bg-red-900/20 border border-red-700/40 hover:bg-red-900/30 transition-colors group">
++                  <div className="flex items-center gap-3">
++                    <Radio className="w-4 h-4 text-red-400" />
++                    <div>
++                      <p className="font-medium text-sm text-white">{h.title ?? 'Untitled Heat'}</p>
++                      <p className="text-xs text-gray-400">{h.heat_participations?.[0]?.count ?? 0} participants</p>
++                    </div>
++                  </div>
++                  <ArrowRight className="w-4 h-4 text-red-400 group-hover:translate-x-1 transition-transform" />
++                </Link>
++              ))}
++            </div>
++          )}
++        </section>
++
++        {/* ── Active leagues ───────────────────────────────────────────────── */}
++        <section>
++          <div className="flex items-center gap-2 mb-3">
++            <Trophy className="w-4 h-4 text-amber-400" />
++            <h2 className="text-lg font-semibold">Active Leagues</h2>
++          </div>
++          {leagueList.length === 0 ? (
++            <p className="text-gray-500 text-sm">No active leagues found.</p>
++          ) : (
++            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
++              {leagueList.map((l: any) => (
++                <Link key={l.id} href={`/league/${l.id}`} className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors group">
++                  <div>
++                    <p className="font-medium text-sm text-white">{l.name}</p>
++                    <p className="text-xs text-gray-400 capitalize">{l.level} · {l.status}</p>
++                  </div>
++                  <ArrowRight className="w-4 h-4 text-gray-500 group-hover:text-white group-hover:translate-x-0.5 transition-all" />
++                </Link>
++              ))}
++            </div>
++          )}
++        </section>
++
++        {/* ── Recent results ───────────────────────────────────────────────── */}
++        <section>
++          <div className="flex items-center gap-2 mb-3">
++            <Clock className="w-4 h-4 text-indigo-400" />
++            <h2 className="text-lg font-semibold">Recent Results (last 24 h)</h2>
++          </div>
++          {recentList.length === 0 ? (
++            <p className="text-gray-500 text-sm">No completed heats in the last 24 hours.</p>
++          ) : (
++            <div className="overflow-hidden rounded-xl border border-white/10">
++              <table className="w-full text-sm">
++                <thead>
++                  <tr className="border-b border-white/10 bg-white/5">
++                    <th className="text-left px-4 py-3 text-xs text-gray-400 font-medium uppercase tracking-wider">Heat</th>
++                    <th className="text-left px-4 py-3 text-xs text-gray-400 font-medium uppercase tracking-wider">Participants</th>
++                    <th className="text-left px-4 py-3 text-xs text-gray-400 font-medium uppercase tracking-wider">Completed</th>
++                    <th className="px-4 py-3"></th>
++                  </tr>
++                </thead>
++                <tbody>
++                  {recentList.map((h: any, i: number) => (
++                    <tr key={h.id} className={`border-b border-white/5 ${i % 2 === 0 ? 'bg-transparent' : 'bg-white/[0.02]'}`}>
++                      <td className="px-4 py-3 font-medium text-white">{h.title ?? 'Untitled Heat'}</td>
++                      <td className="px-4 py-3 text-gray-400">{h.heat_participations?.[0]?.count ?? 0}</td>
++                      <td className="px-4 py-3 text-gray-500 text-xs">{new Date(h.created_at).toLocaleString()}</td>
++                      <td className="px-4 py-3 text-right">
++                        <Link href={`/compete/${h.id}/results`} className="text-xs text-indigo-400 hover:text-indigo-300">
++                          Results →
++                        </Link>
++                      </td>
++                    </tr>
++                  ))}
++                </tbody>
++              </table>
++            </div>
++          )}
++        </section>
+       </main>
+     </div>
+   );
+-}
+\ No newline at end of file
++}
+diff --git a/src/app/dashboard/parent/page.tsx b/src/app/dashboard/parent/page.tsx
+index 897e5b3..1ea1a8d 100644
+--- a/src/app/dashboard/parent/page.tsx
++++ b/src/app/dashboard/parent/page.tsx
+@@ -1,7 +1,19 @@
++// =============================================================================
++// MathAthlone — /dashboard/parent  (Parent Dashboard)
++// =============================================================================
++// Read-only view for parents. Shows:
++//   • Their linked child's profile + ELO rating
++//   • Child's classroom league standing
++//   • Child's recent heat results (last 10)
++//   • Child's classroom league link
++// Parents are linked to athletes via a parent_athlete_links table (if it exists)
++// or via a parent_id FK on users. Falls back to showing school-wide public data.
++// =============================================================================
+ import { redirect } from 'next/navigation';
+ import Link from 'next/link';
+ import { createSupabaseServer } from '@/lib/supabase/server';
+ import MissingProfile from '@/components/auth/MissingProfile';
++import { User, Trophy, TrendingUp, ArrowRight, Star } from 'lucide-react';
+ 
+ export default async function ParentDashboard() {
+   const supabase = await createSupabaseServer();
+@@ -11,53 +23,204 @@ export default async function ParentDashboard() {
+ 
+   const { data: profile } = await supabase
+     .from('users')
+-    .select('display_name, country_code, school_id')
++    .select('id, display_name, school_id')
+     .eq('id', user.id)
+     .maybeSingle();
+ 
+-  // Render recoverable error instead of redirecting — see athlete/page.tsx
+-  // for why redirecting here would create an infinite middleware loop.
+-  if (!profile) {
+-    return <MissingProfile email={user.email} role="parent" />;
++  if (!profile) return <MissingProfile email={user.email} role="parent" />;
++
++  // ── Find linked child ─────────────────────────────────────────────────────
++  // Try parent_athlete_links table first; fall back to users.parent_id
++  let childProfile: any = null;
++
++  let linkRow: { athlete_id: string } | null = null;
++  try {
++    const { data: lr } = await (supabase
++      .from('parent_athlete_links' as any)
++      .select('athlete_id')
++      .eq('parent_id', user.id)
++      .maybeSingle() as any);
++    linkRow = lr as { athlete_id: string } | null;
++  } catch {
++    linkRow = null; // table may not exist yet
++  }
++
++  if (linkRow?.athlete_id) {
++    const { data: child } = await supabase
++      .from('users')
++      .select('id, display_name, grade_level, avatar_url, school_id, schools!users_school_id_fkey ( name )')
++      .eq('id', linkRow.athlete_id)
++      .maybeSingle();
++    childProfile = child;
++  }
++
++  // ── Child's ELO rating ────────────────────────────────────────────────────
++  let childRating: number | null = null;
++  let childDivision: string | null = null;
++  if (childProfile?.id) {
++    const { data: ratingRow } = await supabase
++      .from('athlete_ratings')
++      .select('rating, divisions:division_id ( name )')
++      .eq('athlete_id', childProfile.id)
++      .order('games_played', { ascending: false })
++      .limit(1)
++      .maybeSingle();
++    childRating = ratingRow ? Number((ratingRow as any).rating) : null;
++    childDivision = (ratingRow as any)?.divisions?.name ?? null;
++  }
++
++  // ── Child's classroom league standing ────────────────────────────────────
++  let childStanding: any = null;
++  let childLeague: any = null;
++  if (childProfile?.id) {
++    const { data: standing } = await supabase
++      .from('league_standings')
++      .select('rank, wins, losses, draws, points, current_elo, leagues:league_id ( id, name, level )')
++      .eq('athlete_id', childProfile.id)
++      .eq('leagues.level', 'classroom')
++      .order('rank', { ascending: true })
++      .limit(1)
++      .maybeSingle();
++    if (standing) {
++      childStanding = standing;
++      childLeague = (standing as any).leagues;
++    }
++  }
++
++  // ── Child's recent heat results ───────────────────────────────────────────
++  let recentResults: any[] = [];
++  if (childProfile?.id) {
++    const { data: results } = await supabase
++      .from('heat_participations')
++      .select('rank_in_heat, cta_score, questions_correct, questions_attempted, total_time_ms, heats:heat_id ( title, created_at )')
++      .eq('athlete_id', childProfile.id)
++      .eq('status', 'finished')
++      .order('created_at', { ascending: false, referencedTable: 'heats' })
++      .limit(10);
++    recentResults = (results ?? []) as any[];
+   }
+ 
+   return (
+-    <div className="min-h-screen bg-gray-50">
+-      <header className="bg-white shadow-sm">
++    <div className="min-h-screen bg-[#0a0f1e] text-white">
++      <header className="border-b border-white/10 bg-[#0d1424]/80 backdrop-blur-sm sticky top-0 z-10">
+         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+-          <Link href="/" className="text-2xl font-bold text-blue-600">
+-            Math<span className="text-amber-500">Athlone</span>
++          <Link href="/" className="text-xl font-bold">
++            Math<span className="text-amber-400">Athlone</span>
+           </Link>
+           <div className="flex items-center gap-4">
+-            <span className="text-gray-600">{profile.display_name}</span>
++            <span className="text-sm text-gray-300">{(profile as any).display_name}</span>
++            <span className="px-2 py-0.5 rounded-full bg-emerald-900/60 text-emerald-300 text-xs font-medium border border-emerald-700/50">
++              Parent
++            </span>
+             <form action="/auth/signout" method="POST">
+-              <button className="text-sm text-gray-500 hover:text-gray-700">
+-                Sign Out
+-              </button>
++              <button className="text-sm text-gray-400 hover:text-white transition-colors">Sign Out</button>
+             </form>
+           </div>
+         </div>
+       </header>
+ 
+-      <main className="max-w-7xl mx-auto px-4 py-8">
+-        <div className="mb-8">
+-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+-            Welcome, {profile.display_name}! 👨‍👩‍👧
+-          </h1>
+-          <p className="text-gray-600">
+-            Parent / Guardian
+-          </p>
++      <main className="max-w-3xl mx-auto px-4 py-8 space-y-8">
++        <div>
++          <h1 className="text-3xl font-bold mb-1">Parent Dashboard</h1>
++          <p className="text-gray-400 text-sm">Track your child's MathAthlone progress</p>
+         </div>
+ 
+-        <div className="bg-white rounded-2xl shadow-sm p-12 text-center">
+-          <h2 className="text-2xl font-bold text-gray-900 mb-3">
+-            Family Dashboard
+-          </h2>
+-          <p className="text-gray-600 max-w-xl mx-auto">
+-            View your children's Heat results, manage parental consent, set time limits, and track progress. The parent experience is being built — check back soon.
+-          </p>
+-        </div>
++        {/* ── No child linked ───────────────────────────────────────────────── */}
++        {!childProfile && (
++          <div className="p-8 rounded-xl bg-white/5 border border-white/10 text-center space-y-3">
++            <User className="w-10 h-10 text-gray-500 mx-auto" />
++            <p className="text-gray-300 font-semibold">No athlete linked yet</p>
++            <p className="text-gray-500 text-sm max-w-sm mx-auto">
++              Ask your child's teacher to send you an invite link, or contact your school admin to link your account to your child's profile.
++            </p>
++          </div>
++        )}
++
++        {/* ── Child profile card ────────────────────────────────────────────── */}
++        {childProfile && (
++          <>
++            <section className="p-5 rounded-xl bg-white/5 border border-white/10 space-y-4">
++              <div className="flex items-center gap-4">
++                <div className="w-12 h-12 rounded-full bg-indigo-700 flex items-center justify-center text-lg font-bold text-white">
++                  {childProfile.display_name?.[0]?.toUpperCase() ?? '?'}
++                </div>
++                <div>
++                  <p className="text-lg font-bold text-white">{childProfile.display_name}</p>
++                  <p className="text-sm text-gray-400">
++                    Grade {childProfile.grade_level ?? '—'} · {childProfile.schools?.name ?? 'Unknown School'}
++                  </p>
++                </div>
++              </div>
++
++              <div className="grid grid-cols-3 gap-3">
++                <div className="rounded-lg bg-indigo-900/30 border border-indigo-700/40 p-3 text-center">
++                  <p className="text-xs text-gray-400 mb-1">ELO Rating</p>
++                  <p className="text-xl font-bold text-indigo-300">{childRating ?? '—'}</p>
++                  {childDivision && <p className="text-[10px] text-gray-500 mt-0.5">{childDivision}</p>}
++                </div>
++                {childStanding && (
++                  <>
++                    <div className="rounded-lg bg-amber-900/30 border border-amber-700/40 p-3 text-center">
++                      <p className="text-xs text-gray-400 mb-1">League Rank</p>
++                      <p className="text-xl font-bold text-amber-300">#{childStanding.rank}</p>
++                    </div>
++                    <div className="rounded-lg bg-emerald-900/30 border border-emerald-700/40 p-3 text-center">
++                      <p className="text-xs text-gray-400 mb-1">Record</p>
++                      <p className="text-xl font-bold text-emerald-300">
++                        {childStanding.wins}W–{childStanding.losses}L
++                      </p>
++                    </div>
++                  </>
++                )}
++              </div>
++
++              {childLeague && (
++                <Link href={`/league/${childLeague.id}`} className="flex items-center justify-between p-3 rounded-lg bg-indigo-900/20 border border-indigo-700/30 hover:bg-indigo-900/40 transition-colors group">
++                  <div className="flex items-center gap-2">
++                    <Trophy className="w-4 h-4 text-indigo-400" />
++                    <span className="text-sm text-indigo-300">{childLeague.name}</span>
++                  </div>
++                  <ArrowRight className="w-4 h-4 text-indigo-400 group-hover:translate-x-1 transition-transform" />
++                </Link>
++              )}
++            </section>
++
++            {/* ── Recent heat results ───────────────────────────────────────── */}
++            <section>
++              <div className="flex items-center gap-2 mb-3">
++                <Star className="w-4 h-4 text-amber-400" />
++                <h2 className="text-lg font-semibold">Recent Heats</h2>
++              </div>
++              {recentResults.length === 0 ? (
++                <p className="text-gray-500 text-sm">No heats completed yet.</p>
++              ) : (
++                <div className="overflow-hidden rounded-xl border border-white/10">
++                  <table className="w-full text-sm">
++                    <thead>
++                      <tr className="border-b border-white/10 bg-white/5">
++                        <th className="text-left px-4 py-3 text-xs text-gray-400 font-medium uppercase tracking-wider">Heat</th>
++                        <th className="text-right px-4 py-3 text-xs text-gray-400 font-medium uppercase tracking-wider">Rank</th>
++                        <th className="text-right px-4 py-3 text-xs text-gray-400 font-medium uppercase tracking-wider">CTA</th>
++                        <th className="text-right px-4 py-3 text-xs text-gray-400 font-medium uppercase tracking-wider">Correct</th>
++                      </tr>
++                    </thead>
++                    <tbody>
++                      {recentResults.map((r: any, i: number) => (
++                        <tr key={i} className={`border-b border-white/5 ${i % 2 === 0 ? 'bg-transparent' : 'bg-white/[0.02]'}`}>
++                          <td className="px-4 py-3 text-white">{r.heats?.title ?? 'Heat'}</td>
++                          <td className="px-4 py-3 text-right text-gray-300">#{r.rank_in_heat}</td>
++                          <td className="px-4 py-3 text-right text-emerald-400 font-medium">{Number(r.cta_score ?? 0).toFixed(1)}</td>
++                          <td className="px-4 py-3 text-right text-gray-400">{r.questions_correct ?? 0}/{r.questions_attempted ?? 0}</td>
++                        </tr>
++                      ))}
++                    </tbody>
++                  </table>
++                </div>
++              )}
++            </section>
++          </>
++        )}
+       </main>
+     </div>
+   );
+-}
+\ No newline at end of file
++}
+-- 
+2.43.0
+
