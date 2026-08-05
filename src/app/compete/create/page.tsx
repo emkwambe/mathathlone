@@ -241,16 +241,21 @@ export default function CreateHeatPage() {
     setIntegrity,
     setQuestionCount,
     setDuration,
+    selectContentDivision,
   } = useHeatConfigState();
 
   const {
     divisions, courses, unitTopics, concepts,
-    selectedDivision, selectedCourse, selectedConceptIds, expandedTopics,
+    selectedDivision, selectedContentDivision, selectedCourse, selectedConceptIds, expandedTopics,
     mode, questionProfile, integrityLevel, questionCount, durationMinutes,
     leagueId, leagueScope,
     loadingCurriculum, loadingCourses, loadingConcepts,
     creating, error,
   } = state;
+
+  // The effective content division: if teacher chose a prior-grade division,
+  // use that for course/concept loading; otherwise fall back to ranking division.
+  const effectiveContentDivision = selectedContentDivision ?? selectedDivision;
 
   // ── Auth gate ─────────────────────────────────────────────────────────────
   useEffect(() => {
@@ -265,7 +270,7 @@ export default function CreateHeatPage() {
     async function loadDivisions() {
       dispatch({ type: 'SET_LOADING_CURRICULUM', payload: true });
       const [divResult, dcResult] = await Promise.all([
-        supabase.from('divisions').select('id, name, code, grade_min, grade_max').order('grade_min', { ascending: true }),
+        supabase.from('divisions').select('id, name, code, grade_min, grade_max, display_order').order('display_order', { ascending: true }),
         supabase.from('division_curricula').select('division_id'),
       ]);
       if (cancelled) return;
@@ -273,6 +278,7 @@ export default function CreateHeatPage() {
       const linked = new Set<string>((dcResult.data ?? []).map((r: any) => r.division_id));
       const rows: DivisionRow[] = (divResult.data ?? []).map((d: any) => ({
         id: d.id, name: d.name, code: d.code, grade_min: d.grade_min, grade_max: d.grade_max,
+        display_order: d.display_order ?? 0,
         available: (DIVISION_GRADE_BANDS[d.code]?.length ?? 0) > 0 || (DIVISION_COURSE_CODES[d.code]?.length ?? 0) > 0 || linked.has(d.id),
       }));
       dispatch({ type: 'SET_DIVISIONS', payload: rows });
@@ -287,12 +293,15 @@ export default function CreateHeatPage() {
   }, [supabase, profile?.grade_level, lastSel.divisionCode, dispatch, selectDivision]);
 
   // ── Load courses ──────────────────────────────────────────────────────────
+  // Courses are loaded for the effectiveContentDivision (prior-grade if set,
+  // otherwise the ranking division). This allows warm-up heats to show
+  // prior-grade courses while the ranking division stays fixed.
   useEffect(() => {
-    if (!selectedDivision) { dispatch({ type: 'SET_COURSES', payload: [] }); selectCourse(null); return; }
+    if (!effectiveContentDivision) { dispatch({ type: 'SET_COURSES', payload: [] }); selectCourse(null); return; }
     let cancelled = false;
     async function loadCourses() {
       dispatch({ type: 'SET_LOADING_COURSES', payload: true });
-      const divisionCode = selectedDivision!.code;
+      const divisionCode = effectiveContentDivision!.code;
       const gradeBands = DIVISION_GRADE_BANDS[divisionCode] ?? [];
       const courseCodes = DIVISION_COURSE_CODES[divisionCode] ?? [];
       if (gradeBands.length === 0 && courseCodes.length === 0) { dispatch({ type: 'SET_COURSES', payload: [] }); selectCourse(null); return; }
@@ -311,7 +320,7 @@ export default function CreateHeatPage() {
     }
     loadCourses();
     return () => { cancelled = true; };
-  }, [selectedDivision, supabase, lastSel.courseId, dispatch, selectCourse]);
+  }, [effectiveContentDivision, supabase, lastSel.courseId, dispatch, selectCourse]);
 
   // ── Load concept tree ─────────────────────────────────────────────────────
   useEffect(() => {
@@ -354,10 +363,9 @@ export default function CreateHeatPage() {
       const profileMeta = QUESTION_PROFILES[questionProfile];
       const heat = await createHeat(supabase, {
         ranking_division_id: selectedDivision.id,
-        // content_division_id defaults to ranking_division_id (same-grade case).
-        // Sprint 13: when a teacher selects a prior-grade division for warm-up
-        // heats, content_division_id will differ from ranking_division_id.
-        content_division_id: selectedDivision.id,
+        // content_division_id: if a prior-grade division was chosen for warm-up,
+        // use that; otherwise default to the ranking division (same-grade heat).
+        content_division_id: selectedContentDivision?.id ?? selectedDivision.id,
         unit_topic_id: null,
         concept_ids: conceptIdsArr,
         depth_min: profileMeta.depth_min,
@@ -487,6 +495,63 @@ export default function CreateHeatPage() {
                   );
                 })}
               </div>
+
+              {/* Prior-Grade Warm-Up Selector */}
+              {/* Only shown when a ranking division is selected and there is a
+                  lower available division to choose from. */}
+              {selectedDivision && (() => {
+                const lowerDivisions = divisions.filter(
+                  (d) => d.available && (d.display_order ?? 0) < (selectedDivision.display_order ?? 0)
+                );
+                if (lowerDivisions.length === 0) return null;
+                const isWarmUp = !!selectedContentDivision;
+                return (
+                  <div className="mb-6 p-4 rounded-xl border-2 border-dashed border-blue-200 bg-blue-50">
+                    <div className="flex items-center justify-between mb-2">
+                      <div>
+                        <p className="text-sm font-semibold text-blue-900">Prior-Grade Warm-Up</p>
+                        <p className="text-xs text-blue-600 mt-0.5">
+                          Draw questions from a lower division. Results still count toward{' '}
+                          <strong>{selectedDivision.name}</strong> standings.
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => selectContentDivision(isWarmUp ? null : lowerDivisions[lowerDivisions.length - 1])}
+                        className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition ${
+                          isWarmUp
+                            ? 'bg-blue-600 text-white hover:bg-blue-700'
+                            : 'bg-white border border-blue-300 text-blue-700 hover:bg-blue-100'
+                        }`}
+                      >
+                        {isWarmUp ? 'Warm-Up On' : 'Enable Warm-Up'}
+                      </button>
+                    </div>
+                    {isWarmUp && (
+                      <div className="flex flex-wrap gap-2 mt-3">
+                        {lowerDivisions.map((d) => {
+                          const isContentSelected = selectedContentDivision?.id === d.id;
+                          return (
+                            <button
+                              key={d.id}
+                              type="button"
+                              onClick={() => selectContentDivision(d)}
+                              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-medium transition ${
+                                isContentSelected
+                                  ? 'border-blue-500 bg-blue-600 text-white'
+                                  : 'border-blue-200 bg-white text-blue-700 hover:border-blue-400'
+                              }`}
+                            >
+                              {isContentSelected && <Check className="w-3 h-3" />}
+                              {d.name} (Gr {d.grade_min}–{d.grade_max})
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
 
               {/* Course */}
               <p className="text-xs text-gray-400 mb-3">Course</p>
@@ -682,8 +747,18 @@ export default function CreateHeatPage() {
               <div className="bg-white rounded-2xl border border-gray-200 p-6">
                 <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-500 mb-4">Heat Summary</h2>
                 <div className="space-y-2">
-                  <SummaryRow label="Content" value={selectedDivision?.name ?? '—'} />
-                  <SummaryRow label="Ranks toward" value={selectedDivision?.name ? `${selectedDivision.name} standings` : '—'} />
+                  <SummaryRow
+                    label="Content"
+                    value={
+                      selectedContentDivision
+                        ? `${selectedContentDivision.name} (Warm-Up ↑)`
+                        : selectedDivision?.name ?? '—'
+                    }
+                  />
+                  <SummaryRow
+                    label="Ranks toward"
+                    value={selectedDivision?.name ? `${selectedDivision.name} standings` : '—'}
+                  />
                   <SummaryRow label="Course"   value={selectedCourse?.name ?? '—'} />
                   <SummaryRow
                     label="Topics"

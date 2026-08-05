@@ -23,6 +23,7 @@ export interface DivisionRow {
   code: string;
   grade_min: number;
   grade_max: number;
+  display_order?: number;
   available: boolean;
 }
 
@@ -108,7 +109,8 @@ export interface HeatConfigState {
   concepts: ConceptRow[];
 
   // Selections
-  selectedDivision: DivisionRow | null;
+  selectedDivision: DivisionRow | null;       // The ranking division (grade cohort)
+  selectedContentDivision: DivisionRow | null; // The content division (prior-grade warm-up; null = same as ranking)
   selectedCourse: CourseRow | null;
   selectedConceptIds: Set<string>;
   expandedTopics: Set<string>;
@@ -139,6 +141,7 @@ export type HeatConfigAction =
   | { type: 'SET_COURSES'; payload: CourseRow[] }
   | { type: 'SET_TREE'; payload: { topics: UnitTopicRow[]; concepts: ConceptRow[] } }
   | { type: 'SELECT_DIVISION'; payload: DivisionRow | null }
+  | { type: 'SELECT_CONTENT_DIVISION'; payload: DivisionRow | null }
   | { type: 'SELECT_COURSE'; payload: CourseRow | null }
   | { type: 'TOGGLE_CONCEPT'; payload: string }
   | { type: 'TOGGLE_TOPIC'; payload: { topicId: string; conceptIds: string[] } }
@@ -183,10 +186,26 @@ function reducer(state: HeatConfigState, action: HeatConfigAction): HeatConfigSt
     }
 
     case 'SELECT_DIVISION':
-      // Cascade: changing division clears course + concepts.
+      // Cascade: changing ranking division clears course + concepts.
+      // Also reset content division to null (same-as-ranking default).
       return {
         ...state,
         selectedDivision: action.payload,
+        selectedContentDivision: null,
+        selectedCourse: null,
+        courses: [],
+        unitTopics: [],
+        concepts: [],
+        selectedConceptIds: new Set(),
+        expandedTopics: new Set(),
+      };
+
+    case 'SELECT_CONTENT_DIVISION':
+      // Changing content division clears course + concepts (new curriculum).
+      // Does NOT change the ranking division.
+      return {
+        ...state,
+        selectedContentDivision: action.payload,
         selectedCourse: null,
         courses: [],
         unitTopics: [],
@@ -295,6 +314,7 @@ function makeInitialState(lastSel: LastSelection): HeatConfigState {
     unitTopics: [],
     concepts: [],
     selectedDivision: null,
+    selectedContentDivision: null,
     selectedCourse: null,
     selectedConceptIds: new Set(),
     expandedTopics: new Set(),
@@ -361,6 +381,10 @@ export function useHeatConfigState() {
 
   const selectDivision = useCallback(
     (d: DivisionRow | null) => dispatch({ type: 'SELECT_DIVISION', payload: d }),
+    []
+  );
+  const selectContentDivision = useCallback(
+    (d: DivisionRow | null) => dispatch({ type: 'SELECT_CONTENT_DIVISION', payload: d }),
     []
   );
   const selectCourse = useCallback(
@@ -445,6 +469,7 @@ export function useHeatConfigState() {
     lastSel,
     // Stable dispatchers
     selectDivision,
+    selectContentDivision,
     selectCourse,
     toggleConcept,
     toggleTopic,

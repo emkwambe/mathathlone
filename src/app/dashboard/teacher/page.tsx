@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createSupabaseServer } from '@/lib/supabase/server';
 import MissingProfile from '@/components/auth/MissingProfile';
+import AdvancementEligiblePanel from '@/components/teacher/AdvancementEligiblePanel';
 
 export default async function TeacherDashboard() {
   const supabase = await createSupabaseServer();
@@ -63,7 +64,7 @@ export default async function TeacherDashboard() {
 
   // Get advancement-eligible students across all classes taught by this teacher.
   // A student is eligible when their athlete_ratings.advancement_eligible = true.
-  let advancementStudents: Array<{ display_name: string; grade_level: number | null; rating: number; division_name: string | null; class_name: string }> = [];
+  let advancementStudents: Array<{ athlete_id: string; display_name: string; grade_level: number | null; rating: number; division_id: string; division_name: string | null; class_name: string }> = [];
   if (classes && classes.length > 0) {
     const classIds = (classes as any[]).map((c) => c.id);
     const { data: advData } = await supabase
@@ -87,9 +88,11 @@ export default async function TeacherDashboard() {
         const eligibleRating = (u.athlete_ratings ?? []).find((r: any) => r.advancement_eligible === true);
         if (eligibleRating) {
           advancementStudents.push({
+            athlete_id: u.id ?? '',
             display_name: u.display_name ?? 'Mathlete',
             grade_level: u.grade_level ?? null,
             rating: eligibleRating.rating ?? 0,
+            division_id: eligibleRating.division_id ?? '',
             division_name: eligibleRating.divisions?.name ?? null,
             class_name: row.classes?.name ?? 'Unknown Class',
           });
@@ -239,39 +242,7 @@ export default async function TeacherDashboard() {
         )}
 
         {/* Advancement Eligible Students */}
-        {advancementStudents.length > 0 && (
-          <div className="bg-white rounded-xl shadow-sm p-6 mb-8 border-l-4 border-amber-400">
-            <div className="flex items-center gap-2 mb-4">
-              <span className="text-xl">⭐</span>
-              <h2 className="text-lg font-semibold text-gray-900">Advancement Eligible</h2>
-              <span className="ml-auto text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded-full font-medium">
-                {advancementStudents.length} student{advancementStudents.length !== 1 ? 's' : ''}
-              </span>
-            </div>
-            <p className="text-sm text-gray-500 mb-4">
-              These students have exceeded the advancement threshold (ELO ≥ 1350) in their current division and are ready to compete at the next level.
-            </p>
-            <div className="space-y-2">
-              {advancementStudents.map((s, i) => (
-                <div key={i} className="flex items-center justify-between p-3 bg-amber-50 rounded-lg border border-amber-100">
-                  <div>
-                    <span className="font-medium text-gray-900">{s.display_name}</span>
-                    {s.grade_level && <span className="ml-2 text-xs text-gray-500">Grade {s.grade_level}</span>}
-                    <span className="ml-2 text-xs text-gray-400">{s.class_name}</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    {s.division_name && (
-                      <span className="text-xs bg-white border border-amber-200 text-amber-700 px-2 py-0.5 rounded">
-                        {s.division_name}
-                      </span>
-                    )}
-                    <span className="text-sm font-semibold text-amber-700">★ {Math.round(s.rating)} ELO</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+        <AdvancementEligiblePanel students={advancementStudents} />
 
         {/* Recent Heats */}
         <div className="bg-white rounded-xl shadow-sm p-6">
