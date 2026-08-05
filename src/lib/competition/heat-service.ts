@@ -73,7 +73,10 @@ export type IntegrityLevel =
 export type HeatScope = 'class' | 'school' | 'global';
 
 export interface CreateHeatParams {
-  division_id: string;
+  /** The grade cohort whose ELO and standings receive the results. Always the teacher's class grade. */
+  ranking_division_id: string;
+  /** The division whose curriculum the questions are drawn from. Defaults to ranking_division_id when omitted. */
+  content_division_id?: string | null;
   unit_topic_id: string | null;           // null = "Mixed" across all topics
   /**
    * Explicit list of atomic_concepts.id selected via the topic/concept
@@ -131,7 +134,10 @@ export interface Heat {
   id: string;
   code: string;
   topic_id: string | null;          // legacy FK; nullable after migration 016
-  division_id: string | null;
+  /** Renamed from division_id in migration 043. The grade cohort for ELO/standings. */
+  ranking_division_id: string | null;
+  /** The division whose curriculum was used. NULL means same as ranking_division_id. */
+  content_division_id: string | null;
   unit_topic_id: string | null;
   depth_min: number;
   depth_max: number;
@@ -296,11 +302,11 @@ export async function createHeat(
 
   // Resolve division_code for the global-lobby index
   let divisionCode: string | null = null;
-  if (params.division_id) {
+  if (params.ranking_division_id) {
     const { data: division } = await supabase
       .from('divisions')
       .select('code')
-      .eq('id', params.division_id)
+      .eq('id', params.ranking_division_id)
       .maybeSingle();
     divisionCode = division?.code ?? null;
   }
@@ -326,7 +332,8 @@ export async function createHeat(
   const insertPayload = {
     code,
     topic_id: topicId,                                    // legacy FK satisfied
-    division_id: params.division_id,
+    ranking_division_id: params.ranking_division_id,
+    content_division_id: params.content_division_id ?? params.ranking_division_id,
     unit_topic_id: params.unit_topic_id,                  // null => mixed
     depth_min: params.depth_min,
     depth_max: params.depth_max,

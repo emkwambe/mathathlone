@@ -133,7 +133,7 @@ export async function calculateHeatResults(
   // results-released gate downstream).
   const { data: heat, error: heatError } = await supabase
     .from('heats')
-    .select('id, duration_seconds, division_id, question_count, is_assessment, grade_bands')
+    .select('id, duration_seconds, ranking_division_id, content_division_id, question_count, is_assessment, grade_bands')
     .eq('id', heatId)
     .single();
 
@@ -143,7 +143,9 @@ export async function calculateHeatResults(
 
   const durationMs = Math.max(1, (heat.duration_seconds ?? 900) * 1000);
   const totalQuestions = Math.max(1, heat.question_count ?? 1);
-  const divisionId: string | null = heat.division_id ?? null;
+  // ranking_division_id — the grade cohort whose ELO and standings receive results
+  // content_division_id  — the curriculum the questions were drawn from (may differ)
+  const divisionId: string | null = heat.ranking_division_id ?? null;
   const isAssessment: boolean = (heat as { is_assessment?: boolean }).is_assessment ?? false;
   const gradeBands: GradeBands = (heat as { grade_bands?: GradeBands | null }).grade_bands ?? DEFAULT_GRADE_BANDS;
 
@@ -380,7 +382,7 @@ export async function calculateHeatResults(
   const awardRows = results.map((r) => ({
     heat_id: heatId,
     athlete_id: r.athlete_id,
-    division_id: divisionId,
+    ranking_division_id: divisionId,
     raw_score: r.cta_score,
     accuracy_pct: r.accuracy_score,
     percentile: r.percentile,
@@ -472,7 +474,7 @@ export async function updateAthleteRatingsFromHeat(
   if (missing.length > 0) {
     const seedRows = missing.map((athleteId) => ({
       athlete_id: athleteId,
-      division_id: divisionId,
+      division_id: divisionId,  // athlete_ratings.division_id = ranking division
       rating: RATING_CONFIG.STARTING,
       rating_deviation: RATING_CONFIG.STARTING_RD,
       volatility: RATING_CONFIG.STARTING_VOLATILITY,
@@ -554,6 +556,22 @@ export async function updateAthleteRatingsFromHeat(
       updateQuery = updateQuery.is('division_id', null);
     }
     const { error: updateErr } = await updateQuery;
+
+    // Advancement eligibility: flag the athlete if their new rating crosses
+    // the threshold (1350). This surfaces a badge on the teacher dashboard.
+    const ADVANCEMENT_THRESHOLD = 1350;
+    if (!updateErr && newRating >= ADVANCEMENT_THRESHOLD) {
+      let advQuery = supabase
+        .from('athlete_ratings')
+        .update({ advancement_eligible: true })
+        .eq('athlete_id', r.athlete_id);
+      if (divisionId) {
+        advQuery = advQuery.eq('division_id', divisionId);
+      } else {
+        advQuery = advQuery.is('division_id', null);
+      }
+      await advQuery; // non-blocking — ignore error
+    }
     if (updateErr) {
       console.warn(
         `[scoring-service] athlete_ratings update failed for ${r.athlete_id}:`,

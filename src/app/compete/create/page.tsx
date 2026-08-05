@@ -353,7 +353,11 @@ export default function CreateHeatPage() {
       const conceptIdsArr = Array.from(selectedConceptIds);
       const profileMeta = QUESTION_PROFILES[questionProfile];
       const heat = await createHeat(supabase, {
-        division_id: selectedDivision.id,
+        ranking_division_id: selectedDivision.id,
+        // content_division_id defaults to ranking_division_id (same-grade case).
+        // Sprint 13: when a teacher selects a prior-grade division for warm-up
+        // heats, content_division_id will differ from ranking_division_id.
+        content_division_id: selectedDivision.id,
         unit_topic_id: null,
         concept_ids: conceptIdsArr,
         depth_min: profileMeta.depth_min,
@@ -678,7 +682,8 @@ export default function CreateHeatPage() {
               <div className="bg-white rounded-2xl border border-gray-200 p-6">
                 <h2 className="text-sm font-semibold uppercase tracking-wider text-gray-500 mb-4">Heat Summary</h2>
                 <div className="space-y-2">
-                  <SummaryRow label="Division" value={selectedDivision?.name ?? '—'} />
+                  <SummaryRow label="Content" value={selectedDivision?.name ?? '—'} />
+                  <SummaryRow label="Ranks toward" value={selectedDivision?.name ? `${selectedDivision.name} standings` : '—'} />
                   <SummaryRow label="Course"   value={selectedCourse?.name ?? '—'} />
                   <SummaryRow
                     label="Topics"

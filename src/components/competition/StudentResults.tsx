@@ -336,7 +336,7 @@ export default function StudentResults({
                 `
                 code, question_count, duration_seconds, type, created_at,
                 is_assessment, results_released,
-                division:division_id ( id, name, code ),
+                division:ranking_division_id ( id, name, code ),
                 unit_topic:unit_topic_id ( id, name, code ),
                 course:unit_topic_id ( courses ( id, name ) )
               `

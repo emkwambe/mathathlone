@@ -290,7 +290,7 @@ export default function HeatLobbyPage() {
           .from('heats')
           .select(`
             *,
-            division:division_id ( id, name, code ),
+            division:ranking_division_id ( id, name, code ),
             unit_topic:unit_topic_id (
               id, name, code,
               course:course_id ( id, name, code )
