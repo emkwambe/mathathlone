@@ -85,7 +85,21 @@ const DIVISION_COURSE_CODES: Record<string, string[]> = {
   F:     ['MF'],
 };
 
-const COURSES_WITHOUT_GENERATORS = new Set<string>(['NCM2', 'ALG2', 'APPC']);
+// NC Math 2 has active Batch 1 procedural generators as of migration 044.
+const COURSES_WITHOUT_GENERATORS = new Set<string>(['ALG2', 'APPC']);
+const CONFIG_REQUEST_TIMEOUT_MS = 10_000;
+
+function withConfigTimeout<T>(request: PromiseLike<T>, operation: string): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const timeout = window.setTimeout(() => {
+      reject(new Error(`${operation} took too long. Check your connection and try again.`));
+    }, CONFIG_REQUEST_TIMEOUT_MS);
+    Promise.resolve(request).then(
+      (result) => { window.clearTimeout(timeout); resolve(result); },
+      (reason) => { window.clearTimeout(timeout); reject(reason); },
+    );
+  });
+}
 
 type HeatModeMeta = {
   label: string;
@@ -269,24 +283,36 @@ export default function CreateHeatPage() {
     let cancelled = false;
     async function loadDivisions() {
       dispatch({ type: 'SET_LOADING_CURRICULUM', payload: true });
-      const [divResult, dcResult] = await Promise.all([
-        supabase.from('divisions').select('id, name, code, grade_min, grade_max, display_order').order('display_order', { ascending: true }),
-        supabase.from('division_curricula').select('division_id'),
-      ]);
-      if (cancelled) return;
-      if (divResult.error) { dispatch({ type: 'SET_ERROR', payload: `Couldn't load divisions: ${divResult.error.message}` }); dispatch({ type: 'SET_LOADING_CURRICULUM', payload: false }); return; }
-      const linked = new Set<string>((dcResult.data ?? []).map((r: any) => r.division_id));
-      const rows: DivisionRow[] = (divResult.data ?? []).map((d: any) => ({
-        id: d.id, name: d.name, code: d.code, grade_min: d.grade_min, grade_max: d.grade_max,
-        display_order: d.display_order ?? 0,
-        available: (DIVISION_GRADE_BANDS[d.code]?.length ?? 0) > 0 || (DIVISION_COURSE_CODES[d.code]?.length ?? 0) > 0 || linked.has(d.id),
-      }));
-      dispatch({ type: 'SET_DIVISIONS', payload: rows });
-      const teacherGrade = profile?.grade_level ?? null;
-      const last = rows.find((r) => r.code === lastSel.divisionCode && r.available) ?? null;
-      const byGrade = teacherGrade ? rows.find((r) => r.available && teacherGrade >= r.grade_min && teacherGrade <= r.grade_max) ?? null : null;
-      const firstAvail = rows.find((r) => r.available) ?? null;
-      selectDivision(last ?? byGrade ?? firstAvail);
+      try {
+        const [divResult, dcResult] = await withConfigTimeout(
+          Promise.all([
+            supabase.from('divisions').select('id, name, code, grade_min, grade_max, display_order').order('display_order', { ascending: true }),
+            supabase.from('division_curricula').select('division_id'),
+          ]),
+          'Loading divisions',
+        );
+        if (cancelled) return;
+        if (divResult.error) throw divResult.error;
+        if (dcResult.error) throw dcResult.error;
+
+        const linked = new Set<string>((dcResult.data ?? []).map((r: any) => r.division_id));
+        const rows: DivisionRow[] = (divResult.data ?? []).map((d: any) => ({
+          id: d.id, name: d.name, code: d.code, grade_min: d.grade_min, grade_max: d.grade_max,
+          display_order: d.display_order ?? 0,
+          available: (DIVISION_GRADE_BANDS[d.code]?.length ?? 0) > 0 || (DIVISION_COURSE_CODES[d.code]?.length ?? 0) > 0 || linked.has(d.id),
+        }));
+        dispatch({ type: 'SET_DIVISIONS', payload: rows });
+        const teacherGrade = profile?.grade_level ?? null;
+        const last = rows.find((r) => r.code === lastSel.divisionCode && r.available) ?? null;
+        const byGrade = teacherGrade ? rows.find((r) => r.available && teacherGrade >= r.grade_min && teacherGrade <= r.grade_max) ?? null : null;
+        const firstAvail = rows.find((r) => r.available) ?? null;
+        selectDivision(last ?? byGrade ?? firstAvail);
+      } catch (err: any) {
+        if (!cancelled) {
+          dispatch({ type: 'SET_DIVISIONS', payload: [] });
+          dispatch({ type: 'SET_ERROR', payload: err?.message ?? "Couldn't load divisions. Please try again." });
+        }
+      }
     }
     loadDivisions();
     return () => { cancelled = true; };
@@ -309,14 +335,21 @@ export default function CreateHeatPage() {
       if (gradeBands.length > 0 && courseCodes.length > 0) { query = query.or(`grade_band.in.(${gradeBands.join(',')}),code.in.(${courseCodes.join(',')})`); }
       else if (gradeBands.length > 0) { query = query.in('grade_band', gradeBands); }
       else { query = query.in('code', courseCodes); }
-      const { data, error: cErr } = await query;
-      if (cancelled) return;
-      if (cErr) { dispatch({ type: 'SET_ERROR', payload: `Couldn't load courses: ${cErr.message}` }); dispatch({ type: 'SET_COURSES', payload: [] }); return; }
-      const rows: CourseRow[] = (data ?? []).map((c: any) => ({ ...c, available: !COURSES_WITHOUT_GENERATORS.has(c.code) }));
-      dispatch({ type: 'SET_COURSES', payload: rows });
-      const last = rows.find((c) => c.id === lastSel.courseId && c.available !== false) ?? null;
-      const firstAvail = rows.find((c) => c.available !== false) ?? null;
-      selectCourse(last ?? firstAvail);
+      try {
+        const { data, error: cErr } = await withConfigTimeout(query, 'Loading courses');
+        if (cancelled) return;
+        if (cErr) throw cErr;
+        const rows: CourseRow[] = (data ?? []).map((c: any) => ({ ...c, available: !COURSES_WITHOUT_GENERATORS.has(c.code) }));
+        dispatch({ type: 'SET_COURSES', payload: rows });
+        const last = rows.find((c) => c.id === lastSel.courseId && c.available !== false) ?? null;
+        const firstAvail = rows.find((c) => c.available !== false) ?? null;
+        selectCourse(last ?? firstAvail);
+      } catch (err: any) {
+        if (!cancelled) {
+          dispatch({ type: 'SET_COURSES', payload: [] });
+          dispatch({ type: 'SET_ERROR', payload: err?.message ?? "Couldn't load courses. Please try again." });
+        }
+      }
     }
     loadCourses();
     return () => { cancelled = true; };
@@ -328,16 +361,30 @@ export default function CreateHeatPage() {
     let cancelled = false;
     async function loadTree() {
       dispatch({ type: 'SET_LOADING_CONCEPTS', payload: true });
-      const { data: topics, error: uErr } = await supabase.from('unit_topics').select('id, name, code, display_order').eq('course_id', selectedCourse!.id).order('display_order', { ascending: true });
-      if (cancelled) return;
-      if (uErr) { dispatch({ type: 'SET_ERROR', payload: `Couldn't load unit topics: ${uErr.message}` }); dispatch({ type: 'SET_LOADING_CONCEPTS', payload: false }); return; }
-      const topicRows = (topics as UnitTopicRow[]) ?? [];
-      const topicIds = topicRows.map((t) => t.id);
-      if (topicIds.length === 0) { dispatch({ type: 'SET_TREE', payload: { topics: [], concepts: [] } }); return; }
-      const { data: cs, error: cErr } = await supabase.from('atomic_concepts').select('id, name, lesson_number, unit_topic_id').in('unit_topic_id', topicIds).order('lesson_number', { ascending: true });
-      if (cancelled) return;
-      if (cErr) { dispatch({ type: 'SET_ERROR', payload: `Couldn't load concepts: ${cErr.message}` }); dispatch({ type: 'SET_LOADING_CONCEPTS', payload: false }); return; }
-      dispatch({ type: 'SET_TREE', payload: { topics: topicRows, concepts: (cs as ConceptRow[]) ?? [] } });
+      try {
+        const { data: topics, error: uErr } = await withConfigTimeout(
+          supabase.from('unit_topics').select('id, name, code, display_order').eq('course_id', selectedCourse!.id).order('display_order', { ascending: true }),
+          'Loading unit topics',
+        );
+        if (cancelled) return;
+        if (uErr) throw uErr;
+        const topicRows = (topics as UnitTopicRow[]) ?? [];
+        const topicIds = topicRows.map((t) => t.id);
+        if (topicIds.length === 0) { dispatch({ type: 'SET_TREE', payload: { topics: [], concepts: [] } }); return; }
+
+        const { data: cs, error: cErr } = await withConfigTimeout(
+          supabase.from('atomic_concepts').select('id, name, lesson_number, unit_topic_id').in('unit_topic_id', topicIds).order('lesson_number', { ascending: true }),
+          'Loading concepts',
+        );
+        if (cancelled) return;
+        if (cErr) throw cErr;
+        dispatch({ type: 'SET_TREE', payload: { topics: topicRows, concepts: (cs as ConceptRow[]) ?? [] } });
+      } catch (err: any) {
+        if (!cancelled) {
+          dispatch({ type: 'SET_TREE', payload: { topics: [], concepts: [] } });
+          dispatch({ type: 'SET_ERROR', payload: err?.message ?? "Couldn't load concepts. Please try again." });
+        }
+      }
     }
     loadTree();
     return () => { cancelled = true; };

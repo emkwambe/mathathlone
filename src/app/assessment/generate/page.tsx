@@ -34,6 +34,7 @@ import {
   Loader2,
   Minus,
   PenLine,
+  RefreshCw,
 } from 'lucide-react';
 
 import { createClient } from '@/lib/supabase/client';
@@ -99,7 +100,28 @@ const DIVISION_COURSE_CODES: Record<string, string[]> = {
   F:     ['MF'],
 };
 
-const COURSES_WITHOUT_GENERATORS = new Set<string>(['NCM2', 'ALG2', 'APPC']);
+// NC Math 2 has active Batch 1 procedural generators as of migration 044.
+const COURSES_WITHOUT_GENERATORS = new Set<string>(['ALG2', 'APPC']);
+const CURRICULUM_REQUEST_TIMEOUT_MS = 10_000;
+
+function withCurriculumTimeout<T>(request: PromiseLike<T>, operation: string): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const timeout = window.setTimeout(() => {
+      reject(new Error(`${operation} took too long. Check your connection and try again.`));
+    }, CURRICULUM_REQUEST_TIMEOUT_MS);
+
+    Promise.resolve(request).then(
+      (result) => {
+        window.clearTimeout(timeout);
+        resolve(result);
+      },
+      (reason) => {
+        window.clearTimeout(timeout);
+        reject(reason);
+      },
+    );
+  });
+}
 
 // Document types — counts/ratios live in the assembler's CONFIGS; the desc
 // here just summarizes them for the picker.
@@ -296,58 +318,78 @@ export default function GenerateAssessmentPage() {
   const [loadingConcepts, setLoadingConcepts] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [curriculumRetry, setCurriculumRetry] = useState(0);
+
+  const retryCurriculum = useCallback(() => {
+    setError(null);
+    setLoadingCurriculum(true);
+    setLoadingCourses(false);
+    setLoadingConcepts(false);
+    setCurriculumRetry((attempt) => attempt + 1);
+  }, []);
 
   // ── Load divisions ──────────────────────────────────────────────────────
   useEffect(() => {
     let cancelled = false;
     async function loadDivisions() {
       setLoadingCurriculum(true);
-      const [divResult, dcResult] = await Promise.all([
-        supabase
-          .from('divisions')
-          .select('id, name, code, grade_min, grade_max')
-          .order('grade_min', { ascending: true }),
-        supabase.from('division_curricula').select('division_id'),
-      ]);
-      if (cancelled) return;
-      if (divResult.error) {
-        setError(`Couldn't load divisions: ${divResult.error.message}`);
-        setLoadingCurriculum(false);
-        return;
-      }
-      const linked = new Set<string>((dcResult.data ?? []).map((r: any) => r.division_id));
-      const rows: DivisionRow[] = (divResult.data ?? []).map((d: any) => ({
-        id: d.id,
-        name: d.name,
-        code: d.code,
-        grade_min: d.grade_min,
-        grade_max: d.grade_max,
-        available:
-          (DIVISION_GRADE_BANDS[d.code]?.length ?? 0) > 0
-            || (DIVISION_COURSE_CODES[d.code]?.length ?? 0) > 0
-            || linked.has(d.id),
-      }));
-      setDivisions(rows);
+      try {
+        const [divResult, dcResult] = await withCurriculumTimeout(
+          Promise.all([
+            supabase
+              .from('divisions')
+              .select('id, name, code, grade_min, grade_max')
+              .order('grade_min', { ascending: true }),
+            supabase.from('division_curricula').select('division_id'),
+          ]),
+          'Loading divisions',
+        );
+        if (cancelled) return;
+        if (divResult.error) throw divResult.error;
+        if (dcResult.error) throw dcResult.error;
 
-      const teacherGrade = profile?.grade_level ?? null;
-      const byGrade = teacherGrade
-        ? rows.find((r) => r.available && teacherGrade >= r.grade_min && teacherGrade <= r.grade_max) ?? null
-        : null;
-      const firstAvail = rows.find((r) => r.available) ?? null;
-      setSelectedDivision(byGrade ?? firstAvail);
-      setLoadingCurriculum(false);
+        const linked = new Set<string>((dcResult.data ?? []).map((r: any) => r.division_id));
+        const rows: DivisionRow[] = (divResult.data ?? []).map((d: any) => ({
+          id: d.id,
+          name: d.name,
+          code: d.code,
+          grade_min: d.grade_min,
+          grade_max: d.grade_max,
+          available:
+            (DIVISION_GRADE_BANDS[d.code]?.length ?? 0) > 0
+              || (DIVISION_COURSE_CODES[d.code]?.length ?? 0) > 0
+              || linked.has(d.id),
+        }));
+        setDivisions(rows);
+
+        const teacherGrade = profile?.grade_level ?? null;
+        const byGrade = teacherGrade
+          ? rows.find((r) => r.available && teacherGrade >= r.grade_min && teacherGrade <= r.grade_max) ?? null
+          : null;
+        const firstAvail = rows.find((r) => r.available) ?? null;
+        setSelectedDivision(byGrade ?? firstAvail);
+      } catch (err: any) {
+        if (!cancelled) {
+          setDivisions([]);
+          setSelectedDivision(null);
+          setError(err?.message ?? "Couldn't load divisions. Please try again.");
+        }
+      } finally {
+        if (!cancelled) setLoadingCurriculum(false);
+      }
     }
     loadDivisions();
     return () => {
       cancelled = true;
     };
-  }, [supabase, profile?.grade_level]);
+  }, [supabase, profile?.grade_level, curriculumRetry]);
 
   // ── Load courses ────────────────────────────────────────────────────────
   useEffect(() => {
     if (!selectedDivision) {
       setCourses([]);
       setSelectedCourse(null);
+      setLoadingCourses(false);
       return;
     }
     let cancelled = false;
@@ -378,29 +420,34 @@ export default function GenerateAssessmentPage() {
         query = query.in('code', courseCodes);
       }
 
-      const { data, error: cErr } = await query;
-      if (cancelled) return;
-      if (cErr) {
-        setError(`Couldn't load courses: ${cErr.message}`);
-        setCourses([]);
-        setLoadingCourses(false);
-        return;
-      }
-      const rows: CourseRow[] = (data ?? []).map((c: any) => ({
-        ...(c as CourseRow),
-        available: !COURSES_WITHOUT_GENERATORS.has(c.code),
-      }));
-      setCourses(rows);
+      try {
+        const { data, error: cErr } = await withCurriculumTimeout(query, 'Loading courses');
+        if (cancelled) return;
+        if (cErr) throw cErr;
 
-      const firstAvail = rows.find((c) => c.available !== false) ?? null;
-      setSelectedCourse(firstAvail);
-      setLoadingCourses(false);
+        const rows: CourseRow[] = (data ?? []).map((c: any) => ({
+          ...(c as CourseRow),
+          available: !COURSES_WITHOUT_GENERATORS.has(c.code),
+        }));
+        setCourses(rows);
+
+        const firstAvail = rows.find((c) => c.available !== false) ?? null;
+        setSelectedCourse(firstAvail);
+      } catch (err: any) {
+        if (!cancelled) {
+          setCourses([]);
+          setSelectedCourse(null);
+          setError(err?.message ?? "Couldn't load courses. Please try again.");
+        }
+      } finally {
+        if (!cancelled) setLoadingCourses(false);
+      }
     }
     loadCourses();
     return () => {
       cancelled = true;
     };
-  }, [selectedDivision, supabase]);
+  }, [selectedDivision, supabase, curriculumRetry]);
 
   // ── Load unit_topics + atomic_concepts for the selected course ─────────
   useEffect(() => {
@@ -409,61 +456,67 @@ export default function GenerateAssessmentPage() {
       setConcepts([]);
       setSelectedConceptIds(new Set());
       setExpandedTopics(new Set());
+      setLoadingConcepts(false);
       return;
     }
     let cancelled = false;
     async function loadTree() {
       setLoadingConcepts(true);
-      const courseId = selectedCourse!.id;
-      const { data: topics, error: uErr } = await supabase
-        .from('unit_topics')
-        .select('id, name, code, display_order')
-        .eq('course_id', courseId)
-        .order('display_order', { ascending: true });
-      if (cancelled) return;
-      if (uErr) {
-        setError(`Couldn't load unit topics: ${uErr.message}`);
-        setUnitTopics([]);
-        setConcepts([]);
-        setLoadingConcepts(false);
-        return;
-      }
-      const topicRows = (topics as UnitTopicRow[]) ?? [];
-      setUnitTopics(topicRows);
+      try {
+        const courseId = selectedCourse!.id;
+        const { data: topics, error: uErr } = await withCurriculumTimeout(
+          supabase
+            .from('unit_topics')
+            .select('id, name, code, display_order')
+            .eq('course_id', courseId)
+            .order('display_order', { ascending: true }),
+          'Loading unit topics',
+        );
+        if (cancelled) return;
+        if (uErr) throw uErr;
 
-      const topicIds = topicRows.map((t) => t.id);
-      if (topicIds.length === 0) {
-        setConcepts([]);
-        setSelectedConceptIds(new Set());
-        setExpandedTopics(new Set());
-        setLoadingConcepts(false);
-        return;
-      }
+        const topicRows = (topics as UnitTopicRow[]) ?? [];
+        setUnitTopics(topicRows);
+        const topicIds = topicRows.map((t) => t.id);
+        if (topicIds.length === 0) {
+          setConcepts([]);
+          setSelectedConceptIds(new Set());
+          setExpandedTopics(new Set());
+          return;
+        }
 
-      const { data: cs, error: cErr } = await supabase
-        .from('atomic_concepts')
-        .select('id, name, lesson_number, unit_topic_id')
-        .in('unit_topic_id', topicIds)
-        .order('lesson_number', { ascending: true });
-      if (cancelled) return;
-      if (cErr) {
-        setError(`Couldn't load concepts: ${cErr.message}`);
-        setConcepts([]);
-        setLoadingConcepts(false);
-        return;
+        const { data: cs, error: cErr } = await withCurriculumTimeout(
+          supabase
+            .from('atomic_concepts')
+            .select('id, name, lesson_number, unit_topic_id')
+            .in('unit_topic_id', topicIds)
+            .order('lesson_number', { ascending: true }),
+          'Loading concepts',
+        );
+        if (cancelled) return;
+        if (cErr) throw cErr;
+
+        const conceptRows = (cs as ConceptRow[]) ?? [];
+        setConcepts(conceptRows);
+        // Default: SELECT ALL concepts so the teacher can generate quickly.
+        setSelectedConceptIds(new Set(conceptRows.map((c) => c.id)));
+        setExpandedTopics(topicRows.length > 0 ? new Set([topicRows[0]!.id]) : new Set());
+      } catch (err: any) {
+        if (!cancelled) {
+          setUnitTopics([]);
+          setConcepts([]);
+          setSelectedConceptIds(new Set());
+          setError(err?.message ?? "Couldn't load assessment concepts. Please try again.");
+        }
+      } finally {
+        if (!cancelled) setLoadingConcepts(false);
       }
-      const conceptRows = (cs as ConceptRow[]) ?? [];
-      setConcepts(conceptRows);
-      // Default: SELECT ALL concepts so the teacher can generate quickly.
-      setSelectedConceptIds(new Set(conceptRows.map((c) => c.id)));
-      setExpandedTopics(topicRows.length > 0 ? new Set([topicRows[0]!.id]) : new Set());
-      setLoadingConcepts(false);
     }
     loadTree();
     return () => {
       cancelled = true;
     };
-  }, [selectedCourse, supabase]);
+  }, [selectedCourse, supabase, curriculumRetry]);
 
   // ── Tree manipulation helpers ───────────────────────────────────────────
   const conceptsByTopic = useMemo(() => {
@@ -634,12 +687,24 @@ export default function GenerateAssessmentPage() {
 
         {/* Error banner */}
         {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3">
-            <AlertTriangle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
-            <div>
-              <p className="text-sm font-medium text-red-800">Something went wrong</p>
-              <p className="text-sm text-red-600 mt-0.5">{error}</p>
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start justify-between gap-4">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-medium text-red-800">Something went wrong</p>
+                <p className="text-sm text-red-600 mt-0.5">{error}</p>
+              </div>
             </div>
+            {!generating && (
+              <button
+                type="button"
+                onClick={retryCurriculum}
+                className="inline-flex items-center gap-1.5 flex-shrink-0 rounded-lg border border-red-300 bg-white px-3 py-2 text-sm font-medium text-red-700 hover:bg-red-100"
+              >
+                <RefreshCw className="w-4 h-4" />
+                Retry loading
+              </button>
+            )}
           </div>
         )}
 

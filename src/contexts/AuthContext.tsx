@@ -237,23 +237,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     let mounted = true;
 
-    // 1) Initial session
+    // 1) Initial session. Authentication must never leave the app in an
+    // indefinite spinner: a profile query is useful enrichment, not a
+    // prerequisite for rendering a signed-in route.
+    const finishInitialLoading = () => {
+      if (mounted) setLoading(false);
+    };
+    const hydrationTimeout = window.setTimeout(() => {
+      console.warn('[AuthContext] session hydration exceeded 8 seconds; continuing without blocking the UI');
+      finishInitialLoading();
+    }, 8_000);
+
     supabase.auth
       .getSession()
-      .then(async ({ data: { session: initial } }) => {
+      .then(({ data: { session: initial } }) => {
+        window.clearTimeout(hydrationTimeout);
         if (!mounted) return;
         if (initial) hadSessionRef.current = true;
         setSession(initial);
         setUser(initial?.user ?? null);
+        finishInitialLoading();
+
+        // Fetch the profile after the route is allowed to render. A slow or
+        // unavailable profile response can no longer freeze navigation.
         if (initial?.user) {
-          const p = await fetchProfile(initial.user.id);
-          if (mounted) setProfile(p);
+          void fetchProfile(initial.user.id).then((p) => {
+            if (mounted) setProfile(p);
+          });
         }
-        if (mounted) setLoading(false);
       })
       .catch((err) => {
+        window.clearTimeout(hydrationTimeout);
         console.error('[AuthContext] getSession error:', err);
-        if (mounted) setLoading(false);
+        finishInitialLoading();
       });
 
     // 2) Auth state listener
@@ -318,6 +334,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     return () => {
       mounted = false;
+      window.clearTimeout(hydrationTimeout);
       subscription.unsubscribe();
     };
   }, [supabase, fetchProfile, pathname, router]);
