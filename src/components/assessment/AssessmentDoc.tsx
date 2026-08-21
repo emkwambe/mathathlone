@@ -56,8 +56,11 @@ export default function AssessmentDoc({ doc }: { doc: AssessmentDocument }) {
         className="mx-auto max-w-[8.5in] bg-white p-8 text-black print:p-0"
         style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
       >
-        {/* Header */}
-        <header>
+        {/* Student copy. This wrapper deliberately owns the only forced
+            boundary between the student document and the teacher copy. */}
+        <div className="assessment-student-copy">
+          {/* Header */}
+          <header>
           <div className="flex items-center justify-between">
             <span className="text-[18pt] font-bold">MathAthlone</span>
             <span className="text-[18pt]">🔥</span>
@@ -78,9 +81,9 @@ export default function AssessmentDoc({ doc }: { doc: AssessmentDocument }) {
           </div>
 
           <hr className="my-2 border-t-2 border-black" />
-        </header>
+          </header>
 
-        {/* ── Section A — Multiple Choice ──────────────────────────────────── */}
+          {/* ── Section A — Multiple Choice ──────────────────────────────────── */}
         {sectionA.length > 0 && (
           <section>
             <h2 className="text-[14pt] font-bold">
@@ -146,9 +149,11 @@ export default function AssessmentDoc({ doc }: { doc: AssessmentDocument }) {
           </section>
         )}
 
+        </div>{/* end assessment-student-copy */}
+
         {/* ── Answer Key (teacher copy) — quiz/test only ───────────────────── */}
         {doc.showAnswerKey && (
-          <div className="break-before-page">
+          <div className="assessment-answer-key">
             <h2 className="mb-1 text-[14pt] font-bold">
               Answer Key — {doc.title} (Teacher Copy)
             </h2>
@@ -225,6 +230,22 @@ export default function AssessmentDoc({ doc }: { doc: AssessmentDocument }) {
           .break-inside-avoid {
             page-break-inside: avoid;
             break-inside: avoid;
+          }
+          /*
+           * The complete student document is one print-flow region. Its forced
+           * break occurs only after the final student question, so the answer
+           * key cannot share the final worksheet page. Applying the break to
+           * this wrapper (rather than to the answer-key heading) is reliable
+           * in Chrome's PDF engine even when a free-response question ends near
+           * the bottom of a page.
+           */
+          .assessment-student-copy {
+            page-break-after: always !important;
+            break-after: page !important;
+          }
+          .assessment-answer-key {
+            page-break-before: auto;
+            break-before: auto;
           }
           .break-before-page {
             page-break-before: always;
