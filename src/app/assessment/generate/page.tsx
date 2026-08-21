@@ -334,21 +334,18 @@ export default function GenerateAssessmentPage() {
     async function loadDivisions() {
       setLoadingCurriculum(true);
       try {
-        const [divResult, dcResult] = await withCurriculumTimeout(
-          Promise.all([
-            supabase
-              .from('divisions')
-              .select('id, name, code, grade_min, grade_max')
-              .order('grade_min', { ascending: true }),
-            supabase.from('division_curricula').select('division_id'),
-          ]),
+        // Render the core catalog as soon as the essential divisions query
+        // resolves. Custom division-curriculum links are an optional upgrade.
+        const divResult = await withCurriculumTimeout(
+          supabase
+            .from('divisions')
+            .select('id, name, code, grade_min, grade_max')
+            .order('grade_min', { ascending: true }),
           'Loading divisions',
         );
         if (cancelled) return;
         if (divResult.error) throw divResult.error;
-        if (dcResult.error) throw dcResult.error;
 
-        const linked = new Set<string>((dcResult.data ?? []).map((r: any) => r.division_id));
         const rows: DivisionRow[] = (divResult.data ?? []).map((d: any) => ({
           id: d.id,
           name: d.name,
@@ -357,8 +354,7 @@ export default function GenerateAssessmentPage() {
           grade_max: d.grade_max,
           available:
             (DIVISION_GRADE_BANDS[d.code]?.length ?? 0) > 0
-              || (DIVISION_COURSE_CODES[d.code]?.length ?? 0) > 0
-              || linked.has(d.id),
+              || (DIVISION_COURSE_CODES[d.code]?.length ?? 0) > 0,
         }));
         setDivisions(rows);
 
@@ -368,6 +364,21 @@ export default function GenerateAssessmentPage() {
           : null;
         const firstAvail = rows.find((r) => r.available) ?? null;
         setSelectedDivision(byGrade ?? firstAvail);
+
+        void withCurriculumTimeout(
+          supabase.from('division_curricula').select('division_id'),
+          'Loading custom division curricula',
+        ).then(({ data, error }) => {
+          if (cancelled || error) return;
+          const linked = new Set<string>((data ?? []).map((r: any) => r.division_id));
+          if (linked.size === 0) return;
+          setDivisions((previous) => previous.map((division) => ({
+            ...division,
+            available: division.available || linked.has(division.id),
+          })));
+        }).catch((err) => {
+          console.warn('[GenerateAssessment] optional division_curricula lookup skipped:', err);
+        });
       } catch (err: any) {
         if (!cancelled) {
           setDivisions([]);

@@ -284,22 +284,19 @@ export default function CreateHeatPage() {
     async function loadDivisions() {
       dispatch({ type: 'SET_LOADING_CURRICULUM', payload: true });
       try {
-        const [divResult, dcResult] = await withConfigTimeout(
-          Promise.all([
-            supabase.from('divisions').select('id, name, code, grade_min, grade_max, display_order').order('display_order', { ascending: true }),
-            supabase.from('division_curricula').select('division_id'),
-          ]),
+        // The division catalog is essential. The optional division_curricula
+        // enrichment must never prevent teachers from opening the builder.
+        const divResult = await withConfigTimeout(
+          supabase.from('divisions').select('id, name, code, grade_min, grade_max, display_order').order('display_order', { ascending: true }),
           'Loading divisions',
         );
         if (cancelled) return;
         if (divResult.error) throw divResult.error;
-        if (dcResult.error) throw dcResult.error;
 
-        const linked = new Set<string>((dcResult.data ?? []).map((r: any) => r.division_id));
         const rows: DivisionRow[] = (divResult.data ?? []).map((d: any) => ({
           id: d.id, name: d.name, code: d.code, grade_min: d.grade_min, grade_max: d.grade_max,
           display_order: d.display_order ?? 0,
-          available: (DIVISION_GRADE_BANDS[d.code]?.length ?? 0) > 0 || (DIVISION_COURSE_CODES[d.code]?.length ?? 0) > 0 || linked.has(d.id),
+          available: (DIVISION_GRADE_BANDS[d.code]?.length ?? 0) > 0 || (DIVISION_COURSE_CODES[d.code]?.length ?? 0) > 0,
         }));
         dispatch({ type: 'SET_DIVISIONS', payload: rows });
         const teacherGrade = profile?.grade_level ?? null;
@@ -307,6 +304,23 @@ export default function CreateHeatPage() {
         const byGrade = teacherGrade ? rows.find((r) => r.available && teacherGrade >= r.grade_min && teacherGrade <= r.grade_max) ?? null : null;
         const firstAvail = rows.find((r) => r.available) ?? null;
         selectDivision(last ?? byGrade ?? firstAvail);
+
+        // Custom curriculum links only refine availability after the core UI
+        // is usable. A timeout or RLS issue here is non-fatal.
+        void withConfigTimeout(
+          supabase.from('division_curricula').select('division_id'),
+          'Loading custom division curricula',
+        ).then(({ data, error }) => {
+          if (cancelled || error) return;
+          const linked = new Set<string>((data ?? []).map((r: any) => r.division_id));
+          if (linked.size === 0) return;
+          dispatch({
+            type: 'SET_DIVISIONS',
+            payload: rows.map((division) => ({ ...division, available: division.available || linked.has(division.id) })),
+          });
+        }).catch((err) => {
+          console.warn('[CreateHeat] optional division_curricula lookup skipped:', err);
+        });
       } catch (err: any) {
         if (!cancelled) {
           dispatch({ type: 'SET_DIVISIONS', payload: [] });
