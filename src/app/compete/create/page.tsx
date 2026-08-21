@@ -46,6 +46,7 @@ import {
 
 import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { ProtectedRouteLoadingFallback } from '@/components/auth/ProtectedRouteLoadingFallback';
 import {
   createHeat,
   type HeatType,
@@ -464,14 +465,7 @@ export default function CreateHeatPage() {
 
   // ── Loading state ─────────────────────────────────────────────────────────
   if (authLoading || loadingCurriculum) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <Loader2 className="w-10 h-10 text-indigo-600 mx-auto animate-spin" />
-          <p className="mt-4 text-gray-500 text-sm">Loading…</p>
-        </div>
-      </div>
-    );
+    return <ProtectedRouteLoadingFallback loginHref="/auth/login?next=/compete/create" title="Loading Heat Builder" />;
   }
   if (!isAuthenticated) return null;
 

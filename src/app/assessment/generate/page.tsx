@@ -39,6 +39,7 @@ import {
 
 import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { ProtectedRouteLoadingFallback } from '@/components/auth/ProtectedRouteLoadingFallback';
 import type { AssessmentType, AssessmentDocument } from '@/lib/assessment/assembler';
 
 // -----------------------------------------------------------------------------
@@ -662,14 +663,7 @@ export default function GenerateAssessmentPage() {
 
   // ── Loading / unauthorized states ───────────────────────────────────────
   if (authLoading || loadingCurriculum) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <Loader2 className="w-10 h-10 text-indigo-600 mx-auto animate-spin" />
-          <p className="mt-4 text-gray-500 text-sm">Loading…</p>
-        </div>
-      </div>
-    );
+    return <ProtectedRouteLoadingFallback loginHref="/auth/login?next=/assessment/generate" title="Loading Assessment Generator" />;
   }
   if (!isAuthenticated) return null;
 
