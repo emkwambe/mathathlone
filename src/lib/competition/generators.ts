@@ -9,6 +9,8 @@
 // TYPES
 // -----------------------------------------------------------------------------
 
+import { NCM2_BATCH1_GENERATORS } from './ncm2-generators';
+
 export type AnswerType =
   | 'integer'
   | 'decimal'
@@ -9245,9 +9247,11 @@ export const GENERATORS: Record<string, (difficulty: DifficultyLevel) => Generat
   g6_sp_five_number_summary:      generate_g6_sp_five_number_summary,
   g6_sp_compute_center_stats:     generate_g6_sp_compute_center_stats,
   g6_sp_compute_variability:      generate_g6_sp_compute_variability,
-  g6_sp_compute_mad:              generate_g6_sp_compute_mad,
-};
+    g6_sp_compute_mad:              generate_g6_sp_compute_mad,
 
+  // ─── NC MATH 2 — Batch 1: Polynomial/Rational Expressions + Real Numbers ──
+  ...NCM2_BATCH1_GENERATORS,
+};
 // Helper to get all generator types
 export const GENERATOR_TYPES = Object.keys(GENERATORS);
 
