@@ -35,10 +35,83 @@ VALUES
     'Understanding Irrational Numbers',
     2,
     TRUE
+  ),
+  (
+    (SELECT id FROM public.unit_topics
+     WHERE code = 'NCM2.POLYNOMIAL'
+       AND course_id = (SELECT id FROM public.courses WHERE code = 'NCM2')),
+    'M2.APR.1.3',
+    'Closure Property of Polynomials',
+    3,
+    FALSE
+  ),
+  (
+    (SELECT id FROM public.unit_topics
+     WHERE code = 'NCM2.POLYNOMIAL'
+       AND course_id = (SELECT id FROM public.courses WHERE code = 'NCM2')),
+    'M2.APR.1.4',
+    'Polynomial Structure Analogies',
+    4,
+    FALSE
+  ),
+  (
+    (SELECT id FROM public.unit_topics
+     WHERE code = 'NCM2.POLYNOMIAL'
+       AND course_id = (SELECT id FROM public.courses WHERE code = 'NCM2')),
+    'M2.APR.4.4',
+    'Rational Expression Analogies',
+    11,
+    FALSE
   )
 ON CONFLICT (lesson_number) DO UPDATE
   SET name = EXCLUDED.name,
-      is_generator_ready = TRUE;
+      is_generator_ready = EXCLUDED.is_generator_ready;
+
+-- Correct two legacy static-pool rows discovered during the Batch 1 quality
+-- review. Their original answer/explanation calculations were inconsistent.
+UPDATE public.static_questions
+SET
+  question_text = 'Simplify: (x² − 4)/(x + 3) ÷ (x − 2)/(x² + x − 6). Which simplified expression is correct?',
+  options = '[{"key":"A","text":"x + 2"},{"key":"B","text":"(x − 2)(x + 2)/(x + 3)"},{"key":"C","text":"x² − 4"},{"key":"D","text":"(x − 2)²"}]'::jsonb,
+  correct_answer = 'C',
+  explanation = 'Factor x² − 4 = (x − 2)(x + 2) and x² + x − 6 = (x + 3)(x − 2). Rewrite division as multiplication by the reciprocal, then cancel common nonzero factors. The result is (x − 2)(x + 2) = x² − 4.',
+  is_verified = TRUE
+WHERE course = 'NCM2'
+  AND concept_id = 'M2.APR.3.3';
+
+UPDATE public.static_questions
+SET
+  options = '[{"key":"A","text":"13x² − 43x + 13"},{"key":"B","text":"13x² − 31x + 13"},{"key":"C","text":"x + 3"},{"key":"D","text":"29x² + 13"}]'::jsonb,
+  correct_answer = 'A',
+  explanation = 'Use LCD = (4x + 3)(7x − 2). The numerator is (3x − 5)(7x − 2) + (−2x + 1)(4x + 3) = 13x² − 43x + 13.',
+  is_verified = TRUE
+WHERE course = 'NCM2'
+  AND concept_id = 'M2.APR.4.3';
+
+-- Add the missing static conceptual item for the polynomial-structure analogy.
+-- This uses the existing static-question schema's multiple-choice format while
+-- the richer teacher-assessment version remains in the authoring document.
+INSERT INTO public.static_questions
+  (concept_id, concept_name, course, question_type, question_text, options,
+   correct_answer, explanation, difficulty, is_active, is_verified)
+SELECT
+  'M2.APR.1.4',
+  'Polynomial Structure Analogies',
+  'NCM2',
+  'multiple_choice',
+  'Which statement correctly describes a shared use of the distributive property in (x² + 2x)(x − 1) and 21 × 9?',
+  '[{"key":"A","text":"Both products divide the first factor by the second factor."},{"key":"B","text":"Both products multiply each part of one factor by the other factor before combining results."},{"key":"C","text":"Both products require cancelling a common factor before multiplying."},{"key":"D","text":"Both products can be solved by adding the exponents."}]'::jsonb,
+  'B',
+  'In each product, one factor is treated as a sum or difference of parts. Each part is multiplied by the other factor, and the partial products are combined.',
+  2,
+  TRUE,
+  TRUE
+WHERE NOT EXISTS (
+  SELECT 1 FROM public.static_questions
+  WHERE course = 'NCM2'
+    AND concept_id = 'M2.APR.1.4'
+    AND question_text = 'Which statement correctly describes a shared use of the distributive property in (x² + 2x)(x − 1) and 21 × 9?'
+);
 
 -- Each mapping connects an atomic curriculum concept to a registry key in
 -- src/lib/competition/ncm2-generators.ts.
