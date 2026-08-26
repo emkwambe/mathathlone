@@ -6,7 +6,9 @@
 // ============================================================
 
 'use client';
-import React, { useState, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import BracketResultModal from '@/components/league/BracketResultModal';
 import SwissRoundView from '@/components/league/SwissRoundView';
 
 // ────────────────────────────────────────────────────────────
@@ -247,7 +249,7 @@ const AdvancementBanner: React.FC<{
 // ────────────────────────────────────────────────────────────
 
 const MATCH_W = 260;
-const MATCH_H = 80;
+const MATCH_H = 112;
 const ROUND_GAP = 80;
 const MATCH_GAP = 24;
 
@@ -258,10 +260,19 @@ const BracketMatchCard: React.FC<{
   highlightId: string | null;
   onHover: (id: string | null) => void;
   isClassroom?: boolean;
-}> = ({ match, x, y, highlightId, onHover, isClassroom }) => {
+  isOwner?: boolean;
+  onRecordResult?: (match: BracketMatch) => void;
+}> = ({ match, x, y, highlightId, onHover, isClassroom, isOwner = false, onRecordResult }) => {
   const isLive = match.status === 'live';
   const isComplete = match.status === 'completed';
   const isFinal = match.is_grand_final;
+  const canRecordResult =
+    isOwner &&
+    !isComplete &&
+    !match.is_bye &&
+    match.participant1 !== null &&
+    match.participant2 !== null &&
+    onRecordResult !== undefined;
 
   const borderColor = isLive
     ? '#f59e0b'
@@ -430,15 +441,38 @@ const BracketMatchCard: React.FC<{
         )}
         {renderSlot(match.participant1, match.p1_cta_score, match.winner_id === match.participant1?.id, true)}
         {renderSlot(match.participant2, match.p2_cta_score, match.winner_id === match.participant2?.id, false)}
+        {canRecordResult && (
+          <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '5px 8px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+            <button
+              type="button"
+              onClick={() => onRecordResult(match)}
+              style={{
+                border: '1px solid rgba(129,140,248,0.45)',
+                background: 'rgba(99,102,241,0.16)',
+                color: '#c7d2fe',
+                borderRadius: 6,
+                padding: '3px 7px',
+                fontSize: 10,
+                fontWeight: 800,
+                letterSpacing: '0.04em',
+                cursor: 'pointer',
+              }}
+            >
+              Record Result
+            </button>
+          </div>
+        )}
       </div>
     </foreignObject>
   );
 };
 
-const BracketView: React.FC<{ matches: BracketMatch[]; isClassroom?: boolean }> = ({
-  matches,
-  isClassroom,
-}) => {
+const BracketView: React.FC<{
+  matches: BracketMatch[];
+  isClassroom?: boolean;
+  isOwner?: boolean;
+  onRecordResult?: (match: BracketMatch) => void;
+}> = ({ matches, isClassroom, isOwner = false, onRecordResult }) => {
   const [highlightId, setHighlightId] = useState<string | null>(null);
 
   const rounds = useMemo(() => {
@@ -562,6 +596,8 @@ const BracketView: React.FC<{ matches: BracketMatch[]; isClassroom?: boolean }> 
                 highlightId={highlightId}
                 onHover={setHighlightId}
                 isClassroom={isClassroom}
+                isOwner={isOwner}
+                onRecordResult={onRecordResult}
               />
             );
           })
@@ -1024,17 +1060,31 @@ export default function LeagueDashboard({
   initialSplits,
   isOwner = false,
 }: LeagueDashboardProps = {}) {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabId>('standings');
+  const [selectedBracketMatch, setSelectedBracketMatch] = useState<BracketMatch | null>(null);
 
-  const [bracketData] = useState<BracketMatch[]>(
+  const [bracketData, setBracketData] = useState<BracketMatch[]>(
     initialBracket && initialBracket.length > 0 ? initialBracket : []
   );
-  const [standingsData] = useState<StandingRow[]>(
+
+  useEffect(() => {
+    setBracketData(initialBracket && initialBracket.length > 0 ? initialBracket : []);
+  }, [initialBracket]);
+  const [standingsData, setStandingsData] = useState<StandingRow[]>(
     initialStandings && initialStandings.length > 0 ? initialStandings : []
   );
-  const [championshipData] = useState<ChampionshipEntry[]>(
+  const [championshipData, setChampionshipData] = useState<ChampionshipEntry[]>(
     initialChampionship && initialChampionship.length > 0 ? initialChampionship : []
   );
+
+  useEffect(() => {
+    setStandingsData(initialStandings && initialStandings.length > 0 ? initialStandings : []);
+  }, [initialStandings]);
+
+  useEffect(() => {
+    setChampionshipData(initialChampionship && initialChampionship.length > 0 ? initialChampionship : []);
+  }, [initialChampionship]);
 
   const isClassroom = leagueMeta?.level === 'classroom';
   const isDistrict = leagueMeta?.level === 'district';
@@ -1162,7 +1212,12 @@ export default function LeagueDashboard({
                 bracketId={leagueMeta.bracketId ?? null}
                 isOwner={isOwner}
               />
-            : <BracketView matches={bracketData} isClassroom={isClassroom} />
+            : <BracketView
+                matches={bracketData}
+                isClassroom={isClassroom}
+                isOwner={isOwner}
+                onRecordResult={setSelectedBracketMatch}
+              />
         )}
         {activeTab === 'standings' && (
           <StandingsTable
@@ -1179,6 +1234,22 @@ export default function LeagueDashboard({
           <SeasonTimeline splits={initialSplits} level={leagueMeta?.level} />
         )}
       </div>
+
+      {selectedBracketMatch?.participant1 && selectedBracketMatch.participant2 && (
+        <BracketResultModal
+          match={{
+            id: selectedBracketMatch.id,
+            round: selectedBracketMatch.round,
+            participant1: selectedBracketMatch.participant1,
+            participant2: selectedBracketMatch.participant2,
+          }}
+          onClose={() => setSelectedBracketMatch(null)}
+          onSuccess={() => {
+            setSelectedBracketMatch(null);
+            router.refresh();
+          }}
+        />
+      )}
 
       {/* Footer */}
       <div style={{ marginTop: 20, textAlign: 'center', fontSize: 10, color: '#374151', fontWeight: 500 }}>

@@ -9,8 +9,9 @@
 //   region           string   optional
 //   format           string   optional — bracket format
 //   league_type      string   optional — showdown|campaign|season
-//   content_scope    object   optional — { type, course_code, course_name, unit_code, unit_name }
-//   max_participants number   optional — open integer; omitted for district+
+//   content_scope          object   optional — { type, course_code, course_name, unit_code, unit_name }
+//   ranking_division_code  string   required — JR|INT|ADV|JV|SV; cohort receiving standings/ELO
+//   max_participants       number   optional — open integer; omitted for district+
 //
 // The route:
 //   1. Authenticates the caller (must be a teacher or platform_admin)
@@ -66,6 +67,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     format,
     league_type,
     content_scope,
+    ranking_division_code,
     max_participants,
   } = body;
 
@@ -93,6 +95,26 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   if (league_type && !VALID_LEAGUE_TYPES.includes(league_type)) {
     return NextResponse.json(
       { error: `Invalid league type. Must be one of: ${VALID_LEAGUE_TYPES.join(', ')}` },
+      { status: 400 }
+    );
+  }
+
+  if (typeof ranking_division_code !== 'string' || !ranking_division_code.trim()) {
+    return NextResponse.json(
+      { error: 'Select the grade cohort whose standings and ELO should receive this league\'s results.' },
+      { status: 400 }
+    );
+  }
+
+  const { data: rankingDivision, error: rankingDivisionError } = await supabase
+    .from('divisions')
+    .select('id, code')
+    .eq('code', ranking_division_code.trim().toUpperCase())
+    .maybeSingle();
+
+  if (rankingDivisionError || !rankingDivision) {
+    return NextResponse.json(
+      { error: 'The selected ranking cohort is not available. Refresh the page and try again.' },
       { status: 400 }
     );
   }
@@ -128,9 +150,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       // New Sprint 5b columns
       bracket_format:   format ?? 'single_elimination',
       league_type:      league_type ?? 'showdown',
-      content_scope:    content_scope ?? null,
-      max_participants: max_participants ?? null,
-      created_by:       user.id,
+      content_scope:        content_scope ?? null,
+      // Keep legacy division_id in sync while ranking_division_id is the
+      // authoritative cohort field for Sprint 15 bracket scoring.
+      division_id:          rankingDivision.id,
+      ranking_division_id:  rankingDivision.id,
+      max_participants:     max_participants ?? null,
+      created_by:           user.id,
     })
     .select('id')
     .single();

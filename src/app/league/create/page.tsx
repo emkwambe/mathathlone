@@ -42,6 +42,14 @@ const LEAGUE_LEVELS: { value: LevelValue; label: string }[] = [
 
 const LEVELS_WITHOUT_MAX: LevelValue[] = ['district', 'regional', 'state', 'national'];
 
+const RANKING_COHORTS = [
+  { code: 'JR', label: 'Junior', detail: 'Grades 3–4' },
+  { code: 'INT', label: 'Intermediate', detail: 'Grades 5–6' },
+  { code: 'ADV', label: 'Advanced', detail: 'Grades 7–8' },
+  { code: 'JV', label: 'Junior Varsity', detail: 'Grades 9–10' },
+  { code: 'SV', label: 'Senior Varsity', detail: 'Grades 11–12' },
+] as const;
+
 const LEAGUE_TYPES: {
   value: LeagueType;
   label: string;
@@ -201,6 +209,7 @@ export default function CreateLeaguePage() {
   const [name,             setName]             = useState('');
   const [level,            setLevel]            = useState<LevelValue>('classroom');
   const [region,           setRegion]           = useState('');
+  const [rankingCohort,    setRankingCohort]    = useState('ADV');
   const [format,           setFormat]           = useState<FormatValue>('single_elimination');
   const [maxParticipants,  setMaxParticipants]  = useState<string>('');
   const [scopeType,        setScopeType]        = useState<ScopeType>('course');
@@ -293,8 +302,9 @@ export default function CreateLeaguePage() {
         region:           region.trim() || undefined,
         format,
         league_type:      leagueType,
-        content_scope:    contentScope,
-        max_participants: showMaxParticipants && maxParticipants ? parseInt(maxParticipants, 10) : undefined,
+        content_scope:          contentScope,
+        ranking_division_code: rankingCohort,
+        max_participants:       showMaxParticipants && maxParticipants ? parseInt(maxParticipants, 10) : undefined,
       };
 
       const res = await fetch('/api/league/create', {
@@ -562,6 +572,28 @@ export default function CreateLeaguePage() {
                   className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
                 />
               </div>
+            </div>
+
+            {/* Ranking cohort */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1.5" htmlFor="ranking-cohort">
+                Results rank toward
+              </label>
+              <select
+                id="ranking-cohort"
+                value={rankingCohort}
+                onChange={(e) => setRankingCohort(e.target.value)}
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
+              >
+                {RANKING_COHORTS.map((cohort) => (
+                  <option key={cohort.code} value={cohort.code}>
+                    {cohort.label} — {cohort.detail}
+                  </option>
+                ))}
+              </select>
+              <p className="mt-1.5 text-xs text-gray-500 leading-snug">
+                This is the peer cohort that receives league standings and ELO. It stays the same even when the content includes prior-grade, multi-course, or above-grade-level material.
+              </p>
             </div>
 
             {/* District notice */}

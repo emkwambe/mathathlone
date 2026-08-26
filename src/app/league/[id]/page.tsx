@@ -18,6 +18,7 @@ import LeagueDashboard from '@/components/league/LeagueDashboard';
 import BracketGenerateButton from '@/components/league/BracketGenerateButton';
 import StartLeagueHeatButton from '@/components/league/StartLeagueHeatButton';
 import RosterImportButton from '@/components/league/RosterImportButton';
+import LeagueRankingCohortPanel from '@/components/league/LeagueRankingCohortPanel';
 
 export const revalidate = 60; // ISR — refresh every 60 s
 
@@ -29,13 +30,16 @@ export default async function LeaguePage({ params }: PageProps) {
   const { id: leagueId } = params;
   const supabase = await createSupabaseServer();
 
-  // ── 0. Current user (for teacher actions) ────────────────────────────────
+  // ── 0. Current user (for teacher / administrator actions) ───────────────
   const { data: { user: currentUser } } = await supabase.auth.getUser();
+  const { data: currentProfile } = currentUser
+    ? await supabase.from('users').select('role').eq('id', currentUser.id).maybeSingle()
+    : { data: null };
 
   // ── 1. League meta ────────────────────────────────────────────────────────
   const { data: league, error: leagueErr } = await supabase
     .from('leagues')
-    .select('id, name, level, region, season_id, division_id, created_by, content_scope')
+    .select('id, name, level, region, season_id, division_id, ranking_division_id, created_by, content_scope, ranking_division:ranking_division_id ( code )')
     .eq('id', leagueId)
     .maybeSingle();
 
@@ -241,6 +245,8 @@ export default async function LeaguePage({ params }: PageProps) {
     end_date: s.end_date,
   }));
 
+  const rankingCohortCode = (league as any).ranking_division?.code ?? null;
+
   const leagueMeta = {
     id: league.id,
     name: league.name,
@@ -253,13 +259,16 @@ export default async function LeaguePage({ params }: PageProps) {
     contentScope: (league as any).content_scope ?? null,
   };
 
-  // Is the current user the league owner (teacher / admin)?
-  const isLeagueOwner = currentUser != null && (league as any).created_by === currentUser.id;
+  // A league creator or platform administrator may manage the league.
+  const isLeagueManager = currentUser != null && (
+    (league as any).created_by === currentUser.id ||
+    currentProfile?.role === 'platform_admin'
+  );
 
   return (
     <div className="relative">
       {/* Teacher-only actions bar */}
-      {isLeagueOwner && (
+      {isLeagueManager && (
         <div className="flex items-center justify-between px-4 py-3 bg-indigo-950/60 border-b border-indigo-800/40">
           <span className="text-xs text-indigo-300 font-medium tracking-wide uppercase">
             Teacher Controls
@@ -280,13 +289,19 @@ export default async function LeaguePage({ params }: PageProps) {
           </div>
         </div>
       )}
+      {isLeagueManager && (
+        <LeagueRankingCohortPanel
+          leagueId={leagueId}
+          currentCode={rankingCohortCode}
+        />
+      )}
       <LeagueDashboard
         leagueMeta={leagueMeta}
         initialStandings={standings}
         initialBracket={bracketMatches}
         initialChampionship={championship}
         initialSplits={splits}
-        isOwner={isLeagueOwner}
+        isOwner={isLeagueManager}
       />
     </div>
   );
