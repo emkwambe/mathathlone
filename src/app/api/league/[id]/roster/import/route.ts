@@ -77,9 +77,9 @@ interface RosterEntry {
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ): Promise<NextResponse> {
-  const leagueId = params.id;
+  const { id: leagueId } = await params;
 
   // ── Auth ────────────────────────────────────────────────────────────────────
   const supabase = await createSupabaseServer();

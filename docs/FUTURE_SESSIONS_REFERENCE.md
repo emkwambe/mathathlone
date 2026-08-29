@@ -591,20 +591,15 @@ npx tsx --env-file=.env.local scripts/filename.ts
 command1; command2; command3
 ```
 
-## Dev Accounts
+## Test and Development Accounts
 
-| Email | Password | Role |
-|---|---|---|
-| mrmkwambe@mathathlone.dev | TestHeat2026! | Teacher |
-| dev.teacher@test.com | devpass123 | Teacher (dev) |
-| dev.mathlete.g7@test.com | devpass123 | Student G7 |
-| student1-4@mathathlone.dev | TestHeat2026! | Students |
+> **Security policy:** This repository does not store account identities, passwords, PINs, recovery codes, or service credentials. The platform administrator provisions any required test account in Supabase Auth and distributes access through a private approved channel. Rotate and replace credentials that appeared in historical versions of this document.
 
 ## Supabase
 - Project: yhqxxgqfpgcertsqibps
 - SQL Editor: https://supabase.com/dashboard/project/yhqxxgqfpgcertsqibps/editor
 - Migrations folder: `supabase/migrations/`
-- Latest migration applied: `032_heat_design_overhaul.sql`
+- Migration baseline for the current production build: `046_sprint15_bracket_results.sql` (verify each environment with `docs/verify_migrations.sql`)
 
 ---
 

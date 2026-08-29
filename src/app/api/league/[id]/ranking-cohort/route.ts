@@ -2,10 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServer } from '@/lib/supabase/server';
 
 interface RouteContext {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export async function PATCH(request: NextRequest, { params }: RouteContext): Promise<NextResponse> {
+  const { id: leagueId } = await params;
   const supabase = await createSupabaseServer();
   const { data: { user }, error: authError } = await supabase.auth.getUser();
   if (authError || !user) {
@@ -36,7 +37,7 @@ export async function PATCH(request: NextRequest, { params }: RouteContext): Pro
   const { data: league, error: leagueError } = await supabase
     .from('leagues')
     .select('id, created_by')
-    .eq('id', params.id)
+    .eq('id', leagueId)
     .maybeSingle();
 
   if (leagueError || !league) {

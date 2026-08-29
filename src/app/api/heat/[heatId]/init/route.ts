@@ -15,9 +15,9 @@ import { initHeatRoom } from '@/lib/competition/heat-realtime-cf';
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { heatId: string } }
+  { params }: { params: Promise<{ heatId: string }> }
 ): Promise<NextResponse> {
-  const { heatId } = params;
+  const { heatId } = await params;
 
   // Verify the caller is authenticated
   const supabase = await createSupabaseServer();

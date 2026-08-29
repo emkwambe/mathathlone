@@ -16,7 +16,7 @@ CTA = (Content × 0.50) + (Time × 0.30) + (Accuracy × 0.20)
 
 ## Tech Stack
 
-- **Frontend**: Next.js 14 (App Router), React 18, TypeScript
+- **Frontend**: Next.js 16 (App Router), React 18, TypeScript
 - **Backend**: Supabase (PostgreSQL, Auth, Realtime)
 - **Styling**: Tailwind CSS
 - **Math Rendering**: KaTeX
@@ -26,8 +26,8 @@ CTA = (Content × 0.50) + (Time × 0.30) + (Accuracy × 0.20)
 
 ### Prerequisites
 
-- Node.js 18+
-- npm or yarn
+- Node.js 20.9+ (Node 22 LTS recommended)
+- npm (the repository uses `package-lock.json`)
 - Supabase account
 
 ### Setup
@@ -36,7 +36,7 @@ CTA = (Content × 0.50) + (Time × 0.30) + (Accuracy × 0.20)
    ```bash
    git clone https://github.com/your-org/mathathlone.git
    cd mathathlone
-   npm install
+   npm ci
    ```
 
 2. **Configure environment**
@@ -46,10 +46,8 @@ CTA = (Content × 0.50) + (Time × 0.30) + (Accuracy × 0.20)
    ```
 
 3. **Set up database**
-   
-   In your Supabase SQL Editor, run:
-   - `mathathlone-schema.sql` (creates tables)
-   - `mathathlone-seed.sql` (adds test data)
+
+   Apply the ordered SQL files in `supabase/migrations/` to the target Supabase project. Do not assume a fresh environment is current until it includes the migration required by the feature being tested. The current production baseline includes Sprint 15 migration `046_sprint15_bracket_results.sql`.
 
 4. **Start development server**
    ```bash
@@ -90,11 +88,11 @@ src/
 - Medal recognition (Gold/Silver/Bronze)
 
 ### For Teachers
-- Create and manage classes
-- Launch classroom Heats
-- Live monitoring during competition
-- Post-Heat analytics and gap analysis
-- Export results to CSV
+- Configure and launch curriculum-aligned Heats
+- Generate assessments and review student progress
+- Create and manage individual leagues and brackets
+- Record elimination results with cohort-safe scoring
+- Use roster-scoped classroom setup once the three-school pilot operations release is complete
 
 ### Integrity System
 - Focus detection (tab/app switching)
@@ -105,12 +103,13 @@ src/
 ## Scripts
 
 ```bash
-pnpm dev          # Start development server
-pnpm build        # Build for production
-pnpm lint         # Run ESLint
-pnpm type-check   # Run TypeScript check
-pnpm db:generate  # Generate Supabase types
-pnpm seed:nc      # Seed NC demo data (schools, mathletes, leagues)
+npm run dev          # Start the Turbopack development server
+npm run dev:webpack  # Start development with the legacy Webpack path
+npm run build        # Build for production with the explicit Webpack path
+npm run lint         # Run the ESLint CLI
+npm run type-check   # Run the TypeScript check
+npm run db:generate  # Generate Supabase types
+npm run seed:nc      # Seed NC demo data (schools, mathletes, leagues)
 ```
 
 ## Environment Variables

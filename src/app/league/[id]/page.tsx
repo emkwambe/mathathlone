@@ -23,11 +23,11 @@ import LeagueRankingCohortPanel from '@/components/league/LeagueRankingCohortPan
 export const revalidate = 60; // ISR — refresh every 60 s
 
 interface PageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export default async function LeaguePage({ params }: PageProps) {
-  const { id: leagueId } = params;
+  const { id: leagueId } = await params;
   const supabase = await createSupabaseServer();
 
   // ── 0. Current user (for teacher / administrator actions) ───────────────

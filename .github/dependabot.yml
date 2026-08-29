@@ -1,0 +1,19 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      nextjs-security:
+        dependency-type: production
+        patterns:
+          - next
+          - eslint-config-next
+
+  - package-ecosystem: npm
+    directory: /workers/heat-room
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5

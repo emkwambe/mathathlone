@@ -111,27 +111,11 @@ schools                — school profiles
 
 ---
 
-## 4. Test Accounts
+## 4. Test and Development Accounts
 
-### Pilot Accounts (password: TestHeat2026!)
-| Email | Display Name | Role | DB State |
-|---|---|---|---|
-| mshodges@mathathlone.dev | Ms. Hodges | teacher | auth ✅ profile ✅ role ✅ |
-| mrmkwambe@mathathlone.dev | Mr. Mkwambe | teacher | auth ✅ profile ✅ role ✅ |
-| student1@mathathlone.dev | Amara Osei | athlete G9 | auth ✅ profile ✅ role ✅ |
-| student2@mathathlone.dev | Jordan Chen | athlete G10 | auth ✅ profile ✅ role ✅ |
-| student3@mathathlone.dev | Priya Sharma | athlete G8 | auth ✅ profile ✅ role ✅ |
-| student4@mathathlone.dev | Marcus Williams | athlete G9 | auth ✅ profile ✅ role ✅ |
+> **Security policy:** Account identities, passwords, PINs, recovery codes, and service credentials are not stored in this repository. The platform administrator provisions test accounts in Supabase Auth and distributes access through a private, approved channel.
 
-### Dev Accounts (password: devpass123)
-| Email | Role |
-|---|---|
-| dev.teacher@test.com | teacher |
-| dev.mathlete.g7@test.com | mathlete |
-| dev.mathlete.g10@test.com | mathlete |
-| dev.admin@test.com | platform_admin |
-| dev.parent@test.com | parent |
-| dev.broadcast@test.com | broadcast_host |
+Any credential that appeared in previous versions of this document must be treated as exposed and rotated before use. Disable accounts that are no longer required. The development account switcher accepts a locally supplied password at run time and does not contain a committed password.
 
 ### Creating New Accounts (3-step process)
 ```sql
