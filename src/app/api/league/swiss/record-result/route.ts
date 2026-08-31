@@ -10,6 +10,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServer } from '@/lib/supabase/server';
 import { SwissService } from '@/lib/competition/swiss-service';
+import { getLeagueManagementAccess } from '@/lib/organization/league-authority';
+
+export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const supabase = await createSupabaseServer();
@@ -25,8 +28,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     .eq('id', user.id)
     .maybeSingle();
 
-  if (!profile || !['teacher', 'platform_admin'].includes(profile.role)) {
-    return NextResponse.json({ error: 'Forbidden — teachers only' }, { status: 403 });
+  if (!profile || !['teacher', 'school_admin', 'district_admin', 'platform_admin'].includes(profile.role)) {
+    return NextResponse.json({ error: 'Forbidden — authorized staff only' }, { status: 403 });
   }
 
   let body: {
@@ -46,6 +49,17 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       { status: 400 }
     );
   }
+
+  const { data: pairing } = await supabase
+    .from('swiss_pairings')
+    .select('league_id')
+    .eq('id', pairingId)
+    .maybeSingle();
+  if (!pairing) return NextResponse.json({ error: 'Pairing not found' }, { status: 404 });
+
+  const access = await getLeagueManagementAccess(supabase as any, pairing.league_id);
+  if (access.configurationError) return NextResponse.json({ error: access.configurationError }, { status: 500 });
+  if (!access.allowed) return NextResponse.json({ error: 'Forbidden — you are not authorized to manage this league.' }, { status: 403 });
 
   try {
     const service = new SwissService(supabase);

@@ -1241,18 +1241,36 @@ export class LeagueEngineService {
     heatId: string,
     results: HeatResult[]
   ): Promise<void> {
-    // 1. Calculate average opponent rating
+    // 1. Resolve the league's peer cohort before reading any athlete rating.
+    // Athletes can now hold multiple rating rows after above-grade advancement.
+    const { data: league } = await this.supabase
+      .from('leagues')
+      .select('ranking_division_id, division_id')
+      .eq('id', leagueId)
+      .maybeSingle();
+    const rankingDivisionId = league?.ranking_division_id ?? league?.division_id;
+    if (!rankingDivisionId) {
+      throw new Error('This league needs a ranking cohort before Heat results can be processed.');
+    }
+
+    const athleteIds = [...new Set(results.map((result) => result.athlete_id))];
     const { data: ratings } = await this.supabase
       .from('athlete_ratings')
-      .select('athlete_id, rating, rating_deviation, volatility, games_played, peak_rating, is_provisional, last_competition')
-      .in('athlete_id', results.map((r) => r.athlete_id));
+      .select('id, athlete_id, division_id, rating, rating_deviation, volatility, games_played, peak_rating, is_provisional, last_competition')
+      .in('athlete_id', athleteIds)
+      .eq('division_id', rankingDivisionId);
 
-    const ratingsMap = new Map(
-      (ratings || []).map((r) => [r.athlete_id, r as AthleteRating])
+    type ScopedRating = AthleteRating & { id: string; division_id: string };
+    const ratingsMap = new Map<string, ScopedRating>(
+      (ratings || []).map((rating) => [rating.athlete_id, rating as ScopedRating])
     );
+    const missingRating = athleteIds.find((athleteId) => !ratingsMap.has(athleteId));
+    if (missingRating) {
+      throw new Error('Every participant needs a rating in this league\'s ranking cohort before Heat results can be processed.');
+    }
 
     const avgRating =
-      (ratings || []).reduce((sum, r) => sum + r.rating, 0) /
+      (ratings || []).reduce((sum, rating) => sum + rating.rating, 0) /
       Math.max(1, (ratings || []).length);
 
     // 2. Update each athlete's rating
@@ -1260,7 +1278,7 @@ export class LeagueEngineService {
       const currentRating = ratingsMap.get(result.athlete_id);
       if (!currentRating) continue;
 
-      const { newRating, change } = EloEngine.updateFromHeat(
+      const { newRating } = EloEngine.updateFromHeat(
         currentRating,
         result,
         avgRating
@@ -1289,7 +1307,7 @@ export class LeagueEngineService {
           games_played: currentRating.games_played + 1,
           last_competition: new Date().toISOString(),
         })
-        .eq('athlete_id', result.athlete_id);
+        .eq('id', currentRating.id);
     }
 
     // 3. Update league standings

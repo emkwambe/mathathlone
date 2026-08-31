@@ -32,14 +32,11 @@ export default async function LeaguePage({ params }: PageProps) {
 
   // ── 0. Current user (for teacher / administrator actions) ───────────────
   const { data: { user: currentUser } } = await supabase.auth.getUser();
-  const { data: currentProfile } = currentUser
-    ? await supabase.from('users').select('role').eq('id', currentUser.id).maybeSingle()
-    : { data: null };
 
   // ── 1. League meta ────────────────────────────────────────────────────────
   const { data: league, error: leagueErr } = await supabase
     .from('leagues')
-    .select('id, name, level, region, season_id, division_id, ranking_division_id, created_by, content_scope, ranking_division:ranking_division_id ( code )')
+    .select('id, name, level, region, season_id, division_id, ranking_division_id, school_id, district_id, class_id, created_by, content_scope, ranking_division:ranking_division_id ( code )')
     .eq('id', leagueId)
     .maybeSingle();
 
@@ -154,7 +151,10 @@ export default async function LeaguePage({ params }: PageProps) {
   // ── 8. Shape data for LeagueDashboard props ───────────────────────────────
   const standings = (standingsRaw ?? []).map((r: any) => {
     const user = r.users ?? {};
-    const ar = Array.isArray(r.athlete_ratings) ? r.athlete_ratings[0] : r.athlete_ratings;
+    const ratings = Array.isArray(r.athlete_ratings) ? r.athlete_ratings : [r.athlete_ratings].filter(Boolean);
+    // An athlete can hold multiple ratings after advancement. The league page
+    // must display the one that belongs to this league's ranking cohort.
+    const ar = ratings.find((rating: any) => rating.division_id === (league as any).ranking_division_id) ?? null;
     const division = ar?.divisions?.name ?? '';
     return {
       rank: r.rank,
@@ -259,11 +259,13 @@ export default async function LeaguePage({ params }: PageProps) {
     contentScope: (league as any).content_scope ?? null,
   };
 
-  // A league creator or platform administrator may manage the league.
-  const isLeagueManager = currentUser != null && (
-    (league as any).created_by === currentUser.id ||
-    currentProfile?.role === 'platform_admin'
-  );
+  // Sprint 16B: organization authority is resolved against the persisted
+  // league scope, active delegation records, and the actor's current profile.
+  // This avoids treating a school/district role as global access.
+  const { data: mayManageLeague } = currentUser
+    ? await supabase.rpc('can_manage_league', { p_league_id: leagueId })
+    : { data: false };
+  const isLeagueManager = Boolean(mayManageLeague);
 
   return (
     <div className="relative">

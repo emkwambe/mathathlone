@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServer } from '@/lib/supabase/server';
 
+export const dynamic = 'force-dynamic';
+
 interface RouteContext {
   params: Promise<{ id: string }>;
 }
@@ -9,51 +11,38 @@ export async function PATCH(request: NextRequest, { params }: RouteContext): Pro
   const { id: leagueId } = await params;
   const supabase = await createSupabaseServer();
   const { data: { user }, error: authError } = await supabase.auth.getUser();
-  if (authError || !user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
-  const { data: profile } = await supabase
-    .from('users')
-    .select('role')
-    .eq('id', user.id)
-    .maybeSingle();
-
-  if (!profile || !['teacher', 'platform_admin'].includes(profile.role)) {
-    return NextResponse.json({ error: 'Forbidden — teachers only' }, { status: 403 });
-  }
+  if (authError || !user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   let body: { rankingDivisionCode?: unknown };
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
+    return NextResponse.json({ error: 'Invalid JSON body.' }, { status: 400 });
+  }
+  if (typeof body.rankingDivisionCode !== 'string' || !body.rankingDivisionCode.trim()) {
+    return NextResponse.json({ error: 'rankingDivisionCode is required.' }, { status: 400 });
   }
 
-  if (typeof body.rankingDivisionCode !== 'string' || !body.rankingDivisionCode.trim()) {
-    return NextResponse.json({ error: 'rankingDivisionCode is required' }, { status: 400 });
+  const { data: mayManage, error: authorizationError } = await supabase
+    .rpc('can_manage_league', { p_league_id: leagueId });
+  if (authorizationError) {
+    console.error('[ranking-cohort] authorization error:', authorizationError);
+    return NextResponse.json({ error: 'Unable to verify league authority. Ensure Sprint 16B migration 047 has been run.' }, { status: 500 });
   }
+  if (!mayManage) return NextResponse.json({ error: 'Forbidden — you are not authorized to manage this league.' }, { status: 403 });
 
   const { data: league, error: leagueError } = await supabase
     .from('leagues')
-    .select('id, created_by')
+    .select('id')
     .eq('id', leagueId)
     .maybeSingle();
-
-  if (leagueError || !league) {
-    return NextResponse.json({ error: 'League not found' }, { status: 404 });
-  }
-
-  if (profile.role !== 'platform_admin' && league.created_by !== user.id) {
-    return NextResponse.json({ error: 'Forbidden — only this league\'s creator may set its ranking cohort' }, { status: 403 });
-  }
+  if (leagueError || !league) return NextResponse.json({ error: 'League not found.' }, { status: 404 });
 
   const { data: brackets } = await supabase
     .from('brackets')
     .select('id')
     .eq('league_id', league.id);
   const bracketIds = (brackets ?? []).map((bracket) => bracket.id);
-
   if (bracketIds.length > 0) {
     const { data: completedMatch } = await supabase
       .from('bracket_matches')
@@ -62,12 +51,8 @@ export async function PATCH(request: NextRequest, { params }: RouteContext): Pro
       .eq('status', 'completed')
       .limit(1)
       .maybeSingle();
-
     if (completedMatch) {
-      return NextResponse.json(
-        { error: 'The ranking cohort cannot change after an elimination result has been recorded.' },
-        { status: 409 }
-      );
+      return NextResponse.json({ error: 'The ranking cohort cannot change after an elimination result has been recorded.' }, { status: 409 });
     }
   }
 
@@ -76,18 +61,14 @@ export async function PATCH(request: NextRequest, { params }: RouteContext): Pro
     .select('id, code')
     .eq('code', body.rankingDivisionCode.trim().toUpperCase())
     .maybeSingle();
-
-  if (divisionError || !division) {
-    return NextResponse.json({ error: 'The selected ranking cohort is not available.' }, { status: 400 });
-  }
+  if (divisionError || !division) return NextResponse.json({ error: 'The selected ranking cohort is not available.' }, { status: 400 });
 
   const { error: updateError } = await supabase
     .from('leagues')
     .update({ ranking_division_id: division.id, division_id: division.id })
     .eq('id', league.id);
-
   if (updateError) {
-    console.error('[api/league/[id]/ranking-cohort] update error:', updateError);
+    console.error('[ranking-cohort] update error:', updateError);
     return NextResponse.json({ error: 'Unable to save the ranking cohort.' }, { status: 500 });
   }
 

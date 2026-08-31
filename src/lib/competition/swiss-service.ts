@@ -168,35 +168,37 @@ export class SwissService {
 
     if (error || !pairing) throw new Error('Pairing not found.');
     if (pairing.status === 'completed') throw new Error('Pairing already completed.');
+    if (!pairing.player1_id || !pairing.player2_id) throw new Error('Cannot record a result for a bye pairing.');
+    if (![pairing.player1_id, pairing.player2_id].includes(winnerId)) {
+      throw new Error('Winner must be a participant in this pairing.');
+    }
+    if (!Number.isFinite(player1Cta) || !Number.isFinite(player2Cta) || player1Cta < 0 || player2Cta < 0) {
+      throw new Error('Both CTA scores must be valid numbers greater than or equal to zero.');
+    }
 
-    const loserId =
-      pairing.player1_id === winnerId ? pairing.player2_id : pairing.player1_id;
-
-    if (!loserId) throw new Error('Cannot determine loser — pairing may be a bye.');
-
+    const loserId = pairing.player1_id === winnerId ? pairing.player2_id : pairing.player1_id;
     const leagueId: string = pairing.league_id;
 
-    // ── Write pairing result ─────────────────────────────────────────────────
-    await this.supabase
-      .from('swiss_pairings')
-      .update({
-        winner_id: winnerId,
-        player1_cta: player1Cta,
-        player2_cta: player2Cta,
-        heat_id: heatId,
-        status: 'completed',
-        completed_at: new Date().toISOString(),
-      })
-      .eq('id', pairingId);
+    // A student may have multiple athlete_ratings rows after advancement. Resolve
+    // this league's cohort before reading or updating any rating record.
+    const { data: league } = await this.supabase
+      .from('leagues')
+      .select('ranking_division_id, division_id')
+      .eq('id', leagueId)
+      .maybeSingle();
+    const rankingDivisionId = league?.ranking_division_id ?? league?.division_id;
+    if (!rankingDivisionId) throw new Error('This league needs a ranking cohort before Swiss results can be scored.');
 
     // ── ELO update ───────────────────────────────────────────────────────────
     const { data: ratingsRaw } = await this.supabase
       .from('athlete_ratings')
-      .select('athlete_id, rating, rating_deviation, volatility, games_played, peak_rating, is_provisional, last_competition')
-      .in('athlete_id', [winnerId, loserId]);
+      .select('id, athlete_id, division_id, rating, rating_deviation, volatility, games_played, peak_rating, is_provisional, last_competition')
+      .in('athlete_id', [winnerId, loserId])
+      .eq('division_id', rankingDivisionId);
 
-    const ratingsMap = new Map<string, AthleteRating>(
-      (ratingsRaw ?? []).map((r: any) => [r.athlete_id, r as AthleteRating])
+    type ScopedRating = AthleteRating & { id: string; division_id: string };
+    const ratingsMap = new Map<string, ScopedRating>(
+      (ratingsRaw ?? []).map((r: any) => [r.athlete_id, r as ScopedRating])
     );
 
     const winnerRating = ratingsMap.get(winnerId);
@@ -205,7 +207,11 @@ export class SwissService {
     let winnerEloChange = 0;
     let loserEloChange  = 0;
 
-    if (winnerRating && loserRating) {
+    if (!winnerRating || !loserRating) {
+      throw new Error('Both participants need ratings in this league\'s ranking cohort before a Swiss result can be recorded.');
+    }
+
+    {
       const { winnerChange, loserChange } = EloEngine.updateFromMatch(winnerRating, loserRating);
       winnerEloChange = winnerChange;
       loserEloChange  = loserChange;
@@ -221,7 +227,7 @@ export class SwissService {
           games_played: winnerRating.games_played + 1,
           last_competition: new Date().toISOString(),
         })
-        .eq('athlete_id', winnerId);
+        .eq('id', winnerRating.id);
 
       // Update athlete_ratings for loser
       await this.supabase
@@ -231,7 +237,7 @@ export class SwissService {
           games_played: loserRating.games_played + 1,
           last_competition: new Date().toISOString(),
         })
-        .eq('athlete_id', loserId);
+        .eq('id', loserRating.id);
 
       // Rating history — winner
       await this.supabase.from('rating_history').insert({
@@ -261,6 +267,22 @@ export class SwissService {
         actual_score: 0,
       });
     }
+
+    // Only mark the pairing complete after all preconditions and cohort-scoped
+    // rating writes have succeeded.
+    const { error: pairingUpdateError } = await this.supabase
+      .from('swiss_pairings')
+      .update({
+        winner_id: winnerId,
+        player1_cta: player1Cta,
+        player2_cta: player2Cta,
+        heat_id: heatId,
+        status: 'completed',
+        completed_at: new Date().toISOString(),
+      })
+      .eq('id', pairingId)
+      .eq('status', pairing.status);
+    if (pairingUpdateError) throw new Error(`Unable to complete pairing: ${pairingUpdateError.message}`);
 
     // ── League standings update ──────────────────────────────────────────────
     // Winner: +3 points, +1 win

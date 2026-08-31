@@ -16,6 +16,7 @@ const PUBLIC_ROUTES: string[] = [
 // the edge before any page code runs. Client-side RoleGuard / useRequireRole
 // provide a second layer of enforcement for dynamic client components.
 const ROLE_PROTECTED_ROUTES: { prefix: string; roles: string[] }[] = [
+  { prefix: '/dashboard/platform',  roles: ['platform_admin'] },
   { prefix: '/dashboard/admin',     roles: ['platform_admin', 'school_admin', 'district_admin'] },
   { prefix: '/dashboard/teacher',   roles: ['teacher', 'school_admin', 'district_admin', 'platform_admin'] },
   { prefix: '/dashboard/parent',    roles: ['parent', 'platform_admin'] },

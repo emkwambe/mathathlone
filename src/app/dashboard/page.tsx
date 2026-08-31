@@ -38,7 +38,7 @@ export default async function DashboardPage() {
 
   switch (topRole) {
     case 'platform_admin':
-      redirect('/dashboard/admin');         // platform admins use school admin UI for now
+      redirect('/dashboard/platform/pilot');
     case 'district_admin':
       redirect('/dashboard/admin');         // district admins use school admin UI for now
     case 'school_admin':

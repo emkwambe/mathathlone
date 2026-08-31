@@ -11,6 +11,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServer } from '@/lib/supabase/server';
 import { SwissService } from '@/lib/competition/swiss-service';
+import { getLeagueManagementAccess } from '@/lib/organization/league-authority';
+
+export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const supabase = await createSupabaseServer();
@@ -26,8 +29,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     .eq('id', user.id)
     .maybeSingle();
 
-  if (!profile || !['teacher', 'platform_admin'].includes(profile.role)) {
-    return NextResponse.json({ error: 'Forbidden — teachers only' }, { status: 403 });
+  if (!profile || !['teacher', 'school_admin', 'district_admin', 'platform_admin'].includes(profile.role)) {
+    return NextResponse.json({ error: 'Forbidden — authorized staff only' }, { status: 403 });
   }
 
   let body: { leagueId?: string; name?: string; splitId?: string };
@@ -38,6 +41,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   if (!leagueId) {
     return NextResponse.json({ error: 'leagueId is required' }, { status: 400 });
   }
+
+  const access = await getLeagueManagementAccess(supabase as any, leagueId);
+  if (access.configurationError) return NextResponse.json({ error: access.configurationError }, { status: 500 });
+  if (!access.allowed) return NextResponse.json({ error: 'Forbidden — you are not authorized to manage this league.' }, { status: 403 });
 
   // Verify league exists and is Swiss format
   const { data: league } = await supabase

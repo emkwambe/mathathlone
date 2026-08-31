@@ -12,6 +12,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServer } from '@/lib/supabase/server';
 import { LeagueEngineService } from '@/lib/league-engine';
 import type { HeatResult } from '@/lib/league-engine';
+import { getLeagueManagementAccess } from '@/lib/organization/league-authority';
+
+export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const supabase = await createSupabaseServer();
@@ -49,16 +52,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: 'Heat not found' }, { status: 404 });
   }
 
-  const { data: profile } = await supabase
-    .from('users')
-    .select('role')
-    .eq('id', user.id)
-    .maybeSingle();
-
-  const isAdmin = profile?.role === 'platform_admin';
-  if (!isAdmin && heat.created_by !== user.id) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (heat.league_id !== leagueId) {
+    return NextResponse.json({ error: 'The submitted Heat does not belong to this league.' }, { status: 400 });
   }
+
+  const access = await getLeagueManagementAccess(supabase as any, leagueId);
+  if (access.configurationError) return NextResponse.json({ error: access.configurationError }, { status: 500 });
+  if (!access.allowed) return NextResponse.json({ error: 'Forbidden — you are not authorized to manage this league.' }, { status: 403 });
 
   if (heat.status !== 'complete') {
     return NextResponse.json(
