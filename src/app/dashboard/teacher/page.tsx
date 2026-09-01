@@ -180,6 +180,20 @@ export default async function TeacherDashboard() {
             </Link>
           </div>
 
+          {/* Classes & Roster */}
+          <div className="bg-gradient-to-r from-sky-600 to-cyan-600 rounded-2xl p-8 text-white flex flex-col">
+            <h2 className="text-2xl font-bold mb-2">👥 Classes &amp; Roster</h2>
+            <p className="text-sky-100 mb-6 flex-1">
+              Set up your classes, import Mathletes, and print private login cards before a classroom Heat.
+            </p>
+            <Link
+              href="/dashboard/teacher/classes"
+              className="inline-block self-start px-6 py-3 bg-white text-sky-700 font-semibold rounded-lg hover:bg-sky-50 transition"
+            >
+              Manage Classes
+            </Link>
+          </div>
+
           {/* Create League */}
           <div className="bg-gradient-to-r from-violet-700 to-purple-700 rounded-2xl p-8 text-white flex flex-col">
             <h2 className="text-2xl font-bold mb-2">🏟️ Create a League</h2>

@@ -90,6 +90,14 @@ const DIVISION_COURSE_CODES: Record<string, string[]> = {
 const COURSES_WITHOUT_GENERATORS = new Set<string>(['ALG2', 'APPC']);
 const CONFIG_REQUEST_TIMEOUT_MS = 10_000;
 
+type TeacherClassRow = {
+  id: string;
+  name: string;
+  grade_level: number;
+  join_code: string;
+  roster_count: number;
+};
+
 function withConfigTimeout<T>(request: PromiseLike<T>, operation: string): Promise<T> {
   return new Promise<T>((resolve, reject) => {
     const timeout = window.setTimeout(() => {
@@ -271,15 +279,58 @@ export default function CreateHeatPage() {
   // The effective content division: if teacher chose a prior-grade division,
   // use that for course/concept loading; otherwise fall back to ranking division.
   const effectiveContentDivision = selectedContentDivision ?? selectedDivision;
+  const [teacherClasses, setTeacherClasses] = useState<TeacherClassRow[]>([]);
+  const [selectedClassId, setSelectedClassId] = useState<string>('');
+  const [loadingClasses, setLoadingClasses] = useState(false);
+  const [classLoadError, setClassLoadError] = useState<string | null>(null);
+  const selectedClass = useMemo(
+    () => teacherClasses.find((classroom) => classroom.id === selectedClassId) ?? null,
+    [teacherClasses, selectedClassId],
+  );
 
   // ── Auth gate ─────────────────────────────────────────────────────────────
   useEffect(() => {
     if (authLoading) return;
     if (!isAuthenticated) { router.push('/auth/login?next=/compete/create'); return; }
-    if (!hasRole(['teacher', 'school_admin', 'platform_admin'])) { router.push('/403'); }
+    // Sprint 16C classroom Heats are owned by a teacher and bound to that
+    // teacher's class roster. School/district event setup is introduced later.
+    if (!hasRole(['teacher'])) { router.push('/403'); }
   }, [authLoading, isAuthenticated, hasRole, router]);
 
-  // ── Load divisions ────────────────────────────────────────────────────────
+    // ── Load active classes ─────────────────────────────────────────────────
+  // Classroom Heats are roster-scoped when a class is selected. The API derives
+  // class visibility from the signed-in staff member after migration 048.
+  useEffect(() => {
+    if (authLoading || !isAuthenticated) return;
+    let cancelled = false;
+    async function loadClasses() {
+      setLoadingClasses(true);
+      setClassLoadError(null);
+      try {
+        const response = await fetch('/api/classes', { cache: 'no-store' });
+        const payload = await response.json().catch(() => null);
+        if (!response.ok) throw new Error(payload?.error ?? 'Could not load your classes.');
+        const rows = (payload?.classes ?? []) as TeacherClassRow[];
+        if (cancelled) return;
+        setTeacherClasses(rows);
+        setSelectedClassId((current) => current && rows.some((classroom) => classroom.id === current)
+          ? current
+          : rows[0]?.id ?? '');
+      } catch (err: any) {
+        if (!cancelled) {
+          setTeacherClasses([]);
+          setSelectedClassId('');
+          setClassLoadError(err?.message ?? 'Could not load your classes.');
+        }
+      } finally {
+        if (!cancelled) setLoadingClasses(false);
+      }
+    }
+    void loadClasses();
+    return () => { cancelled = true; };
+  }, [authLoading, isAuthenticated]);
+
+  // ── Load divisions ───────────────────────────────────────────────────────
   useEffect(() => {
     let cancelled = false;
     async function loadDivisions() {
@@ -416,6 +467,8 @@ export default function CreateHeatPage() {
 
   // ── Create handler ────────────────────────────────────────────────────────
   const handleCreate = useCallback(async () => {
+    if (!selectedClass) { dispatch({ type: 'SET_ERROR', payload: 'Choose one of your classes before creating a classroom Heat.' }); return; }
+    if (selectedClass.roster_count < 1) { dispatch({ type: 'SET_ERROR', payload: `Add at least one Mathlete to ${selectedClass.name} before creating its classroom Heat.` }); return; }
     if (!selectedDivision || !selectedCourse) { dispatch({ type: 'SET_ERROR', payload: 'Pick a division and course before creating the Heat.' }); return; }
     if (!enoughConcepts) { dispatch({ type: 'SET_ERROR', payload: `Select at least ${MIN_CONCEPTS} concepts to create a Heat.` }); return; }
     dispatch({ type: 'SET_ERROR', payload: null });
@@ -440,6 +493,7 @@ export default function CreateHeatPage() {
         question_count: questionCount,
         duration_seconds: durationMinutes * 60,
         school_id: profile?.school_id ?? null,
+        class_id: selectedClass.id,
         scope: 'class',
         fr_ratio: currentMode.fr_ratio,
         mc_ratio: currentMode.mc_ratio,
@@ -461,7 +515,7 @@ export default function CreateHeatPage() {
     } finally {
       dispatch({ type: 'SET_CREATING', payload: false });
     }
-  }, [selectedDivision, selectedCourse, enoughConcepts, selectedConceptIds, questionProfile, mode, currentMode, integrityLevel, questionCount, durationMinutes, profile?.school_id, supabase, router, dispatch, MIN_CONCEPTS]);
+  }, [selectedClass, selectedDivision, selectedCourse, enoughConcepts, selectedConceptIds, questionProfile, mode, currentMode, integrityLevel, questionCount, durationMinutes, profile?.school_id, supabase, router, dispatch, MIN_CONCEPTS]);
 
   // ── Loading state ─────────────────────────────────────────────────────────
   if (authLoading || loadingCurriculum) {
@@ -526,6 +580,36 @@ export default function CreateHeatPage() {
 
             {/* Section A: Audience & Content */}
             <ConfigSection title="Audience &amp; Content">
+              {/* Classroom roster */}
+              <div className="mb-6 rounded-xl border border-sky-200 bg-sky-50 p-4">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div>
+                    <p className="text-sm font-semibold text-sky-950">Classroom roster</p>
+                    <p className="mt-1 text-xs leading-5 text-sky-800">Choose the class that will take this Heat. Only Mathletes actively rostered in that class can join with the Heat link or code.</p>
+                  </div>
+                  <a href="/dashboard/teacher/classes" className="text-xs font-semibold text-sky-800 underline decoration-sky-300 underline-offset-2 hover:text-sky-950">Manage classes &amp; roster</a>
+                </div>
+                {loadingClasses ? (
+                  <p className="mt-3 flex items-center gap-2 text-sm text-sky-700"><Loader2 className="h-4 w-4 animate-spin" /> Loading your classes…</p>
+                ) : classLoadError ? (
+                  <p className="mt-3 text-sm text-red-700">{classLoadError}</p>
+                ) : teacherClasses.length === 0 ? (
+                  <p className="mt-3 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">Create a class and add its roster before creating a classroom Heat.</p>
+                ) : (
+                  <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                    {teacherClasses.map((classroom) => {
+                      const selected = classroom.id === selectedClassId;
+                      return (
+                        <button key={classroom.id} type="button" onClick={() => setSelectedClassId(classroom.id)} className={`rounded-lg border p-3 text-left transition ${selected ? 'border-sky-500 bg-white ring-1 ring-sky-300' : 'border-sky-200 bg-white/70 hover:border-sky-400'}`}>
+                          <div className="flex items-center justify-between gap-3"><span className="font-semibold text-slate-900">{classroom.name}</span>{selected && <Check className="h-4 w-4 shrink-0 text-sky-700" />}</div>
+                          <p className="mt-1 text-xs text-slate-600">Grade {classroom.grade_level} · {classroom.roster_count} active Mathlete{classroom.roster_count === 1 ? '' : 's'}</p>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+
               {/* Division */}
               <p className="text-xs text-gray-400 mb-3">Division — Mathletes compete within their division.</p>
               <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
@@ -811,6 +895,10 @@ export default function CreateHeatPage() {
                     }
                   />
                   <SummaryRow
+                    label="Classroom"
+                    value={selectedClass ? `${selectedClass.name} · ${selectedClass.roster_count} rostered` : 'Choose a class'}
+                  />
+                  <SummaryRow
                     label="Ranks toward"
                     value={selectedDivision?.name ? `${selectedDivision.name} standings` : '—'}
                   />
@@ -831,8 +919,9 @@ export default function CreateHeatPage() {
               </div>
 
               {/* Readiness indicator */}
-              {!stepsComplete && (
+              {(!stepsComplete || !selectedClass || selectedClass.roster_count < 1) && (
                 <div className="rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 text-xs text-amber-800 space-y-1">
+                  {(!selectedClass || selectedClass.roster_count < 1) && <p>· Choose a class with at least one rostered Mathlete</p>}
                   {!selectedDivision && <p>· Select a division</p>}
                   {selectedDivision && !selectedCourse && <p>· Select a course</p>}
                   {selectedCourse && !enoughConcepts && <p>· Select at least {MIN_CONCEPTS} concepts</p>}
@@ -843,8 +932,8 @@ export default function CreateHeatPage() {
               <button
                 type="button"
                 onClick={handleCreate}
-                disabled={!stepsComplete || creating}
-                className={`w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-semibold text-white text-base transition-all ${!stepsComplete || creating ? 'bg-gray-300 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] shadow-lg shadow-indigo-200'}`}
+                disabled={!stepsComplete || !selectedClass || selectedClass.roster_count < 1 || creating}
+                className={`w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-semibold text-white text-base transition-all ${!stepsComplete || !selectedClass || selectedClass.roster_count < 1 || creating ? 'bg-gray-300 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] shadow-lg shadow-indigo-200'}`}
               >
                 {creating ? (
                   <><Loader2 className="w-5 h-5 animate-spin" /> Creating Heat…</>

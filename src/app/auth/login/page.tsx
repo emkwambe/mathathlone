@@ -356,7 +356,7 @@ function MathleteLogin({ next }: { next: string | null }) {
 
   const initialCode = searchParams.get('code') || '';
 
-  const [email, setEmail] = useState('');
+  const [loginId, setLoginId] = useState('');
   const [password, setPassword] = useState('');
   const [rawCode, setRawCode] = useState(initialCode);
   const [error, setError] = useState('');
@@ -379,7 +379,19 @@ function MathleteLogin({ next }: { next: string | null }) {
 
       setSubmitting(true);
 
-      const { error: authError } = await signIn(email, password);
+      // Managed classroom accounts receive a username + temporary PIN. Supabase
+      // still signs them in with their private internal email, derived only when
+      // the student enters a username (rather than an ordinary email address).
+      const normalizedLogin = loginId.trim().toLowerCase();
+      if (!normalizedLogin) {
+        setError('Enter your email or the username on your Mathlete login card.');
+        setSubmitting(false);
+        return;
+      }
+      const credential = normalizedLogin.includes('@')
+        ? normalizedLogin
+        : `${normalizedLogin}@roster.mathathlone.internal`;
+      const { error: authError } = await signIn(credential, password);
       if (authError) {
         setError(authError.message);
         setSubmitting(false);
@@ -394,7 +406,7 @@ function MathleteLogin({ next }: { next: string | null }) {
         ?? (codeIsWellFormed ? `/compete/${normalizedCode}` : '/compete');
       router.replace(dest);
     },
-    [codeIsValid, codeIsWellFormed, normalizedCode, signIn, email, password, next, router]
+    [codeIsValid, codeIsWellFormed, normalizedCode, signIn, loginId, password, next, router]
   );
 
   return (
@@ -462,26 +474,29 @@ function MathleteLogin({ next }: { next: string | null }) {
             <div className="border-t border-white/10 my-4" />
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-white/80 mb-1">
-                Email
+              <label htmlFor="login-id" className="block text-sm font-medium text-white/80 mb-1">
+                Email or Mathlete username
               </label>
               <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                id="login-id"
+                type="text"
+                value={loginId}
+                onChange={(e) => setLoginId(e.target.value)}
                 required
-                autoComplete="email"
+                autoComplete="username"
                 autoFocus
+                autoCapitalize="none"
+                autoCorrect="off"
                 className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/40 focus:ring-2 focus:ring-amber-400/40 focus:border-amber-400 outline-none transition"
-                placeholder="you@example.com"
+                placeholder="Username on your login card or you@example.com"
               />
+              <p className="mt-1.5 text-xs leading-5 text-white/45">If your teacher gave you a login card, enter its username here and its temporary PIN below.</p>
             </div>
 
             <div>
               <div className="flex items-center justify-between mb-1">
                 <label htmlFor="password" className="block text-sm font-medium text-white/80">
-                  Password
+                  Password or temporary PIN
                 </label>
                 <Link href="/auth/forgot-password" className="text-sm text-amber-300 hover:underline">
                   Forgot?
@@ -530,7 +545,7 @@ function MathleteLogin({ next }: { next: string | null }) {
           <div className="mt-6 text-center text-sm text-white/60">
             New here?{' '}
             <Link
-              href="/auth/register?role=athlete"
+              href={`/auth/register?role=athlete${next ? `&next=${encodeURIComponent(next)}` : ''}`}
               className="text-amber-300 font-medium hover:underline"
             >
               Create a Mathlete account

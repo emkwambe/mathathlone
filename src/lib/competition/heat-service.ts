@@ -442,6 +442,24 @@ export async function joinHeat(
     throw new Error(`This Heat is not accepting new Mathletes (status: ${heat.status})`);
   }
 
+  // Class-bound Heats are roster-only. This check gives the Mathlete a clear
+  // message before the matching RLS policy enforces the same rule on insert.
+  if (heat.class_id) {
+    const { data: activeEnrollment, error: enrollmentError } = await supabase
+      .from('class_enrollments')
+      .select('id')
+      .eq('class_id', heat.class_id)
+      .eq('athlete_id', user.id)
+      .eq('status', 'active')
+      .maybeSingle();
+    if (enrollmentError) {
+      throw new Error(`Could not verify classroom eligibility: ${enrollmentError.message}`);
+    }
+    if (!activeEnrollment) {
+      throw new Error('This is a roster-only classroom Heat. Ask your teacher to add you to the class before you join.');
+    }
+  }
+
   // If user already joined, return the existing participation (idempotent join)
   const { data: existing } = await supabase
     .from('heat_participations')

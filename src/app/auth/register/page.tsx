@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useState, useEffect, useRef, useCallback } from 'react';
+import { Suspense, useState, useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { createSupabaseBrowser } from '@/lib/supabase/client';
@@ -24,11 +24,17 @@ function getDaysInMonth(month: string, year: string): number {
   return new Date(parseInt(year), parseInt(month), 0).getDate();
 }
 
+function safeNext(next: string | null): string | null {
+  if (!next || !next.startsWith('/') || next.startsWith('//') || next.startsWith('/auth/')) return null;
+  return next;
+}
+
 function RegisterPageInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   // FIX-2: role starts as null so user must explicitly choose; URL param pre-selects but does not skip step
   const initialRole = (searchParams.get('role') as 'athlete' | 'teacher') || null;
+  const next = safeNext(searchParams.get('next'));
 
   // Form state
   const [step, setStep] = useState<'role' | 'details' | 'fairplay'>('role');
@@ -50,7 +56,6 @@ function RegisterPageInner() {
   // Fair Play state
   const [hasScrolledToBottom, setHasScrolledToBottom] = useState(false);
   const [fairPlayAcknowledged, setFairPlayAcknowledged] = useState(false);
-  const [parentConsent, setParentConsent] = useState(false);
   const fairPlayRef = useRef<HTMLDivElement>(null);
 
   // UI state
@@ -63,7 +68,6 @@ function RegisterPageInner() {
     if (step !== 'fairplay') return;
     setHasScrolledToBottom(false);
     setFairPlayAcknowledged(false);
-    setParentConsent(false);
     const raf = requestAnimationFrame(() => {
       if (!fairPlayRef.current) return;
       const { scrollHeight, clientHeight } = fairPlayRef.current;
@@ -73,15 +77,6 @@ function RegisterPageInner() {
     });
     return () => cancelAnimationFrame(raf);
   }, [step]);
-
-  // Check if user is minor (under 18)
-  const isMinor = useCallback(() => {
-    if (!dateOfBirth) return true;
-    const today = new Date();
-    const birth = new Date(dateOfBirth);
-    const age = today.getFullYear() - birth.getFullYear();
-    return age < 18;
-  }, [dateOfBirth]);
 
   // Handle Fair Play scroll detection
   const handleScroll = () => {
@@ -136,7 +131,10 @@ function RegisterPageInner() {
         date_of_birth: role === 'athlete' ? dateOfBirth : null,
         grade_level: role === 'athlete' ? gradeLevel : null,
         fair_play_acknowledged_at: new Date().toISOString(),
-        parent_consent_at: isMinor() ? new Date().toISOString() : null,
+        // A student checkbox is not verifiable parental consent. Managed pilot
+        // accounts use school-approved rosters; any formal parent consent must
+        // be recorded through a separate verified parent process.
+        parent_consent_at: null,
         proctor_certified_at: role === 'teacher' ? new Date().toISOString() : null,
       })
       .eq('id', authData.user.id);
@@ -162,8 +160,8 @@ function RegisterPageInner() {
       }
     }
 
-    // Success - redirect to dashboard
-    router.push('/dashboard');
+    // Preserve the intended Heat when registration began from a shared Heat link.
+    router.push(next ?? '/dashboard');
     router.refresh();
   };
 
@@ -475,19 +473,10 @@ function RegisterPageInner() {
                   </span>
                 </label>
 
-                {role === 'athlete' && isMinor() && (
-                  <label className={`flex items-start gap-3 p-3 rounded-lg border ${hasScrolledToBottom ? 'border-gray-200 cursor-pointer hover:bg-gray-50' : 'border-gray-100 bg-gray-50 cursor-not-allowed'}`}>
-                    <input
-                      type="checkbox"
-                      checked={parentConsent}
-                      onChange={(e) => setParentConsent(e.target.checked)}
-                      disabled={!hasScrolledToBottom}
-                      className="mt-1"
-                    />
-                    <span className={hasScrolledToBottom ? 'text-gray-700' : 'text-gray-400'}>
-                      My parent/guardian consents to my participation
-                    </span>
-                  </label>
+                {role === 'athlete' && (
+                  <p className="rounded-lg border border-blue-100 bg-blue-50 p-3 text-xs leading-5 text-blue-800">
+                    For a classroom account, use the username and temporary PIN on the private login card from your teacher. Do not create a duplicate account during a live Heat.
+                  </p>
                 )}
               </div>
 
@@ -502,7 +491,7 @@ function RegisterPageInner() {
                 </button>
                 <button
                   onClick={handleRegister}
-                  disabled={loading || !fairPlayAcknowledged || (role === 'athlete' && isMinor() && !parentConsent)}
+                  disabled={loading || !fairPlayAcknowledged}
                   className="flex-1 py-3 px-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition"
                 >
                   {loading ? 'Creating Account...' : 'Complete Registration'}
@@ -514,7 +503,7 @@ function RegisterPageInner() {
           {/* Sign In Link */}
           <div className="mt-6 text-center text-sm text-gray-600">
             Already have an account?{' '}
-            <Link href="/auth/login" className="text-blue-600 font-medium hover:underline">
+            <Link href={`/auth/login${next ? `?next=${encodeURIComponent(next)}` : ''}`} className="text-blue-600 font-medium hover:underline">
               Sign in
             </Link>
           </div>
