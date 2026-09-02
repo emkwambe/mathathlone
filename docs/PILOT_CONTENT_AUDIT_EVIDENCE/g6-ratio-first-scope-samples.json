@@ -1,7 +1,7 @@
 {
   "auditTitle": "Grade 6 Ratios and Proportional Relationships — First Pilot Scope Sample Set",
-  "generatedAtUtc": "2026-09-02T15:41:23.346Z",
-  "samplingMethod": "Five deterministic difficulty-2 instances per approved generator, produced from the checked-in generator source.",
+  "generatedAtUtc": "2026-09-02T15:46:46.631Z",
+  "samplingMethod": "Five deterministic difficulty-2 instances per approved generator, produced from the checked-in generator source after RP-001 and RP-002 remediation.",
   "scope": {
     "course": "NC Grade 6 Math",
     "topic": "Ratios and Proportional Relationships",
@@ -10,6 +10,10 @@
       "g6_rp_ratio_table_solve",
       "g6_rp_ratio_word_problem"
     ]
+  },
+  "remediationChecks": {
+    "appleUnitRateRange": "$1–$4 per apple when the apple context is selected",
+    "singularPartGrammar": "No generated solution may say “1 parts”"
   },
   "audit": [
     {
@@ -22,66 +26,66 @@
         {
           "sample": 1,
           "conceptId": "M6.RP.1.3",
-          "questionText": "A box of 7 apples costs $469. What is the unit rate in dollars per apple?",
-          "questionLatex": "A box of 7 apples costs $469. What is the unit rate in dollars per apple?",
-          "correctAnswer": "67",
+          "questionText": "A box of 7 apples costs $28. What is the unit rate in dollars per apple?",
+          "questionLatex": "A box of 7 apples costs $28. What is the unit rate in dollars per apple?",
+          "correctAnswer": "4",
           "answerType": "decimal",
           "options": null,
           "solutionSteps": [
             "Unit rate = total ÷ number of units.",
-            "$469 ÷ 7 apples = $67 per apple."
+            "$28 ÷ 7 apples = $4 per apple."
           ]
         },
         {
           "sample": 2,
           "conceptId": "M6.RP.1.3",
-          "questionText": "A box of 9 apples costs $648. What is the unit rate in dollars per apple?",
-          "questionLatex": "A box of 9 apples costs $648. What is the unit rate in dollars per apple?",
-          "correctAnswer": "72",
+          "questionText": "A box of 9 apples costs $36. What is the unit rate in dollars per apple?",
+          "questionLatex": "A box of 9 apples costs $36. What is the unit rate in dollars per apple?",
+          "correctAnswer": "4",
           "answerType": "decimal",
           "options": null,
           "solutionSteps": [
             "Unit rate = total ÷ number of units.",
-            "$648 ÷ 9 apples = $72 per apple."
+            "$36 ÷ 9 apples = $4 per apple."
           ]
         },
         {
           "sample": 3,
           "conceptId": "M6.RP.1.3",
-          "questionText": "A box of 3 apples costs $228. What is the unit rate in dollars per apple?",
-          "questionLatex": "A box of 3 apples costs $228. What is the unit rate in dollars per apple?",
-          "correctAnswer": "76",
+          "questionText": "A box of 3 apples costs $12. What is the unit rate in dollars per apple?",
+          "questionLatex": "A box of 3 apples costs $12. What is the unit rate in dollars per apple?",
+          "correctAnswer": "4",
           "answerType": "decimal",
           "options": null,
           "solutionSteps": [
             "Unit rate = total ÷ number of units.",
-            "$228 ÷ 3 apples = $76 per apple."
+            "$12 ÷ 3 apples = $4 per apple."
           ]
         },
         {
           "sample": 4,
           "conceptId": "M6.RP.1.3",
-          "questionText": "A car drives 600 miles in 8 hours. What is the unit rate in miles per hour?",
-          "questionLatex": "A car drives 600 miles in 8 hours. What is the unit rate in miles per hour?",
-          "correctAnswer": "75",
+          "questionText": "A car drives 536 miles in 8 hours. What is the unit rate in miles per hour?",
+          "questionLatex": "A car drives 536 miles in 8 hours. What is the unit rate in miles per hour?",
+          "correctAnswer": "67",
           "answerType": "decimal",
           "options": null,
           "solutionSteps": [
             "Unit rate = total ÷ number of units.",
-            "600 miles ÷ 8 hours = 75 miles per hour."
+            "536 miles ÷ 8 hours = 67 miles per hour."
           ]
         },
         {
           "sample": 5,
           "conceptId": "M6.RP.1.3",
-          "questionText": "A box of 6 apples costs $396. What is the unit rate in dollars per apple?",
-          "questionLatex": "A box of 6 apples costs $396. What is the unit rate in dollars per apple?",
-          "correctAnswer": "66",
+          "questionText": "A box of 6 apples costs $24. What is the unit rate in dollars per apple?",
+          "questionLatex": "A box of 6 apples costs $24. What is the unit rate in dollars per apple?",
+          "correctAnswer": "4",
           "answerType": "decimal",
           "options": null,
           "solutionSteps": [
             "Unit rate = total ÷ number of units.",
-            "$396 ÷ 6 apples = $66 per apple."
+            "$24 ÷ 6 apples = $4 per apple."
           ]
         }
       ]
@@ -220,7 +224,7 @@
           "solutionSteps": [
             "The ratio has 1 + 1 = 2 equal parts.",
             "Each part = 6 ÷ 2 = 3.",
-            "Red = 1 parts = 1 × 3 = 3."
+            "Red = 1 part = 1 × 3 = 3."
           ]
         },
         {

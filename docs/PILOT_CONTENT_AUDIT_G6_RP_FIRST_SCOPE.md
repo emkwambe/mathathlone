@@ -1,7 +1,7 @@
 # Pilot Content Audit — Grade 6 Ratios and Proportional Relationships
 
 **Audit ID:** `PILOT-NC6M-RP-001`
-**Status:** **Not ready for classroom release until two conditions are closed**
+**Status:** **Pending final production worksheet-to-Heat acceptance**
 **Scope:** NC Grade 6 Math → Ratios and Proportional Relationships
 **Ranking cohort:** Grade 6
 **Content level:** Grade 6
@@ -11,9 +11,9 @@
 
 ## 1. Release decision
 
-The selected three-concept scope has a sound initial technical foundation. The live database maps every approved skill to an active generator, all fifteen sampled difficulty-2 items were mathematically correct, and each generator produced five distinct item instances. The new printable ratio-table representation is structurally encoded as a KaTeX array and passed a local rendering check.
+The selected three-concept scope has a sound technical foundation. The live database maps every approved skill to an active generator, all fifteen regenerated difficulty-2 items were mathematically correct, and each generator produced five distinct item instances. The printable ratio-table representation is structurally encoded as a KaTeX array and passed a local rendering check.
 
-The scope is **not yet approved for a real classroom**. Two conditions remain. First, the unit-rate generator includes a retail context that produces implausibly high apple prices, such as a box of seven apples costing $469. The arithmetic is correct, but the context is distracting and not appropriate as a default Grade 6 pilot item. Second, the worksheet-to-Heat flow and corrected table must be verified in the deployed production application and a saved PDF before student use.
+The source-level findings have been remediated. The unit-rate generator now constrains familiar retail prices to realistic whole-dollar values, and the 1:1 ratio explanation now uses singular grammar. The scope remains **pending final production acceptance**: the worksheet-to-Heat flow and corrected ratio table must be verified in the deployed application and a saved PDF before student use.
 
 | Gate | Finding | Status |
 |---|---|---|
@@ -21,7 +21,7 @@ The scope is **not yet approved for a real classroom**. Two conditions remain. F
 | Generator variation | Each generator produced five distinct medium-difficulty prompt instances. | Pass |
 | Mathematical correctness | Independent arithmetic/proportion review of all fifteen samples passed. | Pass |
 | Ratio-table structure | Worksheet variant emits a structured KaTeX table; accessible live text remains separate. | Pass locally; production print evidence pending |
-| Student wording and realism | Unit-rate apple-price context is implausible at the generated values. | **Major remediation required** |
+| Student wording and realism | Apple contexts now produce whole-dollar prices of **$1–$4 per apple** when selected. | Pass after remediation |
 | Worksheet/Heat independence | Source implementation generates independent instances from the same canonical concepts. | Pass in implementation review; production flow test pending |
 | Classroom release | Conditions above unresolved. | **Not ready** |
 
@@ -39,7 +39,7 @@ The live inventory confirmed that every row maps to **NC Grade 6 Math** (`G6`) a
 
 ## 3. Sampling method and evidence
 
-Five deterministic difficulty-2 instances were generated for each approved generator from the checked-in generator source. This produced fifteen reviewable items. The evidence file is [`PILOT_CONTENT_AUDIT_EVIDENCE/g6-ratio-first-scope-samples.json`](./PILOT_CONTENT_AUDIT_EVIDENCE/g6-ratio-first-scope-samples.json).
+Five deterministic difficulty-2 instances were regenerated for each approved generator from the checked-in generator source after remediation. This produced fifteen reviewable items. The evidence file is [`PILOT_CONTENT_AUDIT_EVIDENCE/g6-ratio-first-scope-samples.json`](./PILOT_CONTENT_AUDIT_EVIDENCE/g6-ratio-first-scope-samples.json).
 
 This sampling checks source behavior and generator variation. It does not replace the required production worksheet/PDF and class-bound Heat rehearsal after deployment.
 
@@ -55,7 +55,7 @@ Every sampled result was independently recomputed from the prompt. No sample pro
 
 | Generator | Representative calculation checks | Result |
 |---|---|---|
-| Unit rate | `469 ÷ 7 = 67`; `648 ÷ 9 = 72`; `600 ÷ 8 = 75` | Correct |
+| Unit rate | `28 ÷ 7 = 4`; `36 ÷ 9 = 4`; `536 ÷ 8 = 67` | Correct |
 | Ratio table | `12 × 5 = 60`; `7 × 10 = 70`; `14 × 11 = 154`; `6 × 2 = 12` | Correct |
 | Ratio word problem | `50 × 3/(2+3) = 30`; `63 × 2/(2+5) = 18`; `72 × 5/(3+5) = 45`; `45 × 2/(2+1) = 30` | Correct |
 
@@ -76,8 +76,8 @@ The original ratio-table defect was a presentation defect: the values were flatt
 
 | ID | Severity | Finding | Why it matters | Required remediation | Re-test evidence |
 |---|---|---|---|---|---|
-| `RP-001` | **Major** | The unit-rate generator can ask about a box of apples costing $228–$648, implying $67–$76 per apple in sampled items. | The arithmetic is correct but the ordinary-shopping context is implausible and may distract Grade 6 students from the intended skill. | Replace or constrain the apple-cost context so generated rates and totals are realistic, or use a context whose values are naturally large. Sample five new instances after the change. | Five revised unit-rate samples; teacher wording review. |
-| `RP-002` | Minor | One solution phrase says “Red = 1 parts” for a 1:1 ratio. | The answer is correct, but singular grammar reduces polish. | Render “part” when the factor is 1. Re-sample the 1:1 case. | One revised 1:1 sample. |
+| `RP-001` | **Closed** | The unit-rate generator previously produced implausibly expensive apple contexts. | The arithmetic was correct but the ordinary-shopping context could distract Grade 6 students. | Apple unit rates are now constrained to $1–$4, with new samples captured. | Five revised samples pass. |
+| `RP-002` | **Closed** | A 1:1 solution could say “Red = 1 parts.” | The answer was correct but grammatically imprecise. | Singular `part` is now used when the factor equals 1. | Revised 1:1 sample passes. |
 | `RP-003` | Major until completed | New ratio-table worksheet rendering has not been inspected in production print/PDF output. | Local structured markup does not prove final browser printing on school devices. | Deploy worksheet improvement; generate one competition-preparation worksheet containing ratio tables; inspect browser preview and saved PDF. | Screenshot and saved PDF meeting the page/layout checklist. |
 | `RP-004` | Major until completed | The Heat-to-worksheet return and independent-instance behavior has not been exercised using a rostered teacher class in production. | Fair preparation requires preserving the blueprint without revealing or reusing Heat items. | Run the designated teacher acceptance flow and compare practice versus Heat questions. | Builder, worksheet, and Heat captures; completed linkage checklist. |
 
@@ -85,18 +85,16 @@ The original ratio-table defect was a presentation defect: the values were flatt
 
 The course may be marked **Ready** only when the following package is complete.
 
-1. The unit-rate context is revised and five new samples pass mathematical and teacher wording review.
-2. The 1:1 solution grammar is corrected and re-sampled.
-3. A deployed teacher generates a competition-preparation worksheet with all three concepts. The document shows the course, topic, concepts, fresh-instance statement, and no teacher answer key.
-4. The ratio-table item is readable as a two-column table in the page view and in a saved Chrome PDF.
-5. The worksheet stays within the pilot page target: normally at most four student-question pages; no spurious blank answer-key page for a Practice Review.
-6. Returning from the worksheet restores the selected class, course, concepts, mode, profile, timing, and content division in the Heat Builder.
-7. A teacher launches a short class-bound practice Heat and confirms it generates new ratio/unit-rate/word-problem instances rather than retrieving the worksheet items.
-8. A Mathlete outside the rostered class is denied entry to that class-bound Heat.
+1. A deployed teacher generates a competition-preparation worksheet with all three concepts. The document shows the course, topic, concepts, fresh-instance statement, and no teacher answer key.
+2. The ratio-table item is readable as a two-column table in the page view and in a saved Chrome PDF.
+3. The worksheet stays within the pilot page target: normally at most four student-question pages; no spurious blank answer-key page for a Practice Review.
+4. Returning from the worksheet restores the selected class, course, concepts, mode, profile, timing, and content division in the Heat Builder.
+5. A teacher launches a short class-bound practice Heat and confirms it generates new ratio/unit-rate/word-problem instances rather than retrieving the worksheet items.
+6. A Mathlete outside the rostered class is denied entry to that class-bound Heat.
 
 ## 8. Conditional configuration recommendation
 
-Do **not** announce this scope to real classrooms until `RP-001` through `RP-004` are closed. After closure, use this conservative first configuration.
+Do **not** announce this scope to real classrooms until the remaining production evidence items `RP-003` and `RP-004` are closed. After closure, use this conservative first configuration.
 
 | Setting | Recommended value |
 |---|---|
@@ -110,6 +108,6 @@ Do **not** announce this scope to real classrooms until `RP-001` through `RP-004
 
 ## 9. Audit conclusion
 
-The selected scope is an appropriate **first audit unit** because it is narrow, has active coverage for all announced skills, and deliberately includes the visual ratio-table format that was recently corrected. The audit found no mathematical-answer defect in the fifteen sampled medium-difficulty items. It did find a material wording/realism issue in the unit-rate context and two necessary production workflow validations.
+The selected scope is an appropriate **first audit unit** because it is narrow, has active coverage for all announced skills, and deliberately includes the visual ratio-table format that was recently corrected. The fifteen regenerated medium-difficulty samples contain no mathematical-answer defect; the unit-rate realism and singular-grammar findings are closed.
 
-The recommended next move is a focused remediation patch for the unit-rate context and singular solution grammar, followed by one production worksheet-to-Heat rehearsal. After that evidence is complete, the platform owner can make a defensible Grade 6 intraclass pilot release decision for this three-concept scope.
+The remaining next move is one production worksheet-to-Heat rehearsal. After its print/PDF and class-bound Heat evidence is complete, the platform owner can make a defensible Grade 6 intraclass pilot release decision for this three-concept scope.

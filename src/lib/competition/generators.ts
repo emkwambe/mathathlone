@@ -8261,25 +8261,31 @@ export function generate_g6_rp_calculate_unit_rate(difficulty: DifficultyLevel):
   // The unit rate is always total ÷ units = numerator ÷ denominator = rate.
   const contexts = [
     {
+      rateRange: difficulty === 1 ? [25, 45] : [30, 70],
       question: (n: number, d: number) => `A car drives ${n} miles in ${d} hour${d === 1 ? '' : 's'}. What is the unit rate in miles per hour?`,
       sol: (n: number, d: number, r: number) => `${n} miles ÷ ${d} hours = ${r} miles per hour.`,
     },
     {
+      // Keep a familiar shopping context realistic: whole-dollar apple prices
+      // avoid distracting totals such as hundreds of dollars for one box.
+      rateRange: difficulty === 1 ? [1, 3] : [1, 4],
       question: (n: number, d: number) => `A box of ${d} apple${d === 1 ? '' : 's'} costs $${n}. What is the unit rate in dollars per apple?`,
       sol: (n: number, d: number, r: number) => `$${n} ÷ ${d} apples = $${r} per apple.`,
     },
     {
+      rateRange: difficulty === 1 ? [10, 30] : [15, 60],
       question: (n: number, d: number) => `A printer prints ${n} pages in ${d} minute${d === 1 ? '' : 's'}. What is the unit rate in pages per minute?`,
       sol: (n: number, d: number, r: number) => `${n} pages ÷ ${d} minutes = ${r} pages per minute.`,
     },
     {
+      rateRange: difficulty === 1 ? [40, 120] : [50, 200],
       question: (n: number, d: number) => `A snack contains ${n} calories in ${d} serving${d === 1 ? '' : 's'}. What is the unit rate in calories per serving?`,
       sol: (n: number, d: number, r: number) => `${n} calories ÷ ${d} servings = ${r} calories per serving.`,
     },
-  ];
+  ] as const;
   const ctx = contexts[randomInt(0, contexts.length - 1)]!;
   const denominator = randomInt(2, difficulty === 1 ? 6 : 12);
-  const rate = randomInt(difficulty === 1 ? 5 : 15, difficulty === 1 ? 30 : 80);
+  const rate = randomInt(ctx.rateRange[0], ctx.rateRange[1]);
   const numerator = denominator * rate;
   return g7Wrap(difficulty, 'g6_rp_calculate_unit_rate', 'M6.RP.1.3', 'Calculating a Unit Rate', {
     question: ctx.question(numerator, denominator),
@@ -8341,7 +8347,9 @@ export function generate_g6_rp_ratio_word_problem(difficulty: DifficultyLevel): 
     solution_steps: [
       `The ratio has ${a} + ${b} = ${parts} equal parts.`,
       `Each part = ${total} ÷ ${parts} = ${totalMultiple}.`,
-      `${ask === 'blue' ? `Blue = ${a} parts = ${a} × ${totalMultiple} = ${blue}.` : `Red = ${b} parts = ${b} × ${totalMultiple} = ${red}.`}`,
+      `${ask === 'blue'
+        ? `Blue = ${a} ${a === 1 ? 'part' : 'parts'} = ${a} × ${totalMultiple} = ${blue}.`
+        : `Red = ${b} ${b === 1 ? 'part' : 'parts'} = ${b} × ${totalMultiple} = ${red}.`}`,
     ],
     answer_type: 'integer_or_decimal',
   });
