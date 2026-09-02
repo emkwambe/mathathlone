@@ -11,7 +11,6 @@ const inheritedDebtWarnings = {
   '@typescript-eslint/no-require-imports': 'warn',
   '@typescript-eslint/no-unsafe-function-type': 'warn',
   '@typescript-eslint/no-unused-vars': 'warn',
-  'import/no-anonymous-default-export': 'warn',
   'prefer-const': 'warn',
   'react/no-unescaped-entities': 'warn',
   'react-hooks/exhaustive-deps': 'warn',

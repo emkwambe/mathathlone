@@ -22,6 +22,8 @@ export interface AssessmentQuestion {
   type: 'mc' | 'fr';
   section: 'A' | 'B';
   generatorType: string;
+  /** Canonical concept selected for this practice item. */
+  conceptId: string;
   question: string;
   answer: string;
   answerType: string;
@@ -32,10 +34,24 @@ export interface AssessmentQuestion {
   solutionSteps: string[];
 }
 
+export type AssessmentPurpose = 'standalone_practice' | 'competition_preparation';
+
+export interface AssessmentGeneratorCandidate {
+  conceptId: string;
+  generatorType: string;
+}
+
 export interface AssessmentDocument {
   title: string;
   course: string;
   topics: string[];
+  /** Human-readable selected skills. This excludes generator IDs and answers. */
+  concepts: string[];
+  purpose: AssessmentPurpose;
+  /** Student-safe statement explaining independent later Heat generation. */
+  preparationNote?: string;
+  /** Optional teacher-only navigation back to the original Heat configuration. */
+  returnHref?: string;
   date: string;
   type: AssessmentType;
   sections: {
@@ -85,10 +101,18 @@ const TITLES: Record<AssessmentType, string> = {
 // Formal assessments ship with a teacher answer key; practice handouts don't.
 const ANSWER_KEY_TYPES = new Set<AssessmentType>(['quiz', 'test', 'makeup']);
 
+/** Number of practice questions available for each printable document type. */
+export function getAssessmentQuestionBudget(type: AssessmentType): number {
+  return CONFIGS[type].total;
+}
+
 // Pull the human-facing question/answer regardless of which field the
 // generator populated.
 function readQuestion(q: any): string {
-  return String(q?.question ?? q?.question_text ?? q?.question_latex ?? '');
+  // Printable worksheets prefer a generator's explicit formatted version
+  // (for example a KaTeX ratio table). Live Heat delivery continues to use
+  // question_text, which remains a plain-text accessible prompt.
+  return String(q?.question_latex ?? q?.question ?? q?.question_text ?? '');
 }
 function readAnswer(q: any): string {
   return String(q?.answer ?? q?.correct_answer ?? '');
@@ -151,27 +175,101 @@ function buildMCOptions(
   return { options: allOptions, correctOption };
 }
 
+export interface AssembleAssessmentOptions {
+  /** Human-readable concepts the teacher selected from the curriculum tree. */
+  concepts?: string[];
+  /** Makes the worksheet’s student-facing purpose explicit. */
+  purpose?: AssessmentPurpose;
+  /** Student-safe independent-question explanation for competition preparation. */
+  preparationNote?: string;
+  /** Teacher-only route back to the Heat Builder after printing. */
+  returnHref?: string;
+  /** Concept-linked generator candidates resolved and validated on the server. */
+  candidates?: AssessmentGeneratorCandidate[];
+}
+
+/**
+ * Build a varied practice deck that gives every selected concept one item before
+ * any eligible generator type repeats. A later Heat invokes its own generation
+ * path, so none of this document's generated values are reused as Heat items.
+ */
+function buildPracticeDeck(
+  generatorTypes: string[],
+  questionCount: number,
+  candidates: AssessmentGeneratorCandidate[] = [],
+): AssessmentGeneratorCandidate[] {
+  const usable = candidates.length > 0
+    ? candidates
+    : [...new Set(generatorTypes)].map((generatorType) => ({ conceptId: '', generatorType }));
+
+  const uniqueCandidates = Array.from(
+    new Map(usable.map((candidate) => [`${candidate.conceptId}:${candidate.generatorType}`, candidate])).values(),
+  );
+  if (uniqueCandidates.length === 0) return [];
+
+  const byConcept = new Map<string, AssessmentGeneratorCandidate[]>();
+  for (const candidate of uniqueCandidates) {
+    const entries = byConcept.get(candidate.conceptId) ?? [];
+    entries.push(candidate);
+    byConcept.set(candidate.conceptId, entries);
+  }
+
+  const deck: AssessmentGeneratorCandidate[] = [];
+  const usedTypes = new Set<string>();
+
+  // Coverage pass: take one candidate for each requested concept, only while a
+  // question slot remains. API validation prevents a selected set larger than
+  // the chosen document budget.
+  for (const conceptId of fisherYates(Array.from(byConcept.keys()))) {
+    if (deck.length >= questionCount) break;
+    const choices = fisherYates(byConcept.get(conceptId) ?? []);
+    const candidate = choices.find((choice) => !usedTypes.has(choice.generatorType)) ?? choices[0];
+    if (!candidate) continue;
+    deck.push(candidate);
+    usedTypes.add(candidate.generatorType);
+  }
+
+  // Variety pass: fill remaining slots using every available generator type
+  // before repeating one. Procedural generators can safely create fresh values
+  // on repeated invocation when the selected set is smaller than the document.
+  while (deck.length < questionCount) {
+    const cycle = fisherYates(uniqueCandidates);
+    let added = false;
+    for (const candidate of cycle) {
+      if (deck.length >= questionCount) break;
+      if (usedTypes.has(candidate.generatorType) && usedTypes.size < new Set(uniqueCandidates.map((item) => item.generatorType)).size) {
+        continue;
+      }
+      deck.push(candidate);
+      usedTypes.add(candidate.generatorType);
+      added = true;
+    }
+    if (!added) {
+      usedTypes.clear();
+    }
+  }
+
+  return deck;
+}
+
 export function assembleAssessment(
   generatorTypes: string[],
   difficulties: number[],
   type: AssessmentType,
   courseName: string,
   topicNames: string[],
-  heatCode: string = 'STANDALONE'
+  heatCode: string = 'STANDALONE',
+  options: AssembleAssessmentOptions = {},
 ): AssessmentDocument {
   const cfg = CONFIGS[type];
-
-  // Unique generators only, shuffled without replacement
-  const uniqueGens = [...new Set(generatorTypes)];
-  const deck = fisherYates(uniqueGens).slice(0, cfg.total);
-
+  const deck = buildPracticeDeck(generatorTypes, cfg.total, options.candidates);
   const frCount = Math.round(deck.length * cfg.frRatio);
   const sectionA: AssessmentQuestion[] = [];
   const sectionB: AssessmentQuestion[] = [];
 
-  deck.forEach((genType, i) => {
+  deck.forEach((candidate, i) => {
     const difficulty = (difficulties[i % Math.max(difficulties.length, 1)] ?? 2) as 1 | 2 | 3 | 4;
-    const fn = (GENERATORS as Record<string, (d: number) => any>)[genType];
+    const fn = (GENERATORS as Record<string, (d: number) => any>)[candidate.generatorType];
     if (!fn) return;
 
     let q: any;
@@ -182,13 +280,15 @@ export function assembleAssessment(
     const answer = readAnswer(q);
     const answerType = String(q?.answer_type ?? '');
     const solutionSteps = readSteps(q);
+    const conceptId = candidate.conceptId || String(q?.concept_id ?? '');
 
     if (isFR) {
       sectionB.push({
         number: sectionB.length + 1,
         type: 'fr',
         section: 'B',
-        generatorType: genType,
+        generatorType: candidate.generatorType,
+        conceptId,
         question,
         answer,
         answerType,
@@ -197,16 +297,17 @@ export function assembleAssessment(
         solutionSteps,
       });
     } else {
-      const { options, correctOption } = buildMCOptions(answer, genType, difficulty);
+      const { options: mcOptions, correctOption } = buildMCOptions(answer, candidate.generatorType, difficulty);
       sectionA.push({
         number: sectionA.length + 1,
         type: 'mc',
         section: 'A',
-        generatorType: genType,
+        generatorType: candidate.generatorType,
+        conceptId,
         question,
         answer,
         answerType,
-        options,
+        options: mcOptions,
         correctOption,
         points: cfg.mcPts,
         workspaceLines: 0,
@@ -223,6 +324,10 @@ export function assembleAssessment(
     title: TITLES[type],
     course: courseName,
     topics: topicNames,
+    concepts: options.concepts ?? [],
+    purpose: options.purpose ?? 'standalone_practice',
+    preparationNote: options.preparationNote,
+    returnHref: options.returnHref,
     date: new Date().toLocaleDateString('en-US', {
       year: 'numeric', month: 'long', day: 'numeric'
     }),

@@ -62,6 +62,12 @@ import {
   type UnitTopicRow,
   type ConceptRow,
 } from '@/hooks/useHeatConfigState';
+import {
+  clearWorksheetPreparationDraft,
+  loadWorksheetPreparationDraft,
+  saveWorksheetPreparationDraft,
+  type WorksheetPreparationDraft,
+} from '@/lib/assessment/preparation-draft';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -287,6 +293,35 @@ export default function CreateHeatPage() {
     () => teacherClasses.find((classroom) => classroom.id === selectedClassId) ?? null,
     [teacherClasses, selectedClassId],
   );
+  const [worksheetReturnDraft, setWorksheetReturnDraft] = useState<WorksheetPreparationDraft | null>(null);
+  const [worksheetReturnRestored, setWorksheetReturnRestored] = useState(false);
+
+  // Read a preparation draft only when the worksheet preview explicitly sends a
+  // teacher back to the Heat Builder. A normal Create Heat visit never reuses a
+  // stale draft from a prior lesson.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('preparation') === 'return') {
+      setWorksheetReturnDraft(loadWorksheetPreparationDraft());
+    }
+  }, []);
+
+  // Restore the non-curriculum choices once the teacher's classes are loaded.
+  // Curriculum IDs are restored by the data-loading effects below so cascading
+  // clears remain governed by useHeatConfigState.
+  useEffect(() => {
+    if (!worksheetReturnDraft || worksheetReturnRestored || teacherClasses.length === 0) return;
+    if (teacherClasses.some((classroom) => classroom.id === worksheetReturnDraft.classId)) {
+      setSelectedClassId(worksheetReturnDraft.classId);
+    }
+    dispatch({ type: 'SET_MODE', payload: worksheetReturnDraft.mode });
+    dispatch({ type: 'SET_PROFILE', payload: worksheetReturnDraft.questionProfile });
+    dispatch({ type: 'SET_INTEGRITY', payload: worksheetReturnDraft.integrityLevel });
+    dispatch({ type: 'SET_QUESTION_COUNT', payload: worksheetReturnDraft.questionCount });
+    dispatch({ type: 'SET_DURATION', payload: worksheetReturnDraft.durationMinutes });
+    setWorksheetReturnRestored(true);
+  }, [worksheetReturnDraft, worksheetReturnRestored, teacherClasses, dispatch]);
 
   // ── Auth gate ─────────────────────────────────────────────────────────────
   useEffect(() => {
@@ -352,10 +387,13 @@ export default function CreateHeatPage() {
         }));
         dispatch({ type: 'SET_DIVISIONS', payload: rows });
         const teacherGrade = profile?.grade_level ?? null;
+        const restored = worksheetReturnDraft
+          ? rows.find((row) => row.id === worksheetReturnDraft.rankingDivisionId && row.available) ?? null
+          : null;
         const last = rows.find((r) => r.code === lastSel.divisionCode && r.available) ?? null;
         const byGrade = teacherGrade ? rows.find((r) => r.available && teacherGrade >= r.grade_min && teacherGrade <= r.grade_max) ?? null : null;
         const firstAvail = rows.find((r) => r.available) ?? null;
-        selectDivision(last ?? byGrade ?? firstAvail);
+        selectDivision(restored ?? last ?? byGrade ?? firstAvail);
 
         // Custom curriculum links only refine availability after the core UI
         // is usable. A timeout or RLS issue here is non-fatal.
@@ -382,7 +420,18 @@ export default function CreateHeatPage() {
     }
     loadDivisions();
     return () => { cancelled = true; };
-  }, [supabase, profile?.grade_level, lastSel.divisionCode, dispatch, selectDivision]);
+  }, [supabase, profile?.grade_level, lastSel.divisionCode, worksheetReturnDraft, dispatch, selectDivision]);
+
+  // Restore a prior-grade content division after the ranking division is set.
+  useEffect(() => {
+    if (!worksheetReturnDraft?.contentDivisionId || !selectedDivision) return;
+    const restoredContentDivision = divisions.find(
+      (division) => division.id === worksheetReturnDraft.contentDivisionId,
+    ) ?? null;
+    if (restoredContentDivision && selectedContentDivision?.id !== restoredContentDivision.id) {
+      selectContentDivision(restoredContentDivision);
+    }
+  }, [worksheetReturnDraft, selectedDivision, selectedContentDivision?.id, divisions, selectContentDivision]);
 
   // ── Load courses ──────────────────────────────────────────────────────────
   // Courses are loaded for the effectiveContentDivision (prior-grade if set,
@@ -407,9 +456,12 @@ export default function CreateHeatPage() {
         if (cErr) throw cErr;
         const rows: CourseRow[] = (data ?? []).map((c: any) => ({ ...c, available: !COURSES_WITHOUT_GENERATORS.has(c.code) }));
         dispatch({ type: 'SET_COURSES', payload: rows });
+        const restored = worksheetReturnDraft
+          ? rows.find((course) => course.id === worksheetReturnDraft.courseId && course.available !== false) ?? null
+          : null;
         const last = rows.find((c) => c.id === lastSel.courseId && c.available !== false) ?? null;
         const firstAvail = rows.find((c) => c.available !== false) ?? null;
-        selectCourse(last ?? firstAvail);
+        selectCourse(restored ?? last ?? firstAvail);
       } catch (err: any) {
         if (!cancelled) {
           dispatch({ type: 'SET_COURSES', payload: [] });
@@ -419,7 +471,7 @@ export default function CreateHeatPage() {
     }
     loadCourses();
     return () => { cancelled = true; };
-  }, [effectiveContentDivision, supabase, lastSel.courseId, dispatch, selectCourse]);
+  }, [effectiveContentDivision, supabase, lastSel.courseId, worksheetReturnDraft, dispatch, selectCourse]);
 
   // ── Load concept tree ─────────────────────────────────────────────────────
   useEffect(() => {
@@ -444,7 +496,11 @@ export default function CreateHeatPage() {
         );
         if (cancelled) return;
         if (cErr) throw cErr;
-        dispatch({ type: 'SET_TREE', payload: { topics: topicRows, concepts: (cs as ConceptRow[]) ?? [] } });
+        const conceptRows = (cs as ConceptRow[]) ?? [];
+        dispatch({ type: 'SET_TREE', payload: { topics: topicRows, concepts: conceptRows } });
+        if (worksheetReturnDraft?.courseId === selectedCourse!.id) {
+          dispatch({ type: 'SET_SELECTED_CONCEPTS', payload: worksheetReturnDraft.conceptIds });
+        }
       } catch (err: any) {
         if (!cancelled) {
           dispatch({ type: 'SET_TREE', payload: { topics: [], concepts: [] } });
@@ -454,7 +510,7 @@ export default function CreateHeatPage() {
     }
     loadTree();
     return () => { cancelled = true; };
-  }, [selectedCourse, supabase, dispatch]);
+  }, [selectedCourse, supabase, worksheetReturnDraft, dispatch]);
 
   // ── Derived ───────────────────────────────────────────────────────────────
   const currentMode = HEAT_MODES[mode];
@@ -464,6 +520,29 @@ export default function CreateHeatPage() {
     : (['practice', 'school', 'district'] as Array<keyof typeof COMPETITION_INTEGRITY_LEVELS>);
   const currentIntegrityCfg = COMPETITION_INTEGRITY_LEVELS[integrityLevel as keyof typeof COMPETITION_INTEGRITY_LEVELS];
   const isIntegrityLocked = !!currentMode.locked_integrity;
+
+  // ── Practice worksheet handoff ───────────────────────────────────────────
+  const handlePrepareWorksheet = useCallback(() => {
+    if (!selectedClass) { dispatch({ type: 'SET_ERROR', payload: 'Choose one of your classes before preparing its worksheet.' }); return; }
+    if (selectedClass.roster_count < 1) { dispatch({ type: 'SET_ERROR', payload: `Add at least one Mathlete to ${selectedClass.name} before preparing its worksheet.` }); return; }
+    if (!selectedDivision || !selectedCourse || !enoughConcepts) {
+      dispatch({ type: 'SET_ERROR', payload: `Select a division, course, and at least ${MIN_CONCEPTS} concepts before preparing a worksheet.` });
+      return;
+    }
+    saveWorksheetPreparationDraft({
+      rankingDivisionId: selectedDivision.id,
+      contentDivisionId: selectedContentDivision?.id ?? null,
+      courseId: selectedCourse.id,
+      conceptIds: Array.from(selectedConceptIds),
+      mode,
+      questionProfile,
+      integrityLevel,
+      questionCount,
+      durationMinutes,
+      classId: selectedClass.id,
+    });
+    router.push('/assessment/generate?preparation=heat');
+  }, [selectedClass, selectedDivision, selectedContentDivision, selectedCourse, enoughConcepts, selectedConceptIds, mode, questionProfile, integrityLevel, questionCount, durationMinutes, router, dispatch, MIN_CONCEPTS]);
 
   // ── Create handler ────────────────────────────────────────────────────────
   const handleCreate = useCallback(async () => {
@@ -503,6 +582,7 @@ export default function CreateHeatPage() {
         synchronized_start_at: null,
       });
       saveLastSelection({ divisionCode: selectedDivision.code, courseId: selectedCourse.id, mode, profile: questionProfile, questionCount, durationMinutes });
+      clearWorksheetPreparationDraft();
       await new Promise((r) => setTimeout(r, 500));
       try {
         const initRes = await fetch(`/api/heat/${heat.id}/init`, { method: 'POST' });
@@ -928,6 +1008,20 @@ export default function CreateHeatPage() {
                 </div>
               )}
 
+              {/* Preparation action — the later Heat generates fresh items from the same selected skills. */}
+              <button
+                type="button"
+                onClick={handlePrepareWorksheet}
+                disabled={!stepsComplete || !selectedClass || selectedClass.roster_count < 1 || creating}
+                className={`w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl border font-semibold text-sm transition-all ${!stepsComplete || !selectedClass || selectedClass.roster_count < 1 || creating ? 'border-gray-200 text-gray-400 bg-gray-50 cursor-not-allowed' : 'border-emerald-300 text-emerald-800 bg-emerald-50 hover:bg-emerald-100 active:scale-[0.98]'}`}
+              >
+                <FileText className="w-4 h-4" />
+                Prepare Practice Worksheet
+              </button>
+              <p className="px-1 text-[11px] leading-snug text-gray-500">
+                Students will see these topics and concepts; the Heat will use new generated question instances.
+              </p>
+
               {/* Launch button */}
               <button
                 type="button"
@@ -945,7 +1039,10 @@ export default function CreateHeatPage() {
               {/* Cancel */}
               <button
                 type="button"
-                onClick={() => router.push('/dashboard/teacher')}
+                onClick={() => {
+                  clearWorksheetPreparationDraft();
+                  router.push('/dashboard/teacher');
+                }}
                 disabled={creating}
                 className="w-full px-6 py-3 rounded-xl border border-gray-200 text-gray-600 font-medium hover:bg-gray-50 transition-all text-sm"
               >

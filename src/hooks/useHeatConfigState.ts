@@ -148,6 +148,7 @@ export type HeatConfigAction =
   | { type: 'TOGGLE_EXPAND'; payload: string }
   | { type: 'SELECT_ALL_CONCEPTS' }
   | { type: 'CLEAR_ALL_CONCEPTS' }
+  | { type: 'SET_SELECTED_CONCEPTS'; payload: string[] }
   | { type: 'SET_MODE'; payload: HeatType }
   | { type: 'SET_PROFILE'; payload: QuestionProfile }
   | { type: 'SET_INTEGRITY'; payload: IntegrityLevel }
@@ -256,6 +257,14 @@ function reducer(state: HeatConfigState, action: HeatConfigAction): HeatConfigSt
 
     case 'CLEAR_ALL_CONCEPTS':
       return { ...state, selectedConceptIds: new Set() };
+
+    case 'SET_SELECTED_CONCEPTS': {
+      const valid = new Set(state.concepts.map((concept) => concept.id));
+      return {
+        ...state,
+        selectedConceptIds: new Set(action.payload.filter((id) => valid.has(id))),
+      };
+    }
 
     case 'SET_MODE': {
       const defaults = MODE_DEFAULTS[action.payload];

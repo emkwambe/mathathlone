@@ -1821,10 +1821,17 @@ function g7Wrap(
   generator_type: string,
   concept_id: string,
   _concept_name: string,                 // documentation only; concept_id is the live FK
-  q: { question: string; answer: string; solution_steps: string[]; answer_type: AnswerType }
+  q: {
+    question: string;
+    /** Optional worksheet/KaTeX presentation. question_text remains the accessible plain-text prompt. */
+    question_latex?: string;
+    answer: string;
+    solution_steps: string[];
+    answer_type: AnswerType;
+  }
 ): GeneratedQuestion {
   return {
-    question_latex: q.question,
+    question_latex: q.question_latex ?? q.question,
     question_text: q.question,
     correct_answer: q.answer,
     answer_type: q.answer_type,
@@ -8292,9 +8299,19 @@ export function generate_g6_rp_ratio_table_solve(difficulty: DifficultyLevel): G
   const a = randomInt(2, 5);
   const b = randomInt(a + 1, difficulty === 1 ? 8 : 14);
   const missing = b * k;
-  const table = `  x | y\n  1 | ${k}\n  ${a} | ${a * k}\n  ${b} | ?`;
+  // Keep a plain-text version for accessible live-Heat delivery and provide a
+  // structured KaTeX table for printable worksheets. The two descriptions carry
+  // the same values; only the presentation differs.
+  const plainTable = `x | y\n1 | ${k}\n${a} | ${a * k}\n${b} | ?`;
+  const worksheetTable = String.raw`$$\begin{array}{c|c}
+\text{x} & \text{y} \\ \hline
+1 & ${k} \\
+${a} & ${a * k} \\
+${b} & ?
+\end{array}$$`;
   return g7Wrap(difficulty, 'g6_rp_ratio_table_solve', 'M6.RP.2.1', 'Ratio Table — Missing Value', {
-    question: `Find the missing value in the ratio table:\n\n${table}`,
+    question: `Find the missing value in the ratio table:\n\n${plainTable}`,
+    question_latex: `Find the missing value in the ratio table:\n\n${worksheetTable}`,
     answer: String(missing),
     solution_steps: [
       `Find the constant of proportionality: y/x = ${k}.`,

@@ -10,16 +10,32 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 
 import AssessmentDoc from '@/components/assessment/AssessmentDoc';
 import type { AssessmentDocument } from '@/lib/assessment/assembler';
+import { useAuth } from '@/contexts/AuthContext';
+import { ProtectedRouteLoadingFallback } from '@/components/auth/ProtectedRouteLoadingFallback';
 
 const STORAGE_KEY = 'mathathlone:assessment:doc';
 
 export default function AssessmentPreviewPage() {
+  const router = useRouter();
+  const { loading: authLoading, isAuthenticated, hasRole } = useAuth();
   const [doc, setDoc] = useState<AssessmentDocument | null>(null);
   const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    if (authLoading) return;
+    if (!isAuthenticated) {
+      router.replace('/auth/login?next=/assessment/preview');
+      return;
+    }
+    if (!hasRole(['teacher', 'parent'])) {
+      router.replace('/403');
+    }
+  }, [authLoading, isAuthenticated, hasRole, router]);
 
   useEffect(() => {
     try {
@@ -30,6 +46,18 @@ export default function AssessmentPreviewPage() {
     }
     setReady(true);
   }, []);
+
+  useEffect(() => {
+    // Parents may generate independent practice, but a class Heat preparation
+    // document belongs only to the teacher who configured that Heat.
+    if (doc?.purpose === 'competition_preparation' && !authLoading && !hasRole(['teacher'])) {
+      router.replace('/403');
+    }
+  }, [doc, authLoading, hasRole, router]);
+
+  if (authLoading || !isAuthenticated) {
+    return <ProtectedRouteLoadingFallback loginHref="/auth/login?next=/assessment/preview" title="Loading worksheet preview" />;
+  }
 
   if (!ready) {
     return (
@@ -52,7 +80,7 @@ export default function AssessmentPreviewPage() {
             href="/assessment/generate"
             className="mt-6 inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700"
           >
-            Generate Assessment
+            Open Practice Worksheet Builder
           </Link>
         </div>
       </div>

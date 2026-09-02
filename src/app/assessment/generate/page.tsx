@@ -41,6 +41,11 @@ import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { ProtectedRouteLoadingFallback } from '@/components/auth/ProtectedRouteLoadingFallback';
 import type { AssessmentType, AssessmentDocument } from '@/lib/assessment/assembler';
+import {
+  loadWorksheetPreparationDraft,
+  type WorksheetPreparationDraft,
+  WORKSHEET_PREPARATION_RETURN_HREF,
+} from '@/lib/assessment/preparation-draft';
 
 // -----------------------------------------------------------------------------
 // TYPES  (mirrors compete/create/page.tsx)
@@ -286,14 +291,15 @@ export default function GenerateAssessmentPage() {
   const supabase = useMemo(() => createClient(), []);
   const { profile, loading: authLoading, isAuthenticated, hasRole } = useAuth();
 
-  // Auth gate — only teachers/admins can generate assessments.
+  // Worksheet creation is instructional authoring: teachers may prepare class
+  // competition practice and parents may create independent practice only.
   useEffect(() => {
     if (authLoading) return;
     if (!isAuthenticated) {
       router.push('/auth/login?next=/assessment/generate');
       return;
     }
-    if (!hasRole(['teacher', 'parent', 'school_admin', 'platform_admin'])) {
+    if (!hasRole(['teacher', 'parent'])) {
       router.push('/403');
     }
   }, [authLoading, isAuthenticated, hasRole, router]);
@@ -320,6 +326,20 @@ export default function GenerateAssessmentPage() {
   const [generating, setGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [curriculumRetry, setCurriculumRetry] = useState(0);
+  const [preparationDraft, setPreparationDraft] = useState<WorksheetPreparationDraft | null>(null);
+  const [isHeatPreparation, setIsHeatPreparation] = useState(false);
+
+  // Read the mode only after client hydration. This keeps the route safely
+  // prerenderable while preserving the teacher's session-only Heat blueprint.
+  useEffect(() => {
+    const isPreparation = new URLSearchParams(window.location.search).get('preparation') === 'heat';
+    setIsHeatPreparation(isPreparation);
+    if (isPreparation) setPreparationDraft(loadWorksheetPreparationDraft());
+  }, []);
+
+  useEffect(() => {
+    if (isHeatPreparation) setDocType('review');
+  }, [isHeatPreparation]);
 
   const retryCurriculum = useCallback(() => {
     setError(null);
@@ -360,11 +380,15 @@ export default function GenerateAssessmentPage() {
         setDivisions(rows);
 
         const teacherGrade = profile?.grade_level ?? null;
+        const restoredContentDivisionId = preparationDraft?.contentDivisionId ?? preparationDraft?.rankingDivisionId;
+        const restored = restoredContentDivisionId
+          ? rows.find((row) => row.id === restoredContentDivisionId && row.available) ?? null
+          : null;
         const byGrade = teacherGrade
           ? rows.find((r) => r.available && teacherGrade >= r.grade_min && teacherGrade <= r.grade_max) ?? null
           : null;
         const firstAvail = rows.find((r) => r.available) ?? null;
-        setSelectedDivision(byGrade ?? firstAvail);
+        setSelectedDivision(restored ?? byGrade ?? firstAvail);
 
         void withCurriculumTimeout(
           supabase.from('division_curricula').select('division_id'),
@@ -394,7 +418,7 @@ export default function GenerateAssessmentPage() {
     return () => {
       cancelled = true;
     };
-  }, [supabase, profile?.grade_level, curriculumRetry]);
+  }, [supabase, profile?.grade_level, preparationDraft, curriculumRetry]);
 
   // ── Load courses ────────────────────────────────────────────────────────
   useEffect(() => {
@@ -443,8 +467,11 @@ export default function GenerateAssessmentPage() {
         }));
         setCourses(rows);
 
+        const restored = preparationDraft
+          ? rows.find((course) => course.id === preparationDraft.courseId && course.available !== false) ?? null
+          : null;
         const firstAvail = rows.find((c) => c.available !== false) ?? null;
-        setSelectedCourse(firstAvail);
+        setSelectedCourse(restored ?? firstAvail);
       } catch (err: any) {
         if (!cancelled) {
           setCourses([]);
@@ -459,7 +486,7 @@ export default function GenerateAssessmentPage() {
     return () => {
       cancelled = true;
     };
-  }, [selectedDivision, supabase, curriculumRetry]);
+  }, [selectedDivision, supabase, preparationDraft, curriculumRetry]);
 
   // ── Load unit_topics + atomic_concepts for the selected course ─────────
   useEffect(() => {
@@ -510,8 +537,13 @@ export default function GenerateAssessmentPage() {
 
         const conceptRows = (cs as ConceptRow[]) ?? [];
         setConcepts(conceptRows);
-        // Default: SELECT ALL concepts so the teacher can generate quickly.
-        setSelectedConceptIds(new Set(conceptRows.map((c) => c.id)));
+        // A worksheet launched from Heat Builder must keep the exact selected
+        // concept blueprint. Standalone practice keeps the fast all-selected default.
+        setSelectedConceptIds(
+          preparationDraft?.courseId === selectedCourse!.id
+            ? new Set(preparationDraft.conceptIds.filter((id) => conceptRows.some((concept) => concept.id === id)))
+            : new Set(conceptRows.map((c) => c.id)),
+        );
         setExpandedTopics(topicRows.length > 0 ? new Set([topicRows[0]!.id]) : new Set());
       } catch (err: any) {
         if (!cancelled) {
@@ -528,7 +560,7 @@ export default function GenerateAssessmentPage() {
     return () => {
       cancelled = true;
     };
-  }, [selectedCourse, supabase, curriculumRetry]);
+  }, [selectedCourse, supabase, preparationDraft, curriculumRetry]);
 
   // ── Tree manipulation helpers ───────────────────────────────────────────
   const conceptsByTopic = useMemo(() => {
@@ -628,10 +660,10 @@ export default function GenerateAssessmentPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           conceptIds,
-          docType,
+          courseId: selectedCourse.id,
+          docType: isHeatPreparation ? 'review' : docType,
           difficulty,
-          courseName: selectedCourse.name,
-          topicNames: selectedTopicSummary.map((t) => t.name),
+          purpose: isHeatPreparation ? 'competition_preparation' : 'standalone_practice',
         }),
       });
 
@@ -658,6 +690,7 @@ export default function GenerateAssessmentPage() {
     difficultyProfile,
     docType,
     selectedTopicSummary,
+    isHeatPreparation,
     router,
   ]);
 
@@ -677,18 +710,27 @@ export default function GenerateAssessmentPage() {
             Dashboard
           </a>
           <ChevronRight className="w-4 h-4" />
-          <span className="text-gray-700 font-medium">Generate Assessment</span>
+          <span className="text-gray-700 font-medium">Practice Worksheet Builder</span>
         </nav>
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
             <ClipboardCheck className="w-8 h-8 text-indigo-500" />
-            Generate Assessment
+            Practice Worksheet Builder
           </h1>
           <p className="text-gray-500 mt-1">
-            Build a printable take-home document — pick topics, a format, and a difficulty.
+            Select the skills students will practice. A later Heat can assess the same skills with newly generated questions.
           </p>
         </div>
+
+        {isHeatPreparation && (
+          <div className="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 p-4">
+            <p className="text-sm font-semibold text-emerald-900">Competition preparation worksheet</p>
+            <p className="mt-1 text-sm text-emerald-800">
+              These course, topic, and concept selections came from your Heat Builder. Students will practice these skills now; the later Heat will generate new question instances.
+            </p>
+          </div>
+        )}
 
         {/* Error banner */}
         {error && (
@@ -714,7 +756,7 @@ export default function GenerateAssessmentPage() {
         )}
 
         {/* ── Step 1: Division ─────────────────────────────────────────── */}
-        <SectionCard step={1} title="Choose a Division" hint="Assessments draw from a division's curriculum.">
+        <SectionCard step={1} title="Choose a Division" hint="Practice worksheets draw from a division's curriculum." locked={isHeatPreparation}>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
             {divisions.map((d) => {
               const isSelected = selectedDivision?.id === d.id;
@@ -766,7 +808,7 @@ export default function GenerateAssessmentPage() {
               ? 'Only one course available — selected for you.'
               : 'Pick a course for this division.'
           }
-          locked={!selectedDivision}
+          locked={!selectedDivision || isHeatPreparation}
         >
           {loadingCourses ? (
             <div className="text-sm text-gray-400 flex items-center gap-2">
@@ -813,7 +855,7 @@ export default function GenerateAssessmentPage() {
           step={3}
           title="Topics & Concepts"
           hint={`Select the concepts to draw from. Minimum ${MIN_CONCEPTS}.`}
-          locked={!selectedCourse}
+          locked={!selectedCourse || isHeatPreparation}
         >
           {loadingConcepts ? (
             <div className="text-sm text-gray-400 flex items-center gap-2">
@@ -875,19 +917,21 @@ export default function GenerateAssessmentPage() {
         <SectionCard
           step={4}
           title="Document Type"
-          hint="Sets the question count, free-response ratio, and points."
+          hint={isHeatPreparation ? 'Competition preparation is always a student-safe Practice Review.' : 'Sets the question count, free-response ratio, and points.'}
           locked={!enoughConcepts}
         >
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {DOC_TYPES.map((d) => {
               const isSelected = docType === d.key;
+              const isAvailable = !isHeatPreparation || d.key === 'review';
               return (
                 <button
                   key={d.key}
                   type="button"
-                  onClick={() => setDocType(d.key)}
+                  onClick={() => isAvailable && setDocType(d.key)}
+                  disabled={!isAvailable}
                   className={`p-4 rounded-xl border-2 text-left transition-all ${
-                    isSelected ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200 bg-white hover:border-gray-300'
+                    !isAvailable ? 'border-gray-100 bg-gray-50 text-gray-400 cursor-not-allowed opacity-60' : isSelected ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200 bg-white hover:border-gray-300'
                   }`}
                 >
                   <div className="flex items-center gap-2 mb-1">
@@ -952,6 +996,10 @@ export default function GenerateAssessmentPage() {
               value={DOC_TYPES.find((d) => d.key === docType)?.label ?? docType}
             />
             <SummaryRow
+              label="Purpose"
+              value={isHeatPreparation ? 'Competition preparation — same skills, new Heat questions' : 'Standalone practice'}
+            />
+            <SummaryRow
               label="Difficulty"
               value={DIFFICULTY_PROFILES.find((p) => p.key === difficultyProfile)?.label ?? difficultyProfile}
             />
@@ -960,7 +1008,7 @@ export default function GenerateAssessmentPage() {
           <div className="flex gap-3">
             <button
               type="button"
-              onClick={() => router.push('/dashboard/teacher')}
+              onClick={() => router.push(isHeatPreparation ? WORKSHEET_PREPARATION_RETURN_HREF : '/dashboard/teacher')}
               className="px-6 py-3 rounded-xl border border-gray-200 text-gray-600 font-medium hover:bg-gray-50 transition-all"
               disabled={generating}
             >
@@ -984,7 +1032,7 @@ export default function GenerateAssessmentPage() {
               ) : (
                 <>
                   <ClipboardCheck className="w-5 h-5" />
-                  Generate Assessment
+                  {isHeatPreparation ? 'Generate Preparation Worksheet' : 'Generate Practice Worksheet'}
                   <ChevronRight className="w-5 h-5" />
                 </>
               )}

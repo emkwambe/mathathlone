@@ -41,10 +41,10 @@ export default function AssessmentDoc({ doc }: { doc: AssessmentDocument }) {
           🖨 Print / Save PDF
         </button>
         <a
-          href="/assessment/generate"
+          href={doc.returnHref ?? '/assessment/generate'}
           className="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
         >
-          ← Back to Assessment Generator
+          ← {doc.returnHref ? 'Return to Heat Builder' : 'Back to Practice Worksheet Builder'}
         </a>
         <p className="text-xs text-gray-500">
           After printing, choose &lsquo;Save as PDF&rsquo; in the print dialog.
@@ -58,7 +58,7 @@ export default function AssessmentDoc({ doc }: { doc: AssessmentDocument }) {
       >
         {/* Student copy. This wrapper deliberately owns the only forced
             boundary between the student document and the teacher copy. */}
-        <div className="assessment-student-copy">
+        <div className={`assessment-student-copy${doc.showAnswerKey ? ' has-answer-key' : ''}`}>
           {/* Header */}
           <header>
           <div className="flex items-center justify-between">
@@ -82,6 +82,17 @@ export default function AssessmentDoc({ doc }: { doc: AssessmentDocument }) {
 
           <hr className="my-2 border-t-2 border-black" />
           </header>
+
+          {doc.purpose === 'competition_preparation' && (
+            <section className="mb-3 rounded border border-slate-400 bg-slate-50 px-3 py-2 text-[10pt] leading-snug">
+              <p className="font-bold">Skills you will practice</p>
+              <p><span className="font-semibold">Topics:</span> {doc.topics.join(' · ') || 'Selected course skills'}</p>
+              {doc.concepts.length > 0 && (
+                <p><span className="font-semibold">Concepts:</span> {doc.concepts.join(' · ')}</p>
+              )}
+              <p className="mt-1 italic">{doc.preparationNote ?? 'Your Heat will assess these skills using new question instances.'}</p>
+            </section>
+          )}
 
           {/* ── Section A — Multiple Choice ──────────────────────────────────── */}
         {sectionA.length > 0 && (
@@ -239,7 +250,7 @@ export default function AssessmentDoc({ doc }: { doc: AssessmentDocument }) {
            * in Chrome's PDF engine even when a free-response question ends near
            * the bottom of a page.
            */
-          .assessment-student-copy {
+          .assessment-student-copy.has-answer-key {
             page-break-after: always !important;
             break-after: page !important;
           }

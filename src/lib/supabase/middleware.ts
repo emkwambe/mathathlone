@@ -23,8 +23,8 @@ const ROLE_PROTECTED_ROUTES: { prefix: string; roles: string[] }[] = [
   { prefix: '/dashboard/parent',    roles: ['parent', 'platform_admin'] },
   { prefix: '/dashboard/broadcast', roles: ['teacher', 'school_admin', 'district_admin', 'platform_admin'] },
   { prefix: '/compete/create',      roles: ['teacher', 'school_admin', 'district_admin', 'platform_admin'] },
-  { prefix: '/assessment/generate',  roles: ['teacher', 'school_admin', 'district_admin', 'platform_admin'] },
-  { prefix: '/assessment/preview',   roles: ['teacher', 'school_admin', 'district_admin', 'platform_admin'] },
+  { prefix: '/assessment/generate', roles: ['teacher', 'parent'] },
+  { prefix: '/assessment/preview',  roles: ['teacher', 'parent'] },
 ];
 
 const AUTH_REDIRECT_ROUTES: string[] = [
