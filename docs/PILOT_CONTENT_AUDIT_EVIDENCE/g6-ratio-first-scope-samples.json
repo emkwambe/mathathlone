@@ -1,0 +1,243 @@
+{
+  "auditTitle": "Grade 6 Ratios and Proportional Relationships — First Pilot Scope Sample Set",
+  "generatedAtUtc": "2026-09-02T15:41:23.346Z",
+  "samplingMethod": "Five deterministic difficulty-2 instances per approved generator, produced from the checked-in generator source.",
+  "scope": {
+    "course": "NC Grade 6 Math",
+    "topic": "Ratios and Proportional Relationships",
+    "generatorTypes": [
+      "g6_rp_calculate_unit_rate",
+      "g6_rp_ratio_table_solve",
+      "g6_rp_ratio_word_problem"
+    ]
+  },
+  "audit": [
+    {
+      "announcedSkill": "Calculate a unit rate",
+      "generatorType": "g6_rp_calculate_unit_rate",
+      "requestedDifficulty": 2,
+      "uniqueQuestionTextCount": 5,
+      "hasStructuredWorksheetMath": false,
+      "samples": [
+        {
+          "sample": 1,
+          "conceptId": "M6.RP.1.3",
+          "questionText": "A box of 7 apples costs $469. What is the unit rate in dollars per apple?",
+          "questionLatex": "A box of 7 apples costs $469. What is the unit rate in dollars per apple?",
+          "correctAnswer": "67",
+          "answerType": "decimal",
+          "options": null,
+          "solutionSteps": [
+            "Unit rate = total ÷ number of units.",
+            "$469 ÷ 7 apples = $67 per apple."
+          ]
+        },
+        {
+          "sample": 2,
+          "conceptId": "M6.RP.1.3",
+          "questionText": "A box of 9 apples costs $648. What is the unit rate in dollars per apple?",
+          "questionLatex": "A box of 9 apples costs $648. What is the unit rate in dollars per apple?",
+          "correctAnswer": "72",
+          "answerType": "decimal",
+          "options": null,
+          "solutionSteps": [
+            "Unit rate = total ÷ number of units.",
+            "$648 ÷ 9 apples = $72 per apple."
+          ]
+        },
+        {
+          "sample": 3,
+          "conceptId": "M6.RP.1.3",
+          "questionText": "A box of 3 apples costs $228. What is the unit rate in dollars per apple?",
+          "questionLatex": "A box of 3 apples costs $228. What is the unit rate in dollars per apple?",
+          "correctAnswer": "76",
+          "answerType": "decimal",
+          "options": null,
+          "solutionSteps": [
+            "Unit rate = total ÷ number of units.",
+            "$228 ÷ 3 apples = $76 per apple."
+          ]
+        },
+        {
+          "sample": 4,
+          "conceptId": "M6.RP.1.3",
+          "questionText": "A car drives 600 miles in 8 hours. What is the unit rate in miles per hour?",
+          "questionLatex": "A car drives 600 miles in 8 hours. What is the unit rate in miles per hour?",
+          "correctAnswer": "75",
+          "answerType": "decimal",
+          "options": null,
+          "solutionSteps": [
+            "Unit rate = total ÷ number of units.",
+            "600 miles ÷ 8 hours = 75 miles per hour."
+          ]
+        },
+        {
+          "sample": 5,
+          "conceptId": "M6.RP.1.3",
+          "questionText": "A box of 6 apples costs $396. What is the unit rate in dollars per apple?",
+          "questionLatex": "A box of 6 apples costs $396. What is the unit rate in dollars per apple?",
+          "correctAnswer": "66",
+          "answerType": "decimal",
+          "options": null,
+          "solutionSteps": [
+            "Unit rate = total ÷ number of units.",
+            "$396 ÷ 6 apples = $66 per apple."
+          ]
+        }
+      ]
+    },
+    {
+      "announcedSkill": "Solve a missing value in a ratio table",
+      "generatorType": "g6_rp_ratio_table_solve",
+      "requestedDifficulty": 2,
+      "uniqueQuestionTextCount": 5,
+      "hasStructuredWorksheetMath": true,
+      "samples": [
+        {
+          "sample": 1,
+          "conceptId": "M6.RP.2.1",
+          "questionText": "Find the missing value in the ratio table:\n\nx | y\n1 | 5\n4 | 20\n12 | ?",
+          "questionLatex": "Find the missing value in the ratio table:\n\n$$\\begin{array}{c|c}\n\\text{x} & \\text{y} \\\\ \\hline\n1 & 5 \\\\\n4 & 20 \\\\\n12 & ?\n\\end{array}$$",
+          "correctAnswer": "60",
+          "answerType": "integer_or_decimal",
+          "options": null,
+          "solutionSteps": [
+            "Find the constant of proportionality: y/x = 5.",
+            "When x = 12, y = 12 × 5 = 60."
+          ]
+        },
+        {
+          "sample": 2,
+          "conceptId": "M6.RP.2.1",
+          "questionText": "Find the missing value in the ratio table:\n\nx | y\n1 | 10\n3 | 30\n7 | ?",
+          "questionLatex": "Find the missing value in the ratio table:\n\n$$\\begin{array}{c|c}\n\\text{x} & \\text{y} \\\\ \\hline\n1 & 10 \\\\\n3 & 30 \\\\\n7 & ?\n\\end{array}$$",
+          "correctAnswer": "70",
+          "answerType": "integer_or_decimal",
+          "options": null,
+          "solutionSteps": [
+            "Find the constant of proportionality: y/x = 10.",
+            "When x = 7, y = 7 × 10 = 70."
+          ]
+        },
+        {
+          "sample": 3,
+          "conceptId": "M6.RP.2.1",
+          "questionText": "Find the missing value in the ratio table:\n\nx | y\n1 | 10\n2 | 20\n12 | ?",
+          "questionLatex": "Find the missing value in the ratio table:\n\n$$\\begin{array}{c|c}\n\\text{x} & \\text{y} \\\\ \\hline\n1 & 10 \\\\\n2 & 20 \\\\\n12 & ?\n\\end{array}$$",
+          "correctAnswer": "120",
+          "answerType": "integer_or_decimal",
+          "options": null,
+          "solutionSteps": [
+            "Find the constant of proportionality: y/x = 10.",
+            "When x = 12, y = 12 × 10 = 120."
+          ]
+        },
+        {
+          "sample": 4,
+          "conceptId": "M6.RP.2.1",
+          "questionText": "Find the missing value in the ratio table:\n\nx | y\n1 | 11\n2 | 22\n14 | ?",
+          "questionLatex": "Find the missing value in the ratio table:\n\n$$\\begin{array}{c|c}\n\\text{x} & \\text{y} \\\\ \\hline\n1 & 11 \\\\\n2 & 22 \\\\\n14 & ?\n\\end{array}$$",
+          "correctAnswer": "154",
+          "answerType": "integer_or_decimal",
+          "options": null,
+          "solutionSteps": [
+            "Find the constant of proportionality: y/x = 11.",
+            "When x = 14, y = 14 × 11 = 154."
+          ]
+        },
+        {
+          "sample": 5,
+          "conceptId": "M6.RP.2.1",
+          "questionText": "Find the missing value in the ratio table:\n\nx | y\n1 | 2\n2 | 4\n6 | ?",
+          "questionLatex": "Find the missing value in the ratio table:\n\n$$\\begin{array}{c|c}\n\\text{x} & \\text{y} \\\\ \\hline\n1 & 2 \\\\\n2 & 4 \\\\\n6 & ?\n\\end{array}$$",
+          "correctAnswer": "12",
+          "answerType": "integer_or_decimal",
+          "options": null,
+          "solutionSteps": [
+            "Find the constant of proportionality: y/x = 2.",
+            "When x = 6, y = 6 × 2 = 12."
+          ]
+        }
+      ]
+    },
+    {
+      "announcedSkill": "Solve a ratio word problem",
+      "generatorType": "g6_rp_ratio_word_problem",
+      "requestedDifficulty": 2,
+      "uniqueQuestionTextCount": 5,
+      "hasStructuredWorksheetMath": false,
+      "samples": [
+        {
+          "sample": 1,
+          "conceptId": "M6.RP.2.3",
+          "questionText": "A class has blue and red counters in the ratio 2:3. If there are 50 counters in total, how many are red?",
+          "questionLatex": "A class has blue and red counters in the ratio 2:3. If there are 50 counters in total, how many are red?",
+          "correctAnswer": "30",
+          "answerType": "integer_or_decimal",
+          "options": null,
+          "solutionSteps": [
+            "The ratio has 2 + 3 = 5 equal parts.",
+            "Each part = 50 ÷ 5 = 10.",
+            "Red = 3 parts = 3 × 10 = 30."
+          ]
+        },
+        {
+          "sample": 2,
+          "conceptId": "M6.RP.2.3",
+          "questionText": "A class has blue and red counters in the ratio 2:5. If there are 63 counters in total, how many are blue?",
+          "questionLatex": "A class has blue and red counters in the ratio 2:5. If there are 63 counters in total, how many are blue?",
+          "correctAnswer": "18",
+          "answerType": "integer_or_decimal",
+          "options": null,
+          "solutionSteps": [
+            "The ratio has 2 + 5 = 7 equal parts.",
+            "Each part = 63 ÷ 7 = 9.",
+            "Blue = 2 parts = 2 × 9 = 18."
+          ]
+        },
+        {
+          "sample": 3,
+          "conceptId": "M6.RP.2.3",
+          "questionText": "A class has blue and red counters in the ratio 3:5. If there are 72 counters in total, how many are red?",
+          "questionLatex": "A class has blue and red counters in the ratio 3:5. If there are 72 counters in total, how many are red?",
+          "correctAnswer": "45",
+          "answerType": "integer_or_decimal",
+          "options": null,
+          "solutionSteps": [
+            "The ratio has 3 + 5 = 8 equal parts.",
+            "Each part = 72 ÷ 8 = 9.",
+            "Red = 5 parts = 5 × 9 = 45."
+          ]
+        },
+        {
+          "sample": 4,
+          "conceptId": "M6.RP.2.3",
+          "questionText": "A class has blue and red counters in the ratio 1:1. If there are 6 counters in total, how many are red?",
+          "questionLatex": "A class has blue and red counters in the ratio 1:1. If there are 6 counters in total, how many are red?",
+          "correctAnswer": "3",
+          "answerType": "integer_or_decimal",
+          "options": null,
+          "solutionSteps": [
+            "The ratio has 1 + 1 = 2 equal parts.",
+            "Each part = 6 ÷ 2 = 3.",
+            "Red = 1 parts = 1 × 3 = 3."
+          ]
+        },
+        {
+          "sample": 5,
+          "conceptId": "M6.RP.2.3",
+          "questionText": "A class has blue and red counters in the ratio 2:1. If there are 45 counters in total, how many are blue?",
+          "questionLatex": "A class has blue and red counters in the ratio 2:1. If there are 45 counters in total, how many are blue?",
+          "correctAnswer": "30",
+          "answerType": "integer_or_decimal",
+          "options": null,
+          "solutionSteps": [
+            "The ratio has 2 + 1 = 3 equal parts.",
+            "Each part = 45 ÷ 3 = 15.",
+            "Blue = 2 parts = 2 × 15 = 30."
+          ]
+        }
+      ]
+    }
+  ]
+}
