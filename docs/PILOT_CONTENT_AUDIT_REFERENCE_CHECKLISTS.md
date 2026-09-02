@@ -13,11 +13,14 @@ This reference set establishes the evidence required before a Mathathlone course
 
 The audit applies only to the content scope selected for the pilot. Courses not scheduled for pilot use may remain outside the release gate, but they must not be presented as pilot-ready. A course is **pilot-ready** only when every required checklist below passes or when an approved limitation is documented and prevents the affected concept from being selected.
 
+> **Mathematical-correctness veto:** A technically functioning screen, worksheet, or Heat is never sufficient for release. One incorrect answer, contradictory prompt, invalid diagram/table, ambiguous required response, or unintended second correct option is a **critical defect**. It immediately halts release of the affected concept and its announced blueprint until a correction, new generated evidence, and qualified teacher/curriculum reviewer sign-off are recorded.
+
 | Release status | Meaning | Permitted use |
 |---|---|---|
 | **Ready** | All required checks pass; no unresolved critical or major defect remains. | May be offered as a pilot practice worksheet and classroom Heat blueprint. |
 | **Ready with stated limits** | Non-critical limitations are documented; unavailable concepts are blocked or hidden from selection. | May be used only within the documented concept subset. |
-| **Not ready** | A critical or major defect remains, or evidence is incomplete. | Must not be announced, used in worksheets, or used in a Heat. |
+| **Not ready** | A critical or major defect remains, including any mathematical-validity defect, or evidence is incomplete. | Must not be announced, used in worksheets, or used in a Heat. |
+| **Mathematical hold** | A mathematical-validity defect affects a shared generator, renderer, or answer-validation rule used by more than one planned course. | Halt every dependent course/blueprint until impact review and re-test evidence are complete. |
 
 ## 2. Audit scope register
 
@@ -73,8 +76,8 @@ Complete this checklist per selected concept and per active generator. A passing
 | Generator mapping | Generator type maps to the exact canonical concept ID. | Generator inventory row. |
 | Active and implemented state | Generator is active and callable in the current runtime. | Inventory result plus generated sample. |
 | Minimum concept coverage | Every selected concept has one or more viable generator types. | Coverage matrix. |
-| Variation | Repeated invocations produce materially different values, representations, or scenarios while testing the same skill. | Five generated instances per generator. |
-| Answer determinacy | Every generated instance has one unambiguous correct answer or a defined valid-answer set. | Reviewer calculation. |
+| Variation | Repeated invocations produce materially different values, representations, or scenarios while testing the same skill. | Five human-reviewed instances at each supported difficulty, including boundary cases. |
+| Answer determinacy | Every generated instance has one unambiguous correct answer or a defined valid-answer set. | Independent reviewer calculation; generator-supplied answer is not proof. |
 | Distractor quality | Multiple-choice distractors are plausible, unique, and not accidentally correct. | Five generated instances per generator. |
 | Difficulty control | The requested difficulty changes reasonable features of the item without changing the underlying standard unexpectedly. | Low/middle/high sample comparison when supported. |
 | Practice/Heat separation | Worksheet and later Heat are independently generated; no stored worksheet question or answer is sent to the Heat. | Before/after capture and implementation review. |
@@ -90,11 +93,15 @@ Use this table for each course. Add one row for every selected concept-generator
 
 ## 6. Mathematical validity checklist
 
-A curriculum reviewer or qualified teacher should independently solve each sampled item before it is considered release evidence. Do not treat a generator’s supplied answer as proof that the question is correct.
+Mathematical validity is a release gate, not an optional quality review. A qualified teacher or curriculum reviewer must independently solve each retained sample before it is considered release evidence. Do not treat a generator’s supplied answer as proof that the question is correct.
+
+For every generator with a machine-verifiable mathematical invariant, run at least **1,000 independently seeded invocations at each supported difficulty level**. The verification must recompute the answer from the visible prompt values, not repeat the generator’s answer calculation. Automated verification finds recurrence defects; it does not replace human review of wording, instructional appropriateness, diagrams, tables, or ambiguity.
 
 | Check | Pass condition |
 |---|---|
 | Arithmetic/algebra | Values, equations, units, conversions, and simplification are correct. |
+| Invariant stress check | At least 1,000 independently seeded invocations per supported difficulty recompute the answer from parsed visible prompt values; every run passes. |
+| Qualified reviewer sign-off | A teacher/curriculum reviewer independently solves retained samples across low, middle, and high difficulty, including special representations and boundaries. |
 | Domain constraints | Division by zero, impossible geometry, negative measures, non-integer count contexts, and invalid probability conditions are avoided unless intentionally taught and clearly stated. |
 | Diagram/table fidelity | Labels, axes, data values, proportions, and visual relations match the prompt and answer. |
 | Single intended answer | The prompt gives sufficient information and does not support multiple equally valid interpretations. |
@@ -104,6 +111,8 @@ A curriculum reviewer or qualified teacher should independently solve each sampl
 | No answer leakage | The student copy has no hidden answer, answer-letter cue, solution artifact, or filename that reveals an answer. |
 
 Record each mathematical defect in the discrepancy log, preserve a screenshot or generated instance, and mark the generator/concept unavailable until the defect is resolved and re-sampled.
+
+> **No waiver rule:** Mathematical defects cannot be waived for schedule, pilot pressure, a technically successful deployment, or a small expected class size. A release may reduce its concept scope only when the affected concept is removed from the announced worksheet and blocked from the Heat blueprint. If the defect is in shared rendering, answer checking, or a shared generator utility, assess and hold every dependent scope before resuming release work.
 
 ## 7. Student wording, accessibility, and fairness checklist
 
@@ -184,7 +193,8 @@ Complete this final checklist only after all selected concepts have evidence in 
 |---|---|---|
 | Scope complete | Every course, topic, and concept to be announced in the pilot has a bounded audit record. | ☐ |
 | Coverage complete | Every selected concept has active, validated generator support. | ☐ |
-| Mathematical review complete | Required samples have independently verified answers and unambiguous prompts. | ☐ |
+| Mathematical review complete | Five qualified-reviewer samples per supported difficulty and the required invariant stress checks have independently verified answers and unambiguous prompts. | ☐ |
+| Mathematical veto clear | No unresolved mathematical defect affects the released concept, its shared generator, rendering, or answer validation. | ☐ |
 | Rendering complete | Three representative worksheets, including special formats, pass print/PDF review. | ☐ |
 | Heat linkage complete | The shared blueprint/independent-instance flow passes the Heat readiness checklist. | ☐ |
 | Access/privacy complete | Teacher/parent boundaries and managed-student protections pass. | ☐ |
@@ -198,7 +208,7 @@ Complete this final checklist only after all selected concepts have evidence in 
 Maintain one folder or document set per released course with the following artifacts:
 
 1. Completed course scope register and generator coverage matrix.
-2. Five reviewed instances for every active generator used in the released concept set.
+2. Five qualified-reviewer instances at every supported difficulty for every active generator used in the released concept set, plus saved automated invariant-stress results where applicable.
 3. Three saved practice worksheet PDFs, including special math formats where applicable.
 4. One completed worksheet-to-Heat linkage capture showing the shared blueprint and return continuity.
 5. One roster-only join negative test for a class-bound Heat.

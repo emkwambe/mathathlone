@@ -1,0 +1,148 @@
+{
+  "results": [
+    {
+      "input": "g6_rp_calculate_unit_rate, difficulty 1",
+      "output": {
+        "calibration_findings": "NONE",
+        "confidence": 1,
+        "decision": "PASS",
+        "generator_difficulty": "g6_rp_calculate_unit_rate, difficulty 1",
+        "math_accuracy": "PASS; all five samples were independently recomputed (Sample 1: 8/4=2; Sample 2: 134/2=67; Sample 3: 38/2=19; Sample 4: 196/2=98; Sample 5: 60/2=30) and match the provided answers.",
+        "samples_reviewed": 5
+      },
+      "error": ""
+    },
+    {
+      "input": "g6_rp_calculate_unit_rate, difficulty 2",
+      "output": {
+        "calibration_findings": "NONE",
+        "confidence": 1,
+        "decision": "PASS",
+        "generator_difficulty": "g6_rp_calculate_unit_rate, difficulty 2",
+        "math_accuracy": "PASS; all 5 recomputations (294/6=49, 210/7=30, 798/7=114, 205/5=41, 210/5=42) match the provided answers exactly.",
+        "samples_reviewed": 5
+      },
+      "error": ""
+    },
+    {
+      "input": "g6_rp_calculate_unit_rate, difficulty 3",
+      "output": {
+        "calibration_findings": "NONE; no duplicates found; progression from Difficulty 1 to 4 is consistent with increasing divisor and dividend complexity; wording is unambiguous and grade-appropriate.",
+        "confidence": 1,
+        "decision": "PASS",
+        "generator_difficulty": "g6_rp_calculate_unit_rate, difficulty 3",
+        "math_accuracy": "PASS; all five calculations (549/9=61, 539/11=49, 462/11=42, 1368/8=171, 531/9=59) were independently verified as correct.",
+        "samples_reviewed": 5
+      },
+      "error": ""
+    },
+    {
+      "input": "g6_rp_calculate_unit_rate, difficulty 4",
+      "output": {
+        "calibration_findings": "NONE; The samples show a consistent progression from Difficulty 3, using larger divisors (12, 13, 15) and dividends, while maintaining realistic contexts and unambiguous wording.",
+        "confidence": 1,
+        "decision": "PASS",
+        "generator_difficulty": "g6_rp_calculate_unit_rate, difficulty 4",
+        "math_accuracy": "PASS; Independent recomputation of all five samples (756/12=63, 949/13=73, 972/12=81, 3450/15=230, 840/12=70) matches the provided correct answers.",
+        "samples_reviewed": 5
+      },
+      "error": ""
+    },
+    {
+      "input": "g6_rp_ratio_table_solve, difficulty 1",
+      "output": {
+        "calibration_findings": "NONE; No duplicates found; Difficulty 1 appropriately includes the unit rate row (x=1) for single-step solving; Progression is consistent as Difficulty 3 removes the unit rate row.",
+        "confidence": 1,
+        "decision": "PASS",
+        "generator_difficulty": "g6_rp_ratio_table_solve, difficulty 1",
+        "math_accuracy": "PASS; All five samples correctly apply the unit rate (2, 4, or 3) provided in the first row to calculate the missing value for the given x.",
+        "samples_reviewed": 5
+      },
+      "error": ""
+    },
+    {
+      "input": "g6_rp_ratio_table_solve, difficulty 2",
+      "output": {
+        "calibration_findings": "NONE; progression is appropriate as Difficulty 2 uses larger multipliers and targets than Difficulty 1, while Difficulty 3 introduces non-unit ratios.",
+        "confidence": 1,
+        "decision": "PASS",
+        "generator_difficulty": "g6_rp_ratio_table_solve, difficulty 2",
+        "math_accuracy": "PASS; all five samples recomputed correctly using the constant of proportionality (Sample 1: 10*5=50; Sample 2: 10*7=70; Sample 3: 9*7=63; Sample 4: 9*5=45; Sample 5: 10*7=70).",
+        "samples_reviewed": 5
+      },
+      "error": ""
+    },
+    {
+      "input": "g6_rp_ratio_table_solve, difficulty 3",
+      "output": {
+        "calibration_findings": "NONE",
+        "confidence": 1,
+        "decision": "PASS",
+        "generator_difficulty": "g6_rp_ratio_table_solve, difficulty 3",
+        "math_accuracy": "PASS; all five samples correctly identify the constant of proportionality (7 or 8) and apply it to find the missing target value.",
+        "samples_reviewed": 5
+      },
+      "error": ""
+    },
+    {
+      "input": "g6_rp_ratio_table_solve, difficulty 4",
+      "output": {
+        "calibration_findings": "NONE",
+        "confidence": 1,
+        "decision": "PASS",
+        "generator_difficulty": "g6_rp_ratio_table_solve, difficulty 4",
+        "math_accuracy": "PASS with concise rationale: All five samples correctly follow the ratio y = kx. Recomputation: S1 (k=11, 12*11=132), S2 (k=10, 15*10=150), S3 (k=9, 15*9=135), S4 (k=11, 13*11=143), S5 (k=9, 14*9=126).",
+        "samples_reviewed": 5
+      },
+      "error": ""
+    },
+    {
+      "input": "g6_rp_ratio_word_problem, difficulty 1",
+      "output": {
+        "calibration_findings": "NONE; no duplicates found; difficulty level is appropriate for Grade 6 with small totals and simple ratios.",
+        "confidence": 1,
+        "decision": "PASS",
+        "generator_difficulty": "g6_rp_ratio_word_problem, difficulty 1",
+        "math_accuracy": "PASS; all 5 samples recomputed and match provided answers exactly.",
+        "samples_reviewed": 5
+      },
+      "error": ""
+    },
+    {
+      "input": "g6_rp_ratio_word_problem, difficulty 2",
+      "output": {
+        "calibration_findings": "NONE; The difficulty level is appropriate for Grade 6, featuring moderate arithmetic complexity that fits between simpler introductory problems and more advanced multi-step calculations.",
+        "confidence": 1,
+        "decision": "PASS",
+        "generator_difficulty": "g6_rp_ratio_word_problem, difficulty 2",
+        "math_accuracy": "PASS with concise rationale: All five samples correctly calculated the requested quantity by dividing the total by the sum of ratio parts and multiplying by the relevant part.",
+        "samples_reviewed": 5
+      },
+      "error": ""
+    },
+    {
+      "input": "g6_rp_ratio_word_problem, difficulty 3",
+      "output": {
+        "calibration_findings": "NONE",
+        "confidence": 1,
+        "decision": "PASS",
+        "generator_difficulty": "g6_rp_ratio_word_problem, difficulty 3",
+        "math_accuracy": "PASS with concise rationale: All five samples were independently verified using the total-parts method. Sample 1: 84/(3+4)*4=48. Sample 2: 84/(2+5)*2=24. Sample 3: 98/(2+5)*2=28. Sample 4: 77/(2+5)*2=22. Sample 5: 104/(3+5)*3=39. All results match the provided correct answers.",
+        "samples_reviewed": 5
+      },
+      "error": ""
+    },
+    {
+      "input": "g6_rp_ratio_word_problem, difficulty 4",
+      "output": {
+        "calibration_findings": "NONE",
+        "confidence": 1,
+        "decision": "PASS",
+        "generator_difficulty": "g6_rp_ratio_word_problem, difficulty 4",
+        "math_accuracy": "PASS with concise rationale: All five samples were independently solved by calculating total parts, determining the value per part, and multiplying by the requested ratio component; all results matched the provided answers.",
+        "samples_reviewed": 5
+      },
+      "error": ""
+    }
+  ]
+}

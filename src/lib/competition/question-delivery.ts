@@ -18,6 +18,7 @@ import {
   type DifficultyLevel,
   type GeneratedQuestion,
 } from './generators';
+import { generateDistinctQuestion } from './question-uniqueness';
 import {
   VISUAL_GENERATORS,
   generateVisualQuestion,
@@ -595,6 +596,7 @@ export async function generateAndInsertQuestions(
   }
 
   const inserts: HeatQuestionInsert[] = [];
+  const usedProceduralQuestionSignatures = new Set<string>();
 
   // BUG 5 fix — fair distribution via shuffle-without-replacement deck.
   // The old pickGenerator() + recent-window approach was probabilistic:
@@ -626,11 +628,24 @@ export async function generateAndInsertQuestions(
 
     let q: GeneratedQuestion | null = null;
     try {
-      q = generateQuestion(generator.generator_type, difficulty);
+      q = generateDistinctQuestion(
+        (level) => {
+          const generated = generateQuestion(generator.generator_type, level);
+          if (!generated) {
+            throw new Error(`Generator ${generator.generator_type} returned no question.`);
+          }
+          return generated;
+        },
+        difficulty,
+        usedProceduralQuestionSignatures,
+        generator.generator_type,
+      );
     } catch (err) {
-      console.warn(`[question-delivery] generator ${generator.generator_type} threw:`, err);
+      throw new Error(
+        `Could not generate a unique ${generator.generator_type} question for this Heat: ` +
+        `${err instanceof Error ? err.message : 'unknown error'}`,
+      );
     }
-    if (!q) continue;
 
     const generatorUuid: string = generator.id;            // narrowed by isUuid()
 

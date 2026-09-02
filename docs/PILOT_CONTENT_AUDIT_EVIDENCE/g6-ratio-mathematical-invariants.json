@@ -1,0 +1,18 @@
+{
+  "totalVerified": 12000,
+  "results": {
+    "unit-rate:difficulty-1": 1000,
+    "unit-rate:difficulty-2": 1000,
+    "unit-rate:difficulty-3": 1000,
+    "unit-rate:difficulty-4": 1000,
+    "ratio-table:difficulty-1": 1000,
+    "ratio-table:difficulty-2": 1000,
+    "ratio-table:difficulty-3": 1000,
+    "ratio-table:difficulty-4": 1000,
+    "ratio-word-problem:difficulty-1": 1000,
+    "ratio-word-problem:difficulty-2": 1000,
+    "ratio-word-problem:difficulty-3": 1000,
+    "ratio-word-problem:difficulty-4": 1000
+  },
+  "uniquenessHelper": "Passed bounded retry and exhaustion behavior."
+}

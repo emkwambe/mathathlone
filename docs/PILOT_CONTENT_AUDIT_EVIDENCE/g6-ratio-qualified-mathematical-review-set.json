@@ -1,0 +1,1012 @@
+{
+  "auditTitle": "Grade 6 Ratios and Proportional Relationships — Qualified Mathematical Review Set",
+  "status": "Pending qualified teacher/curriculum reviewer sign-off",
+  "generatedAtUtc": "2026-09-02T18:20:36.752Z",
+  "reviewerInstruction": "Independently recompute each answer from the visible prompt. Do not rely on the supplied answer or solution. Mark reject for any error, ambiguity, implausible context, invalid representation, or mismatch.",
+  "scope": {
+    "course": "NC Grade 6 Math",
+    "topic": "Ratios and Proportional Relationships",
+    "samplesPerGeneratorPerDifficulty": 5,
+    "expectedTotalSamples": 60
+  },
+  "generators": [
+    {
+      "announcedSkill": "Calculate a unit rate",
+      "generatorType": "g6_rp_calculate_unit_rate",
+      "difficulties": [
+        {
+          "difficulty": 1,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "A box of 4 apples costs $8. What is the unit rate in dollars per apple?",
+              "questionLatex": "A box of 4 apples costs $8. What is the unit rate in dollars per apple?",
+              "correctAnswer": "2",
+              "answerType": "decimal",
+              "solutionSteps": [
+                "Unit rate = total ÷ number of units.",
+                "$8 ÷ 4 apples = $2 per apple."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "A snack contains 134 calories in 2 servings. What is the unit rate in calories per serving?",
+              "questionLatex": "A snack contains 134 calories in 2 servings. What is the unit rate in calories per serving?",
+              "correctAnswer": "67",
+              "answerType": "decimal",
+              "solutionSteps": [
+                "Unit rate = total ÷ number of units.",
+                "134 calories ÷ 2 servings = 67 calories per serving."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "A printer prints 38 pages in 2 minutes. What is the unit rate in pages per minute?",
+              "questionLatex": "A printer prints 38 pages in 2 minutes. What is the unit rate in pages per minute?",
+              "correctAnswer": "19",
+              "answerType": "decimal",
+              "solutionSteps": [
+                "Unit rate = total ÷ number of units.",
+                "38 pages ÷ 2 minutes = 19 pages per minute."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 4,
+              "questionText": "A snack contains 196 calories in 2 servings. What is the unit rate in calories per serving?",
+              "questionLatex": "A snack contains 196 calories in 2 servings. What is the unit rate in calories per serving?",
+              "correctAnswer": "98",
+              "answerType": "decimal",
+              "solutionSteps": [
+                "Unit rate = total ÷ number of units.",
+                "196 calories ÷ 2 servings = 98 calories per serving."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 5,
+              "questionText": "A car drives 60 miles in 2 hours. What is the unit rate in miles per hour?",
+              "questionLatex": "A car drives 60 miles in 2 hours. What is the unit rate in miles per hour?",
+              "correctAnswer": "30",
+              "answerType": "decimal",
+              "solutionSteps": [
+                "Unit rate = total ÷ number of units.",
+                "60 miles ÷ 2 hours = 30 miles per hour."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        },
+        {
+          "difficulty": 2,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "A car drives 294 miles in 6 hours. What is the unit rate in miles per hour?",
+              "questionLatex": "A car drives 294 miles in 6 hours. What is the unit rate in miles per hour?",
+              "correctAnswer": "49",
+              "answerType": "decimal",
+              "solutionSteps": [
+                "Unit rate = total ÷ number of units.",
+                "294 miles ÷ 6 hours = 49 miles per hour."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "A printer prints 210 pages in 7 minutes. What is the unit rate in pages per minute?",
+              "questionLatex": "A printer prints 210 pages in 7 minutes. What is the unit rate in pages per minute?",
+              "correctAnswer": "30",
+              "answerType": "decimal",
+              "solutionSteps": [
+                "Unit rate = total ÷ number of units.",
+                "210 pages ÷ 7 minutes = 30 pages per minute."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "A snack contains 798 calories in 7 servings. What is the unit rate in calories per serving?",
+              "questionLatex": "A snack contains 798 calories in 7 servings. What is the unit rate in calories per serving?",
+              "correctAnswer": "114",
+              "answerType": "decimal",
+              "solutionSteps": [
+                "Unit rate = total ÷ number of units.",
+                "798 calories ÷ 7 servings = 114 calories per serving."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 4,
+              "questionText": "A car drives 205 miles in 5 hours. What is the unit rate in miles per hour?",
+              "questionLatex": "A car drives 205 miles in 5 hours. What is the unit rate in miles per hour?",
+              "correctAnswer": "41",
+              "answerType": "decimal",
+              "solutionSteps": [
+                "Unit rate = total ÷ number of units.",
+                "205 miles ÷ 5 hours = 41 miles per hour."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 5,
+              "questionText": "A car drives 210 miles in 5 hours. What is the unit rate in miles per hour?",
+              "questionLatex": "A car drives 210 miles in 5 hours. What is the unit rate in miles per hour?",
+              "correctAnswer": "42",
+              "answerType": "decimal",
+              "solutionSteps": [
+                "Unit rate = total ÷ number of units.",
+                "210 miles ÷ 5 hours = 42 miles per hour."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        },
+        {
+          "difficulty": 3,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "A car drives 549 miles in 9 hours. What is the unit rate in miles per hour?",
+              "questionLatex": "A car drives 549 miles in 9 hours. What is the unit rate in miles per hour?",
+              "correctAnswer": "61",
+              "answerType": "decimal",
+              "solutionSteps": [
+                "Unit rate = total ÷ number of units.",
+                "549 miles ÷ 9 hours = 61 miles per hour."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "A printer prints 539 pages in 11 minutes. What is the unit rate in pages per minute?",
+              "questionLatex": "A printer prints 539 pages in 11 minutes. What is the unit rate in pages per minute?",
+              "correctAnswer": "49",
+              "answerType": "decimal",
+              "solutionSteps": [
+                "Unit rate = total ÷ number of units.",
+                "539 pages ÷ 11 minutes = 49 pages per minute."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "A printer prints 462 pages in 11 minutes. What is the unit rate in pages per minute?",
+              "questionLatex": "A printer prints 462 pages in 11 minutes. What is the unit rate in pages per minute?",
+              "correctAnswer": "42",
+              "answerType": "decimal",
+              "solutionSteps": [
+                "Unit rate = total ÷ number of units.",
+                "462 pages ÷ 11 minutes = 42 pages per minute."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 4,
+              "questionText": "A snack contains 1368 calories in 8 servings. What is the unit rate in calories per serving?",
+              "questionLatex": "A snack contains 1368 calories in 8 servings. What is the unit rate in calories per serving?",
+              "correctAnswer": "171",
+              "answerType": "decimal",
+              "solutionSteps": [
+                "Unit rate = total ÷ number of units.",
+                "1368 calories ÷ 8 servings = 171 calories per serving."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 5,
+              "questionText": "A car drives 531 miles in 9 hours. What is the unit rate in miles per hour?",
+              "questionLatex": "A car drives 531 miles in 9 hours. What is the unit rate in miles per hour?",
+              "correctAnswer": "59",
+              "answerType": "decimal",
+              "solutionSteps": [
+                "Unit rate = total ÷ number of units.",
+                "531 miles ÷ 9 hours = 59 miles per hour."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        },
+        {
+          "difficulty": 4,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "A printer prints 756 pages in 12 minutes. What is the unit rate in pages per minute?",
+              "questionLatex": "A printer prints 756 pages in 12 minutes. What is the unit rate in pages per minute?",
+              "correctAnswer": "63",
+              "answerType": "decimal",
+              "solutionSteps": [
+                "Unit rate = total ÷ number of units.",
+                "756 pages ÷ 12 minutes = 63 pages per minute."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "A car drives 949 miles in 13 hours. What is the unit rate in miles per hour?",
+              "questionLatex": "A car drives 949 miles in 13 hours. What is the unit rate in miles per hour?",
+              "correctAnswer": "73",
+              "answerType": "decimal",
+              "solutionSteps": [
+                "Unit rate = total ÷ number of units.",
+                "949 miles ÷ 13 hours = 73 miles per hour."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "A car drives 972 miles in 12 hours. What is the unit rate in miles per hour?",
+              "questionLatex": "A car drives 972 miles in 12 hours. What is the unit rate in miles per hour?",
+              "correctAnswer": "81",
+              "answerType": "decimal",
+              "solutionSteps": [
+                "Unit rate = total ÷ number of units.",
+                "972 miles ÷ 12 hours = 81 miles per hour."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 4,
+              "questionText": "A snack contains 3450 calories in 15 servings. What is the unit rate in calories per serving?",
+              "questionLatex": "A snack contains 3450 calories in 15 servings. What is the unit rate in calories per serving?",
+              "correctAnswer": "230",
+              "answerType": "decimal",
+              "solutionSteps": [
+                "Unit rate = total ÷ number of units.",
+                "3450 calories ÷ 15 servings = 230 calories per serving."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 5,
+              "questionText": "A printer prints 840 pages in 12 minutes. What is the unit rate in pages per minute?",
+              "questionLatex": "A printer prints 840 pages in 12 minutes. What is the unit rate in pages per minute?",
+              "correctAnswer": "70",
+              "answerType": "decimal",
+              "solutionSteps": [
+                "Unit rate = total ÷ number of units.",
+                "840 pages ÷ 12 minutes = 70 pages per minute."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "announcedSkill": "Solve a missing value in a ratio table",
+      "generatorType": "g6_rp_ratio_table_solve",
+      "difficulties": [
+        {
+          "difficulty": 1,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "Find the missing value in the ratio table:\n\nx | y\n1 | 2\n3 | 6\n6 | ?",
+              "questionLatex": "Find the missing value in the ratio table:\n\n$$\\begin{array}{c|c}\n\\text{x} & \\text{y} \\\\ \\hline\n1 & 2 \\\\\n3 & 6 \\\\\n6 & ?\n\\end{array}$$",
+              "correctAnswer": "12",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "Find the constant of proportionality: y/x = 2/1 = 2.",
+                "When x = 6, y = 6 × 2 = 12."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "Find the missing value in the ratio table:\n\nx | y\n1 | 4\n2 | 8\n8 | ?",
+              "questionLatex": "Find the missing value in the ratio table:\n\n$$\\begin{array}{c|c}\n\\text{x} & \\text{y} \\\\ \\hline\n1 & 4 \\\\\n2 & 8 \\\\\n8 & ?\n\\end{array}$$",
+              "correctAnswer": "32",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "Find the constant of proportionality: y/x = 4/1 = 4.",
+                "When x = 8, y = 8 × 4 = 32."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "Find the missing value in the ratio table:\n\nx | y\n1 | 4\n2 | 8\n7 | ?",
+              "questionLatex": "Find the missing value in the ratio table:\n\n$$\\begin{array}{c|c}\n\\text{x} & \\text{y} \\\\ \\hline\n1 & 4 \\\\\n2 & 8 \\\\\n7 & ?\n\\end{array}$$",
+              "correctAnswer": "28",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "Find the constant of proportionality: y/x = 4/1 = 4.",
+                "When x = 7, y = 7 × 4 = 28."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 4,
+              "questionText": "Find the missing value in the ratio table:\n\nx | y\n1 | 2\n2 | 4\n8 | ?",
+              "questionLatex": "Find the missing value in the ratio table:\n\n$$\\begin{array}{c|c}\n\\text{x} & \\text{y} \\\\ \\hline\n1 & 2 \\\\\n2 & 4 \\\\\n8 & ?\n\\end{array}$$",
+              "correctAnswer": "16",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "Find the constant of proportionality: y/x = 2/1 = 2.",
+                "When x = 8, y = 8 × 2 = 16."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 5,
+              "questionText": "Find the missing value in the ratio table:\n\nx | y\n1 | 3\n3 | 9\n8 | ?",
+              "questionLatex": "Find the missing value in the ratio table:\n\n$$\\begin{array}{c|c}\n\\text{x} & \\text{y} \\\\ \\hline\n1 & 3 \\\\\n3 & 9 \\\\\n8 & ?\n\\end{array}$$",
+              "correctAnswer": "24",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "Find the constant of proportionality: y/x = 3/1 = 3.",
+                "When x = 8, y = 8 × 3 = 24."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        },
+        {
+          "difficulty": 2,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "Find the missing value in the ratio table:\n\nx | y\n1 | 5\n4 | 20\n10 | ?",
+              "questionLatex": "Find the missing value in the ratio table:\n\n$$\\begin{array}{c|c}\n\\text{x} & \\text{y} \\\\ \\hline\n1 & 5 \\\\\n4 & 20 \\\\\n10 & ?\n\\end{array}$$",
+              "correctAnswer": "50",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "Find the constant of proportionality: y/x = 5/1 = 5.",
+                "When x = 10, y = 10 × 5 = 50."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "Find the missing value in the ratio table:\n\nx | y\n1 | 7\n4 | 28\n10 | ?",
+              "questionLatex": "Find the missing value in the ratio table:\n\n$$\\begin{array}{c|c}\n\\text{x} & \\text{y} \\\\ \\hline\n1 & 7 \\\\\n4 & 28 \\\\\n10 & ?\n\\end{array}$$",
+              "correctAnswer": "70",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "Find the constant of proportionality: y/x = 7/1 = 7.",
+                "When x = 10, y = 10 × 7 = 70."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "Find the missing value in the ratio table:\n\nx | y\n1 | 7\n3 | 21\n9 | ?",
+              "questionLatex": "Find the missing value in the ratio table:\n\n$$\\begin{array}{c|c}\n\\text{x} & \\text{y} \\\\ \\hline\n1 & 7 \\\\\n3 & 21 \\\\\n9 & ?\n\\end{array}$$",
+              "correctAnswer": "63",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "Find the constant of proportionality: y/x = 7/1 = 7.",
+                "When x = 9, y = 9 × 7 = 63."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 4,
+              "questionText": "Find the missing value in the ratio table:\n\nx | y\n1 | 5\n4 | 20\n9 | ?",
+              "questionLatex": "Find the missing value in the ratio table:\n\n$$\\begin{array}{c|c}\n\\text{x} & \\text{y} \\\\ \\hline\n1 & 5 \\\\\n4 & 20 \\\\\n9 & ?\n\\end{array}$$",
+              "correctAnswer": "45",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "Find the constant of proportionality: y/x = 5/1 = 5.",
+                "When x = 9, y = 9 × 5 = 45."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 5,
+              "questionText": "Find the missing value in the ratio table:\n\nx | y\n1 | 7\n3 | 21\n10 | ?",
+              "questionLatex": "Find the missing value in the ratio table:\n\n$$\\begin{array}{c|c}\n\\text{x} & \\text{y} \\\\ \\hline\n1 & 7 \\\\\n3 & 21 \\\\\n10 & ?\n\\end{array}$$",
+              "correctAnswer": "70",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "Find the constant of proportionality: y/x = 7/1 = 7.",
+                "When x = 10, y = 10 × 7 = 70."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        },
+        {
+          "difficulty": 3,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "Find the missing value in the ratio table:\n\nx | y\n3 | 21\n8 | 56\n12 | ?",
+              "questionLatex": "Find the missing value in the ratio table:\n\n$$\\begin{array}{c|c}\n\\text{x} & \\text{y} \\\\ \\hline\n3 & 21 \\\\\n8 & 56 \\\\\n12 & ?\n\\end{array}$$",
+              "correctAnswer": "84",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "Find the constant of proportionality: y/x = 21/3 = 7.",
+                "When x = 12, y = 12 × 7 = 84."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "Find the missing value in the ratio table:\n\nx | y\n3 | 21\n7 | 49\n10 | ?",
+              "questionLatex": "Find the missing value in the ratio table:\n\n$$\\begin{array}{c|c}\n\\text{x} & \\text{y} \\\\ \\hline\n3 & 21 \\\\\n7 & 49 \\\\\n10 & ?\n\\end{array}$$",
+              "correctAnswer": "70",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "Find the constant of proportionality: y/x = 21/3 = 7.",
+                "When x = 10, y = 10 × 7 = 70."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "Find the missing value in the ratio table:\n\nx | y\n3 | 24\n8 | 64\n10 | ?",
+              "questionLatex": "Find the missing value in the ratio table:\n\n$$\\begin{array}{c|c}\n\\text{x} & \\text{y} \\\\ \\hline\n3 & 24 \\\\\n8 & 64 \\\\\n10 & ?\n\\end{array}$$",
+              "correctAnswer": "80",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "Find the constant of proportionality: y/x = 24/3 = 8.",
+                "When x = 10, y = 10 × 8 = 80."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 4,
+              "questionText": "Find the missing value in the ratio table:\n\nx | y\n4 | 28\n6 | 42\n10 | ?",
+              "questionLatex": "Find the missing value in the ratio table:\n\n$$\\begin{array}{c|c}\n\\text{x} & \\text{y} \\\\ \\hline\n4 & 28 \\\\\n6 & 42 \\\\\n10 & ?\n\\end{array}$$",
+              "correctAnswer": "70",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "Find the constant of proportionality: y/x = 28/4 = 7.",
+                "When x = 10, y = 10 × 7 = 70."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 5,
+              "questionText": "Find the missing value in the ratio table:\n\nx | y\n5 | 40\n7 | 56\n9 | ?",
+              "questionLatex": "Find the missing value in the ratio table:\n\n$$\\begin{array}{c|c}\n\\text{x} & \\text{y} \\\\ \\hline\n5 & 40 \\\\\n7 & 56 \\\\\n9 & ?\n\\end{array}$$",
+              "correctAnswer": "72",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "Find the constant of proportionality: y/x = 40/5 = 8.",
+                "When x = 9, y = 9 × 8 = 72."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        },
+        {
+          "difficulty": 4,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "Find the missing value in the ratio table:\n\nx | y\n4 | 44\n10 | 110\n12 | ?",
+              "questionLatex": "Find the missing value in the ratio table:\n\n$$\\begin{array}{c|c}\n\\text{x} & \\text{y} \\\\ \\hline\n4 & 44 \\\\\n10 & 110 \\\\\n12 & ?\n\\end{array}$$",
+              "correctAnswer": "132",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "Find the constant of proportionality: y/x = 44/4 = 11.",
+                "When x = 12, y = 12 × 11 = 132."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "Find the missing value in the ratio table:\n\nx | y\n4 | 40\n8 | 80\n15 | ?",
+              "questionLatex": "Find the missing value in the ratio table:\n\n$$\\begin{array}{c|c}\n\\text{x} & \\text{y} \\\\ \\hline\n4 & 40 \\\\\n8 & 80 \\\\\n15 & ?\n\\end{array}$$",
+              "correctAnswer": "150",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "Find the constant of proportionality: y/x = 40/4 = 10.",
+                "When x = 15, y = 15 × 10 = 150."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "Find the missing value in the ratio table:\n\nx | y\n4 | 36\n9 | 81\n15 | ?",
+              "questionLatex": "Find the missing value in the ratio table:\n\n$$\\begin{array}{c|c}\n\\text{x} & \\text{y} \\\\ \\hline\n4 & 36 \\\\\n9 & 81 \\\\\n15 & ?\n\\end{array}$$",
+              "correctAnswer": "135",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "Find the constant of proportionality: y/x = 36/4 = 9.",
+                "When x = 15, y = 15 × 9 = 135."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 4,
+              "questionText": "Find the missing value in the ratio table:\n\nx | y\n4 | 44\n8 | 88\n13 | ?",
+              "questionLatex": "Find the missing value in the ratio table:\n\n$$\\begin{array}{c|c}\n\\text{x} & \\text{y} \\\\ \\hline\n4 & 44 \\\\\n8 & 88 \\\\\n13 & ?\n\\end{array}$$",
+              "correctAnswer": "143",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "Find the constant of proportionality: y/x = 44/4 = 11.",
+                "When x = 13, y = 13 × 11 = 143."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 5,
+              "questionText": "Find the missing value in the ratio table:\n\nx | y\n4 | 36\n10 | 90\n14 | ?",
+              "questionLatex": "Find the missing value in the ratio table:\n\n$$\\begin{array}{c|c}\n\\text{x} & \\text{y} \\\\ \\hline\n4 & 36 \\\\\n10 & 90 \\\\\n14 & ?\n\\end{array}$$",
+              "correctAnswer": "126",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "Find the constant of proportionality: y/x = 36/4 = 9.",
+                "When x = 14, y = 14 × 9 = 126."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "announcedSkill": "Solve a ratio word problem",
+      "generatorType": "g6_rp_ratio_word_problem",
+      "difficulties": [
+        {
+          "difficulty": 1,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "A class has blue and red counters in the ratio 1:1. If there are 10 counters in total, how many are blue?",
+              "questionLatex": "A class has blue and red counters in the ratio 1:1. If there are 10 counters in total, how many are blue?",
+              "correctAnswer": "5",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "The ratio has 1 + 1 = 2 equal parts.",
+                "Each part = 10 ÷ 2 = 5.",
+                "Blue = 1 part = 1 × 5 = 5."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "A class has blue and red counters in the ratio 1:1. If there are 12 counters in total, how many are blue?",
+              "questionLatex": "A class has blue and red counters in the ratio 1:1. If there are 12 counters in total, how many are blue?",
+              "correctAnswer": "6",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "The ratio has 1 + 1 = 2 equal parts.",
+                "Each part = 12 ÷ 2 = 6.",
+                "Blue = 1 part = 1 × 6 = 6."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "A class has blue and red counters in the ratio 1:2. If there are 12 counters in total, how many are red?",
+              "questionLatex": "A class has blue and red counters in the ratio 1:2. If there are 12 counters in total, how many are red?",
+              "correctAnswer": "8",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "The ratio has 1 + 2 = 3 equal parts.",
+                "Each part = 12 ÷ 3 = 4.",
+                "Red = 2 parts = 2 × 4 = 8."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 4,
+              "questionText": "A class has blue and red counters in the ratio 2:3. If there are 20 counters in total, how many are red?",
+              "questionLatex": "A class has blue and red counters in the ratio 2:3. If there are 20 counters in total, how many are red?",
+              "correctAnswer": "12",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "The ratio has 2 + 3 = 5 equal parts.",
+                "Each part = 20 ÷ 5 = 4.",
+                "Red = 3 parts = 3 × 4 = 12."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 5,
+              "questionText": "A class has blue and red counters in the ratio 2:3. If there are 25 counters in total, how many are blue?",
+              "questionLatex": "A class has blue and red counters in the ratio 2:3. If there are 25 counters in total, how many are blue?",
+              "correctAnswer": "10",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "The ratio has 2 + 3 = 5 equal parts.",
+                "Each part = 25 ÷ 5 = 5.",
+                "Blue = 2 parts = 2 × 5 = 10."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        },
+        {
+          "difficulty": 2,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "A class has blue and red counters in the ratio 1:3. If there are 40 counters in total, how many are red?",
+              "questionLatex": "A class has blue and red counters in the ratio 1:3. If there are 40 counters in total, how many are red?",
+              "correctAnswer": "30",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "The ratio has 1 + 3 = 4 equal parts.",
+                "Each part = 40 ÷ 4 = 10.",
+                "Red = 3 parts = 3 × 10 = 30."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "A class has blue and red counters in the ratio 2:5. If there are 63 counters in total, how many are blue?",
+              "questionLatex": "A class has blue and red counters in the ratio 2:5. If there are 63 counters in total, how many are blue?",
+              "correctAnswer": "18",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "The ratio has 2 + 5 = 7 equal parts.",
+                "Each part = 63 ÷ 7 = 9.",
+                "Blue = 2 parts = 2 × 9 = 18."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "A class has blue and red counters in the ratio 2:5. If there are 49 counters in total, how many are blue?",
+              "questionLatex": "A class has blue and red counters in the ratio 2:5. If there are 49 counters in total, how many are blue?",
+              "correctAnswer": "14",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "The ratio has 2 + 5 = 7 equal parts.",
+                "Each part = 49 ÷ 7 = 7.",
+                "Blue = 2 parts = 2 × 7 = 14."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 4,
+              "questionText": "A class has blue and red counters in the ratio 2:3. If there are 40 counters in total, how many are blue?",
+              "questionLatex": "A class has blue and red counters in the ratio 2:3. If there are 40 counters in total, how many are blue?",
+              "correctAnswer": "16",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "The ratio has 2 + 3 = 5 equal parts.",
+                "Each part = 40 ÷ 5 = 8.",
+                "Blue = 2 parts = 2 × 8 = 16."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 5,
+              "questionText": "A class has blue and red counters in the ratio 3:4. If there are 56 counters in total, how many are red?",
+              "questionLatex": "A class has blue and red counters in the ratio 3:4. If there are 56 counters in total, how many are red?",
+              "correctAnswer": "32",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "The ratio has 3 + 4 = 7 equal parts.",
+                "Each part = 56 ÷ 7 = 8.",
+                "Red = 4 parts = 4 × 8 = 32."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        },
+        {
+          "difficulty": 3,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "A class has blue and red counters in the ratio 3:4. If there are 84 counters in total, how many are red?",
+              "questionLatex": "A class has blue and red counters in the ratio 3:4. If there are 84 counters in total, how many are red?",
+              "correctAnswer": "48",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "The ratio has 3 + 4 = 7 equal parts.",
+                "Each part = 84 ÷ 7 = 12.",
+                "Red = 4 parts = 4 × 12 = 48."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "A class has blue and red counters in the ratio 2:5. If there are 84 counters in total, how many are blue?",
+              "questionLatex": "A class has blue and red counters in the ratio 2:5. If there are 84 counters in total, how many are blue?",
+              "correctAnswer": "24",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "The ratio has 2 + 5 = 7 equal parts.",
+                "Each part = 84 ÷ 7 = 12.",
+                "Blue = 2 parts = 2 × 12 = 24."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "A class has blue and red counters in the ratio 2:5. If there are 98 counters in total, how many are blue?",
+              "questionLatex": "A class has blue and red counters in the ratio 2:5. If there are 98 counters in total, how many are blue?",
+              "correctAnswer": "28",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "The ratio has 2 + 5 = 7 equal parts.",
+                "Each part = 98 ÷ 7 = 14.",
+                "Blue = 2 parts = 2 × 14 = 28."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 4,
+              "questionText": "A class has blue and red counters in the ratio 2:5. If there are 77 counters in total, how many are blue?",
+              "questionLatex": "A class has blue and red counters in the ratio 2:5. If there are 77 counters in total, how many are blue?",
+              "correctAnswer": "22",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "The ratio has 2 + 5 = 7 equal parts.",
+                "Each part = 77 ÷ 7 = 11.",
+                "Blue = 2 parts = 2 × 11 = 22."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 5,
+              "questionText": "A class has blue and red counters in the ratio 3:5. If there are 104 counters in total, how many are blue?",
+              "questionLatex": "A class has blue and red counters in the ratio 3:5. If there are 104 counters in total, how many are blue?",
+              "correctAnswer": "39",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "The ratio has 3 + 5 = 8 equal parts.",
+                "Each part = 104 ÷ 8 = 13.",
+                "Blue = 3 parts = 3 × 13 = 39."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        },
+        {
+          "difficulty": 4,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "A class has blue and red counters in the ratio 4:5. If there are 153 counters in total, how many are blue?",
+              "questionLatex": "A class has blue and red counters in the ratio 4:5. If there are 153 counters in total, how many are blue?",
+              "correctAnswer": "68",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "The ratio has 4 + 5 = 9 equal parts.",
+                "Each part = 153 ÷ 9 = 17.",
+                "Blue = 4 parts = 4 × 17 = 68."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "A class has blue and red counters in the ratio 4:7. If there are 187 counters in total, how many are red?",
+              "questionLatex": "A class has blue and red counters in the ratio 4:7. If there are 187 counters in total, how many are red?",
+              "correctAnswer": "119",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "The ratio has 4 + 7 = 11 equal parts.",
+                "Each part = 187 ÷ 11 = 17.",
+                "Red = 7 parts = 7 × 17 = 119."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "A class has blue and red counters in the ratio 5:7. If there are 204 counters in total, how many are red?",
+              "questionLatex": "A class has blue and red counters in the ratio 5:7. If there are 204 counters in total, how many are red?",
+              "correctAnswer": "119",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "The ratio has 5 + 7 = 12 equal parts.",
+                "Each part = 204 ÷ 12 = 17.",
+                "Red = 7 parts = 7 × 17 = 119."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 4,
+              "questionText": "A class has blue and red counters in the ratio 3:5. If there are 128 counters in total, how many are blue?",
+              "questionLatex": "A class has blue and red counters in the ratio 3:5. If there are 128 counters in total, how many are blue?",
+              "correctAnswer": "48",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "The ratio has 3 + 5 = 8 equal parts.",
+                "Each part = 128 ÷ 8 = 16.",
+                "Blue = 3 parts = 3 × 16 = 48."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 5,
+              "questionText": "A class has blue and red counters in the ratio 4:7. If there are 198 counters in total, how many are blue?",
+              "questionLatex": "A class has blue and red counters in the ratio 4:7. If there are 198 counters in total, how many are blue?",
+              "correctAnswer": "72",
+              "answerType": "integer_or_decimal",
+              "solutionSteps": [
+                "The ratio has 4 + 7 = 11 equal parts.",
+                "Each part = 198 ÷ 11 = 18.",
+                "Blue = 4 parts = 4 × 18 = 72."
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

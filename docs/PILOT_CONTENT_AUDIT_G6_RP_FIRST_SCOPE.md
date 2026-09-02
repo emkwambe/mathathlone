@@ -1,7 +1,7 @@
 # Pilot Content Audit — Grade 6 Ratios and Proportional Relationships
 
 **Audit ID:** `PILOT-NC6M-RP-001`
-**Status:** **Pending final production worksheet-to-Heat acceptance**
+**Status:** **Pending qualified reviewer sign-off and final production worksheet-to-Heat acceptance**
 **Scope:** NC Grade 6 Math → Ratios and Proportional Relationships
 **Ranking cohort:** Grade 6
 **Content level:** Grade 6
@@ -11,23 +11,27 @@
 
 ## 1. Release decision
 
-The selected three-concept scope has a sound technical foundation. The live database maps every approved skill to an active generator, all fifteen regenerated difficulty-2 items were mathematically correct, and each generator produced five distinct item instances. The printable ratio-table representation is structurally encoded as a KaTeX array and passed a local rendering check.
+The three-concept scope has passed its current **source-level mathematical and generator-quality gates**. The live database maps every approved skill to an active generator. The calibrated source has passed 12,000 independently seeded invariant checks: 1,000 items for each of the three generators at every supported difficulty level. The automated review recomputed every answer from the visible prompts rather than trusting the answer field, and found no wrong answer, contradiction, invalid ratio, malformed table value, or ambiguity in the retained samples.
 
-The source-level findings have been remediated. The unit-rate generator now constrains familiar retail prices to realistic whole-dollar values, and the 1:1 ratio explanation now uses singular grammar. The scope remains **pending final production acceptance**: the worksheet-to-Heat flow and corrected ratio table must be verified in the deployed application and a saved PDF before student use.
+This is **not yet a classroom-release decision**. The mathematical-correctness veto is clear only provisionally until a qualified teacher or curriculum reviewer signs the retained 60-item review set. The production worksheet/PDF and class-bound Heat evidence also remain required. A technically successful deployment cannot waive either requirement.
+
+> **Mathematical-correctness veto:** One incorrect answer, contradictory prompt, invalid diagram or table, ambiguous required response, or unintended second correct option would immediately halt this concept scope. A defect in shared rendering, answer validation, or a shared generator utility would require impact review of every dependent scope before release work continued.
 
 | Gate | Finding | Status |
 |---|---|---|
 | Canonical live mapping | All three announced skills map to active production generators in the expected course/topic. | Pass |
-| Generator variation | Each generator produced five distinct medium-difficulty prompt instances. | Pass |
-| Mathematical correctness | Independent arithmetic/proportion review of all fifteen samples passed. | Pass |
-| Ratio-table structure | Worksheet variant emits a structured KaTeX table; accessible live text remains separate. | Pass locally; production print evidence pending |
-| Student wording and realism | Apple contexts now produce whole-dollar prices of **$1–$4 per apple** when selected. | Pass after remediation |
-| Worksheet/Heat independence | Source implementation generates independent instances from the same canonical concepts. | Pass in implementation review; production flow test pending |
-| Classroom release | Conditions above unresolved. | **Not ready** |
+| Mathematical invariant checks | 12,000 seeded items passed: 1,000 for each generator at each of difficulties 1–4. | Pass |
+| Retained independent review | All 60 non-repeating retained samples passed independent recomputation and calibration review. | Pass; qualified reviewer sign-off pending |
+| Difficulty progression | All three generators now use explicit level-1 through level-4 progressions. | Pass locally |
+| Same-session uniqueness | Printable worksheets and procedural Heat items retry boundedly to avoid exact duplicate visible prompts. | Pass in source test; production flow test pending |
+| Ratio-table structure | Worksheet output emits a structured KaTeX table; accessible live text remains separate. | Pass locally; production PDF evidence pending |
+| Student wording and realism | Unit-rate contexts are realistic, and singular ratio grammar is correct. | Pass locally |
+| Worksheet/Heat independence | Source implementation generates fresh instances from the same canonical concepts. | Pass in implementation review; production flow test pending |
+| Classroom release | Qualified reviewer and production evidence are incomplete. | **Not ready** |
 
 ## 2. Approved audit scope
 
-Students in the first Grade 6 classroom rehearsal would be told that they will practice and later compete on the following three skills. The practice worksheet may disclose these skills. It must not disclose the future Heat items, values, answer ordering, or answer set.
+Students in the first Grade 6 classroom rehearsal would be told that they will practice and later compete on the following three skills. The preparation worksheet may disclose these skills. It must not disclose future Heat values, answer ordering, or answer sets.
 
 | Announced skill | Generator type | Live concept ID | Canonical concept name in live data |
 |---|---|---|---|
@@ -37,77 +41,91 @@ Students in the first Grade 6 classroom rehearsal would be told that they will p
 
 The live inventory confirmed that every row maps to **NC Grade 6 Math** (`G6`) and **Ratios and Proportional Relationships**, with `is_active = true` for its generator.
 
-## 3. Sampling method and evidence
+## 3. Mathematical evidence and review protocol
 
-Five deterministic difficulty-2 instances were regenerated for each approved generator from the checked-in generator source after remediation. This produced fifteen reviewable items. The evidence file is [`PILOT_CONTENT_AUDIT_EVIDENCE/g6-ratio-first-scope-samples.json`](./PILOT_CONTENT_AUDIT_EVIDENCE/g6-ratio-first-scope-samples.json).
+The following evidence must travel with this course record. The automated invariant test is a recurrence and arithmetic check; it does not replace the qualified reviewer’s responsibility to evaluate wording, age appropriateness, ambiguity, and visual fidelity.
 
-This sampling checks source behavior and generator variation. It does not replace the required production worksheet/PDF and class-bound Heat rehearsal after deployment.
+| Evidence artifact | What it proves | Current result |
+|---|---|---|
+| [`g6-ratio-mathematical-invariants.json`](./PILOT_CONTENT_AUDIT_EVIDENCE/g6-ratio-mathematical-invariants.json) | Prompt values were parsed and independently recomputed across all three generator families and all four difficulties. It also tests bounded duplicate retry and exhaustion behavior. | 12,000 / 12,000 pass |
+| [`g6-ratio-qualified-mathematical-review-set.json`](./PILOT_CONTENT_AUDIT_EVIDENCE/g6-ratio-qualified-mathematical-review-set.json) | Sixty non-repeating retained prompts: five per generator at each difficulty, with fields for reviewer calculations, initials, date, and decision. | Pending qualified reviewer sign-off |
+| [`g6-ratio-independent-review-summary.json`](./PILOT_CONTENT_AUDIT_EVIDENCE/g6-ratio-independent-review-summary.json) | Independent prompt-by-prompt mathematical and calibration review of the retained set. | All 12 groups pass |
+| [`g6-ratio-first-scope-samples.json`](./PILOT_CONTENT_AUDIT_EVIDENCE/g6-ratio-first-scope-samples.json) | Historical first medium-difficulty sampling evidence retained for traceability. | Superseded by the retained 60-item set |
 
-| Generator | Samples reviewed | Unique prompt texts | Answer format | Structured worksheet math |
-|---|---:|---:|---|---|
-| `g6_rp_calculate_unit_rate` | 5 | 5 | Numeric rate | Not required |
-| `g6_rp_ratio_table_solve` | 5 | 5 | Numeric missing value | Yes — KaTeX two-column table |
-| `g6_rp_ratio_word_problem` | 5 | 5 | Numeric part value | Not required |
+### 3.1 Difficulty progression
+
+Each difficulty remains within the same Grade 6 standard. It changes the amount of numerical reasoning or representation needed, not the announced concept.
+
+| Generator | Difficulty 1 | Difficulty 2 | Difficulty 3 | Difficulty 4 |
+|---|---|---|---|---|
+| Unit rate | Small whole-number divisors and introductory contexts. | Divisors 5–7 and larger non-overlapping rates. | Divisors 8, 9, or 11 with larger rates. | Divisors 12–15 with the largest rates. |
+| Ratio table | Unit row is visible; small multiplier and target. | Unit row remains visible; multiplier and target increase. | Unit row is removed; students derive the unit rate from an equivalent pair. | No unit row; larger multiplier and target values. |
+| Ratio word problem | Simple coprime ratios and small whole-number groups. | Larger ratio structures and a greater value per part. | Larger ratios and groups. | Largest approved ratios and groups, still yielding whole-number answers. |
 
 ## 4. Mathematical validity review
 
-Every sampled result was independently recomputed from the prompt. No sample produced a contradiction, missing information, a non-integer part in the part-to-part word problems, or a duplicate correct response.
+The automated invariant test verified every generated answer from visible prompt values. The retained independent review then recomputed all 60 saved items. No wrong answer, contradictory relation, non-integer intended count, duplicate retained prompt, invalid ratio-table relation, or malformed singular explanation remains in the final evidence set.
 
-| Generator | Representative calculation checks | Result |
+| Generator | Independent computation method | Source-level result |
 |---|---|---|
-| Unit rate | `28 ÷ 7 = 4`; `36 ÷ 9 = 4`; `536 ÷ 8 = 67` | Correct |
-| Ratio table | `12 × 5 = 60`; `7 × 10 = 70`; `14 × 11 = 154`; `6 × 2 = 12` | Correct |
-| Ratio word problem | `50 × 3/(2+3) = 30`; `63 × 2/(2+5) = 18`; `72 × 5/(3+5) = 45`; `45 × 2/(2+1) = 30` | Correct |
+| Unit rate | Divide the stated total by the stated count/time/servings. Confirm the whole-number divisor and rate fall within the declared difficulty band. | Pass across difficulties 1–4 |
+| Ratio table | Derive the constant of proportionality from a known row and calculate the missing `y` value. Confirm table rows maintain one proportional relationship. | Pass across difficulties 1–4 |
+| Ratio word problem | Divide the total by the sum of ratio parts, then multiply by the asked-for part count. Confirm the ratio pair and total multiplier match the difficulty band. | Pass across difficulties 1–4 |
 
-The sampled question forms are free response. Multiple-choice distractor quality is therefore not applicable to this specific first scope.
+The first-scope questions are free response. Multiple-choice distractor quality therefore does not apply to this release record.
 
-## 5. Rendering and practice-versus-Heat review
+## 5. Rendering, uniqueness, and practice-versus-Heat review
 
-The original ratio-table defect was a presentation defect: the values were flattened into a pipe-separated line in a worksheet. The worksheet generator now provides a distinct formatted version using a two-column KaTeX array, while preserving newline-separated plain text for the live Heat’s accessible prompt path. A local KaTeX rendering check confirmed the structured table is recognized as a mathematical table.
+The original ratio-table defect was a presentation defect: values were flattened into a pipe-separated line in a worksheet. The worksheet path now uses a structured two-column KaTeX array, while the live Heat retains newline-separated plain text for accessibility. Exact duplicate visible procedural prompts are no longer accepted in one assembled worksheet or Heat; the system retries up to 12 times and fails clearly rather than silently presenting a duplicate or shortening the set.
 
 | Requirement | Current evidence | Remaining action |
 |---|---|---|
-| Table looks like a table in practice worksheet | Structured `array` markup is emitted by every sampled ratio-table item. | Verify on deployed worksheet screen and Chrome saved PDF. |
-| Live Heat stays readable | Plain text keeps rows on separate lines, rather than injecting worksheet-only KaTeX. | Verify during the class-bound practice Heat. |
-| Same skills, fresh questions | Practice and Heat draw separately from the canonical generator set; the preparation worksheet carries concepts, not generated questions. | Generate worksheet, return to Builder, launch Heat, and compare instances. |
+| Ratio table looks like a table in practice worksheet | Structured `array` markup is emitted and verified in the invariant suite. | Verify the deployed worksheet screen and Chrome saved PDF. |
+| Live Heat stays readable | Plain-text rows remain separate from worksheet-only KaTeX. | Verify during the class-bound practice Heat. |
+| No exact duplicate procedural prompt in one session | Shared bounded-retry helper is applied to worksheet assembly and procedural Heat insertion. | Verify one 8-question production Heat and one worksheet. |
+| Same skills, fresh questions | Practice and Heat call separate generator runs from one canonical concept blueprint. | Generate worksheet, return to Builder, launch Heat, and compare instances. |
 | Student answer protection | Competition-preparation worksheet uses Practice Review and contains no answer key. | Verify the deployed document shows no answer-key pages. |
 
-## 6. Findings and remediation backlog
+## 6. Findings and remediation status
 
-| ID | Severity | Finding | Why it matters | Required remediation | Re-test evidence |
-|---|---|---|---|---|---|
-| `RP-001` | **Closed** | The unit-rate generator previously produced implausibly expensive apple contexts. | The arithmetic was correct but the ordinary-shopping context could distract Grade 6 students. | Apple unit rates are now constrained to $1–$4, with new samples captured. | Five revised samples pass. |
-| `RP-002` | **Closed** | A 1:1 solution could say “Red = 1 parts.” | The answer was correct but grammatically imprecise. | Singular `part` is now used when the factor equals 1. | Revised 1:1 sample passes. |
-| `RP-003` | Major until completed | New ratio-table worksheet rendering has not been inspected in production print/PDF output. | Local structured markup does not prove final browser printing on school devices. | Deploy worksheet improvement; generate one competition-preparation worksheet containing ratio tables; inspect browser preview and saved PDF. | Screenshot and saved PDF meeting the page/layout checklist. |
-| `RP-004` | Major until completed | The Heat-to-worksheet return and independent-instance behavior has not been exercised using a rostered teacher class in production. | Fair preparation requires preserving the blueprint without revealing or reusing Heat items. | Run the designated teacher acceptance flow and compare practice versus Heat questions. | Builder, worksheet, and Heat captures; completed linkage checklist. |
+| ID | Severity | Finding | Resolution or required action | Status |
+|---|---|---|---|---|
+| `RP-001` | Major | Unit-rate apple contexts could be implausible. | Whole-dollar apple pricing is constrained to the introductory level; higher levels use contexts with meaningful computational demand. | Closed in source; production evidence pending |
+| `RP-002` | Minor | A 1:1 solution could say “1 parts.” | Singular `part` is used when the factor equals 1. | Closed |
+| `RP-003` | Major | Ratio-table worksheet rendering was flattened. | Structured KaTeX table is emitted; live Heat preserves accessible plain text. | Source closed; production PDF evidence pending |
+| `RP-004` | Major | Worksheet-to-Heat preparation flow has not been rehearsed in production with a rostered class. | Complete the designated teacher workflow and compare independently generated practice and Heat items. | Open release gate |
+| `RP-005` | Major | Difficulty levels were not reliably differentiated across the three generator families. | All three generators now use explicit non-overlapping numerical or representation progressions. | Closed in source; qualified sign-off pending |
+| `RP-006` | Major | Repeated procedural prompts could appear in one assembled session. | Shared bounded retry prevents exact duplicate student-visible prompts in worksheets and procedural Heat items. | Closed in source; production session evidence pending |
 
-## 7. Required release evidence after remediation
+## 7. Remaining release evidence
 
-The course may be marked **Ready** only when the following package is complete.
+The course may be marked **Ready** only when all items below are complete.
 
-1. A deployed teacher generates a competition-preparation worksheet with all three concepts. The document shows the course, topic, concepts, fresh-instance statement, and no teacher answer key.
-2. The ratio-table item is readable as a two-column table in the page view and in a saved Chrome PDF.
-3. The worksheet stays within the pilot page target: normally at most four student-question pages; no spurious blank answer-key page for a Practice Review.
-4. Returning from the worksheet restores the selected class, course, concepts, mode, profile, timing, and content division in the Heat Builder.
-5. A teacher launches a short class-bound practice Heat and confirms it generates new ratio/unit-rate/word-problem instances rather than retrieving the worksheet items.
-6. A Mathlete outside the rostered class is denied entry to that class-bound Heat.
+1. A qualified Grade 6 teacher or curriculum reviewer independently completes and signs the 60-item retained review set. Any rejected item reopens the mathematical veto for the affected generator and difficulty.
+2. A deployed teacher generates a competition-preparation worksheet with all three concepts. The document shows the course, topic, concepts, fresh-instance statement, and no teacher answer key.
+3. A ratio-table item is readable as a two-column table in the page view and in a saved Chrome PDF.
+4. The Practice Review stays within the pilot page target: normally at most four student-question pages and no spurious blank answer-key page.
+5. Returning from the worksheet restores the selected class, course, concepts, mode, profile, timing, and content division in the Heat Builder.
+6. A teacher launches a short class-bound practice Heat and confirms it generates different unit-rate, ratio-table, and ratio-word-problem instances from the worksheet.
+7. The worksheet and Heat evidence each show no duplicate student-visible procedural prompt.
+8. A Mathlete outside the rostered class is denied entry to that class-bound Heat.
 
 ## 8. Conditional configuration recommendation
 
-Do **not** announce this scope to real classrooms until the remaining production evidence items `RP-003` and `RP-004` are closed. After closure, use this conservative first configuration.
+Do **not** announce this scope to real classrooms until the remaining sign-off and production evidence are complete. After closure, use this conservative first configuration.
 
 | Setting | Recommended value |
 |---|---|
 | Ranking cohort | Grade 6 |
 | Content level | NC Grade 6 Math |
 | Course/topic | Ratios and Proportional Relationships |
-| Concepts | Unit rate, missing ratio-table value, ratio word problem only |
+| Concepts | Unit rate, missing ratio-table value, and ratio word problem only |
 | Preparation | Competition-preparation Practice Review; no answer key distributed to students |
 | First Heat | Intraclass practice Heat, 8 questions, approximately 12 minutes, standard profile, practice integrity |
 | Result interpretation | Informal classroom feedback only; no ELO, bracket, interclass, or interschool claim |
 
 ## 9. Audit conclusion
 
-The selected scope is an appropriate **first audit unit** because it is narrow, has active coverage for all announced skills, and deliberately includes the visual ratio-table format that was recently corrected. The fifteen regenerated medium-difficulty samples contain no mathematical-answer defect; the unit-rate realism and singular-grammar findings are closed.
+The selected Grade 6 scope now has stronger mathematical controls than a technical smoke test: an explicit no-waiver correctness veto, machine-verified arithmetic invariants, retained non-repeating review samples, independent recomputation evidence, calibrated difficulty bands, and a shared duplicate-resistance mechanism.
 
-The remaining next move is one production worksheet-to-Heat rehearsal. After its print/PDF and class-bound Heat evidence is complete, the platform owner can make a defensible Grade 6 intraclass pilot release decision for this three-concept scope.
+The current mathematical evidence is favorable, but the release remains intentionally conservative. A qualified educator’s review of the retained set and the production worksheet-to-Heat rehearsal are the remaining gates before the platform owner can issue a defensible Grade 6 intraclass pilot release decision.

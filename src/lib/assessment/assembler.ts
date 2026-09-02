@@ -13,7 +13,8 @@
 // back to the canonical field.
 // =============================================================================
 
-import { GENERATORS } from '@/lib/competition/generators';
+import { GENERATORS, type DifficultyLevel, type GeneratedQuestion } from '@/lib/competition/generators';
+import { generateDistinctQuestion } from '@/lib/competition/question-uniqueness';
 
 export type AssessmentType = 'review' | 'quiz' | 'homework' | 'test' | 'makeup';
 
@@ -266,14 +267,26 @@ export function assembleAssessment(
   const frCount = Math.round(deck.length * cfg.frRatio);
   const sectionA: AssessmentQuestion[] = [];
   const sectionB: AssessmentQuestion[] = [];
+  const usedQuestionSignatures = new Set<string>();
 
   deck.forEach((candidate, i) => {
     const difficulty = (difficulties[i % Math.max(difficulties.length, 1)] ?? 2) as 1 | 2 | 3 | 4;
     const fn = (GENERATORS as Record<string, (d: number) => any>)[candidate.generatorType];
     if (!fn) return;
 
-    let q: any;
-    try { q = fn(difficulty); } catch { return; }
+    let q: GeneratedQuestion;
+    try {
+      q = generateDistinctQuestion(
+        fn as (level: DifficultyLevel) => GeneratedQuestion,
+        difficulty as DifficultyLevel,
+        usedQuestionSignatures,
+        candidate.generatorType,
+      );
+    } catch (error) {
+      throw new Error(
+        `Could not assemble a unique practice question for ${candidate.generatorType}: ${error instanceof Error ? error.message : 'unknown error'}`,
+      );
+    }
 
     const isFR = i < frCount;
     const question = readQuestion(q);

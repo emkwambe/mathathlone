@@ -8257,34 +8257,48 @@ export function generate_g6_ns_coordinate_distance_6(difficulty: DifficultyLevel
 
 // 13. M6.RP.1.3 — Calculate a Unit Rate
 export function generate_g6_rp_calculate_unit_rate(difficulty: DifficultyLevel): GeneratedQuestion {
-  // Each context owns its question wording so units never get mixed up.
-  // The unit rate is always total ÷ units = numerator ÷ denominator = rate.
+  // Difficulty changes the size of the whole-number divisor and the required
+  // rate without changing the Grade 6 standard: total ÷ number of units.
+  // The ranges are deliberately non-overlapping across levels so a Standard
+  // or Challenge profile cannot quietly produce an easier Warm-Up item.
+  const difficultyConfig = {
+    1: { denominators: [2, 3, 4], carRateRange: [25, 40], appleRateRange: [1, 2], printerRateRange: [10, 20], snackRateRange: [50, 100] },
+    2: { denominators: [5, 6, 7], carRateRange: [41, 55], appleRateRange: [2, 3], printerRateRange: [21, 40], snackRateRange: [101, 150] },
+    3: { denominators: [8, 9, 11], carRateRange: [56, 70], appleRateRange: [3, 4], printerRateRange: [41, 60], snackRateRange: [151, 200] },
+    4: { denominators: [12, 13, 14, 15], carRateRange: [71, 85], appleRateRange: [4, 5], printerRateRange: [61, 80], snackRateRange: [201, 250] },
+  } as const;
+  const config = difficultyConfig[difficulty];
   const contexts = [
     {
-      rateRange: difficulty === 1 ? [25, 45] : [30, 70],
+      rateRange: config.carRateRange,
       question: (n: number, d: number) => `A car drives ${n} miles in ${d} hour${d === 1 ? '' : 's'}. What is the unit rate in miles per hour?`,
       sol: (n: number, d: number, r: number) => `${n} miles ÷ ${d} hours = ${r} miles per hour.`,
     },
     {
-      // Keep a familiar shopping context realistic: whole-dollar apple prices
-      // avoid distracting totals such as hundreds of dollars for one box.
-      rateRange: difficulty === 1 ? [1, 3] : [1, 4],
+      // Keep a familiar shopping context realistic while scaling its rate by
+      // difficulty: whole-dollar prices avoid distracting decimal arithmetic.
+      rateRange: config.appleRateRange,
       question: (n: number, d: number) => `A box of ${d} apple${d === 1 ? '' : 's'} costs $${n}. What is the unit rate in dollars per apple?`,
       sol: (n: number, d: number, r: number) => `$${n} ÷ ${d} apples = $${r} per apple.`,
     },
     {
-      rateRange: difficulty === 1 ? [10, 30] : [15, 60],
+      rateRange: config.printerRateRange,
       question: (n: number, d: number) => `A printer prints ${n} pages in ${d} minute${d === 1 ? '' : 's'}. What is the unit rate in pages per minute?`,
       sol: (n: number, d: number, r: number) => `${n} pages ÷ ${d} minutes = ${r} pages per minute.`,
     },
     {
-      rateRange: difficulty === 1 ? [40, 120] : [50, 200],
+      rateRange: config.snackRateRange,
       question: (n: number, d: number) => `A snack contains ${n} calories in ${d} serving${d === 1 ? '' : 's'}. What is the unit rate in calories per serving?`,
       sol: (n: number, d: number, r: number) => `${n} calories ÷ ${d} servings = ${r} calories per serving.`,
     },
   ] as const;
-  const ctx = contexts[randomInt(0, contexts.length - 1)]!;
-  const denominator = randomInt(2, difficulty === 1 ? 6 : 12);
+  // Shopping with a $1–$2 unit price belongs in the introductory level. At
+  // higher levels it would make a large-number division look artificially easy.
+  const eligibleContexts = difficulty === 1
+    ? contexts
+    : contexts.filter((_, index) => index !== 1);
+  const ctx = eligibleContexts[randomInt(0, eligibleContexts.length - 1)]!;
+  const denominator = config.denominators[randomInt(0, config.denominators.length - 1)]!;
   const rate = randomInt(ctx.rateRange[0], ctx.rateRange[1]);
   const numerator = denominator * rate;
   return g7Wrap(difficulty, 'g6_rp_calculate_unit_rate', 'M6.RP.1.3', 'Calculating a Unit Rate', {
@@ -8300,28 +8314,41 @@ export function generate_g6_rp_calculate_unit_rate(difficulty: DifficultyLevel):
 
 // 14. M6.RP.2.1 — Solve a Missing Value in a Ratio Table
 export function generate_g6_rp_ratio_table_solve(difficulty: DifficultyLevel): GeneratedQuestion {
-  // Build a 3-row ratio table: (1, k), (a, ak), (b, ?). Ask for the missing value.
-  const k = randomInt(2, difficulty === 1 ? 6 : 12);
-  const a = randomInt(2, 5);
-  const b = randomInt(a + 1, difficulty === 1 ? 8 : 14);
-  const missing = b * k;
+  // Difficulty 1–2 show a unit row; 3–4 require finding the unit rate from a
+  // non-unit equivalent pair. Every level stays within the same Grade 6 skill.
+  const difficultyConfig = {
+    1: { multiplierRange: [2, 4], firstXRange: [2, 3], secondXRange: [4, 5], targetXRange: [6, 8], includesUnitRow: true },
+    2: { multiplierRange: [5, 7], firstXRange: [3, 4], secondXRange: [5, 7], targetXRange: [8, 10], includesUnitRow: true },
+    3: { multiplierRange: [6, 8], firstXRange: [3, 5], secondXRange: [6, 8], targetXRange: [9, 12], includesUnitRow: false },
+    4: { multiplierRange: [9, 12], firstXRange: [4, 6], secondXRange: [8, 10], targetXRange: [12, 15], includesUnitRow: false },
+  } as const;
+  const config = difficultyConfig[difficulty];
+  const k = randomInt(config.multiplierRange[0], config.multiplierRange[1]);
+  const firstX = randomInt(config.firstXRange[0], config.firstXRange[1]);
+  const secondX = randomInt(config.secondXRange[0], config.secondXRange[1]);
+  const targetX = randomInt(config.targetXRange[0], config.targetXRange[1]);
+  const knownRows = config.includesUnitRow
+    ? [[1, k], [firstX, firstX * k]] as const
+    : [[firstX, firstX * k], [secondX, secondX * k]] as const;
+  const missing = targetX * k;
+
   // Keep a plain-text version for accessible live-Heat delivery and provide a
-  // structured KaTeX table for printable worksheets. The two descriptions carry
-  // the same values; only the presentation differs.
-  const plainTable = `x | y\n1 | ${k}\n${a} | ${a * k}\n${b} | ?`;
+  // structured KaTeX table for printable worksheets. The values are identical.
+  const plainTable = ['x | y', ...knownRows.map(([x, y]) => `${x} | ${y}`), `${targetX} | ?`].join('\n');
+  const worksheetRows = [...knownRows.map(([x, y]) => String.raw`${x} & ${y} \\`), `${targetX} & ?`].join('\n');
   const worksheetTable = String.raw`$$\begin{array}{c|c}
 \text{x} & \text{y} \\ \hline
-1 & ${k} \\
-${a} & ${a * k} \\
-${b} & ?
+${worksheetRows}
 \end{array}$$`;
+  const [referenceX, referenceY] = knownRows[0];
+
   return g7Wrap(difficulty, 'g6_rp_ratio_table_solve', 'M6.RP.2.1', 'Ratio Table — Missing Value', {
     question: `Find the missing value in the ratio table:\n\n${plainTable}`,
     question_latex: `Find the missing value in the ratio table:\n\n${worksheetTable}`,
     answer: String(missing),
     solution_steps: [
-      `Find the constant of proportionality: y/x = ${k}.`,
-      `When x = ${b}, y = ${b} × ${k} = ${missing}.`,
+      `Find the constant of proportionality: y/x = ${referenceY}/${referenceX} = ${k}.`,
+      `When x = ${targetX}, y = ${targetX} × ${k} = ${missing}.`,
     ],
     answer_type: 'integer_or_decimal',
   });
@@ -8329,12 +8356,18 @@ ${b} & ?
 
 // 15. M6.RP.2.3 — Ratio Word Problem
 export function generate_g6_rp_ratio_word_problem(difficulty: DifficultyLevel): GeneratedQuestion {
-  // Part-to-part: ratio of blue:red = a:b. Given total, find each.
-  const a = randomInt(1, 5);
-  let b = randomInt(1, 5);
-  while (gcd(a, b) !== 1) b = randomInt(1, 5);
+  // Part-to-part: ratio of blue:red = a:b. Each level uses larger coprime
+  // ratios and larger whole-number groups, while preserving the same standard.
+  const difficultyConfig = {
+    1: { ratioPairs: [[1, 1], [1, 2], [2, 3]], totalMultipleRange: [3, 6] },
+    2: { ratioPairs: [[1, 3], [2, 3], [2, 5], [3, 4]], totalMultipleRange: [7, 10] },
+    3: { ratioPairs: [[2, 5], [3, 4], [3, 5], [4, 5]], totalMultipleRange: [11, 14] },
+    4: { ratioPairs: [[3, 5], [4, 5], [4, 7], [5, 7]], totalMultipleRange: [15, 18] },
+  } as const;
+  const config = difficultyConfig[difficulty];
+  const [a, b] = config.ratioPairs[randomInt(0, config.ratioPairs.length - 1)]!;
   const parts = a + b;
-  const totalMultiple = randomInt(3, difficulty === 1 ? 8 : 15);
+  const totalMultiple = randomInt(config.totalMultipleRange[0], config.totalMultipleRange[1]);
   const total = parts * totalMultiple;
   const blue = a * totalMultiple;
   const red = b * totalMultiple;
