@@ -20,24 +20,12 @@
 // Security:
 //   - Caller must be authenticated as teacher or platform_admin
 //   - Caller must be the league owner (created_by = caller.id)
-//   - Uses SUPABASE_SERVICE_ROLE_KEY for admin user creation (server-side only)
+//   - Uses the server-only Supabase secret key for admin user creation
 // =============================================================================
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServer } from '@/lib/supabase/server';
-import { createClient } from '@supabase/supabase-js';
-
-// ── Admin client (service role — never exposed to browser) ──────────────────
-function createAdminClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !key) {
-    throw new Error('Missing SUPABASE_SERVICE_ROLE_KEY — add it to .env.local and Vercel env vars.');
-  }
-  return createClient(url, key, {
-    auth: { autoRefreshToken: false, persistSession: false },
-  });
-}
+import { createAdminClient } from '@/lib/supabase/admin';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 

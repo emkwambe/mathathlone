@@ -39,11 +39,11 @@ Required variables:
 
 ```
 NEXT_PUBLIC_SUPABASE_URL=https://yhqxxgqfpgcertsqibps.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=<anon key>
-SUPABASE_SERVICE_ROLE_KEY=<service role key>
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<Supabase publishable key>
+SUPABASE_SECRET_KEY=<Supabase secret key>
 ```
 
-All three values are in the Supabase dashboard under **Project Settings → API**.
+All three values are in the Supabase dashboard under **Project Settings → API Keys**. Keep `SUPABASE_SECRET_KEY` server-only; never use a `NEXT_PUBLIC_` prefix for it.
 
 ---
 

@@ -14,6 +14,7 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { getSupabasePublicConfig } from './config';
 
 /**
  * Create a Supabase client for use in Server Components, Server Actions,
@@ -32,10 +33,11 @@ import type { SupabaseClient } from '@supabase/supabase-js';
  */
 export async function createSupabaseServer(): Promise<SupabaseClient> {
   const cookieStore = await cookies();
+  const { url, publishableKey } = getSupabasePublicConfig();
 
   return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    url,
+    publishableKey,
     {
       cookies: {
         getAll() {

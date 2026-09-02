@@ -117,9 +117,9 @@ npm run seed:nc      # Seed NC demo data (schools, mathletes, leagues)
 | Variable | Description |
 |----------|-------------|
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anonymous key |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Current Supabase public publishable key |
 | `NEXT_PUBLIC_APP_URL` | Application URL |
-| `SUPABASE_SERVICE_ROLE_KEY` | Used for bulk roster imports and admin operations |
+| `SUPABASE_SECRET_KEY` | Current Supabase server-only secret key, used for roster imports and platform administration; never expose it with a `NEXT_PUBLIC_` prefix |
 | `NEXT_PUBLIC_HEAT_WORKER_URL` | Cloudflare HeatRoom worker URL |
 | `HEAT_WORKER_URL` | Server-side worker URL |
 | `HEAT_ROOM_SECRET` | Shared secret for Next.js → Worker auth |

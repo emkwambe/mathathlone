@@ -82,10 +82,10 @@ async function fetchAll<T>(
 
 async function main() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const serviceKey = process.env.SUPABASE_SECRET_KEY ?? process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!url || !serviceKey) {
     console.error(
-      'Missing env. Need NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.\n' +
+      'Missing env. Need NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY.\n' +
         'Run with: npx tsx --env-file=.env.local scripts/relink-generator-concepts.ts'
     );
     process.exit(1);
@@ -188,7 +188,7 @@ async function main() {
   if (blocked.length > 0) {
     console.error(
       `\n⚠️  ${blocked.length} updates returned 0 rows changed — writes are being blocked by RLS.\n` +
-        `   SUPABASE_SERVICE_ROLE_KEY does not have write access (is it really the service_role key?).\n` +
+        `   SUPABASE_SECRET_KEY does not have write access (is it a valid Supabase secret key?).\n` +
         `   NO DATA WAS CHANGED for these rows.`
     );
     process.exit(1);

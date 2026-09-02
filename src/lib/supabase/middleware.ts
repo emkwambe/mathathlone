@@ -1,5 +1,6 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
+import { getSupabasePublicConfig } from './config';
 
 const PUBLIC_ROUTES: string[] = [
   '/', '/about', '/pricing', '/contact', '/legal',
@@ -60,10 +61,11 @@ function safeNextPath(next: string | null): string | null {
 
 export async function updateSession(request: NextRequest): Promise<NextResponse> {
   let response = NextResponse.next({ request });
+  const { url, publishableKey } = getSupabasePublicConfig();
 
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    url,
+    publishableKey,
     {
       cookies: {
         getAll() {

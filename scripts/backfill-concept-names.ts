@@ -9,7 +9,7 @@
  * Run:
  *   npx tsx --env-file=.env.local scripts/backfill-concept-names.ts
  *
- * Uses the SERVICE ROLE key so RLS does not block the updates. This script
+ * Uses a server-side Supabase secret key so RLS does not block the updates. This script
  * only updates rows where name === lesson_number; it touches no other rows or
  * tables, and writes no migration. If the key lacks write access, the run
  * aborts (non-zero) rather than reporting false success — see the RLS guard.
@@ -86,10 +86,10 @@ function readConceptPairs(path: string): Pair[] {
 
 async function main() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const serviceKey = process.env.SUPABASE_SECRET_KEY ?? process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!url || !serviceKey) {
     console.error(
-      'Missing env. Need NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.\n' +
+      'Missing env. Need NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SECRET_KEY.\n' +
         'Run with: npx tsx --env-file=.env.local scripts/backfill-concept-names.ts'
     );
     process.exit(1);
@@ -165,11 +165,11 @@ async function main() {
   );
 
   // If updates were silently dropped, the key lacks write access (RLS) — most
-  // likely SUPABASE_SERVICE_ROLE_KEY is not actually the service_role key.
+  // likely SUPABASE_SECRET_KEY is missing or does not have administrative access.
   if (blocked.length > 0) {
     console.error(
       `\n⚠️  ${blocked.length} updates returned 0 rows changed — writes are being blocked by RLS.\n` +
-        `   SUPABASE_SERVICE_ROLE_KEY does not have write access (is it really the service_role key?).\n` +
+        `   SUPABASE_SECRET_KEY does not have write access (is it a valid Supabase secret key?).\n` +
         `   NO DATA WAS CHANGED for these rows.`
     );
     process.exit(1);

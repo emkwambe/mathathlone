@@ -6,7 +6,7 @@
 // not create student accounts, issue credentials, or expose service credentials.
 // =============================================================================
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { createSupabaseServer } from '@/lib/supabase/server';
 
 export const dynamic = 'force-dynamic';
@@ -16,17 +16,6 @@ type StaffRole = (typeof STAFF_ROLES)[number];
 type PlatformActor =
   | { user: { id: string }; profile: { id: string; role: string; display_name: string | null } }
   | { error: NextResponse };
-
-function createAdminClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!url || !key) {
-    throw new Error('Missing server administration configuration. Add SUPABASE_SERVICE_ROLE_KEY to Vercel environment variables.');
-  }
-  return createClient(url, key, {
-    auth: { autoRefreshToken: false, persistSession: false },
-  });
-}
 
 function badRequest(error: string) {
   return NextResponse.json({ error }, { status: 400 });
