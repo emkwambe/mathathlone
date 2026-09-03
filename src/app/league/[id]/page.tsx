@@ -20,7 +20,7 @@ import StartLeagueHeatButton from '@/components/league/StartLeagueHeatButton';
 import RosterImportButton from '@/components/league/RosterImportButton';
 import LeagueRankingCohortPanel from '@/components/league/LeagueRankingCohortPanel';
 
-export const revalidate = 60; // ISR — refresh every 60 s
+export const dynamic = 'force-dynamic';
 
 interface PageProps {
   params: Promise<{ id: string }>;

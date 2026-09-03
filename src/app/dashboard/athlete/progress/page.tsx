@@ -18,6 +18,8 @@ import Link from 'next/link';
 import { createSupabaseServer } from '@/lib/supabase/server';
 import MissingProfile from '@/components/auth/MissingProfile';
 
+export const dynamic = 'force-dynamic';
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function formatDate(iso: string | null | undefined): string {

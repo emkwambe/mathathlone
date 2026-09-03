@@ -25,6 +25,36 @@ const nextConfig = {
           { key: 'Referrer-Policy',        value: 'strict-origin-when-cross-origin' },
         ],
       },
+      // Pilot operations are stateful. Never reuse a browser/CDN response for
+      // a different session, roster, Heat, worksheet, or result state.
+      {
+        source: '/dashboard/:path*',
+        headers: [{ key: 'Cache-Control', value: 'private, no-store, max-age=0, must-revalidate' }],
+      },
+      {
+        source: '/assessment/:path*',
+        headers: [{ key: 'Cache-Control', value: 'private, no-store, max-age=0, must-revalidate' }],
+      },
+      {
+        source: '/compete/:path*',
+        headers: [{ key: 'Cache-Control', value: 'no-store, max-age=0, must-revalidate' }],
+      },
+      {
+        source: '/auth/:path*',
+        headers: [{ key: 'Cache-Control', value: 'no-store, max-age=0, must-revalidate' }],
+      },
+      {
+        source: '/api/:path*',
+        headers: [{ key: 'Cache-Control', value: 'no-store, max-age=0, must-revalidate' }],
+      },
+      {
+        source: '/league/:path*',
+        headers: [{ key: 'Cache-Control', value: 'no-store, max-age=0, must-revalidate' }],
+      },
+      {
+        source: '/leaderboard',
+        headers: [{ key: 'Cache-Control', value: 'no-store, max-age=0, must-revalidate' }],
+      },
     ];
   },
 

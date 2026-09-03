@@ -1,6 +1,8 @@
 import { redirect } from 'next/navigation';
 import { createSupabaseServer } from '@/lib/supabase/server';
 
+export const dynamic = 'force-dynamic';
+
 // Role precedence: highest-privilege role wins (matches the JWT hook ordering)
 const ROLE_PRECEDENCE: Record<string, number> = {
   platform_admin: 1,

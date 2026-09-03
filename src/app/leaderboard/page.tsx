@@ -9,7 +9,7 @@
 import Link from 'next/link';
 import { createSupabaseServer } from '@/lib/supabase/server';
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 // Tier badge config
 const TIERS: Array<{ min: number; label: string; color: string; bg: string }> = [

@@ -37,7 +37,7 @@ export default function LiveStats({
 
   const fetchStats = async () => {
     try {
-      const res = await fetch('/api/stats', { next: { revalidate: 60 } });
+      const res = await fetch('/api/stats', { cache: 'no-store' });
       if (res.ok) {
         const data: PlatformStats = await res.json();
         setStats(data);

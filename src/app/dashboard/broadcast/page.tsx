@@ -11,6 +11,8 @@ import { createSupabaseServer } from '@/lib/supabase/server';
 import MissingProfile from '@/components/auth/MissingProfile';
 import { Radio, Trophy, Zap, ArrowRight, Clock } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+
 export default async function BroadcastDashboard() {
   const supabase = await createSupabaseServer();
 

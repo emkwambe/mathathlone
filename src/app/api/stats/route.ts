@@ -2,8 +2,8 @@
 // MathAthlone — /api/stats
 // =============================================================================
 // Returns live platform statistics for the landing page.
-// Cached for 60 seconds (Vercel ISR-style) so the landing page shows
-// near-real-time numbers without hammering Supabase on every request.
+// Refreshed at the client polling interval. During the controlled pilot,
+// do not serve a stale shared value after classroom activity changes.
 //
 // Response shape:
 //   { activeMathletes: number, competingNow: number, heatsToday: number }
@@ -43,18 +43,11 @@ export async function GET() {
       .eq('status', 'complete')
       .gte('created_at', todayStart.toISOString());
 
-    return NextResponse.json(
-      {
-        activeMathletes: activeMathletes ?? 0,
-        competingNow: competingNow ?? 0,
-        heatsToday: heatsToday ?? 0,
-      },
-      {
-        headers: {
-          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
-        },
-      }
-    );
+    return NextResponse.json({
+      activeMathletes: activeMathletes ?? 0,
+      competingNow: competingNow ?? 0,
+      heatsToday: heatsToday ?? 0,
+    });
   } catch (error) {
     console.error('[/api/stats] Error fetching stats:', error);
     // Return safe fallback values rather than a 500 error

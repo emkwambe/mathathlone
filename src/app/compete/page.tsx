@@ -29,6 +29,7 @@ import {
 
 import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import AccountControls from '@/components/navigation/AccountControls';
 
 // -----------------------------------------------------------------------------
 // CODE NORMALIZATION (live, per-keystroke)
@@ -193,7 +194,16 @@ export default function JoinHeatPage() {
   // ── Render ──────────────────────────────────────────────────────────────
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-indigo-950 via-indigo-900 to-purple-900 flex flex-col items-center justify-center px-4 py-12">
+    <div className="relative flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-indigo-950 via-indigo-900 to-purple-900 px-4 py-12 pt-28">
+      <header className="absolute inset-x-0 top-0 border-b border-white/10 bg-indigo-950/70 backdrop-blur">
+        <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-3">
+          <Link href="/" className="text-lg font-bold tracking-tight text-white hover:text-amber-200">
+            Math<span className="text-amber-300">Athlone</span>
+          </Link>
+          <AccountControls />
+        </div>
+      </header>
+
       <div className="w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">
@@ -276,33 +286,14 @@ export default function JoinHeatPage() {
           </p>
         </form>
 
-        <div className="mt-6 space-y-3 text-center">
-          {!authLoading && (isAuthenticated ? (
-            <Link
-              href="/dashboard/athlete"
-              className="inline-flex items-center gap-2 text-sm font-medium text-amber-300 hover:text-amber-200 transition-colors"
-            >
-              Back to Mathlete Home
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          ) : (
-            <Link
-              href="/auth/login?role=mathlete"
-              className="inline-flex items-center gap-2 text-sm font-medium text-amber-300 hover:text-amber-200 transition-colors"
-            >
-              Sign in to Mathlete Home
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          ))}
-          <div>
-            <Link
-              href="/compete/create"
-              className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors"
-            >
-              <Plus className="w-4 h-4" />
-              Educator? Create a new Heat
-            </Link>
-          </div>
+        <div className="mt-6 text-center">
+          <Link
+            href="/compete/create"
+            className="inline-flex items-center gap-2 text-sm text-white/60 transition-colors hover:text-white"
+          >
+            <Plus className="w-4 h-4" />
+            Educator? Create a new class Heat
+          </Link>
         </div>
       </div>
     </div>

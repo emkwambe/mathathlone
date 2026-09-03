@@ -4,6 +4,8 @@ import { ChevronLeft } from 'lucide-react';
 import { createSupabaseServer } from '@/lib/supabase/server';
 import ClassRosterConsole from '@/components/classes/ClassRosterConsole';
 
+export const dynamic = 'force-dynamic';
+
 export default async function TeacherClassesPage() {
   const supabase = await createSupabaseServer();
   const { data: { user } } = await supabase.auth.getUser();

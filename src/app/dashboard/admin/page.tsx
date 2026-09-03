@@ -14,6 +14,8 @@ import { createSupabaseServer } from '@/lib/supabase/server';
 import MissingProfile from '@/components/auth/MissingProfile';
 import { Users, BookOpen, Trophy, TrendingUp, ArrowRight, CheckCircle2, Clock } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminDashboard() {
   const supabase = await createSupabaseServer();
 

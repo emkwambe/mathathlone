@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { createSupabaseServer } from '@/lib/supabase/server';
 import MissingProfile from '@/components/auth/MissingProfile';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AthleteDashboard() {
   const supabase = await createSupabaseServer();
 

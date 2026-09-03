@@ -4,6 +4,8 @@ import { createSupabaseServer } from '@/lib/supabase/server';
 import MissingProfile from '@/components/auth/MissingProfile';
 import AdvancementEligiblePanel from '@/components/teacher/AdvancementEligiblePanel';
 
+export const dynamic = 'force-dynamic';
+
 export default async function TeacherDashboard() {
   const supabase = await createSupabaseServer();
 
