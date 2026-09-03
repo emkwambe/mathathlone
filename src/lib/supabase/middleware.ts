@@ -113,7 +113,11 @@ export async function updateSession(request: NextRequest): Promise<NextResponse>
     }
   }
 
-  if (!user && !isPublicRoute(path) && !path.startsWith('/api/')) {
+  // The standalone code-entry screen is intentionally public so a teacher can
+  // say “enter this code, then sign in.” Specific Heat lobbies remain protected:
+  // /compete/MA-XXXX still redirects through login and preserves its target.
+  const isPublicClassHeatEntry = path === '/compete';
+  if (!user && !isPublicRoute(path) && !isPublicClassHeatEntry && !path.startsWith('/api/')) {
     const loginUrl = new URL('/auth/login', request.url);
     if (path !== '/') {
       loginUrl.searchParams.set('next', path);
