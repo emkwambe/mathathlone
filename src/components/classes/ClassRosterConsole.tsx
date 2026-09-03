@@ -16,7 +16,6 @@ type RosterStudent = {
   athlete: {
     id: string;
     display_name: string;
-    managed: boolean;
     managed_username: string | null;
     grade_level: number | null;
     is_active: boolean;
@@ -157,7 +156,7 @@ export default function ClassRosterConsole() {
   };
 
   const resetPin = async (student: RosterStudent) => {
-    if (!selectedClassId || !student.athlete?.managed) return;
+    if (!selectedClassId || !student.athlete?.managed_username) return;
     setError(null); setSuccess(null);
     const confirmed = window.confirm(`Create a new temporary PIN for ${student.athlete.display_name}? The previous PIN will stop working immediately.`);
     if (!confirmed) return;
@@ -229,7 +228,7 @@ export default function ClassRosterConsole() {
               <button type="submit" disabled={importing} className="mt-3 inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-50">{importing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Users className="h-4 w-4" />} Add roster and issue cards</button>
             </form>
 
-            <div className="mt-6 border-t border-slate-100 pt-5"><h4 className="font-semibold text-slate-900">Active roster ({roster.length})</h4>{loadingRoster ? <p className="mt-3 text-sm text-slate-500">Loading roster…</p> : roster.length === 0 ? <p className="mt-3 text-sm text-slate-500">No Mathletes yet. Add the class roster above before starting a classroom Heat.</p> : <div className="mt-3 divide-y divide-slate-100">{roster.map((student) => <div key={student.enrollment_id} className="flex items-center justify-between gap-3 py-3"><div><p className="font-medium text-slate-800">{student.athlete?.display_name ?? 'Unknown Mathlete'}</p><p className="text-xs text-slate-500">{student.athlete?.managed ? `Managed login: ${student.athlete.managed_username}` : 'Existing Mathlete account'}{student.athlete?.grade_level ? ` · Grade ${student.athlete.grade_level}` : ''}</p></div>{student.athlete?.managed && <button type="button" disabled={resettingId === student.athlete.id} onClick={() => resetPin(student)} className="inline-flex items-center gap-1.5 rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-800 hover:bg-amber-100 disabled:opacity-50">{resettingId === student.athlete.id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <KeyRound className="h-3.5 w-3.5" />} Reset PIN</button>}</div>)}</div>}</div>
+            <div className="mt-6 border-t border-slate-100 pt-5"><h4 className="font-semibold text-slate-900">Active roster ({roster.length})</h4>{loadingRoster ? <p className="mt-3 text-sm text-slate-500">Loading roster…</p> : roster.length === 0 ? <p className="mt-3 text-sm text-slate-500">No Mathletes yet. Add the class roster above before starting a classroom Heat.</p> : <div className="mt-3 divide-y divide-slate-100">{roster.map((student) => <div key={student.enrollment_id} className="flex items-center justify-between gap-3 py-3"><div><p className="font-medium text-slate-800">{student.athlete?.display_name ?? 'Unknown Mathlete'}</p><p className="text-xs text-slate-500">{student.athlete?.managed_username ? `Managed login: ${student.athlete.managed_username}` : 'Existing Mathlete account'}{student.athlete?.grade_level ? ` · Grade ${student.athlete.grade_level}` : ''}</p></div>{student.athlete?.managed_username && <button type="button" disabled={resettingId === student.athlete.id} onClick={() => resetPin(student)} className="inline-flex items-center gap-1.5 rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-800 hover:bg-amber-100 disabled:opacity-50">{resettingId === student.athlete.id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <KeyRound className="h-3.5 w-3.5" />} Reset PIN</button>}</div>)}</div>}</div>
           </>}
         </div>
       </div>

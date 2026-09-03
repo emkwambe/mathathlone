@@ -108,7 +108,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
     try {
       const { data: existing, error: existingError } = await admin
         .from('users')
-        .select('id, display_name, managed, managed_username, school_id')
+        .select('id, display_name, managed_username, school_id')
         .eq('display_name', displayName)
         .eq('school_id', classroom.school_id)
         .eq('role', 'athlete')
@@ -155,7 +155,6 @@ export async function POST(request: NextRequest, context: RouteContext) {
           role: 'athlete',
           school_id: classroom.school_id,
           grade_level: classroom.grade_level,
-          managed: true,
           managed_username: username,
           country_code: 'US',
         }, { onConflict: 'id' });
@@ -193,7 +192,7 @@ export async function GET(_request: NextRequest, context: RouteContext) {
 
   const { data: roster, error } = await admin
     .from('class_enrollments')
-    .select('id, status, enrolled_at, users:athlete_id(id, display_name, managed, managed_username, grade_level, is_active)')
+    .select('id, status, enrolled_at, users:athlete_id(id, display_name, managed_username, grade_level, is_active)')
     .eq('class_id', classId)
     .eq('status', 'active')
     .order('enrolled_at', { ascending: true });
