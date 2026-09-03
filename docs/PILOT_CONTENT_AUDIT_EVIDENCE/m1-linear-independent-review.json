@@ -1,0 +1,196 @@
+{
+  "results": [
+    {
+      "input": "M1.EQN.2.2 | linear_eq_one_step_add | difficulty 1",
+      "output": {
+        "calibration_status": "pass",
+        "findings": "All five samples are mathematically correct with consistent solution steps and clear notation. The difficulty is well-calibrated for a level 1 introductory set, focusing on basic addition equations with positive integer solutions.",
+        "group": "M1.EQN.2.2 | linear_eq_one_step_add | difficulty 1",
+        "instructional_status": "pass",
+        "mathematical_status": "pass",
+        "severity": "none"
+      },
+      "error": ""
+    },
+    {
+      "input": "M1.EQN.2.2 | linear_eq_one_step_add | difficulty 2",
+      "output": {
+        "calibration_status": "needs_cross_level_review",
+        "findings": "All equations and solutions are mathematically correct. However, the group contains problems like x + 6 = 16 that are identical to Difficulty 1, indicating inconsistent calibration.",
+        "group": "M1.EQN.2.2 | linear_eq_one_step_add | difficulty 2",
+        "instructional_status": "pass",
+        "mathematical_status": "pass",
+        "severity": "minor"
+      },
+      "error": ""
+    },
+    {
+      "input": "M1.EQN.2.2 | linear_eq_one_step_add | difficulty 3",
+      "output": {
+        "calibration_status": "pass",
+        "findings": "All five samples are mathematically correct with consistent solution steps, and the difficulty is appropriately calibrated through the use of negative integers.",
+        "group": "M1.EQN.2.2 | linear_eq_one_step_add | difficulty 3",
+        "instructional_status": "pass",
+        "mathematical_status": "pass",
+        "severity": "none"
+      },
+      "error": ""
+    },
+    {
+      "input": "M1.EQN.2.2 | linear_eq_one_step_add | difficulty 4",
+      "output": {
+        "calibration_status": "needs_cross_level_review",
+        "findings": "All five samples are mathematically correct with consistent solution steps, but the difficulty calibration is poor. Difficulty 4 lacks the subtraction variety seen in lower tiers and includes trivial problems like x + 8 = 15 that belong in Difficulty 1.",
+        "group": "M1.EQN.2.2 | linear_eq_one_step_add | difficulty 4",
+        "instructional_status": "pass",
+        "mathematical_status": "pass",
+        "severity": "minor"
+      },
+      "error": ""
+    },
+    {
+      "input": "M1.EQN.2.3 | linear_eq_one_step_mult | difficulty 1",
+      "output": {
+        "calibration_status": "needs_cross_level_review",
+        "findings": "All five samples are mathematically correct, but the group lacks difficulty differentiation as Level 1 and Level 2 are functionally identical, both including negative constants. Additionally, the generator fails to produce division-based equations despite the announced skill scope.",
+        "group": "M1.EQN.2.3 | linear_eq_one_step_mult | difficulty 1",
+        "instructional_status": "pass",
+        "mathematical_status": "pass",
+        "severity": "minor"
+      },
+      "error": ""
+    },
+    {
+      "input": "M1.EQN.2.3 | linear_eq_one_step_mult | difficulty 2",
+      "output": {
+        "calibration_status": "pass",
+        "findings": "All five samples are mathematically accurate with consistent solution steps and clear notation. The difficulty calibration is appropriate for the skill, utilizing basic multiplication facts and integer solutions.",
+        "group": "M1.EQN.2.3 | linear_eq_one_step_mult | difficulty 2",
+        "instructional_status": "pass",
+        "mathematical_status": "pass",
+        "severity": "none"
+      },
+      "error": ""
+    },
+    {
+      "input": "M1.EQN.2.3 | linear_eq_one_step_mult | difficulty 3",
+      "output": {
+        "calibration_status": "needs_cross_level_review",
+        "findings": "All samples are mathematically correct, but Sample 3 uses non-standard '1x' notation and is a trivial identity incorrectly calibrated to Difficulty 3. The generator also lacks division-based equations despite the skill description.",
+        "group": "M1.EQN.2.3 | linear_eq_one_step_mult | difficulty 3",
+        "instructional_status": "minor_issue",
+        "mathematical_status": "pass",
+        "severity": "minor"
+      },
+      "error": ""
+    },
+    {
+      "input": "M1.EQN.2.3 | linear_eq_one_step_mult | difficulty 4",
+      "output": {
+        "calibration_status": "needs_cross_level_review",
+        "findings": "All five samples are mathematically correct and readable, but the group lacks meaningful difficulty progression as Difficulty 4 remains limited to simple integer operations similar to lower levels.",
+        "group": "M1.EQN.2.3 | linear_eq_one_step_mult | difficulty 4",
+        "instructional_status": "pass",
+        "mathematical_status": "pass",
+        "severity": "minor"
+      },
+      "error": ""
+    },
+    {
+      "input": "M1.EQN.2.4 | linear_eq_two_step | difficulty 1",
+      "output": {
+        "calibration_status": "pass",
+        "findings": "All samples are mathematically sound with consistent solution steps and appropriate notation. The difficulty level is correctly calibrated for an introductory two-step equation skill using positive integers.",
+        "group": "M1.EQN.2.4 | linear_eq_two_step | difficulty 1",
+        "instructional_status": "pass",
+        "mathematical_status": "pass",
+        "severity": "none"
+      },
+      "error": ""
+    },
+    {
+      "input": "M1.EQN.2.4 | linear_eq_two_step | difficulty 2",
+      "output": {
+        "calibration_status": "pass",
+        "findings": "All five samples are mathematically accurate with consistent solution steps. The difficulty level is appropriately calibrated for two-step equations involving positive coefficients and negative integer results.",
+        "group": "M1.EQN.2.4 | linear_eq_two_step | difficulty 2",
+        "instructional_status": "pass",
+        "mathematical_status": "pass",
+        "severity": "none"
+      },
+      "error": ""
+    },
+    {
+      "input": "M1.EQN.2.4 | linear_eq_two_step | difficulty 3",
+      "output": {
+        "calibration_status": "pass",
+        "findings": "All five samples are mathematically accurate and demonstrate consistent solution steps. The difficulty calibration is appropriate, introducing negative coefficients and larger constants compared to lower levels.",
+        "group": "M1.EQN.2.4 | linear_eq_two_step | difficulty 3",
+        "instructional_status": "pass",
+        "mathematical_status": "pass",
+        "severity": "none"
+      },
+      "error": ""
+    },
+    {
+      "input": "M1.EQN.2.4 | linear_eq_two_step | difficulty 4",
+      "output": {
+        "calibration_status": "pass",
+        "findings": "All five samples are mathematically correct with consistent solution steps. The difficulty calibration is appropriate for Level 4, featuring negative coefficients and larger constants.",
+        "group": "M1.EQN.2.4 | linear_eq_two_step | difficulty 4",
+        "instructional_status": "pass",
+        "mathematical_status": "pass",
+        "severity": "none"
+      },
+      "error": ""
+    },
+    {
+      "input": "M1.EQN.2.5 | linear_eq_multi_step | difficulty 1",
+      "output": {
+        "calibration_status": "pass",
+        "findings": "All samples are mathematically accurate with consistent, well-explained solution steps. The difficulty level is appropriate for the introductory stage of multi-step linear equations.",
+        "group": "M1.EQN.2.5 | linear_eq_multi_step | difficulty 1",
+        "instructional_status": "pass",
+        "mathematical_status": "pass",
+        "severity": "none"
+      },
+      "error": ""
+    },
+    {
+      "input": "M1.EQN.2.5 | linear_eq_multi_step | difficulty 2",
+      "output": {
+        "calibration_status": "pass",
+        "findings": "All five samples are mathematically correct, with solution steps that accurately reflect the distribution and combining of like terms. The difficulty is consistently calibrated for level 2, featuring a single distributive step followed by a two-step equation.",
+        "group": "M1.EQN.2.5 | linear_eq_multi_step | difficulty 2",
+        "instructional_status": "pass",
+        "mathematical_status": "pass",
+        "severity": "none"
+      },
+      "error": ""
+    },
+    {
+      "input": "M1.EQN.2.5 | linear_eq_multi_step | difficulty 3",
+      "output": {
+        "calibration_status": "needs_cross_level_review",
+        "findings": "All samples are mathematically correct, but Sample 2 includes a trivial (x + 0) term that simplifies the problem. The difficulty calibration is inconsistent as structural complexity does not increase between difficulty levels 3 and 4.",
+        "group": "M1.EQN.2.5 | linear_eq_multi_step | difficulty 3",
+        "instructional_status": "minor_issue",
+        "mathematical_status": "pass",
+        "severity": "minor"
+      },
+      "error": ""
+    },
+    {
+      "input": "M1.EQN.2.5 | linear_eq_multi_step | difficulty 4",
+      "output": {
+        "calibration_status": "needs_cross_level_review",
+        "findings": "The samples are mathematically accurate and provide clear solution steps. However, the group fails to demonstrate a difficulty increase over level 3, maintaining the same basic linear structure without introducing variables on both sides.",
+        "group": "M1.EQN.2.5 | linear_eq_multi_step | difficulty 4",
+        "instructional_status": "pass",
+        "mathematical_status": "pass",
+        "severity": "minor"
+      },
+      "error": ""
+    }
+  ]
+}
