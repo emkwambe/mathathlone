@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useState, useEffect, useMemo, useCallback } from 'react';
+import { Suspense, useState, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -11,27 +11,6 @@ import {
   Loader2,
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-
-// -----------------------------------------------------------------------------
-// HEAT CODE NORMALIZATION
-// -----------------------------------------------------------------------------
-// Canonical form: "MA-XXXX". Mirrors the per-keystroke normalizer on /compete
-// so a Mathlete can paste a code straight into the login form and get pushed
-// to /compete/[code] after sign-in. See src/app/compete/page.tsx for the full
-// rule table.
-
-const HEAT_CODE_PATTERN = /^MA-[A-Z0-9]{4}$/;
-
-function normalizeHeatCode(raw: string): string {
-  const cleaned = raw.toUpperCase().replace(/[^A-Z0-9]/g, '');
-  if (cleaned.length === 0) return '';
-  if (cleaned === 'M') return 'M';
-  if (cleaned.startsWith('MA')) {
-    const body = cleaned.slice(2);
-    return body.length > 0 ? `MA-${body.slice(0, 4)}` : 'MA-';
-  }
-  return `MA-${cleaned.slice(0, 4)}`;
-}
 
 // -----------------------------------------------------------------------------
 // SHARED HELPERS
@@ -346,36 +325,22 @@ function EducatorLogin({ next }: { next: string | null }) {
 }
 
 // -----------------------------------------------------------------------------
-// MATHLETE LOGIN — sign-in + optional Heat code in one step
+// MATHLETE LOGIN — identity-first entry to the Mathlete Home
 // -----------------------------------------------------------------------------
 
 function MathleteLogin({ next }: { next: string | null }) {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const { signIn } = useAuth();
-
-  const initialCode = searchParams.get('code') || '';
 
   const [loginId, setLoginId] = useState('');
   const [password, setPassword] = useState('');
-  const [rawCode, setRawCode] = useState(initialCode);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
-
-  const normalizedCode = useMemo(() => normalizeHeatCode(rawCode), [rawCode]);
-  const codeIsBlank = normalizedCode === '';
-  const codeIsWellFormed = HEAT_CODE_PATTERN.test(normalizedCode);
-  const codeIsValid = codeIsBlank || codeIsWellFormed;
 
   const handleLogin = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
       setError('');
-
-      if (!codeIsValid) {
-        setError('Heat codes look like MA-XXXX. Leave it empty if you don’t have one.');
-        return;
-      }
 
       setSubmitting(true);
 
@@ -398,15 +363,13 @@ function MathleteLogin({ next }: { next: string | null }) {
         return;
       }
 
-      // Destination priority:
-      //   1. ?next= (explicit redirect from a protected page)
-      //   2. Heat code typed on this form
-      //   3. /compete (join page) as a sane default
-      const dest = next
-        ?? (codeIsWellFormed ? `/compete/${normalizedCode}` : '/compete');
+      // A protected Heat invitation always preserves its exact destination
+      // through ?next=. Otherwise, authenticated Mathletes land in their
+      // identity-first home rather than the event-code entry screen.
+      const dest = next ?? '/dashboard/athlete';
       router.replace(dest);
     },
-    [codeIsValid, codeIsWellFormed, normalizedCode, signIn, loginId, password, next, router]
+    [signIn, loginId, password, next, router]
   );
 
   return (
@@ -419,7 +382,7 @@ function MathleteLogin({ next }: { next: string | null }) {
               Math<span className="text-amber-400">Athlone</span>
             </h1>
           </Link>
-          <p className="text-indigo-200 mt-2">Ready to compete?</p>
+          <p className="text-indigo-200 mt-2">Sign in to your Mathlete Home</p>
         </div>
 
         {/* Card */}
@@ -446,33 +409,11 @@ function MathleteLogin({ next }: { next: string | null }) {
             </div>
           )}
 
+          <p className="mb-6 text-sm leading-6 text-white/65">
+            Use the username and temporary PIN on your Mathlete login card. After signing in, you will arrive at your Mathlete Home, where you can view your progress and join the class Heat your teacher shares.
+          </p>
+
           <form onSubmit={handleLogin} className="space-y-4">
-            {/* Heat code (optional, at the top by design) */}
-            <div>
-              <label htmlFor="heat-code" className="block text-xs font-semibold text-white/60 uppercase tracking-wider mb-2">
-                Have a Heat code? (optional)
-              </label>
-              <input
-                id="heat-code"
-                type="text"
-                inputMode="text"
-                autoCapitalize="characters"
-                autoCorrect="off"
-                autoComplete="off"
-                spellCheck={false}
-                maxLength={8}
-                value={normalizedCode}
-                onChange={(e) => setRawCode(e.target.value)}
-                placeholder="MA-XXXX"
-                className="w-full px-4 py-3.5 text-center text-xl font-mono font-bold tracking-[0.25em] bg-white/15 border-2 border-white/20 rounded-xl text-white placeholder-white/30 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-400/40 transition-all"
-              />
-              <p className="mt-1.5 text-xs text-white/40">
-                Drop you straight into the lobby after sign-in. Skip it to land on the join page.
-              </p>
-            </div>
-
-            <div className="border-t border-white/10 my-4" />
-
             <div>
               <label htmlFor="login-id" className="block text-sm font-medium text-white/80 mb-1">
                 Email or Mathlete username
@@ -516,9 +457,9 @@ function MathleteLogin({ next }: { next: string | null }) {
 
             <button
               type="submit"
-              disabled={submitting || !codeIsValid}
+              disabled={submitting}
               className={`w-full mt-2 flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold text-base transition-all shadow-lg ${
-                submitting || !codeIsValid
+                submitting
                   ? 'bg-white/10 text-white/40 cursor-not-allowed'
                   : 'bg-gradient-to-r from-amber-400 to-orange-500 text-black hover:from-amber-300 hover:to-orange-400 active:scale-[0.98]'
               }`}
@@ -528,14 +469,9 @@ function MathleteLogin({ next }: { next: string | null }) {
                   <Loader2 className="w-5 h-5 animate-spin" />
                   Signing in...
                 </>
-              ) : codeIsWellFormed ? (
-                <>
-                  Sign in &amp; Join {normalizedCode}
-                  <ArrowRight className="w-5 h-5" />
-                </>
               ) : (
                 <>
-                  Sign In
+                  Sign In to Mathlete Home
                   <ArrowRight className="w-5 h-5" />
                 </>
               )}

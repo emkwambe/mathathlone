@@ -200,9 +200,12 @@ export default function JoinHeatPage() {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 shadow-lg mb-4">
             <Flame className="w-9 h-9 text-white" />
           </div>
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">Join a Heat</h1>
-          <p className="text-indigo-200 text-sm">
-            Enter the code your teacher shared with you
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-indigo-300 mb-3">
+            Teacher-led class session
+          </p>
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">Join a class Heat</h1>
+          <p className="text-indigo-200 text-sm leading-6">
+            Enter the code your teacher shared when the class session is ready. You will sign in before joining if needed.
           </p>
         </div>
 
@@ -212,7 +215,7 @@ export default function JoinHeatPage() {
           className="bg-white/10 backdrop-blur-lg border border-white/15 rounded-2xl p-6 md:p-8 shadow-2xl"
         >
           <label htmlFor="heat-code" className="block text-xs font-semibold text-white/60 uppercase tracking-wider mb-2">
-            Heat code
+            Class Heat code
           </label>
           <input
             id="heat-code"
@@ -268,20 +271,38 @@ export default function JoinHeatPage() {
             )}
           </button>
 
-          <p className="text-center text-white/40 text-xs mt-4">
-            Codes look like <span className="font-mono">MA-7X4K</span>
+          <p className="text-center text-white/40 text-xs leading-5 mt-4">
+            Codes look like <span className="font-mono">MA-7X4K</span>. A valid code still requires an active class-roster enrollment.
           </p>
         </form>
 
-        {/* Footer: link to create page for teachers */}
-        <div className="mt-6 text-center">
-          <Link
-            href="/compete/create"
-            className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors"
-          >
-            <Plus className="w-4 h-4" />
-            Or create a new Heat
-          </Link>
+        <div className="mt-6 space-y-3 text-center">
+          {!authLoading && (isAuthenticated ? (
+            <Link
+              href="/dashboard/athlete"
+              className="inline-flex items-center gap-2 text-sm font-medium text-amber-300 hover:text-amber-200 transition-colors"
+            >
+              Back to Mathlete Home
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          ) : (
+            <Link
+              href="/auth/login?role=mathlete"
+              className="inline-flex items-center gap-2 text-sm font-medium text-amber-300 hover:text-amber-200 transition-colors"
+            >
+              Sign in to Mathlete Home
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          ))}
+          <div>
+            <Link
+              href="/compete/create"
+              className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors"
+            >
+              <Plus className="w-4 h-4" />
+              Educator? Create a new Heat
+            </Link>
+          </div>
         </div>
       </div>
     </div>

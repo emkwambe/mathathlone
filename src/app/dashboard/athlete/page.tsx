@@ -137,8 +137,11 @@ export default async function AthleteDashboard() {
       <main className="max-w-7xl mx-auto px-4 py-8">
         {/* Welcome & Stats */}
         <div className="mb-8">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-indigo-600 mb-2">
+            Mathlete Home
+          </p>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Welcome back, {profile.display_name}! 🧮
+            Welcome back, {profile.display_name}!
           </h1>
           <p className="text-gray-600">
             Grade {profile.grade_level} • {profile.country_code}
@@ -315,27 +318,22 @@ export default async function AthleteDashboard() {
           </div>
         )}
 
-        {/* Join Heat Section */}
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 mb-8 text-white">
-          <h2 className="text-2xl font-bold mb-2">Ready to Compete?</h2>
-          <p className="text-blue-100 mb-6">
-            Join a Heat and test your skills against mathletes worldwide.
+        {/* Classroom Heat entry — a code remains a teacher-led invitation. */}
+        <section aria-labelledby="join-class-heat-heading" className="bg-gradient-to-r from-blue-700 to-indigo-700 rounded-2xl p-6 md:p-8 mb-8 text-white shadow-sm">
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-blue-200 mb-3">
+            Classroom competition
           </p>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <Link
-              href="/compete"
-              className="px-6 py-3 bg-white text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition text-center"
-            >
-              Enter Heat Code
-            </Link>
-            <Link
-              href="/compete"
-              className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-400 transition text-center"
-            >
-              Practice Heat
-            </Link>
-          </div>
-        </div>
+          <h2 id="join-class-heat-heading" className="text-2xl font-bold mb-2">Join your class Heat</h2>
+          <p className="max-w-2xl text-blue-100 leading-6 mb-6">
+            When your teacher opens a class competition, they will share a short Heat code. Enter it here to join that session. Your account and active class roster determine whether you may participate.
+          </p>
+          <Link
+            href="/compete"
+            className="inline-flex min-h-11 items-center justify-center px-6 py-3 bg-white text-blue-700 font-semibold rounded-lg hover:bg-blue-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-indigo-700 transition active:scale-[0.98]"
+          >
+            Enter class Heat code
+          </Link>
+        </section>
 
         {/* CTA Profile */}
         {ranking && (
@@ -425,11 +423,11 @@ export default async function AthleteDashboard() {
             </div>
           ) : (
             <p className="text-gray-500 text-center py-8">
-              No Heats completed yet.{' '}
+              No class Heats completed yet. When your teacher opens one, use{' '}
               <Link href="/compete" className="text-blue-600 hover:underline">
-                Join your first Heat
+                Enter class Heat code
               </Link>{' '}
-              to start competing!
+              above to join the session.
             </p>
           )}
         </div>
