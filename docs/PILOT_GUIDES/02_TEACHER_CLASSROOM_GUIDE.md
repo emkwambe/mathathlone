@@ -26,29 +26,35 @@ From **Teacher Dashboard**, open **Classes & Roster**. In **Create a class and p
 | Class name | `Grade 7 Math — Period 2` | The class appears under **My classes**. |
 | Grade level | `Grade 7` | The class card displays the grade and an automatically generated class code. |
 
-The class code identifies the class but does not replace the managed login card. Do not post student temporary PINs with the class code. If you accidentally create a wrong class, pause and contact the platform owner rather than creating many near-duplicate records.
+The class code identifies the class but does not replace the managed login card. Do not post student temporary PINs with the class code. The platform blocks an active duplicate class name for the same teacher and school. If you create a class that should not be used, archive it only after confirming it has no scheduled, lobby, or open class Heat.
 
-## 3. Add a privacy-safe roster and issue cards
+## 3. Review a privacy-safe roster before issuing cards
 
-Select the class under **My classes**. In **Add Mathletes**, paste one privacy-safe display name per line, then select **Add roster and issue cards**. The system accepts line-separated names; commas are also separated automatically. New managed Mathletes receive a unique username and a random six-digit temporary PIN. Existing managed students may be enrolled without showing a new credential.[2]
+Select the class under **My classes**. In **Prepare a roster import**, paste one privacy-safe display name per line, then select **Review roster before creating accounts**. The system accepts line-separated names; commas are also separated automatically. This review creates no student identity, enrollment, or credential. It identifies new accounts, students already active in the class, removed enrollments, duplicate lines, and entries requiring correction.[2]
 
 ```text
-Amara O.
-Jordan C.
-Priya S.
+Avery P.
+Cameron R.
+Jordan S.
 ```
 
 | Action | Expected result | Next step |
 |---|---|---|
-| Import a new roster | A green notice reports how many Mathletes were added | Review the active roster and the card panel immediately. |
-| New credentials appear | **New Mathlete login cards** show username and temporary PIN | Select **Print cards** or hand each card to the corresponding student privately. |
-| An existing student is recognized | The student is enrolled but no PIN is displayed | Confirm the student has their existing card or reset only that student’s PIN. |
+| Review a proposed roster | The **Roster review** panel identifies each proposed outcome and states that no accounts were created. | Correct duplicate or invalid lines before confirmation. |
+| Confirm new entries | Only reviewed **New account** entries create managed Mathletes and active class enrollments. | Secure the one-time card panel immediately. |
+| An entry is already active | No duplicate identity, enrollment, or credential is created. | Leave the existing roster entry intact. |
+| A student already exists | The review does not reveal a credential. | Use **Add an existing managed Mathlete** with that student’s school-issued managed username. |
+| A prior class enrollment was removed | The review does not recreate the identity. | Use **Restore to class** from the removed-roster list. |
 
-> **One-time credential rule:** A new temporary PIN is shown only at account creation or reset time. Print or securely record the card immediately. Do not expect the application to show the original PIN again after leaving the page.[2]
+> **One-time credential rule:** A new temporary PIN appears only when a new managed Mathlete is created or an individual PIN is reset. Select **Print cards** or hand each card directly to its student, then select **I secured the cards** to dismiss the credential panel. Do not expect the application to show the original PIN again after leaving the page.[2]
+
+### Correcting a roster safely
+
+The **Active roster** lists students who may join the class’s class-bound Heats. **Remove from class** changes only the enrollment to removed; it does not delete a Mathlete identity or their history. The **Removed roster** section supports a reversible **Restore to class** action. Both actions, adding an existing managed Mathlete, and class archival are blocked while that class has a Heat that is scheduled, in the lobby, or open. Complete or cancel the Heat first, then make the correction for a later session.
 
 ### If a student loses a card
 
-In the selected class’s **Active roster**, find that Mathlete and select **Reset PIN**. Read the confirmation carefully: the previous PIN stops working immediately. Give the replacement card directly to that student; do not reset every student’s PIN because one student needs help.[2]
+In the selected class’s **Active roster**, find that Mathlete and select **Reset PIN**. Read the confirmation carefully: the previous PIN stops working immediately. Give the replacement card directly to that student and select **I secured the cards** after delivery. Do not reset every student’s PIN because one student needs help.[2]
 
 ## 4. Create a classroom Heat
 
@@ -102,7 +108,7 @@ When scoring completes, the teacher sees a results view. Review results as instr
 | Boundaries | No personal student email or temporary PIN is copied into public materials. |
 
 [1]: ../SPRINT_16B_PLAN.md "Sprint 16B — Three-School Pilot Hierarchy, Provisioning & Authorization"
-[2]: ../SPRINT_16C_PLAN.md "Sprint 16C — Class Rosters, Managed Mathlete Access, and Classroom Heats"
+[2]: ../SPRINT_17_ROSTER_OPERATIONS_PLAN.md "Sprint 17 — Classroom Roster Operations and Managed Mathlete Lifecycle"
 [3]: ../../src/app/compete/%5Bcode%5D/page.tsx "Heat lobby and participation implementation"
 
 ---

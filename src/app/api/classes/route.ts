@@ -31,6 +31,10 @@ async function getStaffContext() {
   return { supabase, user, profile };
 }
 
+function errorMessage(error: unknown, fallback: string): string {
+  return error instanceof Error && error.message ? error.message : fallback;
+}
+
 function makeClassCode(): string {
   const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   let code = '';
@@ -58,13 +62,13 @@ export async function GET() {
   let admin: ReturnType<typeof createAdminClient>;
   try {
     admin = createAdminClient();
-  } catch (error: any) {
-    return NextResponse.json({ error: error?.message ?? 'Server administration is not configured.' }, { status: 500 });
+  } catch (error: unknown) {
+    return NextResponse.json({ error: errorMessage(error, 'Server administration is not configured.') }, { status: 500 });
   }
 
   let query = admin
     .from('classes')
-    .select('id, name, grade_level, join_code, school_id, teacher_id, is_active, created_at, class_enrollments(count)')
+    .select('id, name, grade_level, join_code, school_id, teacher_id, is_active, created_at')
     .eq('is_active', true)
     .order('name', { ascending: true });
 
@@ -74,13 +78,27 @@ export async function GET() {
   const { data: classes, error } = await query;
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
+  const classIds = (classes ?? []).map((classroom: { id: string }) => classroom.id);
+  const activeCounts = new Map<string, number>();
+  if (classIds.length > 0) {
+    const { data: activeEnrollments, error: enrollmentError } = await admin
+      .from('class_enrollments')
+      .select('class_id')
+      .in('class_id', classIds)
+      .eq('status', 'active');
+    if (enrollmentError) return NextResponse.json({ error: enrollmentError.message }, { status: 500 });
+    for (const enrollment of activeEnrollments ?? []) {
+      const classId = (enrollment as { class_id: string }).class_id;
+      activeCounts.set(classId, (activeCounts.get(classId) ?? 0) + 1);
+    }
+  }
+
   return NextResponse.json({
-    classes: (classes ?? []).map((classroom: any) => ({
+    classes: (classes ?? []).map((classroom: { id: string }) => ({
       ...classroom,
-      roster_count: classroom.class_enrollments?.[0]?.count ?? 0,
-      class_enrollments: undefined,
+      roster_count: activeCounts.get(classroom.id) ?? 0,
     })),
-  });
+  }, { headers: { 'Cache-Control': 'no-store' } });
 }
 
 /**
@@ -112,11 +130,24 @@ export async function POST(request: NextRequest) {
   let admin: ReturnType<typeof createAdminClient>;
   try {
     admin = createAdminClient();
-  } catch (error: any) {
-    return NextResponse.json({ error: error?.message ?? 'Server administration is not configured.' }, { status: 500 });
+  } catch (error: unknown) {
+    return NextResponse.json({ error: errorMessage(error, 'Server administration is not configured.') }, { status: 500 });
   }
 
   try {
+    const { data: duplicate, error: duplicateError } = await admin
+      .from('classes')
+      .select('id')
+      .eq('school_id', context.profile.school_id)
+      .eq('teacher_id', context.user.id)
+      .eq('name', name)
+      .eq('is_active', true)
+      .maybeSingle();
+    if (duplicateError) return NextResponse.json({ error: duplicateError.message }, { status: 500 });
+    if (duplicate) {
+      return NextResponse.json({ error: 'An active class with this name already exists for you at this school.' }, { status: 409 });
+    }
+
     const joinCode = await createUniqueClassCode(admin);
     const { data: classroom, error } = await admin
       .from('classes')
@@ -133,7 +164,7 @@ export async function POST(request: NextRequest) {
 
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
     return NextResponse.json({ classroom }, { status: 201 });
-  } catch (error: any) {
-    return NextResponse.json({ error: error?.message ?? 'Could not create the class.' }, { status: 500 });
+  } catch (error: unknown) {
+    return NextResponse.json({ error: errorMessage(error, 'Could not create the class.') }, { status: 500 });
   }
 }
