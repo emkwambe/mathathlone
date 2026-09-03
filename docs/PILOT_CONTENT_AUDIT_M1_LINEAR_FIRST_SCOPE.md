@@ -1,14 +1,14 @@
 # Pilot Content Audit — NC Math 1 Linear Equations Progression
 
-**Audit status:** **Not ready for classroom release — mathematical correctness passed; calibration and representation remediation required.**
+**Audit status:** **Source-level content gates passed — not yet classroom-ready.**
 
-**Scope:** NC Math 1 → Equations & Inequalities → M1.EQN.2.2 through M1.EQN.2.5.
+**Scope:** NC Math 1 → Equations & Inequalities → `M1.EQN.2.2` through `M1.EQN.2.5`.
 
 **Audit date:** 2026-09-02/03
 
 **Audit standard:** [`PILOT_CONTENT_AUDIT_REFERENCE_CHECKLISTS.md`](./PILOT_CONTENT_AUDIT_REFERENCE_CHECKLISTS.md)
 
-> **Mathematical veto:** Any incorrect answer, contradictory prompt, invalid solution set, ambiguous required answer, or answer-key mismatch halts the affected concept. Mathematical validity passed in this audit; the remaining blockers are difficulty calibration and announced-skill representation, not answer correctness.
+> **Mathematical veto:** Any incorrect answer, contradictory prompt, invalid solution set, ambiguous required answer, or answer-key mismatch halts the affected concept. Mathematical correctness, announced-skill fidelity, and automated difficulty controls now pass for this source version. A qualified NC Math 1 teacher review and controlled production workflow evidence remain required before classroom release.
 
 ## 1. Approved instructional window
 
@@ -21,63 +21,66 @@
 
 The live Supabase inventory returned one active generator row for every expected generator type. All four mappings align to course code `NCM1`, course name **NC Math 1**, and topic **Equations & Inequalities**.
 
-## 2. Evidence and methodology
+## 2. Final evidence and method
 
-The retained evidence file is [`m1-linear-first-scope-samples.json`](./PILOT_CONTENT_AUDIT_EVIDENCE/m1-linear-first-scope-samples.json). It contains five deterministically seeded instances for each of four generators at each of four difficulty levels: **80 retained samples** in total.
+The maintained retained evidence is [`m1-linear-first-scope-samples.json`](./PILOT_CONTENT_AUDIT_EVIDENCE/m1-linear-first-scope-samples.json). It contains five deterministically seeded, nonrepeating instances for each of four generators at each of four difficulty levels: **80 retained samples** in total. The multiplication/division retained set includes both explicit forms at every difficulty level.
 
-The independent invariant test generated **16,000** additional seeded items: 1,000 items for every generator/difficulty pair. The verifier parsed the visible equation from `question_text`, substituted the reported answer, and tested the equation independently rather than trusting the generator’s solution steps or answer field. It also required an integer answer type and a nonempty solution-step array.
+The maintained invariant test is [`audit-m1-linear-first-scope.ts`](../scripts/audit-m1-linear-first-scope.ts). It generated **16,000** additional seeded items—1,000 for every generator/difficulty pair—and parsed each visible equation from `question_text`. It recomputed the answer by substitution rather than trusting the generated answer field or solution steps. It also verifies nonzero required terms, nontrivial higher-level coefficients, explicit difficulty-band requirements, both multiplication/division forms, and 12-question same-session uniqueness through the shared bounded-retry helper.
 
-| Evidence measure | Result |
+The final independent review is retained in [`m1-linear-final-independent-review.json`](./PILOT_CONTENT_AUDIT_EVIDENCE/m1-linear-final-independent-review.json).
+
+| Evidence measure | Final result |
 |---|---:|
 | Active production generator mappings | 4 / 4 pass |
 | Retained samples | 80 |
 | Retained sample groups | 16 |
 | Unique retained prompts within each group | 5 / 5 in all 16 groups |
 | Independent mathematical-invariant runs | 16,000 / 16,000 pass |
-| Independently reviewed groups | 16 / 16 |
+| Same-session uniqueness checks | 12 / 12 in all 16 groups |
+| Final independently reviewed groups | 16 / 16 pass |
 | Mathematical-answer defects found | 0 |
 
 ## 3. Mathematical correctness decision
 
-All independent checks passed. For one-step addition/subtraction and two-step equations, the verifier recomputed the relation `a*x + b = c` from the printed coefficients and constants. For one-step multiplication/division equations, it verified `a*x = c` with nonzero `a`. For multi-step equations, it parsed and verified `a(x + b) + c = result` with the signs displayed in the student-visible prompt.
+All independent checks passed. The verifier evaluates the printed equation, not the generator’s stored answer: it recomputes addition/subtraction relations, multiplication/division relations including explicit `x ÷ a = q` items, two-step equations, and multi-step distribution/combination equations.
 
-> **Decision:** The audit found no incorrect answer, algebraically invalid equation, contradictory prompt, or solution mismatch in the 16,000-item invariant population or 80 retained samples. The mathematical-correctness veto is therefore **clear for the four audited generators**, subject to regression testing after any later generator change.
+> **Decision:** The mathematical-correctness veto is **clear for the four audited generators in this source version**. No incorrect answer, algebraically invalid equation, contradictory prompt, or solution mismatch was found in the 16,000-item invariant population, the 80 retained samples, or the final independent review. Regression evidence is required after any later change to these generators.
 
-## 4. Independent review findings
+## 4. Remediation completed
 
-The independent review found no critical or major mathematical defect. It did find calibration and scope-representation issues that prevent a classroom-ready claim.
+The prior audit held calibrated classroom release because three source controls were incomplete. Each finding is closed in the current source and automated evidence.
 
-| ID | Finding | Severity | Affected scope | Release decision | Required remediation |
-|---|---|---|---|---|---|
-| M1-CAL-01 | `linear_eq_one_step_add` permits difficulty-2 and difficulty-4 prompts that overlap introductory positive-number examples. A difficulty-4 sample can remain simpler than a lower-level subtraction case. | Minor | M1.EQN.2.2 | Hold calibrated multi-level release | Define non-overlapping representation/range rules; require sign/operation complexity appropriate to each difficulty. |
-| M1-REP-02 | `linear_eq_one_step_mult` currently emits only coefficient equations such as `ax = c`; it does not represent division-form equations despite the announced “multiplication/division” skill. Coefficient `1x` can also produce an overly simple prompt at higher levels. | Major instructional-scope defect | M1.EQN.2.3 | Hold release of this announced four-skill window | Add explicit division-form instances and eliminate coefficient-1 prompts at higher difficulties; calibrate all four difficulty levels. |
-| M1-CAL-03 | `linear_eq_multi_step` does not use its `difficulty` parameter. It can emit `(x + 0)`, and levels 1–4 retain the same structure/ranges. | Major calibration defect | M1.EQN.2.5 | Hold calibrated multi-level release | Define explicit level 1–4 numeric/structural bands; avoid zero inner term; ensure higher levels add justified complexity. |
-
-The two-step generator (`M1.EQN.2.4`) passed its retained cross-level review: the progression introduces larger values and negative coefficients/constants as intended, while retaining a unique integer solution.
+| Former finding | Completed correction | Verification |
+|---|---|---|
+| `M1-CAL-01`: one-step add/sub levels overlapped | Level 1 uses positive addition; level 2 uses positive-number subtraction; level 3 uses a negative solution with positive addition; level 4 uses subtraction of a negative with larger signed values. | Explicit invariant assertions plus final 16-group review. |
+| `M1-REP-02`: multiplication/division lacked division form | The generator now produces both coefficient equations and explicit division-form equations at each level. Higher levels use signed, nonunit factors. | Every 1,000-item level population contains both forms; every retained level group includes both forms. |
+| `M1-CAL-03`: multi-step ignored difficulty and allowed zero inner terms | Each level now has its own numeric/structural band. Inner and outer constants are nonzero; level 3 uses a negative distributive coefficient; level 4 adds a second `x` term for combination after distribution. | Explicit invariant assertions plus final 16-group review. |
+| Higher-level trivial notation | Higher-level two-step and multi-step generators reject unit coefficients where that would undermine intended complexity. | Invariant assertions and retained samples. |
 
 ## 5. Current release status
 
 | Gate | Status | Closure condition |
 |---|---|---|
-| Live mapping and active generator coverage | Pass | Remains pass unless database mapping changes. |
-| Mathematical correctness | Pass | Re-run invariant evidence after generator remediation. |
-| Variation within retained samples | Pass | Maintain same-session duplicate protection. |
-| Difficulty calibration | **Hold** | Close M1-CAL-01 and M1-CAL-03 with explicit level 1–4 tests. |
-| Announced-skill fidelity | **Hold** | Close M1-REP-02 by representing both multiplication and division forms, or rename/narrow the announced skill with course-teacher approval. |
-| Qualified NC Math 1 teacher review | Pending | Teacher signs retained corrected review set after remediation. |
-| Printable worksheet/PDF review | Pending | Practice worksheet preserves equations, signs, negatives, and multi-step parentheses in browser and saved PDF. |
-| Worksheet-to-Heat independence | Pending | Teacher uses same announced blueprint; Heat generates new instances. |
-| Roster/class operational check | Pending | Controlled DEMO teacher/class/Mathlete workflow passes. |
+| Live mapping and active generator coverage | **Pass** | Recheck if database mappings change. |
+| Mathematical correctness | **Pass** | Re-run invariant evidence after any generator change. |
+| Announced-skill fidelity | **Pass** | Preserve both multiplication and division representations for `M1.EQN.2.3`. |
+| Difficulty calibration | **Pass** | Preserve the documented level 1–4 structures and invariant assertions. |
+| Variation and same-session duplicates | **Pass** | Keep shared bounded-retry uniqueness in worksheet and Heat assembly. |
+| Qualified NC Math 1 teacher review | **Pending** | Teacher signs the retained 80-item review set or records required edits. |
+| Printable worksheet/PDF review | **Pending** | Practice worksheet preserves fractions, signs, negatives, parentheses, and division notation in browser and saved PDF. |
+| Worksheet-to-Heat independence | **Pending** | Teacher uses one announced blueprint; the Heat generates fresh instances. |
+| Roster/class operational check | **Pending** | Controlled DEMO teacher/class/Mathlete workflow passes. |
 
-## 6. Recommended remediation sequence
+The scope may accurately be described as **mathematically validated and source-calibrated**. It must **not** yet be described as classroom-ready, official EOC preparation, or an EOC score predictor.
 
-1. Correct M1-CAL-01, M1-REP-02, and M1-CAL-03 in the generator layer; do not alter standards, course mappings, or student records.
-2. Add maintained invariant tests that prove correct answers, nonzero coefficients, no forbidden trivial identities, appropriate displayed syntax, and difficulty-band boundaries for all four generators.
-3. Regenerate the 80-sample retained set and repeat independent group review.
-4. Obtain a qualified NC Math 1 teacher review of the corrected retained examples.
-5. Complete the production worksheet/PDF and Heat-independence tests using a controlled DEMO class before announcing this scope to students.
+## 6. Remaining controlled acceptance sequence
 
-Until these gates close, the audit may accurately report **mathematical correctness passed in sampled and invariant-tested evidence**, but it may not describe the linear-equations window as pilot-ready or as calibrated across four difficulty levels.
+1. Give a qualified NC Math 1 teacher the retained 80-item set for instructional review and document any edits.
+2. In a controlled DEMO class, generate a student-facing Practice Review for this exact four-skill blueprint.
+3. Save it as PDF and verify fractions, negative signs, parentheses, and answer fields render correctly; the Practice Review must not include an answer key.
+4. Return to Heat Builder and confirm the exact class and four-skill blueprint persist.
+5. Launch a short class-bound Heat and confirm its new equation instances do not duplicate worksheet prompts.
+6. Confirm a Mathlete outside the selected class cannot join.
 
 ## 7. Scope and external assessment boundary
 

@@ -1,15 +1,17 @@
 {
   "audit_scope": "NC Math 1 — Equations & Inequalities — Linear Equations Progression",
-  "generated_at": "2026-09-03T01:41:44.695Z",
+  "generated_at": "2026-09-03T02:17:21.314Z",
   "methodology": {
     "retained_samples_per_generator_difficulty": 5,
     "invariant_stress_runs_per_generator_difficulty": 1000,
+    "same_session_unique_prompt_check": 12,
     "total_invariant_runs": 16000,
     "independent_checks": [
       "Parse visible equation coefficients and constants from question_text.",
-      "Recompute the equation using correct_answer rather than trusting solution_steps.",
-      "Require integer answer types and non-empty solution-step arrays.",
-      "Record prompt variation across retained samples."
+      "Recompute each equation using correct_answer rather than trusting solution_steps.",
+      "Require integer answer types, nonempty solution steps, nonzero required terms, and valid level-4 combined coefficients.",
+      "Require both multiplication and division forms for the announced multiplication/division skill at every level.",
+      "Require five retained unique prompts and twelve same-session unique prompts for every generator/difficulty pair."
     ]
   },
   "summary": [
@@ -20,6 +22,11 @@
       "retained_samples": 5,
       "unique_retained_prompts": 5,
       "invariant_stress_runs": 1000,
+      "same_session_unique_prompts": 12,
+      "retained_multiplication_form": null,
+      "retained_division_form": null,
+      "multiplication_forms": null,
+      "division_forms": null,
       "invariant_result": "pass"
     },
     {
@@ -29,6 +36,11 @@
       "retained_samples": 5,
       "unique_retained_prompts": 5,
       "invariant_stress_runs": 1000,
+      "same_session_unique_prompts": 12,
+      "retained_multiplication_form": null,
+      "retained_division_form": null,
+      "multiplication_forms": null,
+      "division_forms": null,
       "invariant_result": "pass"
     },
     {
@@ -38,6 +50,11 @@
       "retained_samples": 5,
       "unique_retained_prompts": 5,
       "invariant_stress_runs": 1000,
+      "same_session_unique_prompts": 12,
+      "retained_multiplication_form": null,
+      "retained_division_form": null,
+      "multiplication_forms": null,
+      "division_forms": null,
       "invariant_result": "pass"
     },
     {
@@ -47,6 +64,11 @@
       "retained_samples": 5,
       "unique_retained_prompts": 5,
       "invariant_stress_runs": 1000,
+      "same_session_unique_prompts": 12,
+      "retained_multiplication_form": null,
+      "retained_division_form": null,
+      "multiplication_forms": null,
+      "division_forms": null,
       "invariant_result": "pass"
     },
     {
@@ -56,6 +78,11 @@
       "retained_samples": 5,
       "unique_retained_prompts": 5,
       "invariant_stress_runs": 1000,
+      "same_session_unique_prompts": 12,
+      "retained_multiplication_form": true,
+      "retained_division_form": true,
+      "multiplication_forms": 520,
+      "division_forms": 480,
       "invariant_result": "pass"
     },
     {
@@ -65,6 +92,11 @@
       "retained_samples": 5,
       "unique_retained_prompts": 5,
       "invariant_stress_runs": 1000,
+      "same_session_unique_prompts": 12,
+      "retained_multiplication_form": true,
+      "retained_division_form": true,
+      "multiplication_forms": 495,
+      "division_forms": 505,
       "invariant_result": "pass"
     },
     {
@@ -74,6 +106,11 @@
       "retained_samples": 5,
       "unique_retained_prompts": 5,
       "invariant_stress_runs": 1000,
+      "same_session_unique_prompts": 12,
+      "retained_multiplication_form": true,
+      "retained_division_form": true,
+      "multiplication_forms": 502,
+      "division_forms": 498,
       "invariant_result": "pass"
     },
     {
@@ -83,6 +120,11 @@
       "retained_samples": 5,
       "unique_retained_prompts": 5,
       "invariant_stress_runs": 1000,
+      "same_session_unique_prompts": 12,
+      "retained_multiplication_form": true,
+      "retained_division_form": true,
+      "multiplication_forms": 498,
+      "division_forms": 502,
       "invariant_result": "pass"
     },
     {
@@ -92,6 +134,11 @@
       "retained_samples": 5,
       "unique_retained_prompts": 5,
       "invariant_stress_runs": 1000,
+      "same_session_unique_prompts": 12,
+      "retained_multiplication_form": null,
+      "retained_division_form": null,
+      "multiplication_forms": null,
+      "division_forms": null,
       "invariant_result": "pass"
     },
     {
@@ -101,6 +148,11 @@
       "retained_samples": 5,
       "unique_retained_prompts": 5,
       "invariant_stress_runs": 1000,
+      "same_session_unique_prompts": 12,
+      "retained_multiplication_form": null,
+      "retained_division_form": null,
+      "multiplication_forms": null,
+      "division_forms": null,
       "invariant_result": "pass"
     },
     {
@@ -110,6 +162,11 @@
       "retained_samples": 5,
       "unique_retained_prompts": 5,
       "invariant_stress_runs": 1000,
+      "same_session_unique_prompts": 12,
+      "retained_multiplication_form": null,
+      "retained_division_form": null,
+      "multiplication_forms": null,
+      "division_forms": null,
       "invariant_result": "pass"
     },
     {
@@ -119,6 +176,11 @@
       "retained_samples": 5,
       "unique_retained_prompts": 5,
       "invariant_stress_runs": 1000,
+      "same_session_unique_prompts": 12,
+      "retained_multiplication_form": null,
+      "retained_division_form": null,
+      "multiplication_forms": null,
+      "division_forms": null,
       "invariant_result": "pass"
     },
     {
@@ -128,6 +190,11 @@
       "retained_samples": 5,
       "unique_retained_prompts": 5,
       "invariant_stress_runs": 1000,
+      "same_session_unique_prompts": 12,
+      "retained_multiplication_form": null,
+      "retained_division_form": null,
+      "multiplication_forms": null,
+      "division_forms": null,
       "invariant_result": "pass"
     },
     {
@@ -137,6 +204,11 @@
       "retained_samples": 5,
       "unique_retained_prompts": 5,
       "invariant_stress_runs": 1000,
+      "same_session_unique_prompts": 12,
+      "retained_multiplication_form": null,
+      "retained_division_form": null,
+      "multiplication_forms": null,
+      "division_forms": null,
       "invariant_result": "pass"
     },
     {
@@ -146,6 +218,11 @@
       "retained_samples": 5,
       "unique_retained_prompts": 5,
       "invariant_stress_runs": 1000,
+      "same_session_unique_prompts": 12,
+      "retained_multiplication_form": null,
+      "retained_division_form": null,
+      "multiplication_forms": null,
+      "division_forms": null,
       "invariant_result": "pass"
     },
     {
@@ -155,6 +232,11 @@
       "retained_samples": 5,
       "unique_retained_prompts": 5,
       "invariant_stress_runs": 1000,
+      "same_session_unique_prompts": 12,
+      "retained_multiplication_form": null,
+      "retained_division_form": null,
+      "multiplication_forms": null,
+      "division_forms": null,
       "invariant_result": "pass"
     }
   ],
@@ -165,102 +247,6 @@
       "generator_type": "linear_eq_one_step_add",
       "difficulty": 1,
       "sample_index": 1,
-      "question_text": "Solve for x: x + 6 = 16",
-      "question_latex": "x + 6 = 16",
-      "correct_answer": "10",
-      "answer_type": "integer",
-      "solution_steps": [
-        "x + 6 = 16",
-        "x = 16 - 6",
-        "x = 10"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.2",
-      "announced_skill": "Solve one-step addition/subtraction equations",
-      "generator_type": "linear_eq_one_step_add",
-      "difficulty": 1,
-      "sample_index": 2,
-      "question_text": "Solve for x: x + 5 = 11",
-      "question_latex": "x + 5 = 11",
-      "correct_answer": "6",
-      "answer_type": "integer",
-      "solution_steps": [
-        "x + 5 = 11",
-        "x = 11 - 5",
-        "x = 6"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.2",
-      "announced_skill": "Solve one-step addition/subtraction equations",
-      "generator_type": "linear_eq_one_step_add",
-      "difficulty": 1,
-      "sample_index": 3,
-      "question_text": "Solve for x: x + 9 = 11",
-      "question_latex": "x + 9 = 11",
-      "correct_answer": "2",
-      "answer_type": "integer",
-      "solution_steps": [
-        "x + 9 = 11",
-        "x = 11 - 9",
-        "x = 2"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.2",
-      "announced_skill": "Solve one-step addition/subtraction equations",
-      "generator_type": "linear_eq_one_step_add",
-      "difficulty": 1,
-      "sample_index": 4,
-      "question_text": "Solve for x: x + 3 = 6",
-      "question_latex": "x + 3 = 6",
-      "correct_answer": "3",
-      "answer_type": "integer",
-      "solution_steps": [
-        "x + 3 = 6",
-        "x = 6 - 3",
-        "x = 3"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.2",
-      "announced_skill": "Solve one-step addition/subtraction equations",
-      "generator_type": "linear_eq_one_step_add",
-      "difficulty": 1,
-      "sample_index": 5,
-      "question_text": "Solve for x: x + 5 = 14",
-      "question_latex": "x + 5 = 14",
-      "correct_answer": "9",
-      "answer_type": "integer",
-      "solution_steps": [
-        "x + 5 = 14",
-        "x = 14 - 5",
-        "x = 9"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.2",
-      "announced_skill": "Solve one-step addition/subtraction equations",
-      "generator_type": "linear_eq_one_step_add",
-      "difficulty": 2,
-      "sample_index": 1,
-      "question_text": "Solve for x: x - 7 = -8",
-      "question_latex": "x - 7 = -8",
-      "correct_answer": "-1",
-      "answer_type": "integer",
-      "solution_steps": [
-        "x - 7 = -8",
-        "x = -8 + 7",
-        "x = -1"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.2",
-      "announced_skill": "Solve one-step addition/subtraction equations",
-      "generator_type": "linear_eq_one_step_add",
-      "difficulty": 2,
-      "sample_index": 2,
       "question_text": "Solve for x: x + 8 = 16",
       "question_latex": "x + 8 = 16",
       "correct_answer": "8",
@@ -275,16 +261,112 @@
       "standard_code": "M1.EQN.2.2",
       "announced_skill": "Solve one-step addition/subtraction equations",
       "generator_type": "linear_eq_one_step_add",
-      "difficulty": 2,
-      "sample_index": 3,
-      "question_text": "Solve for x: x + 6 = 16",
-      "question_latex": "x + 6 = 16",
+      "difficulty": 1,
+      "sample_index": 2,
+      "question_text": "Solve for x: x + 3 = 13",
+      "question_latex": "x + 3 = 13",
       "correct_answer": "10",
       "answer_type": "integer",
       "solution_steps": [
-        "x + 6 = 16",
-        "x = 16 - 6",
+        "x + 3 = 13",
+        "x = 13 - 3",
         "x = 10"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.2",
+      "announced_skill": "Solve one-step addition/subtraction equations",
+      "generator_type": "linear_eq_one_step_add",
+      "difficulty": 1,
+      "sample_index": 3,
+      "question_text": "Solve for x: x + 9 = 13",
+      "question_latex": "x + 9 = 13",
+      "correct_answer": "4",
+      "answer_type": "integer",
+      "solution_steps": [
+        "x + 9 = 13",
+        "x = 13 - 9",
+        "x = 4"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.2",
+      "announced_skill": "Solve one-step addition/subtraction equations",
+      "generator_type": "linear_eq_one_step_add",
+      "difficulty": 1,
+      "sample_index": 4,
+      "question_text": "Solve for x: x + 6 = 12",
+      "question_latex": "x + 6 = 12",
+      "correct_answer": "6",
+      "answer_type": "integer",
+      "solution_steps": [
+        "x + 6 = 12",
+        "x = 12 - 6",
+        "x = 6"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.2",
+      "announced_skill": "Solve one-step addition/subtraction equations",
+      "generator_type": "linear_eq_one_step_add",
+      "difficulty": 1,
+      "sample_index": 5,
+      "question_text": "Solve for x: x + 3 = 15",
+      "question_latex": "x + 3 = 15",
+      "correct_answer": "12",
+      "answer_type": "integer",
+      "solution_steps": [
+        "x + 3 = 15",
+        "x = 15 - 3",
+        "x = 12"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.2",
+      "announced_skill": "Solve one-step addition/subtraction equations",
+      "generator_type": "linear_eq_one_step_add",
+      "difficulty": 2,
+      "sample_index": 1,
+      "question_text": "Solve for x: x - 5 = 7",
+      "question_latex": "x - 5 = 7",
+      "correct_answer": "12",
+      "answer_type": "integer",
+      "solution_steps": [
+        "x - 5 = 7",
+        "x = 7 + 5",
+        "x = 12"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.2",
+      "announced_skill": "Solve one-step addition/subtraction equations",
+      "generator_type": "linear_eq_one_step_add",
+      "difficulty": 2,
+      "sample_index": 2,
+      "question_text": "Solve for x: x - 7 = 9",
+      "question_latex": "x - 7 = 9",
+      "correct_answer": "16",
+      "answer_type": "integer",
+      "solution_steps": [
+        "x - 7 = 9",
+        "x = 9 + 7",
+        "x = 16"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.2",
+      "announced_skill": "Solve one-step addition/subtraction equations",
+      "generator_type": "linear_eq_one_step_add",
+      "difficulty": 2,
+      "sample_index": 3,
+      "question_text": "Solve for x: x - 4 = 12",
+      "question_latex": "x - 4 = 12",
+      "correct_answer": "16",
+      "answer_type": "integer",
+      "solution_steps": [
+        "x - 4 = 12",
+        "x = 12 + 4",
+        "x = 16"
       ]
     },
     {
@@ -293,14 +375,14 @@
       "generator_type": "linear_eq_one_step_add",
       "difficulty": 2,
       "sample_index": 4,
-      "question_text": "Solve for x: x - 7 = -9",
-      "question_latex": "x - 7 = -9",
-      "correct_answer": "-2",
+      "question_text": "Solve for x: x - 4 = 9",
+      "question_latex": "x - 4 = 9",
+      "correct_answer": "13",
       "answer_type": "integer",
       "solution_steps": [
-        "x - 7 = -9",
-        "x = -9 + 7",
-        "x = -2"
+        "x - 4 = 9",
+        "x = 9 + 4",
+        "x = 13"
       ]
     },
     {
@@ -309,14 +391,14 @@
       "generator_type": "linear_eq_one_step_add",
       "difficulty": 2,
       "sample_index": 5,
-      "question_text": "Solve for x: x - 8 = -9",
-      "question_latex": "x - 8 = -9",
-      "correct_answer": "-1",
+      "question_text": "Solve for x: x - 6 = 8",
+      "question_latex": "x - 6 = 8",
+      "correct_answer": "14",
       "answer_type": "integer",
       "solution_steps": [
-        "x - 8 = -9",
-        "x = -9 + 8",
-        "x = -1"
+        "x - 6 = 8",
+        "x = 8 + 6",
+        "x = 14"
       ]
     },
     {
@@ -325,45 +407,13 @@
       "generator_type": "linear_eq_one_step_add",
       "difficulty": 3,
       "sample_index": 1,
-      "question_text": "Solve for x: x + 6 = 2",
-      "question_latex": "x + 6 = 2",
-      "correct_answer": "-4",
-      "answer_type": "integer",
-      "solution_steps": [
-        "x + 6 = 2",
-        "x = 2 - 6",
-        "x = -4"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.2",
-      "announced_skill": "Solve one-step addition/subtraction equations",
-      "generator_type": "linear_eq_one_step_add",
-      "difficulty": 3,
-      "sample_index": 2,
-      "question_text": "Solve for x: x - 12 = -12",
-      "question_latex": "x - 12 = -12",
-      "correct_answer": "0",
-      "answer_type": "integer",
-      "solution_steps": [
-        "x - 12 = -12",
-        "x = -12 + 12",
-        "x = 0"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.2",
-      "announced_skill": "Solve one-step addition/subtraction equations",
-      "generator_type": "linear_eq_one_step_add",
-      "difficulty": 3,
-      "sample_index": 3,
-      "question_text": "Solve for x: x - 10 = -26",
-      "question_latex": "x - 10 = -26",
+      "question_text": "Solve for x: x + 8 = -8",
+      "question_latex": "x + 8 = -8",
       "correct_answer": "-16",
       "answer_type": "integer",
       "solution_steps": [
-        "x - 10 = -26",
-        "x = -26 + 10",
+        "x + 8 = -8",
+        "x = -8 - 8",
         "x = -16"
       ]
     },
@@ -372,15 +422,47 @@
       "announced_skill": "Solve one-step addition/subtraction equations",
       "generator_type": "linear_eq_one_step_add",
       "difficulty": 3,
-      "sample_index": 4,
-      "question_text": "Solve for x: x + 8 = -9",
-      "question_latex": "x + 8 = -9",
-      "correct_answer": "-17",
+      "sample_index": 2,
+      "question_text": "Solve for x: x + 5 = 3",
+      "question_latex": "x + 5 = 3",
+      "correct_answer": "-2",
       "answer_type": "integer",
       "solution_steps": [
-        "x + 8 = -9",
-        "x = -9 - 8",
-        "x = -17"
+        "x + 5 = 3",
+        "x = 3 - 5",
+        "x = -2"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.2",
+      "announced_skill": "Solve one-step addition/subtraction equations",
+      "generator_type": "linear_eq_one_step_add",
+      "difficulty": 3,
+      "sample_index": 3,
+      "question_text": "Solve for x: x + 12 = 9",
+      "question_latex": "x + 12 = 9",
+      "correct_answer": "-3",
+      "answer_type": "integer",
+      "solution_steps": [
+        "x + 12 = 9",
+        "x = 9 - 12",
+        "x = -3"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.2",
+      "announced_skill": "Solve one-step addition/subtraction equations",
+      "generator_type": "linear_eq_one_step_add",
+      "difficulty": 3,
+      "sample_index": 4,
+      "question_text": "Solve for x: x + 15 = 6",
+      "question_latex": "x + 15 = 6",
+      "correct_answer": "-9",
+      "answer_type": "integer",
+      "solution_steps": [
+        "x + 15 = 6",
+        "x = 6 - 15",
+        "x = -9"
       ]
     },
     {
@@ -389,13 +471,13 @@
       "generator_type": "linear_eq_one_step_add",
       "difficulty": 3,
       "sample_index": 5,
-      "question_text": "Solve for x: x - 19 = -37",
-      "question_latex": "x - 19 = -37",
+      "question_text": "Solve for x: x + 9 = -9",
+      "question_latex": "x + 9 = -9",
       "correct_answer": "-18",
       "answer_type": "integer",
       "solution_steps": [
-        "x - 19 = -37",
-        "x = -37 + 19",
+        "x + 9 = -9",
+        "x = -9 - 9",
         "x = -18"
       ]
     },
@@ -405,14 +487,15 @@
       "generator_type": "linear_eq_one_step_add",
       "difficulty": 4,
       "sample_index": 1,
-      "question_text": "Solve for x: x + 14 = 26",
-      "question_latex": "x + 14 = 26",
-      "correct_answer": "12",
+      "question_text": "Solve for x: x - (-12) = -5",
+      "question_latex": "x - (-12) = -5",
+      "correct_answer": "-17",
       "answer_type": "integer",
       "solution_steps": [
-        "x + 14 = 26",
-        "x = 26 - 14",
-        "x = 12"
+        "x - (-12) = -5",
+        "x + 12 = -5",
+        "x = -5 - 12",
+        "x = -17"
       ]
     },
     {
@@ -421,14 +504,15 @@
       "generator_type": "linear_eq_one_step_add",
       "difficulty": 4,
       "sample_index": 2,
-      "question_text": "Solve for x: x + 22 = -8",
-      "question_latex": "x + 22 = -8",
-      "correct_answer": "-30",
+      "question_text": "Solve for x: x - (-16) = 45",
+      "question_latex": "x - (-16) = 45",
+      "correct_answer": "29",
       "answer_type": "integer",
       "solution_steps": [
-        "x + 22 = -8",
-        "x = -8 - 22",
-        "x = -30"
+        "x - (-16) = 45",
+        "x + 16 = 45",
+        "x = 45 - 16",
+        "x = 29"
       ]
     },
     {
@@ -437,14 +521,15 @@
       "generator_type": "linear_eq_one_step_add",
       "difficulty": 4,
       "sample_index": 3,
-      "question_text": "Solve for x: x + 29 = 35",
-      "question_latex": "x + 29 = 35",
-      "correct_answer": "6",
+      "question_text": "Solve for x: x - (-17) = 38",
+      "question_latex": "x - (-17) = 38",
+      "correct_answer": "21",
       "answer_type": "integer",
       "solution_steps": [
-        "x + 29 = 35",
-        "x = 35 - 29",
-        "x = 6"
+        "x - (-17) = 38",
+        "x + 17 = 38",
+        "x = 38 - 17",
+        "x = 21"
       ]
     },
     {
@@ -453,14 +538,15 @@
       "generator_type": "linear_eq_one_step_add",
       "difficulty": 4,
       "sample_index": 4,
-      "question_text": "Solve for x: x + 19 = 6",
-      "question_latex": "x + 19 = 6",
-      "correct_answer": "-13",
+      "question_text": "Solve for x: x - (-16) = -7",
+      "question_latex": "x - (-16) = -7",
+      "correct_answer": "-23",
       "answer_type": "integer",
       "solution_steps": [
-        "x + 19 = 6",
-        "x = 6 - 19",
-        "x = -13"
+        "x - (-16) = -7",
+        "x + 16 = -7",
+        "x = -7 - 16",
+        "x = -23"
       ]
     },
     {
@@ -469,14 +555,15 @@
       "generator_type": "linear_eq_one_step_add",
       "difficulty": 4,
       "sample_index": 5,
-      "question_text": "Solve for x: x + 8 = 15",
-      "question_latex": "x + 8 = 15",
-      "correct_answer": "7",
+      "question_text": "Solve for x: x - (-6) = -20",
+      "question_latex": "x - (-6) = -20",
+      "correct_answer": "-26",
       "answer_type": "integer",
       "solution_steps": [
-        "x + 8 = 15",
-        "x = 15 - 8",
-        "x = 7"
+        "x - (-6) = -20",
+        "x + 6 = -20",
+        "x = -20 - 6",
+        "x = -26"
       ]
     },
     {
@@ -485,14 +572,14 @@
       "generator_type": "linear_eq_one_step_mult",
       "difficulty": 1,
       "sample_index": 1,
-      "question_text": "Solve for x: 5x = 10",
-      "question_latex": "5x = 10",
-      "correct_answer": "2",
+      "question_text": "Solve for x: x ÷ 4 = 7",
+      "question_latex": "\\frac{x}{4} = 7",
+      "correct_answer": "28",
       "answer_type": "integer",
       "solution_steps": [
-        "5x = 10",
-        "x = 10 ÷ 5",
-        "x = 2"
+        "x ÷ 4 = 7",
+        "x = 7 × 4",
+        "x = 28"
       ]
     },
     {
@@ -501,14 +588,14 @@
       "generator_type": "linear_eq_one_step_mult",
       "difficulty": 1,
       "sample_index": 2,
-      "question_text": "Solve for x: 3x = -24",
-      "question_latex": "3x = -24",
-      "correct_answer": "-8",
+      "question_text": "Solve for x: 5x = 15",
+      "question_latex": "5x = 15",
+      "correct_answer": "3",
       "answer_type": "integer",
       "solution_steps": [
-        "3x = -24",
-        "x = -24 ÷ 3",
-        "x = -8"
+        "5x = 15",
+        "x = 15 ÷ 5",
+        "x = 3"
       ]
     },
     {
@@ -517,14 +604,14 @@
       "generator_type": "linear_eq_one_step_mult",
       "difficulty": 1,
       "sample_index": 3,
-      "question_text": "Solve for x: 3x = -15",
-      "question_latex": "3x = -15",
-      "correct_answer": "-5",
+      "question_text": "Solve for x: 2x = 6",
+      "question_latex": "2x = 6",
+      "correct_answer": "3",
       "answer_type": "integer",
       "solution_steps": [
-        "3x = -15",
-        "x = -15 ÷ 3",
-        "x = -5"
+        "2x = 6",
+        "x = 6 ÷ 2",
+        "x = 3"
       ]
     },
     {
@@ -533,6 +620,22 @@
       "generator_type": "linear_eq_one_step_mult",
       "difficulty": 1,
       "sample_index": 4,
+      "question_text": "Solve for x: x ÷ 2 = 4",
+      "question_latex": "\\frac{x}{2} = 4",
+      "correct_answer": "8",
+      "answer_type": "integer",
+      "solution_steps": [
+        "x ÷ 2 = 4",
+        "x = 4 × 2",
+        "x = 8"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.3",
+      "announced_skill": "Solve one-step multiplication/division equations",
+      "generator_type": "linear_eq_one_step_mult",
+      "difficulty": 1,
+      "sample_index": 5,
       "question_text": "Solve for x: 5x = 50",
       "question_latex": "5x = 50",
       "correct_answer": "10",
@@ -547,32 +650,16 @@
       "standard_code": "M1.EQN.2.3",
       "announced_skill": "Solve one-step multiplication/division equations",
       "generator_type": "linear_eq_one_step_mult",
-      "difficulty": 1,
-      "sample_index": 5,
-      "question_text": "Solve for x: 4x = -40",
-      "question_latex": "4x = -40",
-      "correct_answer": "-10",
-      "answer_type": "integer",
-      "solution_steps": [
-        "4x = -40",
-        "x = -40 ÷ 4",
-        "x = -10"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.3",
-      "announced_skill": "Solve one-step multiplication/division equations",
-      "generator_type": "linear_eq_one_step_mult",
       "difficulty": 2,
       "sample_index": 1,
-      "question_text": "Solve for x: 8x = 80",
-      "question_latex": "8x = 80",
-      "correct_answer": "10",
+      "question_text": "Solve for x: x ÷ 3 = 7",
+      "question_latex": "\\frac{x}{3} = 7",
+      "correct_answer": "21",
       "answer_type": "integer",
       "solution_steps": [
-        "8x = 80",
-        "x = 80 ÷ 8",
-        "x = 10"
+        "x ÷ 3 = 7",
+        "x = 7 × 3",
+        "x = 21"
       ]
     },
     {
@@ -581,13 +668,125 @@
       "generator_type": "linear_eq_one_step_mult",
       "difficulty": 2,
       "sample_index": 2,
-      "question_text": "Solve for x: 4x = -16",
-      "question_latex": "4x = -16",
+      "question_text": "Solve for x: x ÷ 8 = 5",
+      "question_latex": "\\frac{x}{8} = 5",
+      "correct_answer": "40",
+      "answer_type": "integer",
+      "solution_steps": [
+        "x ÷ 8 = 5",
+        "x = 5 × 8",
+        "x = 40"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.3",
+      "announced_skill": "Solve one-step multiplication/division equations",
+      "generator_type": "linear_eq_one_step_mult",
+      "difficulty": 2,
+      "sample_index": 3,
+      "question_text": "Solve for x: x ÷ 7 = 8",
+      "question_latex": "\\frac{x}{7} = 8",
+      "correct_answer": "56",
+      "answer_type": "integer",
+      "solution_steps": [
+        "x ÷ 7 = 8",
+        "x = 8 × 7",
+        "x = 56"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.3",
+      "announced_skill": "Solve one-step multiplication/division equations",
+      "generator_type": "linear_eq_one_step_mult",
+      "difficulty": 2,
+      "sample_index": 4,
+      "question_text": "Solve for x: x ÷ 3 = 5",
+      "question_latex": "\\frac{x}{3} = 5",
+      "correct_answer": "15",
+      "answer_type": "integer",
+      "solution_steps": [
+        "x ÷ 3 = 5",
+        "x = 5 × 3",
+        "x = 15"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.3",
+      "announced_skill": "Solve one-step multiplication/division equations",
+      "generator_type": "linear_eq_one_step_mult",
+      "difficulty": 2,
+      "sample_index": 5,
+      "question_text": "Solve for x: 5x = 15",
+      "question_latex": "5x = 15",
+      "correct_answer": "3",
+      "answer_type": "integer",
+      "solution_steps": [
+        "5x = 15",
+        "x = 15 ÷ 5",
+        "x = 3"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.3",
+      "announced_skill": "Solve one-step multiplication/division equations",
+      "generator_type": "linear_eq_one_step_mult",
+      "difficulty": 3,
+      "sample_index": 1,
+      "question_text": "Solve for x: -10x = 140",
+      "question_latex": "-10x = 140",
+      "correct_answer": "-14",
+      "answer_type": "integer",
+      "solution_steps": [
+        "-10x = 140",
+        "x = 140 ÷ -10",
+        "x = -14"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.3",
+      "announced_skill": "Solve one-step multiplication/division equations",
+      "generator_type": "linear_eq_one_step_mult",
+      "difficulty": 3,
+      "sample_index": 2,
+      "question_text": "Solve for x: -4x = 24",
+      "question_latex": "-4x = 24",
+      "correct_answer": "-6",
+      "answer_type": "integer",
+      "solution_steps": [
+        "-4x = 24",
+        "x = 24 ÷ -4",
+        "x = -6"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.3",
+      "announced_skill": "Solve one-step multiplication/division equations",
+      "generator_type": "linear_eq_one_step_mult",
+      "difficulty": 3,
+      "sample_index": 3,
+      "question_text": "Solve for x: x ÷ (-10) = 7",
+      "question_latex": "\\frac{x}{-10} = 7",
+      "correct_answer": "-70",
+      "answer_type": "integer",
+      "solution_steps": [
+        "x ÷ (-10) = 7",
+        "x = 7 × -10",
+        "x = -70"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.3",
+      "announced_skill": "Solve one-step multiplication/division equations",
+      "generator_type": "linear_eq_one_step_mult",
+      "difficulty": 3,
+      "sample_index": 4,
+      "question_text": "Solve for x: -7x = 28",
+      "question_latex": "-7x = 28",
       "correct_answer": "-4",
       "answer_type": "integer",
       "solution_steps": [
-        "4x = -16",
-        "x = -16 ÷ 4",
+        "-7x = 28",
+        "x = 28 ÷ -7",
         "x = -4"
       ]
     },
@@ -595,128 +794,16 @@
       "standard_code": "M1.EQN.2.3",
       "announced_skill": "Solve one-step multiplication/division equations",
       "generator_type": "linear_eq_one_step_mult",
-      "difficulty": 2,
-      "sample_index": 3,
-      "question_text": "Solve for x: 2x = -4",
-      "question_latex": "2x = -4",
-      "correct_answer": "-2",
-      "answer_type": "integer",
-      "solution_steps": [
-        "2x = -4",
-        "x = -4 ÷ 2",
-        "x = -2"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.3",
-      "announced_skill": "Solve one-step multiplication/division equations",
-      "generator_type": "linear_eq_one_step_mult",
-      "difficulty": 2,
-      "sample_index": 4,
-      "question_text": "Solve for x: 7x = 49",
-      "question_latex": "7x = 49",
-      "correct_answer": "7",
-      "answer_type": "integer",
-      "solution_steps": [
-        "7x = 49",
-        "x = 49 ÷ 7",
-        "x = 7"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.3",
-      "announced_skill": "Solve one-step multiplication/division equations",
-      "generator_type": "linear_eq_one_step_mult",
-      "difficulty": 2,
-      "sample_index": 5,
-      "question_text": "Solve for x: 8x = -56",
-      "question_latex": "8x = -56",
-      "correct_answer": "-7",
-      "answer_type": "integer",
-      "solution_steps": [
-        "8x = -56",
-        "x = -56 ÷ 8",
-        "x = -7"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.3",
-      "announced_skill": "Solve one-step multiplication/division equations",
-      "generator_type": "linear_eq_one_step_mult",
-      "difficulty": 3,
-      "sample_index": 1,
-      "question_text": "Solve for x: -4x = -24",
-      "question_latex": "-4x = -24",
-      "correct_answer": "6",
-      "answer_type": "integer",
-      "solution_steps": [
-        "-4x = -24",
-        "x = -24 ÷ -4",
-        "x = 6"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.3",
-      "announced_skill": "Solve one-step multiplication/division equations",
-      "generator_type": "linear_eq_one_step_mult",
-      "difficulty": 3,
-      "sample_index": 2,
-      "question_text": "Solve for x: 6x = -24",
-      "question_latex": "6x = -24",
-      "correct_answer": "-4",
-      "answer_type": "integer",
-      "solution_steps": [
-        "6x = -24",
-        "x = -24 ÷ 6",
-        "x = -4"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.3",
-      "announced_skill": "Solve one-step multiplication/division equations",
-      "generator_type": "linear_eq_one_step_mult",
-      "difficulty": 3,
-      "sample_index": 3,
-      "question_text": "Solve for x: 1x = -5",
-      "question_latex": "1x = -5",
-      "correct_answer": "-5",
-      "answer_type": "integer",
-      "solution_steps": [
-        "1x = -5",
-        "x = -5 ÷ 1",
-        "x = -5"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.3",
-      "announced_skill": "Solve one-step multiplication/division equations",
-      "generator_type": "linear_eq_one_step_mult",
-      "difficulty": 3,
-      "sample_index": 4,
-      "question_text": "Solve for x: -10x = 100",
-      "question_latex": "-10x = 100",
-      "correct_answer": "-10",
-      "answer_type": "integer",
-      "solution_steps": [
-        "-10x = 100",
-        "x = 100 ÷ -10",
-        "x = -10"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.3",
-      "announced_skill": "Solve one-step multiplication/division equations",
-      "generator_type": "linear_eq_one_step_mult",
       "difficulty": 3,
       "sample_index": 5,
-      "question_text": "Solve for x: 8x = -24",
-      "question_latex": "8x = -24",
-      "correct_answer": "-3",
+      "question_text": "Solve for x: x ÷ (-11) = 11",
+      "question_latex": "\\frac{x}{-11} = 11",
+      "correct_answer": "-121",
       "answer_type": "integer",
       "solution_steps": [
-        "8x = -24",
-        "x = -24 ÷ 8",
-        "x = -3"
+        "x ÷ (-11) = 11",
+        "x = 11 × -11",
+        "x = -121"
       ]
     },
     {
@@ -725,14 +812,14 @@
       "generator_type": "linear_eq_one_step_mult",
       "difficulty": 4,
       "sample_index": 1,
-      "question_text": "Solve for x: -11x = 0",
-      "question_latex": "-11x = 0",
-      "correct_answer": "0",
+      "question_text": "Solve for x: x ÷ (-13) = 27",
+      "question_latex": "\\frac{x}{-13} = 27",
+      "correct_answer": "-351",
       "answer_type": "integer",
       "solution_steps": [
-        "-11x = 0",
-        "x = 0 ÷ -11",
-        "x = 0"
+        "x ÷ (-13) = 27",
+        "x = 27 × -13",
+        "x = -351"
       ]
     },
     {
@@ -741,14 +828,14 @@
       "generator_type": "linear_eq_one_step_mult",
       "difficulty": 4,
       "sample_index": 2,
-      "question_text": "Solve for x: 11x = -33",
-      "question_latex": "11x = -33",
-      "correct_answer": "-3",
+      "question_text": "Solve for x: -12x = 144",
+      "question_latex": "-12x = 144",
+      "correct_answer": "-12",
       "answer_type": "integer",
       "solution_steps": [
-        "11x = -33",
-        "x = -33 ÷ 11",
-        "x = -3"
+        "-12x = 144",
+        "x = 144 ÷ -12",
+        "x = -12"
       ]
     },
     {
@@ -757,14 +844,14 @@
       "generator_type": "linear_eq_one_step_mult",
       "difficulty": 4,
       "sample_index": 3,
-      "question_text": "Solve for x: 10x = -100",
-      "question_latex": "10x = -100",
-      "correct_answer": "-10",
+      "question_text": "Solve for x: -14x = -406",
+      "question_latex": "-14x = -406",
+      "correct_answer": "29",
       "answer_type": "integer",
       "solution_steps": [
-        "10x = -100",
-        "x = -100 ÷ 10",
-        "x = -10"
+        "-14x = -406",
+        "x = -406 ÷ -14",
+        "x = 29"
       ]
     },
     {
@@ -773,14 +860,14 @@
       "generator_type": "linear_eq_one_step_mult",
       "difficulty": 4,
       "sample_index": 4,
-      "question_text": "Solve for x: 4x = -28",
-      "question_latex": "4x = -28",
-      "correct_answer": "-7",
+      "question_text": "Solve for x: x ÷ (-9) = 19",
+      "question_latex": "\\frac{x}{-9} = 19",
+      "correct_answer": "-171",
       "answer_type": "integer",
       "solution_steps": [
-        "4x = -28",
-        "x = -28 ÷ 4",
-        "x = -7"
+        "x ÷ (-9) = 19",
+        "x = 19 × -9",
+        "x = -171"
       ]
     },
     {
@@ -789,14 +876,14 @@
       "generator_type": "linear_eq_one_step_mult",
       "difficulty": 4,
       "sample_index": 5,
-      "question_text": "Solve for x: 4x = -36",
-      "question_latex": "4x = -36",
-      "correct_answer": "-9",
+      "question_text": "Solve for x: x ÷ (-14) = -26",
+      "question_latex": "\\frac{x}{-14} = -26",
+      "correct_answer": "364",
       "answer_type": "integer",
       "solution_steps": [
-        "4x = -36",
-        "x = -36 ÷ 4",
-        "x = -9"
+        "x ÷ (-14) = -26",
+        "x = -26 × -14",
+        "x = 364"
       ]
     },
     {
@@ -805,12 +892,28 @@
       "generator_type": "linear_eq_two_step",
       "difficulty": 1,
       "sample_index": 1,
-      "question_text": "Solve for x: 4x + 1 = 37",
-      "question_latex": "4x + 1 = 37",
+      "question_text": "Solve for x: 3x + 6 = 18",
+      "question_latex": "3x + 6 = 18",
+      "correct_answer": "4",
+      "answer_type": "integer",
+      "solution_steps": [
+        "3x + 6 = 18",
+        "3x = 12",
+        "x = 4"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.4",
+      "announced_skill": "Solve two-step linear equations",
+      "generator_type": "linear_eq_two_step",
+      "difficulty": 1,
+      "sample_index": 2,
+      "question_text": "Solve for x: 4x + 10 = 46",
+      "question_latex": "4x + 10 = 46",
       "correct_answer": "9",
       "answer_type": "integer",
       "solution_steps": [
-        "4x + 1 = 37",
+        "4x + 10 = 46",
         "4x = 36",
         "x = 9"
       ]
@@ -820,31 +923,15 @@
       "announced_skill": "Solve two-step linear equations",
       "generator_type": "linear_eq_two_step",
       "difficulty": 1,
-      "sample_index": 2,
-      "question_text": "Solve for x: 2x + 10 = 18",
-      "question_latex": "2x + 10 = 18",
-      "correct_answer": "4",
-      "answer_type": "integer",
-      "solution_steps": [
-        "2x + 10 = 18",
-        "2x = 8",
-        "x = 4"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.4",
-      "announced_skill": "Solve two-step linear equations",
-      "generator_type": "linear_eq_two_step",
-      "difficulty": 1,
       "sample_index": 3,
-      "question_text": "Solve for x: 3x + 7 = 37",
-      "question_latex": "3x + 7 = 37",
-      "correct_answer": "10",
+      "question_text": "Solve for x: 5x + 10 = 50",
+      "question_latex": "5x + 10 = 50",
+      "correct_answer": "8",
       "answer_type": "integer",
       "solution_steps": [
-        "3x + 7 = 37",
-        "3x = 30",
-        "x = 10"
+        "5x + 10 = 50",
+        "5x = 40",
+        "x = 8"
       ]
     },
     {
@@ -853,14 +940,14 @@
       "generator_type": "linear_eq_two_step",
       "difficulty": 1,
       "sample_index": 4,
-      "question_text": "Solve for x: 3x + 7 = 28",
-      "question_latex": "3x + 7 = 28",
-      "correct_answer": "7",
+      "question_text": "Solve for x: 2x + 10 = 12",
+      "question_latex": "2x + 10 = 12",
+      "correct_answer": "1",
       "answer_type": "integer",
       "solution_steps": [
-        "3x + 7 = 28",
-        "3x = 21",
-        "x = 7"
+        "2x + 10 = 12",
+        "2x = 2",
+        "x = 1"
       ]
     },
     {
@@ -869,14 +956,14 @@
       "generator_type": "linear_eq_two_step",
       "difficulty": 1,
       "sample_index": 5,
-      "question_text": "Solve for x: 2x + 8 = 28",
-      "question_latex": "2x + 8 = 28",
-      "correct_answer": "10",
+      "question_text": "Solve for x: 4x + 8 = 44",
+      "question_latex": "4x + 8 = 44",
+      "correct_answer": "9",
       "answer_type": "integer",
       "solution_steps": [
-        "2x + 8 = 28",
-        "2x = 20",
-        "x = 10"
+        "4x + 8 = 44",
+        "4x = 36",
+        "x = 9"
       ]
     },
     {
@@ -885,93 +972,13 @@
       "generator_type": "linear_eq_two_step",
       "difficulty": 2,
       "sample_index": 1,
-      "question_text": "Solve for x: 5x - 12 = -47",
-      "question_latex": "5x - 12 = -47",
-      "correct_answer": "-7",
-      "answer_type": "integer",
-      "solution_steps": [
-        "5x - 12 = -47",
-        "5x = -35",
-        "x = -7"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.4",
-      "announced_skill": "Solve two-step linear equations",
-      "generator_type": "linear_eq_two_step",
-      "difficulty": 2,
-      "sample_index": 2,
-      "question_text": "Solve for x: 4x + 12 = 20",
-      "question_latex": "4x + 12 = 20",
-      "correct_answer": "2",
-      "answer_type": "integer",
-      "solution_steps": [
-        "4x + 12 = 20",
-        "4x = 8",
-        "x = 2"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.4",
-      "announced_skill": "Solve two-step linear equations",
-      "generator_type": "linear_eq_two_step",
-      "difficulty": 2,
-      "sample_index": 3,
-      "question_text": "Solve for x: 3x + 9 = 15",
-      "question_latex": "3x + 9 = 15",
-      "correct_answer": "2",
-      "answer_type": "integer",
-      "solution_steps": [
-        "3x + 9 = 15",
-        "3x = 6",
-        "x = 2"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.4",
-      "announced_skill": "Solve two-step linear equations",
-      "generator_type": "linear_eq_two_step",
-      "difficulty": 2,
-      "sample_index": 4,
-      "question_text": "Solve for x: 10x + 11 = -59",
-      "question_latex": "10x + 11 = -59",
-      "correct_answer": "-7",
-      "answer_type": "integer",
-      "solution_steps": [
-        "10x + 11 = -59",
-        "10x = -70",
-        "x = -7"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.4",
-      "announced_skill": "Solve two-step linear equations",
-      "generator_type": "linear_eq_two_step",
-      "difficulty": 2,
-      "sample_index": 5,
-      "question_text": "Solve for x: 6x + 14 = -16",
-      "question_latex": "6x + 14 = -16",
-      "correct_answer": "-5",
-      "answer_type": "integer",
-      "solution_steps": [
-        "6x + 14 = -16",
-        "6x = -30",
-        "x = -5"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.4",
-      "announced_skill": "Solve two-step linear equations",
-      "generator_type": "linear_eq_two_step",
-      "difficulty": 3,
-      "sample_index": 1,
-      "question_text": "Solve for x: -4x + 5 = 13",
-      "question_latex": "-4x + 5 = 13",
+      "question_text": "Solve for x: 9x - 15 = -33",
+      "question_latex": "9x - 15 = -33",
       "correct_answer": "-2",
       "answer_type": "integer",
       "solution_steps": [
-        "-4x + 5 = 13",
-        "-4x = 8",
+        "9x - 15 = -33",
+        "9x = -18",
         "x = -2"
       ]
     },
@@ -979,448 +986,256 @@
       "standard_code": "M1.EQN.2.4",
       "announced_skill": "Solve two-step linear equations",
       "generator_type": "linear_eq_two_step",
-      "difficulty": 3,
+      "difficulty": 2,
       "sample_index": 2,
-      "question_text": "Solve for x: 6x - 15 = 9",
-      "question_latex": "6x - 15 = 9",
-      "correct_answer": "4",
+      "question_text": "Solve for x: 6x - 6 = 12",
+      "question_latex": "6x - 6 = 12",
+      "correct_answer": "3",
       "answer_type": "integer",
       "solution_steps": [
-        "6x - 15 = 9",
-        "6x = 24",
-        "x = 4"
+        "6x - 6 = 12",
+        "6x = 18",
+        "x = 3"
       ]
     },
     {
       "standard_code": "M1.EQN.2.4",
       "announced_skill": "Solve two-step linear equations",
       "generator_type": "linear_eq_two_step",
-      "difficulty": 3,
+      "difficulty": 2,
       "sample_index": 3,
-      "question_text": "Solve for x: -5x + 6 = 81",
-      "question_latex": "-5x + 6 = 81",
-      "correct_answer": "-15",
+      "question_text": "Solve for x: 3x + 7 = -20",
+      "question_latex": "3x + 7 = -20",
+      "correct_answer": "-9",
       "answer_type": "integer",
       "solution_steps": [
-        "-5x + 6 = 81",
-        "-5x = 75",
-        "x = -15"
+        "3x + 7 = -20",
+        "3x = -27",
+        "x = -9"
       ]
     },
     {
       "standard_code": "M1.EQN.2.4",
       "announced_skill": "Solve two-step linear equations",
       "generator_type": "linear_eq_two_step",
-      "difficulty": 3,
+      "difficulty": 2,
       "sample_index": 4,
-      "question_text": "Solve for x: 3x - 17 = -2",
-      "question_latex": "3x - 17 = -2",
-      "correct_answer": "5",
-      "answer_type": "integer",
-      "solution_steps": [
-        "3x - 17 = -2",
-        "3x = 15",
-        "x = 5"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.4",
-      "announced_skill": "Solve two-step linear equations",
-      "generator_type": "linear_eq_two_step",
-      "difficulty": 3,
-      "sample_index": 5,
-      "question_text": "Solve for x: 2x - 14 = -40",
-      "question_latex": "2x - 14 = -40",
-      "correct_answer": "-13",
-      "answer_type": "integer",
-      "solution_steps": [
-        "2x - 14 = -40",
-        "2x = -26",
-        "x = -13"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.4",
-      "announced_skill": "Solve two-step linear equations",
-      "generator_type": "linear_eq_two_step",
-      "difficulty": 4,
-      "sample_index": 1,
-      "question_text": "Solve for x: -8x + 11 = 67",
-      "question_latex": "-8x + 11 = 67",
-      "correct_answer": "-7",
-      "answer_type": "integer",
-      "solution_steps": [
-        "-8x + 11 = 67",
-        "-8x = 56",
-        "x = -7"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.4",
-      "announced_skill": "Solve two-step linear equations",
-      "generator_type": "linear_eq_two_step",
-      "difficulty": 4,
-      "sample_index": 2,
-      "question_text": "Solve for x: 6x - 4 = -34",
-      "question_latex": "6x - 4 = -34",
-      "correct_answer": "-5",
-      "answer_type": "integer",
-      "solution_steps": [
-        "6x - 4 = -34",
-        "6x = -30",
-        "x = -5"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.4",
-      "announced_skill": "Solve two-step linear equations",
-      "generator_type": "linear_eq_two_step",
-      "difficulty": 4,
-      "sample_index": 3,
-      "question_text": "Solve for x: 14x - 12 = 240",
-      "question_latex": "14x - 12 = 240",
-      "correct_answer": "18",
-      "answer_type": "integer",
-      "solution_steps": [
-        "14x - 12 = 240",
-        "14x = 252",
-        "x = 18"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.4",
-      "announced_skill": "Solve two-step linear equations",
-      "generator_type": "linear_eq_two_step",
-      "difficulty": 4,
-      "sample_index": 4,
-      "question_text": "Solve for x: -8x + 2 = 90",
-      "question_latex": "-8x + 2 = 90",
-      "correct_answer": "-11",
-      "answer_type": "integer",
-      "solution_steps": [
-        "-8x + 2 = 90",
-        "-8x = 88",
-        "x = -11"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.4",
-      "announced_skill": "Solve two-step linear equations",
-      "generator_type": "linear_eq_two_step",
-      "difficulty": 4,
-      "sample_index": 5,
-      "question_text": "Solve for x: -9x + 9 = -63",
-      "question_latex": "-9x + 9 = -63",
-      "correct_answer": "8",
-      "answer_type": "integer",
-      "solution_steps": [
-        "-9x + 9 = -63",
-        "-9x = -72",
-        "x = 8"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.5",
-      "announced_skill": "Solve multi-step linear equations",
-      "generator_type": "linear_eq_multi_step",
-      "difficulty": 1,
-      "sample_index": 1,
-      "question_text": "Solve for x: 2(x + 5) - 9 = -11",
-      "question_latex": "2(x + 5) - 9 = -11",
-      "correct_answer": "-6",
-      "answer_type": "integer",
-      "solution_steps": [
-        "Distribute: 2x + 10 - 9 = -11",
-        "Combine: 2x + 1 = -11",
-        "2x = -12",
-        "x = -6"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.5",
-      "announced_skill": "Solve multi-step linear equations",
-      "generator_type": "linear_eq_multi_step",
-      "difficulty": 1,
-      "sample_index": 2,
-      "question_text": "Solve for x: 5(x + 2) + 6 = -4",
-      "question_latex": "5(x + 2) + 6 = -4",
-      "correct_answer": "-4",
-      "answer_type": "integer",
-      "solution_steps": [
-        "Distribute: 5x + 10 + 6 = -4",
-        "Combine: 5x + 16 = -4",
-        "5x = -20",
-        "x = -4"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.5",
-      "announced_skill": "Solve multi-step linear equations",
-      "generator_type": "linear_eq_multi_step",
-      "difficulty": 1,
-      "sample_index": 3,
-      "question_text": "Solve for x: 4(x - 5) - 3 = 9",
-      "question_latex": "4(x - 5) - 3 = 9",
-      "correct_answer": "8",
-      "answer_type": "integer",
-      "solution_steps": [
-        "Distribute: 4x - 20 - 3 = 9",
-        "Combine: 4x - 23 = 9",
-        "4x = 32",
-        "x = 8"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.5",
-      "announced_skill": "Solve multi-step linear equations",
-      "generator_type": "linear_eq_multi_step",
-      "difficulty": 1,
-      "sample_index": 4,
-      "question_text": "Solve for x: 5(x + 5) + 7 = 37",
-      "question_latex": "5(x + 5) + 7 = 37",
+      "question_text": "Solve for x: 7x + 7 = 14",
+      "question_latex": "7x + 7 = 14",
       "correct_answer": "1",
       "answer_type": "integer",
       "solution_steps": [
-        "Distribute: 5x + 25 + 7 = 37",
-        "Combine: 5x + 32 = 37",
-        "5x = 5",
+        "7x + 7 = 14",
+        "7x = 7",
         "x = 1"
       ]
     },
     {
-      "standard_code": "M1.EQN.2.5",
-      "announced_skill": "Solve multi-step linear equations",
-      "generator_type": "linear_eq_multi_step",
-      "difficulty": 1,
+      "standard_code": "M1.EQN.2.4",
+      "announced_skill": "Solve two-step linear equations",
+      "generator_type": "linear_eq_two_step",
+      "difficulty": 2,
       "sample_index": 5,
-      "question_text": "Solve for x: 5(x - 5) - 4 = 11",
-      "question_latex": "5(x - 5) - 4 = 11",
-      "correct_answer": "8",
-      "answer_type": "integer",
-      "solution_steps": [
-        "Distribute: 5x - 25 - 4 = 11",
-        "Combine: 5x - 29 = 11",
-        "5x = 40",
-        "x = 8"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.5",
-      "announced_skill": "Solve multi-step linear equations",
-      "generator_type": "linear_eq_multi_step",
-      "difficulty": 2,
-      "sample_index": 1,
-      "question_text": "Solve for x: 3(x - 1) + 9 = 21",
-      "question_latex": "3(x - 1) + 9 = 21",
-      "correct_answer": "5",
-      "answer_type": "integer",
-      "solution_steps": [
-        "Distribute: 3x - 3 + 9 = 21",
-        "Combine: 3x + 6 = 21",
-        "3x = 15",
-        "x = 5"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.5",
-      "announced_skill": "Solve multi-step linear equations",
-      "generator_type": "linear_eq_multi_step",
-      "difficulty": 2,
-      "sample_index": 2,
-      "question_text": "Solve for x: 3(x - 5) + 8 = -19",
-      "question_latex": "3(x - 5) + 8 = -19",
-      "correct_answer": "-4",
-      "answer_type": "integer",
-      "solution_steps": [
-        "Distribute: 3x - 15 + 8 = -19",
-        "Combine: 3x - 7 = -19",
-        "3x = -12",
-        "x = -4"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.5",
-      "announced_skill": "Solve multi-step linear equations",
-      "generator_type": "linear_eq_multi_step",
-      "difficulty": 2,
-      "sample_index": 3,
-      "question_text": "Solve for x: 2(x + 1) + 3 = 17",
-      "question_latex": "2(x + 1) + 3 = 17",
-      "correct_answer": "6",
-      "answer_type": "integer",
-      "solution_steps": [
-        "Distribute: 2x + 2 + 3 = 17",
-        "Combine: 2x + 5 = 17",
-        "2x = 12",
-        "x = 6"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.5",
-      "announced_skill": "Solve multi-step linear equations",
-      "generator_type": "linear_eq_multi_step",
-      "difficulty": 2,
-      "sample_index": 4,
-      "question_text": "Solve for x: 3(x + 2) + 8 = 5",
-      "question_latex": "3(x + 2) + 8 = 5",
+      "question_text": "Solve for x: 4x - 15 = -27",
+      "question_latex": "4x - 15 = -27",
       "correct_answer": "-3",
       "answer_type": "integer",
       "solution_steps": [
-        "Distribute: 3x + 6 + 8 = 5",
-        "Combine: 3x + 14 = 5",
-        "3x = -9",
-        "x = -3"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.5",
-      "announced_skill": "Solve multi-step linear equations",
-      "generator_type": "linear_eq_multi_step",
-      "difficulty": 2,
-      "sample_index": 5,
-      "question_text": "Solve for x: 3(x + 3) - 7 = 26",
-      "question_latex": "3(x + 3) - 7 = 26",
-      "correct_answer": "8",
-      "answer_type": "integer",
-      "solution_steps": [
-        "Distribute: 3x + 9 - 7 = 26",
-        "Combine: 3x + 2 = 26",
-        "3x = 24",
-        "x = 8"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.5",
-      "announced_skill": "Solve multi-step linear equations",
-      "generator_type": "linear_eq_multi_step",
-      "difficulty": 3,
-      "sample_index": 1,
-      "question_text": "Solve for x: 4(x + 2) - 3 = 25",
-      "question_latex": "4(x + 2) - 3 = 25",
-      "correct_answer": "5",
-      "answer_type": "integer",
-      "solution_steps": [
-        "Distribute: 4x + 8 - 3 = 25",
-        "Combine: 4x + 5 = 25",
-        "4x = 20",
-        "x = 5"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.5",
-      "announced_skill": "Solve multi-step linear equations",
-      "generator_type": "linear_eq_multi_step",
-      "difficulty": 3,
-      "sample_index": 2,
-      "question_text": "Solve for x: 5(x + 0) + 1 = 6",
-      "question_latex": "5(x + 0) + 1 = 6",
-      "correct_answer": "1",
-      "answer_type": "integer",
-      "solution_steps": [
-        "Distribute: 5x  + 1 = 6",
-        "Combine: 5x + 1 = 6",
-        "5x = 5",
-        "x = 1"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.5",
-      "announced_skill": "Solve multi-step linear equations",
-      "generator_type": "linear_eq_multi_step",
-      "difficulty": 3,
-      "sample_index": 3,
-      "question_text": "Solve for x: 2(x - 3) + 9 = 11",
-      "question_latex": "2(x - 3) + 9 = 11",
-      "correct_answer": "4",
-      "answer_type": "integer",
-      "solution_steps": [
-        "Distribute: 2x - 6 + 9 = 11",
-        "Combine: 2x + 3 = 11",
-        "2x = 8",
-        "x = 4"
-      ]
-    },
-    {
-      "standard_code": "M1.EQN.2.5",
-      "announced_skill": "Solve multi-step linear equations",
-      "generator_type": "linear_eq_multi_step",
-      "difficulty": 3,
-      "sample_index": 4,
-      "question_text": "Solve for x: 4(x - 2) - 1 = -21",
-      "question_latex": "4(x - 2) - 1 = -21",
-      "correct_answer": "-3",
-      "answer_type": "integer",
-      "solution_steps": [
-        "Distribute: 4x - 8 - 1 = -21",
-        "Combine: 4x - 9 = -21",
+        "4x - 15 = -27",
         "4x = -12",
         "x = -3"
       ]
     },
     {
-      "standard_code": "M1.EQN.2.5",
-      "announced_skill": "Solve multi-step linear equations",
-      "generator_type": "linear_eq_multi_step",
+      "standard_code": "M1.EQN.2.4",
+      "announced_skill": "Solve two-step linear equations",
+      "generator_type": "linear_eq_two_step",
+      "difficulty": 3,
+      "sample_index": 1,
+      "question_text": "Solve for x: 9x - 15 = -105",
+      "question_latex": "9x - 15 = -105",
+      "correct_answer": "-10",
+      "answer_type": "integer",
+      "solution_steps": [
+        "9x - 15 = -105",
+        "9x = -90",
+        "x = -10"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.4",
+      "announced_skill": "Solve two-step linear equations",
+      "generator_type": "linear_eq_two_step",
+      "difficulty": 3,
+      "sample_index": 2,
+      "question_text": "Solve for x: 3x - 16 = -28",
+      "question_latex": "3x - 16 = -28",
+      "correct_answer": "-4",
+      "answer_type": "integer",
+      "solution_steps": [
+        "3x - 16 = -28",
+        "3x = -12",
+        "x = -4"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.4",
+      "announced_skill": "Solve two-step linear equations",
+      "generator_type": "linear_eq_two_step",
+      "difficulty": 3,
+      "sample_index": 3,
+      "question_text": "Solve for x: 10x - 17 = -47",
+      "question_latex": "10x - 17 = -47",
+      "correct_answer": "-3",
+      "answer_type": "integer",
+      "solution_steps": [
+        "10x - 17 = -47",
+        "10x = -30",
+        "x = -3"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.4",
+      "announced_skill": "Solve two-step linear equations",
+      "generator_type": "linear_eq_two_step",
+      "difficulty": 3,
+      "sample_index": 4,
+      "question_text": "Solve for x: 2x - 20 = -18",
+      "question_latex": "2x - 20 = -18",
+      "correct_answer": "1",
+      "answer_type": "integer",
+      "solution_steps": [
+        "2x - 20 = -18",
+        "2x = 2",
+        "x = 1"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.4",
+      "announced_skill": "Solve two-step linear equations",
+      "generator_type": "linear_eq_two_step",
       "difficulty": 3,
       "sample_index": 5,
-      "question_text": "Solve for x: 4(x - 1) - 9 = -13",
-      "question_latex": "4(x - 1) - 9 = -13",
-      "correct_answer": "0",
+      "question_text": "Solve for x: 5x + 4 = -56",
+      "question_latex": "5x + 4 = -56",
+      "correct_answer": "-12",
       "answer_type": "integer",
       "solution_steps": [
-        "Distribute: 4x - 4 - 9 = -13",
-        "Combine: 4x - 13 = -13",
-        "4x = 0",
-        "x = 0"
+        "5x + 4 = -56",
+        "5x = -60",
+        "x = -12"
       ]
     },
     {
-      "standard_code": "M1.EQN.2.5",
-      "announced_skill": "Solve multi-step linear equations",
-      "generator_type": "linear_eq_multi_step",
+      "standard_code": "M1.EQN.2.4",
+      "announced_skill": "Solve two-step linear equations",
+      "generator_type": "linear_eq_two_step",
       "difficulty": 4,
       "sample_index": 1,
-      "question_text": "Solve for x: 4(x + 1) + 10 = 14",
-      "question_latex": "4(x + 1) + 10 = 14",
-      "correct_answer": "0",
+      "question_text": "Solve for x: 14x - 18 = -46",
+      "question_latex": "14x - 18 = -46",
+      "correct_answer": "-2",
       "answer_type": "integer",
       "solution_steps": [
-        "Distribute: 4x + 4 + 10 = 14",
-        "Combine: 4x + 14 = 14",
-        "4x = 0",
-        "x = 0"
+        "14x - 18 = -46",
+        "14x = -28",
+        "x = -2"
       ]
     },
     {
-      "standard_code": "M1.EQN.2.5",
-      "announced_skill": "Solve multi-step linear equations",
-      "generator_type": "linear_eq_multi_step",
+      "standard_code": "M1.EQN.2.4",
+      "announced_skill": "Solve two-step linear equations",
+      "generator_type": "linear_eq_two_step",
       "difficulty": 4,
       "sample_index": 2,
-      "question_text": "Solve for x: 3(x - 3) + 5 = -7",
-      "question_latex": "3(x - 3) + 5 = -7",
-      "correct_answer": "-1",
+      "question_text": "Solve for x: 4x + 25 = 61",
+      "question_latex": "4x + 25 = 61",
+      "correct_answer": "9",
       "answer_type": "integer",
       "solution_steps": [
-        "Distribute: 3x - 9 + 5 = -7",
-        "Combine: 3x - 4 = -7",
-        "3x = -3",
-        "x = -1"
+        "4x + 25 = 61",
+        "4x = 36",
+        "x = 9"
       ]
     },
     {
-      "standard_code": "M1.EQN.2.5",
-      "announced_skill": "Solve multi-step linear equations",
-      "generator_type": "linear_eq_multi_step",
+      "standard_code": "M1.EQN.2.4",
+      "announced_skill": "Solve two-step linear equations",
+      "generator_type": "linear_eq_two_step",
       "difficulty": 4,
       "sample_index": 3,
-      "question_text": "Solve for x: 3(x - 3) - 4 = -4",
-      "question_latex": "3(x - 3) - 4 = -4",
+      "question_text": "Solve for x: -14x - 23 = -65",
+      "question_latex": "-14x - 23 = -65",
       "correct_answer": "3",
       "answer_type": "integer",
       "solution_steps": [
-        "Distribute: 3x - 9 - 4 = -4",
-        "Combine: 3x - 13 = -4",
+        "-14x - 23 = -65",
+        "-14x = -42",
+        "x = 3"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.4",
+      "announced_skill": "Solve two-step linear equations",
+      "generator_type": "linear_eq_two_step",
+      "difficulty": 4,
+      "sample_index": 4,
+      "question_text": "Solve for x: 10x - 4 = 156",
+      "question_latex": "10x - 4 = 156",
+      "correct_answer": "16",
+      "answer_type": "integer",
+      "solution_steps": [
+        "10x - 4 = 156",
+        "10x = 160",
+        "x = 16"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.4",
+      "announced_skill": "Solve two-step linear equations",
+      "generator_type": "linear_eq_two_step",
+      "difficulty": 4,
+      "sample_index": 5,
+      "question_text": "Solve for x: 13x + 2 = -128",
+      "question_latex": "13x + 2 = -128",
+      "correct_answer": "-10",
+      "answer_type": "integer",
+      "solution_steps": [
+        "13x + 2 = -128",
+        "13x = -130",
+        "x = -10"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.5",
+      "announced_skill": "Solve multi-step linear equations",
+      "generator_type": "linear_eq_multi_step",
+      "difficulty": 1,
+      "sample_index": 1,
+      "question_text": "Solve for x: 2(x + 1) + 6 = 24",
+      "question_latex": "2(x + 1) + 6 = 24",
+      "correct_answer": "8",
+      "answer_type": "integer",
+      "solution_steps": [
+        "Distribute: 2x + 2 + 6 = 24",
+        "Combine: 2x + 8 = 24",
+        "2x = 16",
+        "x = 8"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.5",
+      "announced_skill": "Solve multi-step linear equations",
+      "generator_type": "linear_eq_multi_step",
+      "difficulty": 1,
+      "sample_index": 2,
+      "question_text": "Solve for x: 3(x + 1) + 4 = 16",
+      "question_latex": "3(x + 1) + 4 = 16",
+      "correct_answer": "3",
+      "answer_type": "integer",
+      "solution_steps": [
+        "Distribute: 3x + 3 + 4 = 16",
+        "Combine: 3x + 7 = 16",
         "3x = 9",
         "x = 3"
       ]
@@ -1429,16 +1244,288 @@
       "standard_code": "M1.EQN.2.5",
       "announced_skill": "Solve multi-step linear equations",
       "generator_type": "linear_eq_multi_step",
-      "difficulty": 4,
-      "sample_index": 4,
-      "question_text": "Solve for x: 3(x - 4) - 7 = 2",
-      "question_latex": "3(x - 4) - 7 = 2",
+      "difficulty": 1,
+      "sample_index": 3,
+      "question_text": "Solve for x: 3(x + 4) + 4 = 37",
+      "question_latex": "3(x + 4) + 4 = 37",
       "correct_answer": "7",
       "answer_type": "integer",
       "solution_steps": [
-        "Distribute: 3x - 12 - 7 = 2",
-        "Combine: 3x - 19 = 2",
+        "Distribute: 3x + 12 + 4 = 37",
+        "Combine: 3x + 16 = 37",
         "3x = 21",
+        "x = 7"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.5",
+      "announced_skill": "Solve multi-step linear equations",
+      "generator_type": "linear_eq_multi_step",
+      "difficulty": 1,
+      "sample_index": 4,
+      "question_text": "Solve for x: 2(x + 1) + 8 = 20",
+      "question_latex": "2(x + 1) + 8 = 20",
+      "correct_answer": "5",
+      "answer_type": "integer",
+      "solution_steps": [
+        "Distribute: 2x + 2 + 8 = 20",
+        "Combine: 2x + 10 = 20",
+        "2x = 10",
+        "x = 5"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.5",
+      "announced_skill": "Solve multi-step linear equations",
+      "generator_type": "linear_eq_multi_step",
+      "difficulty": 1,
+      "sample_index": 5,
+      "question_text": "Solve for x: 2(x + 5) + 4 = 18",
+      "question_latex": "2(x + 5) + 4 = 18",
+      "correct_answer": "2",
+      "answer_type": "integer",
+      "solution_steps": [
+        "Distribute: 2x + 10 + 4 = 18",
+        "Combine: 2x + 14 = 18",
+        "2x = 4",
+        "x = 2"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.5",
+      "announced_skill": "Solve multi-step linear equations",
+      "generator_type": "linear_eq_multi_step",
+      "difficulty": 2,
+      "sample_index": 1,
+      "question_text": "Solve for x: 2(x - 8) + 9 = -19",
+      "question_latex": "2(x - 8) + 9 = -19",
+      "correct_answer": "-6",
+      "answer_type": "integer",
+      "solution_steps": [
+        "Distribute: 2x - 16 + 9 = -19",
+        "Combine: 2x - 7 = -19",
+        "2x = -12",
+        "x = -6"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.5",
+      "announced_skill": "Solve multi-step linear equations",
+      "generator_type": "linear_eq_multi_step",
+      "difficulty": 2,
+      "sample_index": 2,
+      "question_text": "Solve for x: 5(x - 3) + 4 = -26",
+      "question_latex": "5(x - 3) + 4 = -26",
+      "correct_answer": "-3",
+      "answer_type": "integer",
+      "solution_steps": [
+        "Distribute: 5x - 15 + 4 = -26",
+        "Combine: 5x - 11 = -26",
+        "5x = -15",
+        "x = -3"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.5",
+      "announced_skill": "Solve multi-step linear equations",
+      "generator_type": "linear_eq_multi_step",
+      "difficulty": 2,
+      "sample_index": 3,
+      "question_text": "Solve for x: 5(x + 8) - 6 = 59",
+      "question_latex": "5(x + 8) - 6 = 59",
+      "correct_answer": "5",
+      "answer_type": "integer",
+      "solution_steps": [
+        "Distribute: 5x + 40 - 6 = 59",
+        "Combine: 5x + 34 = 59",
+        "5x = 25",
+        "x = 5"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.5",
+      "announced_skill": "Solve multi-step linear equations",
+      "generator_type": "linear_eq_multi_step",
+      "difficulty": 2,
+      "sample_index": 4,
+      "question_text": "Solve for x: 3(x - 2) - 9 = -18",
+      "question_latex": "3(x - 2) - 9 = -18",
+      "correct_answer": "-1",
+      "answer_type": "integer",
+      "solution_steps": [
+        "Distribute: 3x - 6 - 9 = -18",
+        "Combine: 3x - 15 = -18",
+        "3x = -3",
+        "x = -1"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.5",
+      "announced_skill": "Solve multi-step linear equations",
+      "generator_type": "linear_eq_multi_step",
+      "difficulty": 2,
+      "sample_index": 5,
+      "question_text": "Solve for x: 3(x + 4) - 9 = -27",
+      "question_latex": "3(x + 4) - 9 = -27",
+      "correct_answer": "-10",
+      "answer_type": "integer",
+      "solution_steps": [
+        "Distribute: 3x + 12 - 9 = -27",
+        "Combine: 3x + 3 = -27",
+        "3x = -30",
+        "x = -10"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.5",
+      "announced_skill": "Solve multi-step linear equations",
+      "generator_type": "linear_eq_multi_step",
+      "difficulty": 3,
+      "sample_index": 1,
+      "question_text": "Solve for x: -4(x - 12) + 4 = 8",
+      "question_latex": "-4(x - 12) + 4 = 8",
+      "correct_answer": "11",
+      "answer_type": "integer",
+      "solution_steps": [
+        "Distribute: -4x + 48 + 4 = 8",
+        "Combine: -4x + 52 = 8",
+        "-4x = -44",
+        "x = 11"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.5",
+      "announced_skill": "Solve multi-step linear equations",
+      "generator_type": "linear_eq_multi_step",
+      "difficulty": 3,
+      "sample_index": 2,
+      "question_text": "Solve for x: -3(x - 3) - 13 = -19",
+      "question_latex": "-3(x - 3) - 13 = -19",
+      "correct_answer": "5",
+      "answer_type": "integer",
+      "solution_steps": [
+        "Distribute: -3x + 9 - 13 = -19",
+        "Combine: -3x - 4 = -19",
+        "-3x = -15",
+        "x = 5"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.5",
+      "announced_skill": "Solve multi-step linear equations",
+      "generator_type": "linear_eq_multi_step",
+      "difficulty": 3,
+      "sample_index": 3,
+      "question_text": "Solve for x: -3(x - 6) + 9 = -15",
+      "question_latex": "-3(x - 6) + 9 = -15",
+      "correct_answer": "14",
+      "answer_type": "integer",
+      "solution_steps": [
+        "Distribute: -3x + 18 + 9 = -15",
+        "Combine: -3x + 27 = -15",
+        "-3x = -42",
+        "x = 14"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.5",
+      "announced_skill": "Solve multi-step linear equations",
+      "generator_type": "linear_eq_multi_step",
+      "difficulty": 3,
+      "sample_index": 4,
+      "question_text": "Solve for x: -8(x - 12) - 2 = 134",
+      "question_latex": "-8(x - 12) - 2 = 134",
+      "correct_answer": "-5",
+      "answer_type": "integer",
+      "solution_steps": [
+        "Distribute: -8x + 96 - 2 = 134",
+        "Combine: -8x + 94 = 134",
+        "-8x = 40",
+        "x = -5"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.5",
+      "announced_skill": "Solve multi-step linear equations",
+      "generator_type": "linear_eq_multi_step",
+      "difficulty": 3,
+      "sample_index": 5,
+      "question_text": "Solve for x: -2(x + 9) + 20 = -8",
+      "question_latex": "-2(x + 9) + 20 = -8",
+      "correct_answer": "5",
+      "answer_type": "integer",
+      "solution_steps": [
+        "Distribute: -2x - 18 + 20 = -8",
+        "Combine: -2x + 2 = -8",
+        "-2x = -10",
+        "x = 5"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.5",
+      "announced_skill": "Solve multi-step linear equations",
+      "generator_type": "linear_eq_multi_step",
+      "difficulty": 4,
+      "sample_index": 1,
+      "question_text": "Solve for x: 3(x - 5) - 5x - 13 = 8",
+      "question_latex": "3(x - 5) - 5x - 13 = 8",
+      "correct_answer": "-18",
+      "answer_type": "integer",
+      "solution_steps": [
+        "Distribute: 3x - 15 - 5x - 13 = 8",
+        "Combine like terms: -2x - 28 = 8",
+        "-2x = 36",
+        "x = -18"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.5",
+      "announced_skill": "Solve multi-step linear equations",
+      "generator_type": "linear_eq_multi_step",
+      "difficulty": 4,
+      "sample_index": 2,
+      "question_text": "Solve for x: 7(x + 6) + 3x - 5 = -143",
+      "question_latex": "7(x + 6) + 3x - 5 = -143",
+      "correct_answer": "-18",
+      "answer_type": "integer",
+      "solution_steps": [
+        "Distribute: 7x + 42 + 3x - 5 = -143",
+        "Combine like terms: 10x + 37 = -143",
+        "10x = -180",
+        "x = -18"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.5",
+      "announced_skill": "Solve multi-step linear equations",
+      "generator_type": "linear_eq_multi_step",
+      "difficulty": 4,
+      "sample_index": 3,
+      "question_text": "Solve for x: -11(x + 3) + 8x - 23 = -74",
+      "question_latex": "-11(x + 3) + 8x - 23 = -74",
+      "correct_answer": "6",
+      "answer_type": "integer",
+      "solution_steps": [
+        "Distribute: -11x - 33 + 8x - 23 = -74",
+        "Combine like terms: -3x - 56 = -74",
+        "-3x = -18",
+        "x = 6"
+      ]
+    },
+    {
+      "standard_code": "M1.EQN.2.5",
+      "announced_skill": "Solve multi-step linear equations",
+      "generator_type": "linear_eq_multi_step",
+      "difficulty": 4,
+      "sample_index": 4,
+      "question_text": "Solve for x: -6(x + 1) + 8x - 12 = -4",
+      "question_latex": "-6(x + 1) + 8x - 12 = -4",
+      "correct_answer": "7",
+      "answer_type": "integer",
+      "solution_steps": [
+        "Distribute: -6x - 6 + 8x - 12 = -4",
+        "Combine like terms: 2x - 18 = -4",
+        "2x = 14",
         "x = 7"
       ]
     },
@@ -1448,15 +1535,15 @@
       "generator_type": "linear_eq_multi_step",
       "difficulty": 4,
       "sample_index": 5,
-      "question_text": "Solve for x: 5(x - 5) - 8 = -8",
-      "question_latex": "5(x - 5) - 8 = -8",
-      "correct_answer": "5",
+      "question_text": "Solve for x: 9(x + 13) + 4x + 6 = 19",
+      "question_latex": "9(x + 13) + 4x + 6 = 19",
+      "correct_answer": "-8",
       "answer_type": "integer",
       "solution_steps": [
-        "Distribute: 5x - 25 - 8 = -8",
-        "Combine: 5x - 33 = -8",
-        "5x = 25",
-        "x = 5"
+        "Distribute: 9x + 117 + 4x + 6 = 19",
+        "Combine like terms: 13x + 123 = 19",
+        "13x = -104",
+        "x = -8"
       ]
     }
   ]

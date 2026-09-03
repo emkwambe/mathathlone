@@ -1,0 +1,196 @@
+{
+  "results": [
+    {
+      "input": "M1.EQN.2.2 | linear_eq_one_step_add | difficulty 1",
+      "output": {
+        "calibration_status": "pass",
+        "findings": "All five equations are mathematically correct with accurate solution steps. The difficulty is well-calibrated for Level 1, and M1.EQN.2.3 correctly includes both multiplication and division forms.",
+        "group": "M1.EQN.2.2 | linear_eq_one_step_add | difficulty 1",
+        "instructional_status": "pass",
+        "mathematical_status": "pass",
+        "severity": "none"
+      },
+      "error": ""
+    },
+    {
+      "input": "M1.EQN.2.2 | linear_eq_one_step_add | difficulty 2",
+      "output": {
+        "calibration_status": "pass",
+        "findings": "All five subtraction-based one-step equations are mathematically sound with logical solution steps and accurate integer results. The group effectively transitions from Level 1 addition to Level 2 subtraction while maintaining clear algebraic notation.",
+        "group": "M1.EQN.2.2 | linear_eq_one_step_add | difficulty 2",
+        "instructional_status": "pass",
+        "mathematical_status": "pass",
+        "severity": "none"
+      },
+      "error": ""
+    },
+    {
+      "input": "M1.EQN.2.2 | linear_eq_one_step_add | difficulty 3",
+      "output": {
+        "calibration_status": "pass",
+        "findings": "All five equations in group M1.EQN.2.2 difficulty 3 are mathematically correct with valid solution steps. The review also confirms that M1.EQN.2.3 meets multiplication/division representation requirements and M1.EQN.2.4 correctly focuses on multiplication-form equations.",
+        "group": "M1.EQN.2.2 | linear_eq_one_step_add | difficulty 3",
+        "instructional_status": "pass",
+        "mathematical_status": "pass",
+        "severity": "none"
+      },
+      "error": ""
+    },
+    {
+      "input": "M1.EQN.2.2 | linear_eq_one_step_add | difficulty 4",
+      "output": {
+        "calibration_status": "pass",
+        "findings": "All five samples for M1.EQN.2.2 difficulty 4 are mathematically correct, and M1.EQN.2.3 correctly retains both multiplication and division forms. Difficulty calibration is appropriate, using double negatives to represent the highest level of one-step addition/subtraction complexity.",
+        "group": "M1.EQN.2.2 | linear_eq_one_step_add | difficulty 4",
+        "instructional_status": "pass",
+        "mathematical_status": "pass",
+        "severity": "none"
+      },
+      "error": ""
+    },
+    {
+      "input": "M1.EQN.2.3 | linear_eq_one_step_mult | difficulty 1",
+      "output": {
+        "calibration_status": "pass",
+        "findings": "All five samples for M1.EQN.2.3 Difficulty 1 are mathematically correct and include both multiplication and division representations. The difficulty is appropriately calibrated for level 1 with simple positive integer operations.",
+        "group": "M1.EQN.2.3 | linear_eq_one_step_mult | difficulty 1",
+        "instructional_status": "pass",
+        "mathematical_status": "pass",
+        "severity": "none"
+      },
+      "error": ""
+    },
+    {
+      "input": "M1.EQN.2.3 | linear_eq_one_step_mult | difficulty 2",
+      "output": {
+        "calibration_status": "pass",
+        "findings": "All five samples recomputed correctly with both multiplication and division forms represented. Solution steps and notation are consistent with the one-step linear equation standard.",
+        "group": "M1.EQN.2.3 | linear_eq_one_step_mult | difficulty 2",
+        "instructional_status": "pass",
+        "mathematical_status": "pass",
+        "severity": "none"
+      },
+      "error": ""
+    },
+    {
+      "input": "M1.EQN.2.3 | linear_eq_one_step_mult | difficulty 3",
+      "output": {
+        "calibration_status": "pass",
+        "findings": "All five samples are mathematically accurate and follow the required instructional balance between multiplication and division forms. The introduction of negative integers at difficulty level 3 is correctly calibrated for the NC Math 1 standard.",
+        "group": "M1.EQN.2.3 | linear_eq_one_step_mult | difficulty 3",
+        "instructional_status": "pass",
+        "mathematical_status": "pass",
+        "severity": "none"
+      },
+      "error": ""
+    },
+    {
+      "input": "M1.EQN.2.3 | linear_eq_one_step_mult | difficulty 4",
+      "output": {
+        "calibration_status": "pass",
+        "findings": "All five equations were independently recomputed and verified as mathematically accurate, with solution steps correctly reflecting inverse operations. The group appropriately includes both multiplication and division representations as required, and the use of negative values with multi-digit integers justifies the difficulty 4 calibration.",
+        "group": "M1.EQN.2.3 | linear_eq_one_step_mult | difficulty 4",
+        "instructional_status": "pass",
+        "mathematical_status": "pass",
+        "severity": "none"
+      },
+      "error": ""
+    },
+    {
+      "input": "M1.EQN.2.4 | linear_eq_two_step | difficulty 1",
+      "output": {
+        "calibration_status": "pass",
+        "findings": "All five samples for M1.EQN.2.4 difficulty 1 are mathematically correct and follow the expected two-step structure with integer solutions. The M1.EQN.2.3 group correctly includes both multiplication and division forms as required.",
+        "group": "M1.EQN.2.4 | linear_eq_two_step | difficulty 1",
+        "instructional_status": "pass",
+        "mathematical_status": "pass",
+        "severity": "none"
+      },
+      "error": ""
+    },
+    {
+      "input": "M1.EQN.2.4 | linear_eq_two_step | difficulty 2",
+      "output": {
+        "calibration_status": "pass",
+        "findings": "All five samples for M1.EQN.2.4 difficulty 2 are mathematically correct and demonstrate appropriate difficulty progression by introducing negative integers. The group meets all instructional criteria, including the correctly applied waiver for division-form equations while M1.EQN.2.3 maintains balanced representation.",
+        "group": "M1.EQN.2.4 | linear_eq_two_step | difficulty 2",
+        "instructional_status": "pass",
+        "mathematical_status": "pass",
+        "severity": "none"
+      },
+      "error": ""
+    },
+    {
+      "input": "M1.EQN.2.4 | linear_eq_two_step | difficulty 3",
+      "output": {
+        "calibration_status": "pass",
+        "findings": "All five equations are mathematically correct with accurate solution steps. The difficulty 3 calibration is appropriate for two-step equations involving negative integers and multi-digit constants.",
+        "group": "M1.EQN.2.4 | linear_eq_two_step | difficulty 3",
+        "instructional_status": "pass",
+        "mathematical_status": "pass",
+        "severity": "none"
+      },
+      "error": ""
+    },
+    {
+      "input": "M1.EQN.2.4 | linear_eq_two_step | difficulty 4",
+      "output": {
+        "calibration_status": "pass",
+        "findings": "All five M1.EQN.2.4 difficulty 4 samples are mathematically correct and demonstrate appropriate level-4 complexity with negative coefficients and larger constants. M1.EQN.2.3 correctly maintains both multiplication and division forms across all levels as required by the methodology.",
+        "group": "M1.EQN.2.4 | linear_eq_two_step | difficulty 4",
+        "instructional_status": "pass",
+        "mathematical_status": "pass",
+        "severity": "none"
+      },
+      "error": ""
+    },
+    {
+      "input": "M1.EQN.2.5 | linear_eq_multi_step | difficulty 1",
+      "output": {
+        "calibration_status": "pass",
+        "findings": "All five multi-step equations were independently verified for mathematical accuracy and logical step-by-step resolution. The difficulty calibration is appropriate for level 1, focusing on distribution and constant combination without the added complexity of negative coefficients or multiple variable terms.",
+        "group": "M1.EQN.2.5 | linear_eq_multi_step | difficulty 1",
+        "instructional_status": "pass",
+        "mathematical_status": "pass",
+        "severity": "none"
+      },
+      "error": ""
+    },
+    {
+      "input": "M1.EQN.2.5 | linear_eq_multi_step | difficulty 2",
+      "output": {
+        "calibration_status": "pass",
+        "findings": "All five equations were recomputed correctly with logical solution steps, and the group shows appropriate difficulty progression with negative constants. The review also confirmed that M1.EQN.2.3 maintains both multiplication and division forms while M1.EQN.2.4 correctly adheres to two-step linear equation standards.",
+        "group": "M1.EQN.2.5 | linear_eq_multi_step | difficulty 2",
+        "instructional_status": "pass",
+        "mathematical_status": "pass",
+        "severity": "none"
+      },
+      "error": ""
+    },
+    {
+      "input": "M1.EQN.2.5 | linear_eq_multi_step | difficulty 3",
+      "output": {
+        "calibration_status": "pass",
+        "findings": "All five M1.EQN.2.5 difficulty 3 equations are mathematically correct with clear distribution and combination steps. The group is well-calibrated, and cross-standard representation requirements for M1.EQN.2.3 and M1.EQN.2.4 are fully met.",
+        "group": "M1.EQN.2.5 | linear_eq_multi_step | difficulty 3",
+        "instructional_status": "pass",
+        "mathematical_status": "pass",
+        "severity": "none"
+      },
+      "error": ""
+    },
+    {
+      "input": "M1.EQN.2.5 | linear_eq_multi_step | difficulty 4",
+      "output": {
+        "calibration_status": "pass",
+        "findings": "All five samples for M1.EQN.2.5 difficulty 4 are mathematically correct with clear solution steps and appropriate difficulty calibration. The review also confirmed that M1.EQN.2.3 includes required multiplication/division forms and M1.EQN.2.4 correctly uses multiplication-based two-step equations.",
+        "group": "M1.EQN.2.5 | linear_eq_multi_step | difficulty 4",
+        "instructional_status": "pass",
+        "mathematical_status": "pass",
+        "severity": "none"
+      },
+      "error": ""
+    }
+  ]
+}

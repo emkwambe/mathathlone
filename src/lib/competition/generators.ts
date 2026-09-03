@@ -243,27 +243,68 @@ export function generate_simplify_expression(difficulty: DifficultyLevel): Gener
 }
 
 // 3. M1.EQN.2.2 - One-Step Equations (Add/Sub)
+// Difficulty progression: (1) positive integers; (2) positive solution with a
+// subtraction representation; (3) signed terms and signed solution; (4) larger
+// signed integers, including subtraction of a negative quantity.
 export function generate_linear_eq_one_step_add(difficulty: DifficultyLevel): GeneratedQuestion {
-  const ranges = { 1: [1, 10], 2: [-10, 15], 3: [-20, 20], 4: [-30, 30] };
-  const [min, max] = ranges[difficulty];
-  
-  const x = randomInt(min, max);
-  const b = randomNonZeroInt(min, max);
+  const configs = {
+    1: { x: [2, 12], b: [1, 10], operation: 'add' as const },
+    2: { x: [4, 18], b: [2, 12], operation: 'subtract' as const },
+    3: { x: [-18, 18], b: [-15, 15], operation: 'signed' as const },
+    4: { x: [-35, 35], b: [-30, 30], operation: 'signed' as const },
+  };
+  const cfg = configs[difficulty];
+  const x = difficulty === 3
+    ? randomNonZeroInt(-18, -2)
+    : difficulty === 4
+      ? randomNonZeroInt(cfg.x[0], cfg.x[1])
+      : randomInt(cfg.x[0], cfg.x[1]);
+
+  let b: number;
+  if (cfg.operation === 'add') {
+    b = randomNonZeroInt(cfg.b[0], cfg.b[1]);
+  } else if (cfg.operation === 'subtract') {
+    b = -randomNonZeroInt(cfg.b[0], cfg.b[1]);
+  } else if (difficulty === 4) {
+    // Require a negative constant at the highest level so the printed prompt
+    // includes x - (-n), not merely a wider version of an introductory item.
+    b = -randomNonZeroInt(2, Math.abs(cfg.b[1]));
+  } else {
+    // Level 3 requires a negative solution with a positive added constant,
+    // making its signed-integer structure visibly distinct from levels 1–2.
+    b = randomNonZeroInt(5, 15);
+  }
+
+  // At level 4, show subtraction of a negative explicitly. The effective
+  // algebraic constant is positive, so the printed expression and the answer
+  // remain equivalent: x - (-n) = x + n.
+  if (difficulty === 4) {
+    const negativeConstantMagnitude = Math.abs(b);
+    const c = x + negativeConstantMagnitude;
+    const equation = `x - (-${negativeConstantMagnitude}) = ${c}`;
+    return {
+      question_latex: equation,
+      question_text: `Solve for x: ${equation}`,
+      correct_answer: String(x),
+      answer_type: 'integer',
+      solution_steps: [equation, `x + ${negativeConstantMagnitude} = ${c}`, `x = ${c} - ${negativeConstantMagnitude}`, `x = ${x}`],
+      difficulty,
+      concept_id: 'M1.EQN.2.2',
+      generator_type: 'linear_eq_one_step_add',
+    };
+  }
+
   const c = x + b;
-  
-  const sign = b > 0 ? '+' : '-';
-  const absB = Math.abs(b);
-  
+  const operator = b > 0 ? '+' : '-';
+  const equation = `x ${operator} ${Math.abs(b)} = ${c}`;
+  const inverseOperation = b > 0 ? `x = ${c} - ${Math.abs(b)}` : `x = ${c} + ${Math.abs(b)}`;
+
   return {
-    question_latex: `x ${sign} ${absB} = ${c}`,
-    question_text: `Solve for x: x ${sign} ${absB} = ${c}`,
+    question_latex: equation,
+    question_text: `Solve for x: ${equation}`,
     correct_answer: String(x),
     answer_type: 'integer',
-    solution_steps: [
-      `x ${sign} ${absB} = ${c}`,
-      b > 0 ? `x = ${c} - ${absB}` : `x = ${c} + ${absB}`,
-      `x = ${x}`
-    ],
+    solution_steps: [equation, inverseOperation, `x = ${x}`],
     difficulty,
     concept_id: 'M1.EQN.2.2',
     generator_type: 'linear_eq_one_step_add',
@@ -271,20 +312,51 @@ export function generate_linear_eq_one_step_add(difficulty: DifficultyLevel): Ge
 }
 
 // 4. M1.EQN.2.3 - One-Step Equations (Mult/Div)
+// Every difficulty can produce either an explicit multiplication equation or an
+// explicit division equation. Higher levels add signed quantities and larger,
+// non-unit divisors; coefficient 1 is never used.
 export function generate_linear_eq_one_step_mult(difficulty: DifficultyLevel): GeneratedQuestion {
-  const ranges = { 1: [2, 5], 2: [2, 10], 3: [-10, 10], 4: [-12, 12] };
-  const [min, max] = ranges[difficulty];
-  
-  const a = randomNonZeroInt(min, max);
-  const x = randomInt(-10, 10);
-  const c = a * x;
-  
+  const configs = {
+    1: { factor: [2, 5], quotient: [2, 10], signed: false },
+    2: { factor: [3, 8], quotient: [3, 15], signed: false },
+    3: { factor: [3, 12], quotient: [-18, 18], signed: true },
+    4: { factor: [5, 18], quotient: [-30, 30], signed: true },
+  };
+  const cfg = configs[difficulty];
+  const useDivisionForm = Math.random() < 0.5;
+  const magnitude = randomNonZeroInt(cfg.factor[0], cfg.factor[1]);
+  // A signed divisor/coefficient is mandatory at levels 3–4, ensuring every
+  // higher-level instance differs structurally from the positive-integer forms.
+  const factor = cfg.signed ? -magnitude : magnitude;
+  const x = cfg.signed
+    ? randomNonZeroInt(cfg.quotient[0], cfg.quotient[1])
+    : randomNonZeroInt(cfg.quotient[0], cfg.quotient[1]);
+
+  if (useDivisionForm) {
+    const displayedDivisor = factor < 0 ? `(${factor})` : String(factor);
+    const equationText = `x ÷ ${displayedDivisor} = ${x}`;
+    const equationLatex = `\\frac{x}{${factor}} = ${x}`;
+    const answer = factor * x;
+    return {
+      question_latex: equationLatex,
+      question_text: `Solve for x: ${equationText}`,
+      correct_answer: String(answer),
+      answer_type: 'integer',
+      solution_steps: [equationText, `x = ${x} × ${factor}`, `x = ${answer}`],
+      difficulty,
+      concept_id: 'M1.EQN.2.3',
+      generator_type: 'linear_eq_one_step_mult',
+    };
+  }
+
+  const c = factor * x;
+  const equation = `${factor}x = ${c}`;
   return {
-    question_latex: `${a}x = ${c}`,
-    question_text: `Solve for x: ${a}x = ${c}`,
+    question_latex: equation,
+    question_text: `Solve for x: ${equation}`,
     correct_answer: String(x),
     answer_type: 'integer',
-    solution_steps: [`${a}x = ${c}`, `x = ${c} ÷ ${a}`, `x = ${x}`],
+    solution_steps: [equation, `x = ${c} ÷ ${factor}`, `x = ${x}`],
     difficulty,
     concept_id: 'M1.EQN.2.3',
     generator_type: 'linear_eq_one_step_mult',
@@ -301,7 +373,10 @@ export function generate_linear_eq_two_step(difficulty: DifficultyLevel): Genera
   };
   const cfg = configs[difficulty];
   
-  const a = randomNonZeroInt(cfg.coef[0], cfg.coef[1]);
+  let a = randomNonZeroInt(cfg.coef[0], cfg.coef[1]);
+  if (difficulty >= 3) {
+    while (Math.abs(a) === 1) a = randomNonZeroInt(cfg.coef[0], cfg.coef[1]);
+  }
   const x = randomInt(cfg.ans[0], cfg.ans[1]);
   const b = randomNonZeroInt(cfg.const[0], cfg.const[1]);
   const c = a * x + b;
@@ -326,26 +401,68 @@ export function generate_linear_eq_two_step(difficulty: DifficultyLevel): Genera
 }
 
 // 6. M1.EQN.2.5 - Multi-Step Equations
+// Difficulty progression: (1) positive single-distribution; (2) signed
+// constants and solutions; (3) negative coefficients with larger signed values;
+// (4) distribution plus a second x-term to combine, while keeping variables on
+// the left side only (variables on both sides are M1.EQN.2.6).
 export function generate_linear_eq_multi_step(difficulty: DifficultyLevel): GeneratedQuestion {
-  const a = randomNonZeroInt(2, 5);
-  const b = randomInt(-5, 5);
-  const c = randomInt(-10, 10);
-  const x = randomInt(-8, 8);
+  const configs = {
+    1: { a: [2, 4], b: [1, 5], c: [1, 8], x: [2, 10] },
+    2: { a: [2, 6], b: [-8, 8], c: [-12, 12], x: [-10, 10] },
+    3: { a: [-8, 8], b: [-12, 12], c: [-20, 20], x: [-15, 15] },
+    4: { a: [-12, 12], b: [-15, 15], c: [-25, 25], x: [-20, 20] },
+  };
+  const cfg = configs[difficulty];
+  let a = randomNonZeroInt(cfg.a[0], cfg.a[1]);
+  if (difficulty === 3) {
+    // A negative distributive coefficient is the visible level-three advance.
+    a = -randomNonZeroInt(2, 8);
+  } else if (difficulty === 4) {
+    while (Math.abs(a) === 1) a = randomNonZeroInt(cfg.a[0], cfg.a[1]);
+  }
+  const b = randomNonZeroInt(cfg.b[0], cfg.b[1]);
+  const c = randomNonZeroInt(cfg.c[0], cfg.c[1]);
+  const x = difficulty === 1 ? randomInt(cfg.x[0], cfg.x[1]) : randomNonZeroInt(cfg.x[0], cfg.x[1]);
+  const innerSign = b > 0 ? '+' : '-';
+
+  if (difficulty === 4) {
+    let d = randomNonZeroInt(-8, 8);
+    while (a + d === 0) d = randomNonZeroInt(-8, 8);
+    const coefficient = a + d;
+    const result = a * (x + b) + d * x + c;
+    const equation = `${a}(x ${innerSign} ${Math.abs(b)}) ${formatCoef(d)}x ${formatConst(c)} = ${result}`;
+    const distributed = `${a}x ${formatConst(a * b)} ${formatCoef(d)}x ${formatConst(c)} = ${result}`;
+    const constant = a * b + c;
+    return {
+      question_latex: equation,
+      question_text: `Solve for x: ${equation}`,
+      correct_answer: String(x),
+      answer_type: 'integer',
+      solution_steps: [
+        `Distribute: ${distributed}`,
+        `Combine like terms: ${coefficient}x ${formatConst(constant)} = ${result}`,
+        `${coefficient}x = ${result - constant}`,
+        `x = ${x}`,
+      ],
+      difficulty,
+      concept_id: 'M1.EQN.2.5',
+      generator_type: 'linear_eq_multi_step',
+    };
+  }
+
   const result = a * (x + b) + c;
-  
-  const innerSign = b >= 0 ? '+' : '-';
-  const outerSign = c >= 0 ? '+' : '-';
-  
+  const equation = `${a}(x ${innerSign} ${Math.abs(b)}) ${formatConst(c)} = ${result}`;
+  const distributedConstant = a * b + c;
   return {
-    question_latex: `${a}(x ${innerSign} ${Math.abs(b)}) ${outerSign} ${Math.abs(c)} = ${result}`,
-    question_text: `Solve for x: ${a}(x ${innerSign} ${Math.abs(b)}) ${outerSign} ${Math.abs(c)} = ${result}`,
+    question_latex: equation,
+    question_text: `Solve for x: ${equation}`,
     correct_answer: String(x),
     answer_type: 'integer',
     solution_steps: [
-      `Distribute: ${a}x ${formatConst(a * b)} ${outerSign} ${Math.abs(c)} = ${result}`,
-      `Combine: ${a}x ${formatConst(a * b + c)} = ${result}`,
-      `${a}x = ${result - (a * b + c)}`,
-      `x = ${x}`
+      `Distribute: ${a}x ${formatConst(a * b)} ${formatConst(c)} = ${result}`,
+      `Combine: ${a}x ${formatConst(distributedConstant)} = ${result}`,
+      `${a}x = ${result - distributedConstant}`,
+      `x = ${x}`,
     ],
     difficulty,
     concept_id: 'M1.EQN.2.5',
