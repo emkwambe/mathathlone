@@ -51,8 +51,8 @@ export interface AssessmentDocument {
   title: string;
   course: string;
   topics: string[];
-  /** Human-readable selected skills. This excludes generator IDs and answers. */
-  concepts: string[];
+  /** Manually curated student-facing skills. This excludes internal concept names, generator IDs, and answers. */
+  announcedSkills: string[];
   purpose: AssessmentPurpose;
   /** Student-safe statement explaining independent later Heat generation. */
   preparationNote?: string;
@@ -156,8 +156,8 @@ function buildMCOptions(
 }
 
 export interface AssembleAssessmentOptions {
-  /** Human-readable concepts the teacher selected from the curriculum tree. */
-  concepts?: string[];
+  /** Manually curated student-facing labels for the selected curriculum concepts. */
+  announcedSkills?: string[];
   /** Makes the worksheet’s student-facing purpose explicit. */
   purpose?: AssessmentPurpose;
   /** Student-safe independent-question explanation for competition preparation. */
@@ -319,7 +319,7 @@ export function assembleAssessment(
     title: TITLES[type],
     course: courseName,
     topics: topicNames,
-    concepts: options.concepts ?? [],
+    announcedSkills: options.announcedSkills ?? [],
     purpose: options.purpose ?? 'standalone_practice',
     preparationNote: options.preparationNote,
     returnHref: options.returnHref,

@@ -115,7 +115,7 @@ export async function POST(req: NextRequest) {
 
     const { data: course, error: courseError } = await supabase
       .from('courses')
-      .select('id, name')
+      .select('id, name, code')
       .eq('id', courseId)
       .eq('is_active', true)
       .maybeSingle();
@@ -138,15 +138,38 @@ export async function POST(req: NextRequest) {
 
     const { data: concepts, error: conceptsError } = await supabase
       .from('atomic_concepts')
-      .select('id, name, unit_topic_id')
+      .select('id, name, announced_skill, unit_topic_id')
       .in('id', conceptIds)
       .in('unit_topic_id', courseTopicIds);
     if (conceptsError || (concepts ?? []).length !== conceptIds.length) {
       return NextResponse.json({ error: 'Every selected concept must belong to the selected course.' }, { status: 400 });
     }
 
-    const selectedConcepts = concepts as Array<{ id: string; name: string; unit_topic_id: string }>;
+    const selectedConcepts = concepts as Array<{
+      id: string;
+      name: string;
+      announced_skill: string | null;
+      unit_topic_id: string;
+    }>;
     const conceptNameById = new Map(selectedConcepts.map((concept) => [concept.id, concept.name]));
+    const announcedSkillById = new Map(
+      selectedConcepts.map((concept) => [concept.id, concept.announced_skill?.trim() ?? '']),
+    );
+    const missingAnnouncedSkillCount = conceptIds.filter(
+      (conceptId) => !announcedSkillById.get(conceptId),
+    ).length;
+
+    // Competition-preparation copies go directly to students. A student-facing
+    // briefing therefore requires manually curated educator-approved labels;
+    // internal concept descriptions are never used as a fallback or paraphrased.
+    if (purpose === 'competition_preparation' && missingAnnouncedSkillCount > 0) {
+      return NextResponse.json(
+        {
+          error: 'The selected scope is missing one or more approved student-facing skill labels. Do not distribute a competition-preparation worksheet until curriculum review supplies those manual labels.',
+        },
+        { status: 422 },
+      );
+    }
     const topicNames = Array.from(
       new Set(selectedConcepts.map((concept) => topicNameById.get(concept.unit_topic_id)).filter((name): name is string => !!name)),
     );
@@ -183,7 +206,9 @@ export async function POST(req: NextRequest) {
       topicNames,
       'STANDALONE',
       {
-        concepts: conceptIds.map((conceptId) => conceptNameById.get(conceptId) ?? 'Unnamed concept'),
+        announcedSkills: conceptIds
+          .map((conceptId) => announcedSkillById.get(conceptId) ?? '')
+          .filter(Boolean),
         purpose,
         preparationNote: purpose === 'competition_preparation'
           ? 'Your Heat will assess these skills using new question instances. This worksheet does not include future competition questions.'

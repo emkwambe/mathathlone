@@ -45,6 +45,8 @@ export interface ConceptRow {
   id: string;
   name: string;
   lesson_number: string;
+  /** Manual educator-approved student-facing label; never AI-generated. */
+  announced_skill: string | null;
   unit_topic_id: string;
 }
 

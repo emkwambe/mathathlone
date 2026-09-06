@@ -47,6 +47,11 @@ import {
 import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { ProtectedRouteLoadingFallback } from '@/components/auth/ProtectedRouteLoadingFallback';
+import { ContentReadinessNotice } from '@/components/content/ContentReadinessNotice';
+import {
+  getSelectedContentReadiness,
+  hasCuratedAnnouncedSkill,
+} from '@/lib/content/readiness';
 import {
   createHeat,
   type HeatType,
@@ -221,7 +226,16 @@ function TopicTreeNode({ topic, concepts, expanded, selectedConceptIds, onToggle
             concepts.map((c) => (
               <label key={c.id} className="flex items-center gap-2 px-2 py-1 rounded hover:bg-gray-50 cursor-pointer select-none">
                 <input type="checkbox" checked={selectedConceptIds.has(c.id)} onChange={() => onToggleConcept(c.id)} className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
-                <span className="text-sm text-gray-700">{c.name ? `${c.lesson_number} — ${c.name}` : c.lesson_number}</span>
+                <span className="min-w-0 text-sm text-gray-700">
+                  {hasCuratedAnnouncedSkill(c.announced_skill)
+                    ? c.announced_skill
+                    : c.name
+                      ? `${c.lesson_number} — ${c.name}`
+                      : c.lesson_number}
+                  {hasCuratedAnnouncedSkill(c.announced_skill) && (
+                    <span className="ml-2 text-[11px] text-slate-400">{c.lesson_number}</span>
+                  )}
+                </span>
               </label>
             ))
           )}
@@ -491,7 +505,7 @@ export default function CreateHeatPage() {
         if (topicIds.length === 0) { dispatch({ type: 'SET_TREE', payload: { topics: [], concepts: [] } }); return; }
 
         const { data: cs, error: cErr } = await withConfigTimeout(
-          supabase.from('atomic_concepts').select('id, name, lesson_number, unit_topic_id').in('unit_topic_id', topicIds).order('lesson_number', { ascending: true }),
+          supabase.from('atomic_concepts').select('id, name, lesson_number, announced_skill, unit_topic_id').in('unit_topic_id', topicIds).order('lesson_number', { ascending: true }),
           'Loading concepts',
         );
         if (cancelled) return;
@@ -520,6 +534,18 @@ export default function CreateHeatPage() {
     : (['practice', 'school', 'district'] as Array<keyof typeof COMPETITION_INTEGRITY_LEVELS>);
   const currentIntegrityCfg = COMPETITION_INTEGRITY_LEVELS[integrityLevel as keyof typeof COMPETITION_INTEGRITY_LEVELS];
   const isIntegrityLocked = !!currentMode.locked_integrity;
+  const selectedConcepts = useMemo(
+    () => concepts.filter((concept) => selectedConceptIds.has(concept.id)),
+    [concepts, selectedConceptIds],
+  );
+  const selectedContentReadiness = useMemo(
+    () => getSelectedContentReadiness(selectedCourse?.code, selectedConcepts),
+    [selectedCourse?.code, selectedConcepts],
+  );
+  const missingAnnouncedSkillCount = useMemo(
+    () => selectedConcepts.filter((concept) => !hasCuratedAnnouncedSkill(concept.announced_skill)).length,
+    [selectedConcepts],
+  );
 
   // ── Practice worksheet handoff ───────────────────────────────────────────
   const handlePrepareWorksheet = useCallback(() => {
@@ -798,6 +824,17 @@ export default function CreateHeatPage() {
                       </button>
                     );
                   })}
+                </div>
+              )}
+
+              {selectedCourse && (
+                <div className="mb-5">
+                  <ContentReadinessNotice
+                    readiness={selectedContentReadiness}
+                    selectedConceptCount={selectedCount}
+                    missingAnnouncedSkillCount={missingAnnouncedSkillCount}
+                    purpose="competition_preparation"
+                  />
                 </div>
               )}
 

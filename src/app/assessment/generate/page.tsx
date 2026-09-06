@@ -41,6 +41,11 @@ import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { ProtectedRouteLoadingFallback } from '@/components/auth/ProtectedRouteLoadingFallback';
 import type { AssessmentDocument } from '@/lib/assessment/assembler';
+import { ContentReadinessNotice } from '@/components/content/ContentReadinessNotice';
+import {
+  getSelectedContentReadiness,
+  hasCuratedAnnouncedSkill,
+} from '@/lib/content/readiness';
 import {
   ASSESSMENT_FORMAT_CONFIGS,
   getAssessmentQuestionPlan,
@@ -84,6 +89,7 @@ interface ConceptRow {
   id: string;
   name: string;
   lesson_number: string;
+  announced_skill: string | null;
   unit_topic_id: string;
 }
 
@@ -279,7 +285,12 @@ function TopicTreeNode({
                     onChange={() => onToggleConcept(c.id)}
                     className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                   />
-                  <span className="text-sm text-gray-700">{c.name}</span>
+                  <span className="min-w-0 text-sm text-gray-700">
+                    {hasCuratedAnnouncedSkill(c.announced_skill) ? c.announced_skill : c.name}
+                    {hasCuratedAnnouncedSkill(c.announced_skill) && (
+                      <span className="ml-2 text-[11px] text-slate-400">{c.lesson_number}</span>
+                    )}
+                  </span>
                 </label>
               );
             })
@@ -539,7 +550,7 @@ export default function GenerateAssessmentPage() {
         const { data: cs, error: cErr } = await withCurriculumTimeout(
           supabase
             .from('atomic_concepts')
-            .select('id, name, lesson_number, unit_topic_id')
+            .select('id, name, lesson_number, announced_skill, unit_topic_id')
             .in('unit_topic_id', topicIds)
             .order('lesson_number', { ascending: true }),
           'Loading concepts',
@@ -632,6 +643,19 @@ export default function GenerateAssessmentPage() {
   const totalConcepts = concepts.length;
   const selectedCount = selectedConceptIds.size;
   const enoughConcepts = selectedCount >= MIN_CONCEPTS;
+  const selectedConcepts = useMemo(
+    () => concepts.filter((concept) => selectedConceptIds.has(concept.id)),
+    [concepts, selectedConceptIds],
+  );
+  const selectedContentReadiness = useMemo(
+    () => getSelectedContentReadiness(selectedCourse?.code, selectedConcepts),
+    [selectedCourse?.code, selectedConcepts],
+  );
+  const missingAnnouncedSkillCount = useMemo(
+    () => selectedConcepts.filter((concept) => !hasCuratedAnnouncedSkill(concept.announced_skill)).length,
+    [selectedConcepts],
+  );
+  const competitionBriefingReady = !isHeatPreparation || missingAnnouncedSkillCount === 0;
 
   const selectedTopicSummary = useMemo(() => {
     const map = new Map<string, number>();
@@ -657,6 +681,7 @@ export default function GenerateAssessmentPage() {
     selectedCourse.available !== false &&
     enoughConcepts &&
     everyConceptCanAppear &&
+    competitionBriefingReady &&
     !!docType &&
     !!difficultyProfile;
 
@@ -931,6 +956,14 @@ export default function GenerateAssessmentPage() {
                   />
                 ))}
               </div>
+              <div className="mt-4">
+                <ContentReadinessNotice
+                  readiness={selectedContentReadiness}
+                  selectedConceptCount={selectedCount}
+                  missingAnnouncedSkillCount={missingAnnouncedSkillCount}
+                  purpose={isHeatPreparation ? 'competition_preparation' : 'standalone_practice'}
+                />
+              </div>
             </>
           )}
         </SectionCard>
@@ -1070,7 +1103,11 @@ export default function GenerateAssessmentPage() {
         </SectionCard>
 
         {/* ── Step 7: Generate ─────────────────────────────────────────── */}
-        <SectionCard step={7} title="Review and Generate" locked={!canGenerate}>
+        <SectionCard
+          step={7}
+          title="Review and Generate"
+          locked={!selectedDivision || !selectedCourse || !enoughConcepts || !everyConceptCanAppear}
+        >
           <div className="rounded-xl bg-gray-50 border border-gray-200 p-4 mb-4 space-y-2 text-sm">
             <SummaryRow label="Division" value={selectedDivision?.name ?? '—'} />
             <SummaryRow label="Course" value={selectedCourse?.name ?? '—'} />
@@ -1083,6 +1120,7 @@ export default function GenerateAssessmentPage() {
               }
             />
             <SummaryRow label="Concepts" value={`${selectedCount} selected`} />
+            <SummaryRow label="Readiness" value={selectedContentReadiness.label} />
             <SummaryRow
               label="Document"
               value={DOC_TYPES.find((d) => d.key === docType)?.label ?? docType}
@@ -1100,6 +1138,12 @@ export default function GenerateAssessmentPage() {
               value={DIFFICULTY_PROFILES.find((p) => p.key === difficultyProfile)?.label ?? difficultyProfile}
             />
           </div>
+
+          {!competitionBriefingReady && (
+            <p className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-medium leading-relaxed text-amber-900">
+              Generation is paused for this competition-preparation worksheet because the selected student briefing is incomplete. Add only manually approved curriculum labels; the system will not create or paraphrase them.
+            </p>
+          )}
 
           <div className="flex gap-3">
             <button

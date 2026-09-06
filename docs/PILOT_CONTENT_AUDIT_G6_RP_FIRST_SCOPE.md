@@ -96,13 +96,14 @@ The original ratio-table defect was a presentation defect: values were flattened
 | `RP-004` | Major | Worksheet-to-Heat preparation flow has not been rehearsed in production with a rostered class. | Complete the designated teacher workflow and compare independently generated practice and Heat items. | Open release gate |
 | `RP-005` | Major | Difficulty levels were not reliably differentiated across the three generator families. | All three generators now use explicit non-overlapping numerical or representation progressions. | Closed in source; qualified sign-off pending |
 | `RP-006` | Major | Repeated procedural prompts could appear in one assembled session. | Shared bounded retry prevents exact duplicate student-visible prompts in worksheets and procedural Heat items. | Closed in source; production session evidence pending |
+| `RP-007` | Major | The student briefing exposed raw internal concept labels rather than concise approved skill labels. | Store only the three reviewed Grade 6 labels as manual `announced_skill` metadata; reject competition preparation when a selected label is missing. | Source fix pending deployment and production evidence |
 
 ## 7. Remaining release evidence
 
 The course may be marked **Ready** only when all items below are complete.
 
 1. A qualified Grade 6 teacher or curriculum reviewer independently completes and signs the 60-item retained review set. Any rejected item reopens the mathematical veto for the affected generator and difficulty.
-2. A deployed teacher generates a competition-preparation worksheet with all three concepts. The document shows the course, topic, concepts, fresh-instance statement, and no teacher answer key.
+2. A deployed teacher generates a competition-preparation worksheet with all three concepts. The document shows the course, topic, the three manually approved student-facing skills as a readable list, the fresh-instance statement, and no teacher answer key. It must not show raw internal concept names in the student briefing.
 3. A ratio-table item is readable as a two-column table in the page view and in a saved Chrome PDF.
 4. The Practice Review stays within the pilot page target: normally at most four student-question pages and no spurious blank answer-key page.
 5. Returning from the worksheet restores the selected class, course, concepts, mode, profile, timing, and content division in the Heat Builder.

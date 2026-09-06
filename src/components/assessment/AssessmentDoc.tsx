@@ -26,6 +26,9 @@ function Math({ text, className }: { text: string; className?: string }) {
 export default function AssessmentDoc({ doc }: { doc: AssessmentDocument }) {
   const sectionA = doc.sections.A;
   const sectionB = doc.sections.B;
+  // A saved preview from a deployment before announcedSkills exists can still
+  // open safely; new competition-preparation documents are server-validated.
+  const announcedSkills = doc.announcedSkills ?? [];
   const mcPts = sectionA[0]?.points ?? 0;
   const frPts = sectionB[0]?.points ?? 0;
 
@@ -87,8 +90,15 @@ export default function AssessmentDoc({ doc }: { doc: AssessmentDocument }) {
             <section className="mb-3 rounded border border-slate-400 bg-slate-50 px-3 py-2 text-[10pt] leading-snug">
               <p className="font-bold">Skills you will practice</p>
               <p><span className="font-semibold">Topics:</span> {doc.topics.join(' · ') || 'Selected course skills'}</p>
-              {doc.concepts.length > 0 && (
-                <p><span className="font-semibold">Concepts:</span> {doc.concepts.join(' · ')}</p>
+              {announcedSkills.length > 0 && (
+                <div className="mt-1">
+                  <p className="font-semibold">Skills:</p>
+                  <ul className="ml-5 list-disc space-y-0.5">
+                    {announcedSkills.map((skill) => (
+                      <li key={skill}>{skill}</li>
+                    ))}
+                  </ul>
+                </div>
               )}
               <p className="mt-1 italic">{doc.preparationNote ?? 'Your Heat will assess these skills using new question instances.'}</p>
             </section>
