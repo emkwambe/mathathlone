@@ -43,7 +43,7 @@ export function ContentReadinessNotice({
         )}
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
-            <p className="text-sm font-semibold">Content readiness</p>
+            <p className="text-sm font-semibold">Curriculum-scope readiness</p>
             <span className={`rounded-full border px-2 py-0.5 text-[11px] font-semibold ${classes.badge}`}>
               {readiness.label}
             </span>
@@ -53,7 +53,7 @@ export function ContentReadinessNotice({
           </p>
           {readiness.auditRecord && (
             <p className="mt-1.5 text-[11px] font-medium opacity-80">
-              Recorded audit: {readiness.auditRecord}
+              Recorded content audit: {readiness.auditRecord}
             </p>
           )}
           {needsManualBriefingLabel && (

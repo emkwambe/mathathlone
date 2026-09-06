@@ -38,16 +38,16 @@ Competition preparation continues to force the **Practice Review** type. The tea
 
 The competition-preparation briefing now uses only **manually authored, educator-approved** `atomic_concepts.announced_skill` records. It never substitutes the longer internal concept description and never invokes, paraphrases, or infers with AI. A competition-preparation worksheet is blocked when any selected concept lacks a manual label; standalone practice remains available, but it does not invent a student-facing skill label.
 
-The teacher sees a deterministic, source-controlled readiness cue in both the Worksheet Builder and Heat Builder. The cue communicates recorded evidence only. It does not make a course classroom-ready merely because a course or generator is selectable.
+The teacher sees a deterministic, source-controlled **curriculum-scope** readiness cue in both the Worksheet Builder and Heat Builder. The cue communicates recorded curriculum evidence only; it does not replace or erase separately recorded platform, security, roster, or other operational verification. It does not make a course classroom-ready merely because a course or generator is selectable.
 
 | Recorded condition | Teacher-facing cue | Classroom-ready claim |
 |---|---|---|
-| No matching recorded audit scope | No recorded pilot content audit | Prohibited |
+| No matching recorded course-content audit scope | No recorded audit for this content scope | Prohibited; this does not negate separately recorded platform or operational verification |
 | G6 ratios selected within `M6.RP.1.3`, `M6.RP.2.1`, and `M6.RP.2.3` | Controlled verification in progress | Prohibited until qualified review and production evidence close |
 | NC Math 1 linear selection within `M1.EQN.2.2` through `M1.EQN.2.5` | Source-calibrated; educator and production gates pending | Prohibited until qualified review and production evidence close |
-| Mixed selection containing an unrecorded concept | No recorded pilot content audit | Prohibited; the system does not extend a scope claim automatically |
+| Mixed selection containing an unrecorded concept | No recorded audit for this content scope | Prohibited; the system does not extend a curriculum-scope claim automatically |
 
-Only the three approved Grade 6 ratios labels are seeded by this release: **Calculate a unit rate**, **Solve a missing value in a ratio table**, and **Solve a ratio word problem**. The complete policy boundary is recorded in [`DETERMINISTIC_FIRST_CONTENT_AND_ANALYTICS_POLICY.md`](./DETERMINISTIC_FIRST_CONTENT_AND_ANALYTICS_POLICY.md).
+Only the three approved Grade 6 ratios labels are seeded by this release: **Calculate a unit rate**, **Solve a missing value in a ratio table**, and **Solve a ratio word problem**. The scope cue is not a general platform-audit indicator: completed infrastructure and roster verification remains separately documented. The complete policy boundary is recorded in [`DETERMINISTIC_FIRST_CONTENT_AND_ANALYTICS_POLICY.md`](./DETERMINISTIC_FIRST_CONTENT_AND_ANALYTICS_POLICY.md).
 
 ## Acceptance criteria
 

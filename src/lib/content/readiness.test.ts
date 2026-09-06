@@ -25,6 +25,8 @@ describe('content readiness registry', () => {
     ]);
 
     expect(readiness.status).toBe('not_audited');
+    expect(readiness.label).toBe('No recorded audit for this content scope');
+    expect(readiness.summary).toContain('separately recorded platform, security, roster');
     expect(readiness.classroomReady).toBe(false);
   });
 
@@ -40,7 +42,8 @@ describe('content readiness registry', () => {
 
   it('uses the limited-scope warning before course concepts are selected', () => {
     expect(getCourseContentReadiness('G6').label).toContain('Limited audit record');
-    expect(getCourseContentReadiness('unknown-course').status).toBe('not_audited');
+    expect(getCourseContentReadiness('G6').summary).toContain('does not negate separately recorded platform or operational verification');
+    expect(getCourseContentReadiness('unknown-course').label).toBe('No recorded audit for this content scope');
   });
 
   it('requires an actual manual label instead of accepting blank text', () => {

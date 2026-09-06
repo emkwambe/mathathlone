@@ -39,9 +39,9 @@ interface RecordedAuditScope {
 
 const NO_RECORDED_AUDIT: ContentReadiness = {
   status: 'not_audited',
-  label: 'No recorded pilot content audit',
+  label: 'No recorded audit for this content scope',
   tone: 'amber',
-  summary: 'This selected scope has no recorded presentability, mathematical-accuracy, qualified-educator, or controlled operational acceptance evidence. Do not describe it as classroom-ready.',
+  summary: 'No course-content audit record covers this exact selection. This cue is limited to curriculum-scope evidence; it does not describe or replace separately recorded platform, security, roster, or other operational verification. Do not describe this content scope as classroom-ready.',
   classroomReady: false,
 };
 
@@ -77,7 +77,7 @@ const COURSE_LIMITED_SCOPE_SUMMARIES: Readonly<Record<string, ContentReadiness>>
     status: 'controlled_acceptance_in_progress',
     label: 'Limited audit record — select the reviewed scope',
     tone: 'blue',
-    summary: 'Only the documented Grade 6 ratios scope has recorded pilot evidence. Other Grade 6 topics remain unaudited for presentability and mathematical accuracy.',
+    summary: 'Only the documented Grade 6 ratios scope has recorded course-content evidence. Other Grade 6 topics lack a scoped curriculum audit record; this does not negate separately recorded platform or operational verification.',
     auditRecord: 'PILOT-NC6M-RP-001',
     classroomReady: false,
   },
@@ -85,7 +85,7 @@ const COURSE_LIMITED_SCOPE_SUMMARIES: Readonly<Record<string, ContentReadiness>>
     status: 'source_calibrated_pending_educator',
     label: 'Limited audit record — select the reviewed scope',
     tone: 'blue',
-    summary: 'Only the documented NC Math 1 linear-equation scope has source-level evidence. Other NC Math 1 topics remain unaudited for presentability and mathematical accuracy.',
+    summary: 'Only the documented NC Math 1 linear-equation scope has source-level content evidence. Other NC Math 1 topics lack a scoped curriculum audit record; this does not negate separately recorded platform or operational verification.',
     auditRecord: 'PILOT-NCM1-LINEAR-001',
     classroomReady: false,
   },

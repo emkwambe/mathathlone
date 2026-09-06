@@ -1,6 +1,6 @@
 # Deterministic-First Content and Analytics Policy
 
-**Status:** Approved product policy for the controlled pilot  
+**Status:** Approved product policy for the controlled pilot
 **Scope:** Curriculum metadata, worksheets, Heat generation and delivery, scoring, eligibility, roster operations, and any future analytical insight features.
 
 ## Policy statement
