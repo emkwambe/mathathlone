@@ -26,7 +26,9 @@ The page gives print guidance rather than guaranteeing a page count. Teachers mu
 
 The browser, secure worksheet API, and document assembler use the same `src/lib/assessment/config.ts` configuration. The API validates the selected integer count against the document type’s allowed range before generation. The assembler then creates exactly that number of questions and calculates the section mix and total points from the same contract.
 
-To preserve announced-skill coverage, the builder and API both reject a request where the number of selected concepts exceeds the requested question count. This ensures each selected concept can appear at least once.
+A worksheet may select **one or more atomic concepts**. This supports focused mastery practice, such as working only on a missing-value ratio-table skill, as well as mixed-topic review. There is no artificial three-concept minimum for worksheets.
+
+To preserve announced-skill coverage, the builder and API both reject a request where the number of selected concepts exceeds the requested question count. This ensures each selected concept can appear at least once. Heat Builder retains its independent competition configuration rules; this worksheet policy does not alter Heat selection requirements.
 
 ## Competition-preparation safeguards
 
@@ -36,7 +38,7 @@ Competition preparation continues to force the **Practice Review** type. The tea
 
 1. A 10-question Grade 6 ratios Practice Review declares and renders exactly 10 questions, including 6 multiple-choice and 4 free-response questions under the configured 40% ratio.
 2. The builder summary, API validation, and printable document agree on question count, section mix, and total points.
-3. A selected question count below three selected concepts is blocked before generation and by the API.
+3. One selected atomic concept is accepted for focused practice; a selected question count below the number of selected concepts is blocked before generation and by the API.
 4. The student copy discloses announced topics and concepts, includes the independent-new-instance statement, and contains no answer key.
 5. PDF print preview has no spurious trailing answer-key page; the teacher reviews actual pagination before distribution.
 6. Returning to Heat Builder preserves the original class, skill blueprint, practice mode, and Heat configuration.

@@ -83,12 +83,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Choose a valid course before generating a worksheet.' }, { status: 400 });
     }
     if (!Array.isArray(rawConceptIds)) {
-      return NextResponse.json({ error: 'Choose at least three concepts before generating a worksheet.' }, { status: 400 });
+      return NextResponse.json({ error: 'Choose at least one concept before generating a worksheet.' }, { status: 400 });
     }
 
     const conceptIds = Array.from(new Set(rawConceptIds.filter((id): id is string => typeof id === 'string' && UUID_RE.test(id))));
-    if (conceptIds.length < 3 || conceptIds.length > MAX_CONCEPTS) {
-      return NextResponse.json({ error: `Choose between 3 and ${MAX_CONCEPTS} valid concepts before generating a worksheet.` }, { status: 400 });
+    if (conceptIds.length < 1 || conceptIds.length > MAX_CONCEPTS) {
+      return NextResponse.json({ error: `Choose between 1 and ${MAX_CONCEPTS} valid concepts before generating a worksheet.` }, { status: 400 });
     }
 
     const typedDocType = docType as AssessmentType;

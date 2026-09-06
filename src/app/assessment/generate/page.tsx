@@ -164,7 +164,9 @@ const DIFFICULTY_PROFILES: Array<{
   { key: 'challenge', label: 'Challenge', emoji: '⚡', desc: 'Analysis · multi-step',      difficulty: 3 },
 ];
 
-const MIN_CONCEPTS = 3;
+// A worksheet may intentionally focus on one atomic skill; competition Heat
+// configuration retains its independent multi-concept requirements.
+const MIN_CONCEPTS = 1;
 
 // -----------------------------------------------------------------------------
 // HELPER COMPONENTS  (mirrors compete/create/page.tsx)
@@ -663,7 +665,7 @@ export default function GenerateAssessmentPage() {
   // the GENERATORS registry (9 000+ lines) is never bundled into the browser.
   const handleGenerate = useCallback(async () => {
     if (!selectedCourse || !enoughConcepts) {
-      setError(`Select at least ${MIN_CONCEPTS} concepts to generate an assessment.`);
+      setError('Select at least one concept to generate an assessment.');
       return;
     }
     setError(null);
@@ -874,7 +876,7 @@ export default function GenerateAssessmentPage() {
         <SectionCard
           step={3}
           title="Topics & Concepts"
-          hint={`Select the concepts to draw from. Minimum ${MIN_CONCEPTS}.`}
+          hint="Select one or more concepts. A single concept supports focused skill practice; add more for mixed review."
           locked={!selectedCourse || isHeatPreparation}
         >
           {loadingConcepts ? (
@@ -893,7 +895,7 @@ export default function GenerateAssessmentPage() {
                   of {totalConcepts} concepts selected
                   {!enoughConcepts && (
                     <span className="ml-1 text-amber-700">
-                      (need at least {MIN_CONCEPTS})
+                      (select at least one concept)
                     </span>
                   )}
                 </p>
