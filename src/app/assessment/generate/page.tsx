@@ -40,7 +40,13 @@ import {
 import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { ProtectedRouteLoadingFallback } from '@/components/auth/ProtectedRouteLoadingFallback';
-import type { AssessmentType, AssessmentDocument } from '@/lib/assessment/assembler';
+import type { AssessmentDocument } from '@/lib/assessment/assembler';
+import {
+  ASSESSMENT_FORMAT_CONFIGS,
+  getAssessmentQuestionPlan,
+  getWorksheetLengthGuidance,
+  type AssessmentType,
+} from '@/lib/assessment/config';
 import {
   loadWorksheetPreparationDraft,
   type WorksheetPreparationDraft,
@@ -137,11 +143,11 @@ const DOC_TYPES: Array<{
   icon: React.ReactNode;
   desc: string;
 }> = [
-  { key: 'review',   label: 'Practice Review', icon: <Clipboard className="w-5 h-5" />,      desc: '10 Q · 40% free response · practice' },
-  { key: 'quiz',     label: 'Quiz',            icon: <FileText className="w-5 h-5" />,        desc: '12 Q · 40% free response · graded' },
-  { key: 'homework', label: 'Homework',        icon: <PenLine className="w-5 h-5" />,         desc: '8 Q · 60% free response · take-home' },
-  { key: 'test',     label: 'Unit Test',       icon: <ClipboardCheck className="w-5 h-5" />,  desc: '20 Q · 50% free response · formal' },
-  { key: 'makeup',   label: 'Makeup Test',     icon: <ClipboardCheck className="w-5 h-5" />,  desc: '20 Q · 50% free response · alternate' },
+  { key: 'review',   label: 'Practice Review', icon: <Clipboard className="w-5 h-5" />,      desc: '5–16 questions · student-safe practice' },
+  { key: 'quiz',     label: 'Quiz',            icon: <FileText className="w-5 h-5" />,        desc: '6–16 questions · graded' },
+  { key: 'homework', label: 'Homework',        icon: <PenLine className="w-5 h-5" />,         desc: '5–14 questions · take-home' },
+  { key: 'test',     label: 'Unit Test',       icon: <ClipboardCheck className="w-5 h-5" />,  desc: '10–20 questions · formal' },
+  { key: 'makeup',   label: 'Makeup Test',     icon: <ClipboardCheck className="w-5 h-5" />,  desc: '10–20 questions · alternate' },
 ];
 
 type DifficultyProfileKey = 'warmup' | 'standard' | 'challenge';
@@ -317,6 +323,7 @@ export default function GenerateAssessmentPage() {
 
   // ── Document config state ───────────────────────────────────────────────
   const [docType, setDocType] = useState<AssessmentType>('quiz');
+  const [questionCount, setQuestionCount] = useState<number>(ASSESSMENT_FORMAT_CONFIGS.quiz.defaultQuestionCount);
   const [difficultyProfile, setDifficultyProfile] = useState<DifficultyProfileKey>('standard');
 
   // ── UI state ────────────────────────────────────────────────────────────
@@ -338,7 +345,10 @@ export default function GenerateAssessmentPage() {
   }, []);
 
   useEffect(() => {
-    if (isHeatPreparation) setDocType('review');
+    if (isHeatPreparation) {
+      setDocType('review');
+      setQuestionCount(ASSESSMENT_FORMAT_CONFIGS.review.defaultQuestionCount);
+    }
   }, [isHeatPreparation]);
 
   const retryCurriculum = useCallback(() => {
@@ -632,11 +642,19 @@ export default function GenerateAssessmentPage() {
       .map((t) => ({ name: t.name, count: map.get(t.id)! }));
   }, [concepts, selectedConceptIds, unitTopics]);
 
+  const worksheetPlan = useMemo(
+    () => getAssessmentQuestionPlan(docType, questionCount),
+    [docType, questionCount],
+  );
+  const worksheetFormat = ASSESSMENT_FORMAT_CONFIGS[docType];
+  const everyConceptCanAppear = selectedCount <= questionCount;
+
   const canGenerate =
     !!selectedDivision &&
     !!selectedCourse &&
     selectedCourse.available !== false &&
     enoughConcepts &&
+    everyConceptCanAppear &&
     !!docType &&
     !!difficultyProfile;
 
@@ -664,6 +682,7 @@ export default function GenerateAssessmentPage() {
           docType: isHeatPreparation ? 'review' : docType,
           difficulty,
           purpose: isHeatPreparation ? 'competition_preparation' : 'standalone_practice',
+          questionCount,
         }),
       });
 
@@ -691,6 +710,7 @@ export default function GenerateAssessmentPage() {
     docType,
     selectedTopicSummary,
     isHeatPreparation,
+    questionCount,
     router,
   ]);
 
@@ -917,7 +937,7 @@ export default function GenerateAssessmentPage() {
         <SectionCard
           step={4}
           title="Document Type"
-          hint={isHeatPreparation ? 'Competition preparation is always a student-safe Practice Review.' : 'Sets the question count, free-response ratio, and points.'}
+          hint={isHeatPreparation ? 'Competition preparation is always a student-safe Practice Review. Choose its length below.' : 'Choose the student-facing purpose and answer-key policy. Choose length below.'}
           locked={!enoughConcepts}
         >
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -928,7 +948,11 @@ export default function GenerateAssessmentPage() {
                 <button
                   key={d.key}
                   type="button"
-                  onClick={() => isAvailable && setDocType(d.key)}
+                  onClick={() => {
+                    if (!isAvailable) return;
+                    setDocType(d.key);
+                    setQuestionCount(ASSESSMENT_FORMAT_CONFIGS[d.key].defaultQuestionCount);
+                  }}
                   disabled={!isAvailable}
                   className={`p-4 rounded-xl border-2 text-left transition-all ${
                     !isAvailable ? 'border-gray-100 bg-gray-50 text-gray-400 cursor-not-allowed opacity-60' : isSelected ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200 bg-white hover:border-gray-300'
@@ -947,9 +971,75 @@ export default function GenerateAssessmentPage() {
           </div>
         </SectionCard>
 
-        {/* ── Step 5: Difficulty Profile ───────────────────────────────── */}
+        {/* ── Step 5: Worksheet length ─────────────────────────────────── */}
         <SectionCard
           step={5}
+          title="Worksheet Length"
+          hint="Choose the number of questions. The plan below updates before you generate."
+          locked={!enoughConcepts}
+        >
+          <div className="rounded-xl border border-indigo-100 bg-indigo-50/70 p-4">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <p className="text-sm font-semibold text-indigo-950">{questionCount} questions</p>
+                <p className="mt-0.5 text-xs text-indigo-800">
+                  {worksheetPlan.multipleChoiceCount} multiple choice · {worksheetPlan.freeResponseCount} free response · {worksheetPlan.totalPoints} points
+                </p>
+              </div>
+              <span className="rounded-full border border-indigo-200 bg-white px-3 py-1 text-xs font-medium text-indigo-800">
+                {getWorksheetLengthGuidance(questionCount)}
+              </span>
+            </div>
+            <div className="mt-4 grid grid-cols-3 gap-2">
+              {[worksheetFormat.minQuestionCount, worksheetFormat.defaultQuestionCount, worksheetFormat.maxQuestionCount].map((count, index) => (
+                <button
+                  key={count}
+                  type="button"
+                  onClick={() => setQuestionCount(count)}
+                  className={`rounded-lg border px-3 py-2 text-left text-sm transition-colors ${
+                    questionCount === count
+                      ? 'border-indigo-600 bg-indigo-600 text-white'
+                      : 'border-indigo-200 bg-white text-indigo-900 hover:border-indigo-400'
+                  }`}
+                >
+                  <span className="block font-semibold">{count} questions</span>
+                  <span className={`block text-[11px] ${questionCount === count ? 'text-indigo-100' : 'text-indigo-600'}`}>
+                    {index === 0 ? 'Short' : index === 1 ? 'Suggested' : 'Extended'}
+                  </span>
+                </button>
+              ))}
+            </div>
+            <div className="mt-4">
+              <div className="flex items-center justify-between text-xs font-medium text-gray-600">
+                <span>{worksheetFormat.minQuestionCount}</span>
+                <span>Fine-tune question count</span>
+                <span>{worksheetFormat.maxQuestionCount}</span>
+              </div>
+              <input
+                type="range"
+                min={worksheetFormat.minQuestionCount}
+                max={worksheetFormat.maxQuestionCount}
+                step={1}
+                value={questionCount}
+                onChange={(event) => setQuestionCount(Number(event.target.value))}
+                className="mt-2 w-full accent-indigo-600"
+                aria-label="Worksheet question count"
+              />
+            </div>
+            {!everyConceptCanAppear && (
+              <p className="mt-3 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-medium text-amber-900">
+                Select at least {selectedCount} questions so each selected concept can appear at least once.
+              </p>
+            )}
+            <p className="mt-3 text-xs text-gray-600">
+              Print guidance only: review the browser print preview before distributing. Longer prompts or extra workspace may use more space.
+            </p>
+          </div>
+        </SectionCard>
+
+        {/* ── Step 6: Difficulty Profile ───────────────────────────────── */}
+        <SectionCard
+          step={6}
           title="Difficulty Profile"
           hint="Sets how hard the generated problems are."
           locked={!enoughConcepts}
@@ -977,8 +1067,8 @@ export default function GenerateAssessmentPage() {
           </div>
         </SectionCard>
 
-        {/* ── Step 6: Generate ─────────────────────────────────────────── */}
-        <SectionCard step={6} title="Generate" locked={!canGenerate}>
+        {/* ── Step 7: Generate ─────────────────────────────────────────── */}
+        <SectionCard step={7} title="Review and Generate" locked={!canGenerate}>
           <div className="rounded-xl bg-gray-50 border border-gray-200 p-4 mb-4 space-y-2 text-sm">
             <SummaryRow label="Division" value={selectedDivision?.name ?? '—'} />
             <SummaryRow label="Course" value={selectedCourse?.name ?? '—'} />
@@ -994,6 +1084,10 @@ export default function GenerateAssessmentPage() {
             <SummaryRow
               label="Document"
               value={DOC_TYPES.find((d) => d.key === docType)?.label ?? docType}
+            />
+            <SummaryRow
+              label="Question plan"
+              value={`${worksheetPlan.questionCount} questions · ${worksheetPlan.multipleChoiceCount} multiple choice · ${worksheetPlan.freeResponseCount} free response · ${worksheetPlan.totalPoints} points${everyConceptCanAppear ? '' : ' · increase length to cover all selected concepts'}`}
             />
             <SummaryRow
               label="Purpose"

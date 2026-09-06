@@ -15,8 +15,13 @@
 
 import { GENERATORS, type DifficultyLevel, type GeneratedQuestion } from '@/lib/competition/generators';
 import { generateDistinctQuestion } from '@/lib/competition/question-uniqueness';
+import {
+  ASSESSMENT_FORMAT_CONFIGS,
+  getAssessmentQuestionPlan,
+  type AssessmentType,
+} from '@/lib/assessment/config';
 
-export type AssessmentType = 'review' | 'quiz' | 'homework' | 'test' | 'makeup';
+export type { AssessmentType } from '@/lib/assessment/config';
 
 export interface AssessmentQuestion {
   number: number;
@@ -55,6 +60,8 @@ export interface AssessmentDocument {
   returnHref?: string;
   date: string;
   type: AssessmentType;
+  /** Teacher-selected document length, validated by the generation API. */
+  questionCount: number;
   sections: {
     A: AssessmentQuestion[];
     B: AssessmentQuestion[];
@@ -64,32 +71,6 @@ export interface AssessmentDocument {
   /** Teacher answer key is rendered for formal assessments, not practice. */
   showAnswerKey: boolean;
 }
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Page-budget targets (US Letter, 0.75in margins, 11pt Georgia):
-//   • Question pages  ≤ 4  (≈ 9 in of printable height per page)
-//   • Answer key      ≤ 2  (fits on 1 page for ≤16 Qs, 2 pages for 17–20)
-//   • Total           ≤ 6
-//
-// Workspace line height ≈ 0.28 in each.  FR question block ≈ 0.5 in overhead.
-// MC question block ≈ 0.6 in each (question + 2-col options + answer box).
-// ─────────────────────────────────────────────────────────────────────────────
-const CONFIGS: Record<AssessmentType, {
-  total: number; frRatio: number;
-  mcPts: number; frPts: number; wsLines: number;
-}> = {
-  //                total  frRatio  mcPts  frPts  wsLines
-  // review:  8 Q   → ~5 MC (3.0in) + ~3 FR (3×1.5in=4.5in) ≈ 2 pages
-  review:   { total: 8,  frRatio: 0.375, mcPts: 2, frPts: 4, wsLines: 3 },
-  // quiz:   12 Q   → ~7 MC (4.2in) + ~5 FR (5×1.5in=7.5in) ≈ 3 pages
-  quiz:     { total: 12, frRatio: 0.417, mcPts: 3, frPts: 5, wsLines: 4 },
-  // homework: 8 Q  → ~3 MC (1.8in) + ~5 FR (5×1.7in=8.5in) ≈ 3 pages
-  homework: { total: 8,  frRatio: 0.625, mcPts: 2, frPts: 4, wsLines: 4 },
-  // test:   16 Q   → ~8 MC (4.8in) + ~8 FR (8×1.7in=13.6in) ≈ 4 pages
-  test:     { total: 16, frRatio: 0.5,   mcPts: 3, frPts: 5, wsLines: 5 },
-  // makeup: 16 Q   → same as test
-  makeup:   { total: 16, frRatio: 0.5,   mcPts: 3, frPts: 5, wsLines: 5 },
-};
 
 const TITLES: Record<AssessmentType, string> = {
   review:   'Practice Review',
@@ -102,10 +83,8 @@ const TITLES: Record<AssessmentType, string> = {
 // Formal assessments ship with a teacher answer key; practice handouts don't.
 const ANSWER_KEY_TYPES = new Set<AssessmentType>(['quiz', 'test', 'makeup']);
 
-/** Number of practice questions available for each printable document type. */
-export function getAssessmentQuestionBudget(type: AssessmentType): number {
-  return CONFIGS[type].total;
-}
+/** Re-exported for existing server-only callers. */
+export { getAssessmentQuestionBudget } from '@/lib/assessment/config';
 
 // Pull the human-facing question/answer regardless of which field the
 // generator populated.
@@ -187,6 +166,8 @@ export interface AssembleAssessmentOptions {
   returnHref?: string;
   /** Concept-linked generator candidates resolved and validated on the server. */
   candidates?: AssessmentGeneratorCandidate[];
+  /** Bounded teacher-selected question count for this document. */
+  questionCount?: number;
 }
 
 /**
@@ -262,9 +243,10 @@ export function assembleAssessment(
   heatCode: string = 'STANDALONE',
   options: AssembleAssessmentOptions = {},
 ): AssessmentDocument {
-  const cfg = CONFIGS[type];
-  const deck = buildPracticeDeck(generatorTypes, cfg.total, options.candidates);
-  const frCount = Math.round(deck.length * cfg.frRatio);
+  const cfg = ASSESSMENT_FORMAT_CONFIGS[type];
+  const questionPlan = getAssessmentQuestionPlan(type, options.questionCount);
+  const deck = buildPracticeDeck(generatorTypes, questionPlan.questionCount, options.candidates);
+  const frCount = questionPlan.freeResponseCount;
   const sectionA: AssessmentQuestion[] = [];
   const sectionB: AssessmentQuestion[] = [];
   const usedQuestionSignatures = new Set<string>();
@@ -305,8 +287,8 @@ export function assembleAssessment(
         question,
         answer,
         answerType,
-        points: cfg.frPts,
-        workspaceLines: cfg.wsLines,
+        points: cfg.freeResponsePoints,
+        workspaceLines: cfg.workspaceLines,
         solutionSteps,
       });
     } else {
@@ -322,7 +304,7 @@ export function assembleAssessment(
         answerType,
         options: mcOptions,
         correctOption,
-        points: cfg.mcPts,
+        points: cfg.multipleChoicePoints,
         workspaceLines: 0,
         solutionSteps,
       });
@@ -345,6 +327,7 @@ export function assembleAssessment(
       year: 'numeric', month: 'long', day: 'numeric'
     }),
     type,
+    questionCount: questionPlan.questionCount,
     sections: { A: sectionA, B: sectionB },
     totalPoints,
     heatCode,

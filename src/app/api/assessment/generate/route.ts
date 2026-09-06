@@ -11,10 +11,14 @@ import { createSupabaseServer } from '@/lib/supabase/server';
 import { GENERATORS } from '@/lib/competition/generators';
 import {
   assembleAssessment,
-  getAssessmentQuestionBudget,
   type AssessmentPurpose,
-  type AssessmentType,
 } from '@/lib/assessment/assembler';
+import {
+  ASSESSMENT_FORMAT_CONFIGS,
+  getAssessmentQuestionBudget,
+  isAssessmentQuestionCountAllowed,
+  type AssessmentType,
+} from '@/lib/assessment/config';
 
 const KNOWN_GENERATOR_KEYS = new Set(Object.keys(GENERATORS));
 const ALLOWED_ROLES = new Set(['teacher', 'parent']);
@@ -88,9 +92,17 @@ export async function POST(req: NextRequest) {
     }
 
     const typedDocType = docType as AssessmentType;
-    if (conceptIds.length > getAssessmentQuestionBudget(typedDocType)) {
+    const requestedQuestionCount = body.questionCount ?? getAssessmentQuestionBudget(typedDocType);
+    const formatConfig = ASSESSMENT_FORMAT_CONFIGS[typedDocType];
+    if (!isAssessmentQuestionCountAllowed(typedDocType, requestedQuestionCount)) {
       return NextResponse.json(
-        { error: `This ${typedDocType} format has ${getAssessmentQuestionBudget(typedDocType)} questions. Choose no more than that many concepts so every selected concept can appear.` },
+        { error: `${formatConfig.label} supports ${formatConfig.minQuestionCount}–${formatConfig.maxQuestionCount} questions. Choose a whole number in that range.` },
+        { status: 400 },
+      );
+    }
+    if (conceptIds.length > requestedQuestionCount) {
+      return NextResponse.json(
+        { error: `Choose no more than ${requestedQuestionCount} concepts so every selected concept can appear in this worksheet.` },
         { status: 400 },
       );
     }
@@ -178,6 +190,7 @@ export async function POST(req: NextRequest) {
           : undefined,
         returnHref: purpose === 'competition_preparation' ? '/compete/create?preparation=return' : undefined,
         candidates,
+        questionCount: requestedQuestionCount,
       },
     );
 
