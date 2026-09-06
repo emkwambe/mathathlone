@@ -19,7 +19,7 @@
 
 'use client';
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   AlertTriangle,
@@ -40,6 +40,7 @@ import {
 import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { ProtectedRouteLoadingFallback } from '@/components/auth/ProtectedRouteLoadingFallback';
+import { usePracticeGeneratorAvailability } from '@/hooks/usePracticeGeneratorAvailability';
 import type { AssessmentDocument } from '@/lib/assessment/assembler';
 import { ContentReadinessNotice } from '@/components/content/ContentReadinessNotice';
 import {
@@ -217,6 +218,7 @@ interface TreeNodeProps {
   onToggleExpand: () => void;
   onToggleConcept: (conceptId: string) => void;
   onToggleTopic: (topicId: string) => void;
+  unavailableConceptIds: ReadonlySet<string>;
 }
 
 function TopicTreeNode({
@@ -227,6 +229,7 @@ function TopicTreeNode({
   onToggleExpand,
   onToggleConcept,
   onToggleTopic,
+  unavailableConceptIds,
 }: TreeNodeProps) {
   const selectedInTopic = concepts.filter((c) => selectedConceptIds.has(c.id)).length;
   const allSelected = concepts.length > 0 && selectedInTopic === concepts.length;
@@ -274,6 +277,7 @@ function TopicTreeNode({
           ) : (
             concepts.map((c) => {
               const isSelected = selectedConceptIds.has(c.id);
+              const isUnavailable = isSelected && unavailableConceptIds.has(c.id);
               return (
                 <label
                   key={c.id}
@@ -289,6 +293,9 @@ function TopicTreeNode({
                     {hasCuratedAnnouncedSkill(c.announced_skill) ? c.announced_skill : c.name}
                     {hasCuratedAnnouncedSkill(c.announced_skill) && (
                       <span className="ml-2 text-[11px] text-slate-400">{c.lesson_number}</span>
+                    )}
+                    {isUnavailable && (
+                      <span className="ml-2 text-[11px] font-medium text-red-600">Practice generator unavailable</span>
                     )}
                   </span>
                 </label>
@@ -348,6 +355,8 @@ export default function GenerateAssessmentPage() {
   const [curriculumRetry, setCurriculumRetry] = useState(0);
   const [preparationDraft, setPreparationDraft] = useState<WorksheetPreparationDraft | null>(null);
   const [isHeatPreparation, setIsHeatPreparation] = useState(false);
+  const initialStandaloneSelectionRef = useRef(false);
+  const [initialUnavailableConceptCount, setInitialUnavailableConceptCount] = useState(0);
 
   // Read the mode only after client hydration. This keeps the route safely
   // prerenderable while preserving the teacher's session-only Heat blueprint.
@@ -562,8 +571,11 @@ export default function GenerateAssessmentPage() {
         setConcepts(conceptRows);
         // A worksheet launched from Heat Builder must keep the exact selected
         // concept blueprint. Standalone practice keeps the fast all-selected default.
+        const restoresHeatBlueprint = preparationDraft?.courseId === selectedCourse!.id;
+        initialStandaloneSelectionRef.current = !restoresHeatBlueprint;
+        setInitialUnavailableConceptCount(0);
         setSelectedConceptIds(
-          preparationDraft?.courseId === selectedCourse!.id
+          restoresHeatBlueprint
             ? new Set(preparationDraft.conceptIds.filter((id) => conceptRows.some((concept) => concept.id === id)))
             : new Set(conceptRows.map((c) => c.id)),
         );
@@ -647,6 +659,20 @@ export default function GenerateAssessmentPage() {
     () => concepts.filter((concept) => selectedConceptIds.has(concept.id)),
     [concepts, selectedConceptIds],
   );
+  const selectedConceptIdList = useMemo(
+    () => selectedConcepts.map((concept) => concept.id),
+    [selectedConcepts],
+  );
+  const practiceGeneratorAvailability = usePracticeGeneratorAvailability(
+    selectedConceptIdList,
+    isAuthenticated && selectedConceptIdList.length > 0,
+  );
+  const unavailableSelectedConcepts = useMemo(
+    () => selectedConcepts.filter((concept) => practiceGeneratorAvailability.unavailableConceptIds.has(concept.id)),
+    [selectedConcepts, practiceGeneratorAvailability.unavailableConceptIds],
+  );
+  const allSelectedConceptsHavePracticeGenerators =
+    practiceGeneratorAvailability.status === 'ready' && unavailableSelectedConcepts.length === 0;
   const selectedContentReadiness = useMemo(
     () => getSelectedContentReadiness(selectedCourse?.code, selectedConcepts),
     [selectedCourse?.code, selectedConcepts],
@@ -656,6 +682,19 @@ export default function GenerateAssessmentPage() {
     [selectedConcepts],
   );
   const competitionBriefingReady = !isHeatPreparation || missingAnnouncedSkillCount === 0;
+
+  // Standalone practice historically began with all concepts selected. After
+  // deterministic availability has loaded, drop only unsupported default items
+  // and state the count visibly. Heat-preparation blueprints are never altered.
+  useEffect(() => {
+    if (!initialStandaloneSelectionRef.current || practiceGeneratorAvailability.status !== 'ready') return;
+    initialStandaloneSelectionRef.current = false;
+    if (practiceGeneratorAvailability.unavailableConceptIds.size === 0) return;
+    setInitialUnavailableConceptCount(practiceGeneratorAvailability.unavailableConceptIds.size);
+    setSelectedConceptIds((previous) => new Set(
+      Array.from(previous).filter((conceptId) => !practiceGeneratorAvailability.unavailableConceptIds.has(conceptId)),
+    ));
+  }, [practiceGeneratorAvailability.status, practiceGeneratorAvailability.unavailableConceptIds]);
 
   const selectedTopicSummary = useMemo(() => {
     const map = new Map<string, number>();
@@ -682,6 +721,7 @@ export default function GenerateAssessmentPage() {
     enoughConcepts &&
     everyConceptCanAppear &&
     competitionBriefingReady &&
+    allSelectedConceptsHavePracticeGenerators &&
     !!docType &&
     !!difficultyProfile;
 
@@ -691,6 +731,14 @@ export default function GenerateAssessmentPage() {
   const handleGenerate = useCallback(async () => {
     if (!selectedCourse || !enoughConcepts) {
       setError('Select at least one concept to generate an assessment.');
+      return;
+    }
+    if (practiceGeneratorAvailability.status !== 'ready') {
+      setError('Checking whether the selected concepts have implemented practice generators. Please wait before generating.');
+      return;
+    }
+    if (unavailableSelectedConcepts.length > 0) {
+      setError('Remove each selected concept marked “Practice generator unavailable” before creating a worksheet. The selection was not changed automatically.');
       return;
     }
     setError(null);
@@ -738,6 +786,8 @@ export default function GenerateAssessmentPage() {
     selectedTopicSummary,
     isHeatPreparation,
     questionCount,
+    practiceGeneratorAvailability.status,
+    unavailableSelectedConcepts.length,
     router,
   ]);
 
@@ -951,18 +1001,40 @@ export default function GenerateAssessmentPage() {
                     expanded={expandedTopics.has(t.id)}
                     selectedConceptIds={selectedConceptIds}
                     onToggleExpand={() => toggleExpand(t.id)}
-                    onToggleConcept={toggleConcept}
-                    onToggleTopic={toggleTopic}
-                  />
+                        onToggleConcept={toggleConcept}
+                        onToggleTopic={toggleTopic}
+                        unavailableConceptIds={practiceGeneratorAvailability.unavailableConceptIds}
+                      />
                 ))}
               </div>
-              <div className="mt-4">
+              <div className="mt-4 space-y-3">
                 <ContentReadinessNotice
                   readiness={selectedContentReadiness}
                   selectedConceptCount={selectedCount}
                   missingAnnouncedSkillCount={missingAnnouncedSkillCount}
                   purpose={isHeatPreparation ? 'competition_preparation' : 'standalone_practice'}
                 />
+                {practiceGeneratorAvailability.status === 'loading' && (
+                  <p className="text-xs text-slate-500">Checking implemented practice generators for the selected concepts…</p>
+                )}
+                {practiceGeneratorAvailability.status === 'error' && (
+                  <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-800">
+                    {practiceGeneratorAvailability.error} Do not generate until availability can be verified.
+                  </p>
+                )}
+                {unavailableSelectedConcepts.length > 0 && (
+                  <p className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs leading-relaxed text-amber-900">
+                    {unavailableSelectedConcepts.length === 1
+                      ? `Remove “${unavailableSelectedConcepts[0]?.name}” before generating. It has no active implemented practice generator.`
+                      : `Remove the ${unavailableSelectedConcepts.length} selected concepts marked “Practice generator unavailable” before generating. They have no active implemented practice generator.`}
+                    {' '}The selection has not been changed automatically.
+                  </p>
+                )}
+                {initialUnavailableConceptCount > 0 && (
+                  <p className="rounded-lg border border-sky-200 bg-sky-50 px-3 py-2 text-xs leading-relaxed text-sky-900">
+                    The initial standalone selection excluded {initialUnavailableConceptCount} concept{initialUnavailableConceptCount === 1 ? '' : 's'} without an active implemented practice generator. Select any additional concepts individually to review their status.
+                  </p>
+                )}
               </div>
             </>
           )}
@@ -1143,6 +1215,26 @@ export default function GenerateAssessmentPage() {
             <p className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-medium leading-relaxed text-amber-900">
               Generation is paused for this competition-preparation worksheet because the selected student briefing is incomplete. Add only manually approved curriculum labels; the system will not create or paraphrase them.
             </p>
+          )}
+          {practiceGeneratorAvailability.status === 'loading' && (
+            <p className="mb-4 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-medium leading-relaxed text-slate-700">
+              Checking implemented practice-generator coverage before this worksheet can be created.
+            </p>
+          )}
+          {practiceGeneratorAvailability.status === 'error' && (
+            <p className="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs font-medium leading-relaxed text-red-800">
+              Practice-generator coverage could not be verified. Do not generate until the check succeeds.
+            </p>
+          )}
+          {unavailableSelectedConcepts.length > 0 && (
+            <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-medium leading-relaxed text-amber-900">
+              The selected scope includes concepts without active implemented practice generators. Remove the marked concepts before generating; the system does not silently change a teacher’s selection.
+              {isHeatPreparation && (
+                <a href={WORKSHEET_PREPARATION_RETURN_HREF} className="ml-1 font-semibold underline underline-offset-2">
+                  Return to Heat Builder to revise the selected skills.
+                </a>
+              )}
+            </div>
           )}
 
           <div className="flex gap-3">

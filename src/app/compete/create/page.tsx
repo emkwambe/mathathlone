@@ -48,6 +48,7 @@ import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { ProtectedRouteLoadingFallback } from '@/components/auth/ProtectedRouteLoadingFallback';
 import { ContentReadinessNotice } from '@/components/content/ContentReadinessNotice';
+import { usePracticeGeneratorAvailability } from '@/hooks/usePracticeGeneratorAvailability';
 import {
   getSelectedContentReadiness,
   hasCuratedAnnouncedSkill,
@@ -192,9 +193,10 @@ interface TopicTreeNodeProps {
   onToggleExpand: () => void;
   onToggleConcept: (id: string) => void;
   onToggleTopic: (id: string) => void;
+  unavailableConceptIds: ReadonlySet<string>;
 }
 
-function TopicTreeNode({ topic, concepts, expanded, selectedConceptIds, onToggleExpand, onToggleConcept, onToggleTopic }: TopicTreeNodeProps) {
+function TopicTreeNode({ topic, concepts, expanded, selectedConceptIds, onToggleExpand, onToggleConcept, onToggleTopic, unavailableConceptIds }: TopicTreeNodeProps) {
   const selectedInTopic = concepts.filter((c) => selectedConceptIds.has(c.id)).length;
   const allSelected = concepts.length > 0 && selectedInTopic === concepts.length;
   const someSelected = selectedInTopic > 0 && !allSelected;
@@ -223,21 +225,27 @@ function TopicTreeNode({ topic, concepts, expanded, selectedConceptIds, onToggle
           {concepts.length === 0 ? (
             <p className="text-xs text-gray-400 italic py-1">No concepts in this topic yet.</p>
           ) : (
-            concepts.map((c) => (
-              <label key={c.id} className="flex items-center gap-2 px-2 py-1 rounded hover:bg-gray-50 cursor-pointer select-none">
-                <input type="checkbox" checked={selectedConceptIds.has(c.id)} onChange={() => onToggleConcept(c.id)} className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
-                <span className="min-w-0 text-sm text-gray-700">
-                  {hasCuratedAnnouncedSkill(c.announced_skill)
-                    ? c.announced_skill
-                    : c.name
-                      ? `${c.lesson_number} — ${c.name}`
-                      : c.lesson_number}
-                  {hasCuratedAnnouncedSkill(c.announced_skill) && (
-                    <span className="ml-2 text-[11px] text-slate-400">{c.lesson_number}</span>
-                  )}
-                </span>
-              </label>
-            ))
+            concepts.map((c) => {
+              const isUnavailable = selectedConceptIds.has(c.id) && unavailableConceptIds.has(c.id);
+              return (
+                <label key={c.id} className="flex items-center gap-2 px-2 py-1 rounded hover:bg-gray-50 cursor-pointer select-none">
+                  <input type="checkbox" checked={selectedConceptIds.has(c.id)} onChange={() => onToggleConcept(c.id)} className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
+                  <span className="min-w-0 text-sm text-gray-700">
+                    {hasCuratedAnnouncedSkill(c.announced_skill)
+                      ? c.announced_skill
+                      : c.name
+                        ? `${c.lesson_number} — ${c.name}`
+                        : c.lesson_number}
+                    {hasCuratedAnnouncedSkill(c.announced_skill) && (
+                      <span className="ml-2 text-[11px] text-slate-400">{c.lesson_number}</span>
+                    )}
+                    {isUnavailable && (
+                      <span className="ml-2 text-[11px] font-medium text-red-600">Practice generator unavailable</span>
+                    )}
+                  </span>
+                </label>
+              );
+            })
           )}
         </div>
       )}
@@ -538,6 +546,20 @@ export default function CreateHeatPage() {
     () => concepts.filter((concept) => selectedConceptIds.has(concept.id)),
     [concepts, selectedConceptIds],
   );
+  const selectedConceptIdList = useMemo(
+    () => selectedConcepts.map((concept) => concept.id),
+    [selectedConcepts],
+  );
+  const practiceGeneratorAvailability = usePracticeGeneratorAvailability(
+    selectedConceptIdList,
+    isAuthenticated && selectedConceptIdList.length > 0,
+  );
+  const unavailableSelectedConcepts = useMemo(
+    () => selectedConcepts.filter((concept) => practiceGeneratorAvailability.unavailableConceptIds.has(concept.id)),
+    [selectedConcepts, practiceGeneratorAvailability.unavailableConceptIds],
+  );
+  const allSelectedConceptsHavePracticeGenerators =
+    practiceGeneratorAvailability.status === 'ready' && unavailableSelectedConcepts.length === 0;
   const selectedContentReadiness = useMemo(
     () => getSelectedContentReadiness(selectedCourse?.code, selectedConcepts),
     [selectedCourse?.code, selectedConcepts],
@@ -555,6 +577,14 @@ export default function CreateHeatPage() {
       dispatch({ type: 'SET_ERROR', payload: `Select a division, course, and at least ${MIN_CONCEPTS} concepts before preparing a worksheet.` });
       return;
     }
+    if (practiceGeneratorAvailability.status !== 'ready') {
+      dispatch({ type: 'SET_ERROR', payload: 'Checking whether every selected concept has an implemented practice generator. Please wait before preparing a worksheet.' });
+      return;
+    }
+    if (unavailableSelectedConcepts.length > 0) {
+      dispatch({ type: 'SET_ERROR', payload: 'Remove each selected concept marked “Practice generator unavailable” before preparing a worksheet. The selection was not changed automatically.' });
+      return;
+    }
     saveWorksheetPreparationDraft({
       rankingDivisionId: selectedDivision.id,
       contentDivisionId: selectedContentDivision?.id ?? null,
@@ -568,7 +598,7 @@ export default function CreateHeatPage() {
       classId: selectedClass.id,
     });
     router.push('/assessment/generate?preparation=heat');
-  }, [selectedClass, selectedDivision, selectedContentDivision, selectedCourse, enoughConcepts, selectedConceptIds, mode, questionProfile, integrityLevel, questionCount, durationMinutes, router, dispatch, MIN_CONCEPTS]);
+  }, [selectedClass, selectedDivision, selectedContentDivision, selectedCourse, enoughConcepts, selectedConceptIds, mode, questionProfile, integrityLevel, questionCount, durationMinutes, practiceGeneratorAvailability.status, unavailableSelectedConcepts.length, router, dispatch, MIN_CONCEPTS]);
 
   // ── Create handler ────────────────────────────────────────────────────────
   const handleCreate = useCallback(async () => {
@@ -576,6 +606,8 @@ export default function CreateHeatPage() {
     if (selectedClass.roster_count < 1) { dispatch({ type: 'SET_ERROR', payload: `Add at least one Mathlete to ${selectedClass.name} before creating its classroom Heat.` }); return; }
     if (!selectedDivision || !selectedCourse) { dispatch({ type: 'SET_ERROR', payload: 'Pick a division and course before creating the Heat.' }); return; }
     if (!enoughConcepts) { dispatch({ type: 'SET_ERROR', payload: `Select at least ${MIN_CONCEPTS} concepts to create a Heat.` }); return; }
+    if (practiceGeneratorAvailability.status !== 'ready') { dispatch({ type: 'SET_ERROR', payload: 'Checking whether every selected concept has an implemented practice generator. Please wait before creating a Heat.' }); return; }
+    if (unavailableSelectedConcepts.length > 0) { dispatch({ type: 'SET_ERROR', payload: 'Remove each selected concept marked “Practice generator unavailable” before creating a Heat. The selection was not changed automatically.' }); return; }
     dispatch({ type: 'SET_ERROR', payload: null });
     dispatch({ type: 'SET_CREATING', payload: true });
     try {
@@ -621,7 +653,7 @@ export default function CreateHeatPage() {
     } finally {
       dispatch({ type: 'SET_CREATING', payload: false });
     }
-  }, [selectedClass, selectedDivision, selectedCourse, enoughConcepts, selectedConceptIds, questionProfile, mode, currentMode, integrityLevel, questionCount, durationMinutes, profile?.school_id, supabase, router, dispatch, MIN_CONCEPTS]);
+  }, [selectedClass, selectedDivision, selectedCourse, enoughConcepts, selectedConceptIds, questionProfile, mode, currentMode, integrityLevel, questionCount, durationMinutes, profile?.school_id, practiceGeneratorAvailability.status, unavailableSelectedConcepts.length, supabase, router, dispatch, MIN_CONCEPTS]);
 
   // ── Loading state ─────────────────────────────────────────────────────────
   if (authLoading || loadingCurriculum) {
@@ -835,6 +867,22 @@ export default function CreateHeatPage() {
                     missingAnnouncedSkillCount={missingAnnouncedSkillCount}
                     purpose="competition_preparation"
                   />
+                  {practiceGeneratorAvailability.status === 'loading' && (
+                    <p className="mt-3 text-xs text-slate-500">Checking implemented practice generators for the selected concepts…</p>
+                  )}
+                  {practiceGeneratorAvailability.status === 'error' && (
+                    <p className="mt-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-800">
+                      {practiceGeneratorAvailability.error} Do not prepare a worksheet or launch a Heat until availability can be verified.
+                    </p>
+                  )}
+                  {unavailableSelectedConcepts.length > 0 && (
+                    <p className="mt-3 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs leading-relaxed text-amber-900">
+                      {unavailableSelectedConcepts.length === 1
+                        ? `Remove “${unavailableSelectedConcepts[0]?.name}” before preparing a worksheet or launching a Heat. It has no active implemented practice generator.`
+                        : `Remove the ${unavailableSelectedConcepts.length} selected concepts marked “Practice generator unavailable” before preparing a worksheet or launching a Heat. They have no active implemented practice generators.`}
+                      {' '}The selection has not been changed automatically.
+                    </p>
+                  )}
                 </div>
               )}
 
@@ -871,6 +919,7 @@ export default function CreateHeatPage() {
                         onToggleExpand={() => toggleExpand(t.id)}
                         onToggleConcept={toggleConcept}
                         onToggleTopic={toggleTopic}
+                        unavailableConceptIds={practiceGeneratorAvailability.unavailableConceptIds}
                       />
                     ))}
                   </div>
@@ -1036,12 +1085,15 @@ export default function CreateHeatPage() {
               </div>
 
               {/* Readiness indicator */}
-              {(!stepsComplete || !selectedClass || selectedClass.roster_count < 1) && (
+              {(!stepsComplete || !selectedClass || selectedClass.roster_count < 1 || !allSelectedConceptsHavePracticeGenerators) && (
                 <div className="rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 text-xs text-amber-800 space-y-1">
                   {(!selectedClass || selectedClass.roster_count < 1) && <p>· Choose a class with at least one rostered Mathlete</p>}
                   {!selectedDivision && <p>· Select a division</p>}
                   {selectedDivision && !selectedCourse && <p>· Select a course</p>}
                   {selectedCourse && !enoughConcepts && <p>· Select at least {MIN_CONCEPTS} concepts</p>}
+                  {selectedConcepts.length > 0 && practiceGeneratorAvailability.status === 'loading' && <p>· Wait for practice-generator coverage to be checked</p>}
+                  {selectedConcepts.length > 0 && practiceGeneratorAvailability.status === 'error' && <p>· Restore practice-generator coverage before continuing</p>}
+                  {unavailableSelectedConcepts.length > 0 && <p>· Remove every concept marked “Practice generator unavailable”</p>}
                 </div>
               )}
 
@@ -1049,8 +1101,8 @@ export default function CreateHeatPage() {
               <button
                 type="button"
                 onClick={handlePrepareWorksheet}
-                disabled={!stepsComplete || !selectedClass || selectedClass.roster_count < 1 || creating}
-                className={`w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl border font-semibold text-sm transition-all ${!stepsComplete || !selectedClass || selectedClass.roster_count < 1 || creating ? 'border-gray-200 text-gray-400 bg-gray-50 cursor-not-allowed' : 'border-emerald-300 text-emerald-800 bg-emerald-50 hover:bg-emerald-100 active:scale-[0.98]'}`}
+                disabled={!stepsComplete || !selectedClass || selectedClass.roster_count < 1 || !allSelectedConceptsHavePracticeGenerators || creating}
+                className={`w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl border font-semibold text-sm transition-all ${!stepsComplete || !selectedClass || selectedClass.roster_count < 1 || !allSelectedConceptsHavePracticeGenerators || creating ? 'border-gray-200 text-gray-400 bg-gray-50 cursor-not-allowed' : 'border-emerald-300 text-emerald-800 bg-emerald-50 hover:bg-emerald-100 active:scale-[0.98]'}`}
               >
                 <FileText className="w-4 h-4" />
                 Prepare Practice Worksheet
@@ -1063,8 +1115,8 @@ export default function CreateHeatPage() {
               <button
                 type="button"
                 onClick={handleCreate}
-                disabled={!stepsComplete || !selectedClass || selectedClass.roster_count < 1 || creating}
-                className={`w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-semibold text-white text-base transition-all ${!stepsComplete || !selectedClass || selectedClass.roster_count < 1 || creating ? 'bg-gray-300 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] shadow-lg shadow-indigo-200'}`}
+                disabled={!stepsComplete || !selectedClass || selectedClass.roster_count < 1 || !allSelectedConceptsHavePracticeGenerators || creating}
+                className={`w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-semibold text-white text-base transition-all ${!stepsComplete || !selectedClass || selectedClass.roster_count < 1 || !allSelectedConceptsHavePracticeGenerators || creating ? 'bg-gray-300 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] shadow-lg shadow-indigo-200'}`}
               >
                 {creating ? (
                   <><Loader2 className="w-5 h-5 animate-spin" /> Creating Heat…</>

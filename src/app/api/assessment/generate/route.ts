@@ -8,11 +8,14 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServer } from '@/lib/supabase/server';
-import { GENERATORS } from '@/lib/competition/generators';
 import {
   assembleAssessment,
   type AssessmentPurpose,
 } from '@/lib/assessment/assembler';
+import {
+  getImplementedPracticeGeneratorCandidates,
+  getImplementedPracticeConceptIds,
+} from '@/lib/assessment/practice-generator-availability';
 import {
   ASSESSMENT_FORMAT_CONFIGS,
   getAssessmentQuestionBudget,
@@ -20,7 +23,6 @@ import {
   type AssessmentType,
 } from '@/lib/assessment/config';
 
-const KNOWN_GENERATOR_KEYS = new Set(Object.keys(GENERATORS));
 const ALLOWED_ROLES = new Set(['teacher', 'parent']);
 const ASSESSMENT_TYPES = new Set<AssessmentType>(['review', 'quiz', 'homework', 'test', 'makeup']);
 const DIFFICULTIES = new Set([1, 2, 3]);
@@ -35,31 +37,69 @@ function isAssessmentPurpose(value: unknown): value is AssessmentPurpose {
   return value === 'standalone_practice' || value === 'competition_preparation';
 }
 
+async function getAuthorizedWorksheetRole() {
+  const supabase = await createSupabaseServer();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { supabase, error: NextResponse.json({ error: 'Unauthorized' }, { status: 401 }) };
+
+  const { data: profile, error: profileError } = await supabase
+    .from('users')
+    .select('role')
+    .eq('id', user.id)
+    .maybeSingle();
+  if (profileError) {
+    return { supabase, error: NextResponse.json({ error: 'Could not verify worksheet access.' }, { status: 500 }) };
+  }
+
+  const role = (profile as { role?: string } | null)?.role ?? '';
+  if (!ALLOWED_ROLES.has(role)) {
+    return { supabase, error: NextResponse.json({ error: 'Only teachers and parents can view practice-generator availability.' }, { status: 403 }) };
+  }
+
+  return { supabase, role, error: null };
+}
+
+/**
+ * Read-only preflight used by the curriculum pickers. It returns only which
+ * selected concept IDs have an active deterministic practice generator; it
+ * never creates a question, reveals answers, or changes any record.
+ */
+export async function GET(req: NextRequest) {
+  try {
+    const authorization = await getAuthorizedWorksheetRole();
+    if (authorization.error) return authorization.error;
+
+    const rawConceptIds = req.nextUrl.searchParams.get('conceptIds')?.split(',') ?? [];
+    const conceptIds = Array.from(new Set(rawConceptIds.filter((id) => UUID_RE.test(id))));
+    if (conceptIds.length < 1 || conceptIds.length > 128) {
+      return NextResponse.json({ error: 'Choose between 1 and 128 valid concepts to check practice-generator availability.' }, { status: 400 });
+    }
+
+    const { data: generators, error: generatorError } = await authorization.supabase
+      .from('question_generators')
+      .select('concept_id, generator_type')
+      .in('concept_id', conceptIds)
+      .eq('is_active', true);
+    if (generatorError) {
+      return NextResponse.json({ error: 'Could not check practice-generator availability.' }, { status: 500 });
+    }
+
+    return NextResponse.json({
+      implementedConceptIds: Array.from(getImplementedPracticeConceptIds(generators ?? [])),
+    });
+  } catch (err) {
+    console.error('[GET /api/assessment/generate]', err);
+    return NextResponse.json({ error: 'Could not check practice-generator availability.' }, { status: 500 });
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
-    const supabase = await createSupabaseServer();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const { data: profile, error: profileError } = await supabase
-      .from('users')
-      .select('role')
-      .eq('id', user.id)
-      .maybeSingle();
-
-    if (profileError) {
-      return NextResponse.json({ error: 'Could not verify worksheet access.' }, { status: 500 });
-    }
-
-    const role = (profile as { role?: string } | null)?.role ?? '';
-    if (!ALLOWED_ROLES.has(role)) {
-      return NextResponse.json({ error: 'Only teachers and parents can generate practice worksheets.' }, { status: 403 });
-    }
+    const authorization = await getAuthorizedWorksheetRole();
+    if (authorization.error) return authorization.error;
+    const { supabase, role } = authorization;
 
     const body: unknown = await req.json();
     if (!isRecord(body)) {
@@ -183,9 +223,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Could not load practice generators for the selected concepts.' }, { status: 500 });
     }
 
-    const candidates = ((generators ?? []) as Array<{ concept_id: string; generator_type: string }>)
-      .filter((generator) => KNOWN_GENERATOR_KEYS.has(generator.generator_type))
-      .map((generator) => ({ conceptId: generator.concept_id, generatorType: generator.generator_type }));
+    const candidates = getImplementedPracticeGeneratorCandidates(generators ?? []);
     const coveredConceptIds = new Set(candidates.map((candidate) => candidate.conceptId));
     const missingConceptNames = conceptIds
       .filter((conceptId) => !coveredConceptIds.has(conceptId))

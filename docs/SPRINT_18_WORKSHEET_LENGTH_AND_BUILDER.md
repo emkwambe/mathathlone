@@ -38,6 +38,8 @@ Competition preparation continues to force the **Practice Review** type. The tea
 
 The competition-preparation briefing now uses only **manually authored, educator-approved** `atomic_concepts.announced_skill` records. It never substitutes the longer internal concept description and never invokes, paraphrases, or infers with AI. A competition-preparation worksheet is blocked when any selected concept lacks a manual label; standalone practice remains available, but it does not invent a student-facing skill label.
 
+Both builders now also perform a read-only deterministic preflight against the active, implemented procedural-generator registry. An unavailable selected concept is visibly marked and blocks both worksheet handoff and Heat launch until the teacher revises the selection. A Heat-preparation blueprint is never silently changed; the teacher returns to Heat Builder to decide what to remove. The historical all-selected standalone default removes unavailable concepts only after the preflight completes and reports exactly how many were excluded.
+
 The teacher sees a deterministic, source-controlled **curriculum-scope** readiness cue in both the Worksheet Builder and Heat Builder. The cue communicates recorded curriculum evidence only; it does not replace or erase separately recorded platform, security, roster, or other operational verification. It does not make a course classroom-ready merely because a course or generator is selectable.
 
 | Recorded condition | Teacher-facing cue | Classroom-ready claim |
@@ -57,8 +59,9 @@ Only the three approved Grade 6 ratios labels are seeded by this release: **Calc
 4. A competition-preparation student copy displays only manual, approved announced skills as a readable list, includes the independent-new-instance statement, and contains no answer key.
 5. A competition-preparation request with an unlabeled concept is visibly paused in the builder and rejected by the secure API without falling back to an internal label.
 6. Both builders show the recorded readiness cue for the selected course and concepts; no cue implies that an unaudited or partially gated scope is classroom-ready.
-7. PDF print preview has no spurious trailing answer-key page; the teacher reviews actual pagination before distribution.
-8. Returning to Heat Builder preserves the original class, skill blueprint, practice mode, and Heat configuration.
+7. Both builders identify every selected concept without an active implemented practice generator before a worksheet handoff or Heat launch. A preparation blueprint is not silently altered.
+8. PDF print preview has no spurious trailing answer-key page; the teacher reviews actual pagination before distribution.
+9. Returning to Heat Builder preserves the original class, skill blueprint, practice mode, and Heat configuration.
 
 ## Remaining pilot-safety work
 
