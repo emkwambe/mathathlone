@@ -1,0 +1,842 @@
+{
+  "auditTitle": "Grade 7 Rational Addition and Subtraction — Qualified Mathematical Review Set",
+  "status": "Pending qualified Grade 7 teacher/curriculum reviewer sign-off",
+  "sourceBoundary": "M7.NS.1.1 through M7.NS.1.4 only. The contextual M7.NS.4.1 generator is excluded from this review set.",
+  "reviewerInstruction": "Independently recompute or reason from each visible prompt. Do not rely on the supplied answer or explanation. Mark reject for any wrong answer, ambiguity, incorrect distractor, inappropriate wording, representation defect, or mismatch with the stated Grade 7 concept.",
+  "scope": {
+    "course": "NC Grade 7 Math",
+    "topic": "The Number System",
+    "staticItems": 5,
+    "samplesPerGeneratorPerDifficulty": 5,
+    "proceduralSamples": 40,
+    "expectedTotalItems": 45
+  },
+  "staticItems": [
+    {
+      "item": 1,
+      "lessonNumber": "M7.NS.1.1",
+      "difficulty": 1,
+      "questionText": "On a number line, adding a negative number to a positive number always results in a movement to the ___ from the starting position.",
+      "options": [
+        "A. right",
+        "B. left",
+        "C. origin",
+        "D. same position"
+      ],
+      "correctAnswer": "B",
+      "explanation": "Adding a negative number moves left on the number line (toward lesser values).",
+      "reviewerCalculation": "",
+      "reviewerInitials": "",
+      "reviewerDate": "",
+      "reviewerDecision": "pending"
+    },
+    {
+      "item": 2,
+      "lessonNumber": "M7.NS.1.1",
+      "difficulty": 1,
+      "questionText": "Which expression is best modeled by starting at -3 on a number line and moving 5 units to the right?",
+      "options": [
+        "A. -3 - 5",
+        "B. -3 + (-5)",
+        "C. -3 + 5",
+        "D. 3 + 5"
+      ],
+      "correctAnswer": "C",
+      "explanation": "Moving right on a number line means adding a positive number.",
+      "reviewerCalculation": "",
+      "reviewerInitials": "",
+      "reviewerDate": "",
+      "reviewerDecision": "pending"
+    },
+    {
+      "item": 3,
+      "lessonNumber": "M7.NS.1.1",
+      "difficulty": 2,
+      "questionText": "Which statement about p + q is ALWAYS true when p > 0 and q < 0?",
+      "options": [
+        "A. p + q > 0",
+        "B. p + q < 0",
+        "C. p + q = 0",
+        "D. The sign of p + q depends on the absolute values of p and q"
+      ],
+      "correctAnswer": "D",
+      "explanation": "The sign depends on which value has the larger absolute value.",
+      "reviewerCalculation": "",
+      "reviewerInitials": "",
+      "reviewerDate": "",
+      "reviewerDecision": "pending"
+    },
+    {
+      "item": 4,
+      "lessonNumber": "M7.NS.1.3",
+      "difficulty": 1,
+      "questionText": "Which expression is equivalent to p - q?",
+      "options": [
+        "A. p + q",
+        "B. p + (-q)",
+        "C. -p + q",
+        "D. -p - q"
+      ],
+      "correctAnswer": "B",
+      "explanation": "Subtraction is defined as adding the additive inverse: p - q = p + (-q).",
+      "reviewerCalculation": "",
+      "reviewerInitials": "",
+      "reviewerDate": "",
+      "reviewerDecision": "pending"
+    },
+    {
+      "item": 5,
+      "lessonNumber": "M7.NS.1.3",
+      "difficulty": 2,
+      "questionText": "A diver is at -12 feet. She ascends to -5 feet. Which expression represents the change in her depth?",
+      "options": [
+        "A. -12 - (-5)",
+        "B. -5 - (-12)",
+        "C. -5 + (-12)",
+        "D. -12 + 5"
+      ],
+      "correctAnswer": "B",
+      "explanation": "Change = final - initial = -5 - (-12) = -5 + 12 = 7 feet upward.",
+      "reviewerCalculation": "",
+      "reviewerInitials": "",
+      "reviewerDate": "",
+      "reviewerDecision": "pending"
+    }
+  ],
+  "proceduralGenerators": [
+    {
+      "lessonNumber": "M7.NS.1.2",
+      "generatorType": "g7_add_rational",
+      "reviewFocus": "Signed rational-number addition, common-denominator reasoning, prompt/answer consistency, and difficulty suitability.",
+      "difficulties": [
+        {
+          "difficulty": 1,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "Add: 1 + (-4)",
+              "questionLatex": "Add: 1 + (-4)",
+              "correctAnswer": "-3",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 1",
+                "Rewrite: 1/1 + -4/1",
+                "Add numerators: -3/1",
+                "Simplify: -3"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "Add: 4 + 1",
+              "questionLatex": "Add: 4 + 1",
+              "correctAnswer": "5",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 1",
+                "Rewrite: 4/1 + 1/1",
+                "Add numerators: 5/1",
+                "Simplify: 5"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "Add: -5 + (-3)",
+              "questionLatex": "Add: -5 + (-3)",
+              "correctAnswer": "-8",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 1",
+                "Rewrite: -5/1 + -3/1",
+                "Add numerators: -8/1",
+                "Simplify: -8"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 4,
+              "questionText": "Add: -3 + (-4)",
+              "questionLatex": "Add: -3 + (-4)",
+              "correctAnswer": "-7",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 1",
+                "Rewrite: -3/1 + -4/1",
+                "Add numerators: -7/1",
+                "Simplify: -7"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 5,
+              "questionText": "Add: 1 + 3",
+              "questionLatex": "Add: 1 + 3",
+              "correctAnswer": "4",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 1",
+                "Rewrite: 1/1 + 3/1",
+                "Add numerators: 4/1",
+                "Simplify: 4"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        },
+        {
+          "difficulty": 2,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "Add: 8 + (-17/2)",
+              "questionLatex": "Add: 8 + (-17/2)",
+              "correctAnswer": "-1/2",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 2",
+                "Rewrite: 16/2 + -17/2",
+                "Add numerators: -1/2",
+                "Simplify: -1/2"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "Add: 13/2 + (-10)",
+              "questionLatex": "Add: 13/2 + (-10)",
+              "correctAnswer": "-7/2",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 2",
+                "Rewrite: 13/2 + -20/2",
+                "Add numerators: -7/2",
+                "Simplify: -7/2"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "Add: -25/6 + (-37/6)",
+              "questionLatex": "Add: -25/6 + (-37/6)",
+              "correctAnswer": "-31/3",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 36",
+                "Rewrite: -150/36 + -222/36",
+                "Add numerators: -372/36",
+                "Simplify: -31/3"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 4,
+              "questionText": "Add: -5 + (-4)",
+              "questionLatex": "Add: -5 + (-4)",
+              "correctAnswer": "-9",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 1",
+                "Rewrite: -5/1 + -4/1",
+                "Add numerators: -9/1",
+                "Simplify: -9"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 5,
+              "questionText": "Add: -10 + 5/4",
+              "questionLatex": "Add: -10 + 5/4",
+              "correctAnswer": "-35/4",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 4",
+                "Rewrite: -40/4 + 5/4",
+                "Add numerators: -35/4",
+                "Simplify: -35/4"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        },
+        {
+          "difficulty": 3,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "Add: 11/2 + (-10)",
+              "questionLatex": "Add: 11/2 + (-10)",
+              "correctAnswer": "-9/2",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 2",
+                "Rewrite: 11/2 + -20/2",
+                "Add numerators: -9/2",
+                "Simplify: -9/2"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "Add: -9/2 + 10",
+              "questionLatex": "Add: -9/2 + 10",
+              "correctAnswer": "11/2",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 2",
+                "Rewrite: -9/2 + 20/2",
+                "Add numerators: 11/2",
+                "Simplify: 11/2"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "Add: -15/2 + 8",
+              "questionLatex": "Add: -15/2 + 8",
+              "correctAnswer": "1/2",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 2",
+                "Rewrite: -15/2 + 16/2",
+                "Add numerators: 1/2",
+                "Simplify: 1/2"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 4,
+              "questionText": "Add: 1/2 + 11",
+              "questionLatex": "Add: 1/2 + 11",
+              "correctAnswer": "23/2",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 2",
+                "Rewrite: 1/2 + 22/2",
+                "Add numerators: 23/2",
+                "Simplify: 23/2"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 5,
+              "questionText": "Add: 5/2 + 8/3",
+              "questionLatex": "Add: 5/2 + 8/3",
+              "correctAnswer": "31/6",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 6",
+                "Rewrite: 15/6 + 16/6",
+                "Add numerators: 31/6",
+                "Simplify: 31/6"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        },
+        {
+          "difficulty": 4,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "Add: 12 + (-9)",
+              "questionLatex": "Add: 12 + (-9)",
+              "correctAnswer": "3",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 1",
+                "Rewrite: 12/1 + -9/1",
+                "Add numerators: 3/1",
+                "Simplify: 3"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "Add: 10 + (-71/5)",
+              "questionLatex": "Add: 10 + (-71/5)",
+              "correctAnswer": "-21/5",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 5",
+                "Rewrite: 50/5 + -71/5",
+                "Add numerators: -21/5",
+                "Simplify: -21/5"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "Add: -9 + 15/2",
+              "questionLatex": "Add: -9 + 15/2",
+              "correctAnswer": "-3/2",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 2",
+                "Rewrite: -18/2 + 15/2",
+                "Add numerators: -3/2",
+                "Simplify: -3/2"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 4,
+              "questionText": "Add: 2 + 16/5",
+              "questionLatex": "Add: 2 + 16/5",
+              "correctAnswer": "26/5",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 5",
+                "Rewrite: 10/5 + 16/5",
+                "Add numerators: 26/5",
+                "Simplify: 26/5"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 5,
+              "questionText": "Add: 1/6 + 19/3",
+              "questionLatex": "Add: 1/6 + 19/3",
+              "correctAnswer": "13/2",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 18",
+                "Rewrite: 3/18 + 114/18",
+                "Add numerators: 117/18",
+                "Simplify: 13/2"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "lessonNumber": "M7.NS.1.4",
+      "generatorType": "g7_subtract_rational",
+      "reviewFocus": "Signed rational-number subtraction, additive-inverse notation, prompt/answer consistency, and difficulty suitability.",
+      "difficulties": [
+        {
+          "difficulty": 1,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "Subtract: 3 − (-3)",
+              "questionLatex": "Subtract: 3 − (-3)",
+              "correctAnswer": "6",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 1",
+                "Rewrite: 3/1 − -3/1",
+                "Subtract numerators: 6/1",
+                "Simplify: 6"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "Subtract: 5 − 4",
+              "questionLatex": "Subtract: 5 − 4",
+              "correctAnswer": "1",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 1",
+                "Rewrite: 5/1 − 4/1",
+                "Subtract numerators: 1/1",
+                "Simplify: 1"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "Subtract: 5 − (-1)",
+              "questionLatex": "Subtract: 5 − (-1)",
+              "correctAnswer": "6",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 1",
+                "Rewrite: 5/1 − -1/1",
+                "Subtract numerators: 6/1",
+                "Simplify: 6"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 4,
+              "questionText": "Subtract: -5 − (-4)",
+              "questionLatex": "Subtract: -5 − (-4)",
+              "correctAnswer": "-1",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 1",
+                "Rewrite: -5/1 − -4/1",
+                "Subtract numerators: -1/1",
+                "Simplify: -1"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 5,
+              "questionText": "Subtract: -6 − 1",
+              "questionLatex": "Subtract: -6 − 1",
+              "correctAnswer": "-7",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 1",
+                "Rewrite: -6/1 − 1/1",
+                "Subtract numerators: -7/1",
+                "Simplify: -7"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        },
+        {
+          "difficulty": 2,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "Subtract: 17/6 − 17/2",
+              "questionLatex": "Subtract: 17/6 − 17/2",
+              "correctAnswer": "-17/3",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 12",
+                "Rewrite: 34/12 − 102/12",
+                "Subtract numerators: -68/12",
+                "Simplify: -17/3"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "Subtract: -27/5 − 2",
+              "questionLatex": "Subtract: -27/5 − 2",
+              "correctAnswer": "-37/5",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 5",
+                "Rewrite: -27/5 − 10/5",
+                "Subtract numerators: -37/5",
+                "Simplify: -37/5"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "Subtract: -3/2 − 28/5",
+              "questionLatex": "Subtract: -3/2 − 28/5",
+              "correctAnswer": "-71/10",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 10",
+                "Rewrite: -15/10 − 56/10",
+                "Subtract numerators: -71/10",
+                "Simplify: -71/10"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 4,
+              "questionText": "Subtract: 5 − 13/2",
+              "questionLatex": "Subtract: 5 − 13/2",
+              "correctAnswer": "-3/2",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 2",
+                "Rewrite: 10/2 − 13/2",
+                "Subtract numerators: -3/2",
+                "Simplify: -3/2"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 5,
+              "questionText": "Subtract: 7/3 − 43/5",
+              "questionLatex": "Subtract: 7/3 − 43/5",
+              "correctAnswer": "-94/15",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 15",
+                "Rewrite: 35/15 − 129/15",
+                "Subtract numerators: -94/15",
+                "Simplify: -94/15"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        },
+        {
+          "difficulty": 3,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "Subtract: 9 − 47/6",
+              "questionLatex": "Subtract: 9 − 47/6",
+              "correctAnswer": "7/6",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 6",
+                "Rewrite: 54/6 − 47/6",
+                "Subtract numerators: 7/6",
+                "Simplify: 7/6"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "Subtract: -3 − (-20/3)",
+              "questionLatex": "Subtract: -3 − (-20/3)",
+              "correctAnswer": "11/3",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 3",
+                "Rewrite: -9/3 − -20/3",
+                "Subtract numerators: 11/3",
+                "Simplify: 11/3"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "Subtract: 44/5 − 29/2",
+              "questionLatex": "Subtract: 44/5 − 29/2",
+              "correctAnswer": "-57/10",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 10",
+                "Rewrite: 88/10 − 145/10",
+                "Subtract numerators: -57/10",
+                "Simplify: -57/10"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 4,
+              "questionText": "Subtract: 13/2 − (-67/5)",
+              "questionLatex": "Subtract: 13/2 − (-67/5)",
+              "correctAnswer": "199/10",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 10",
+                "Rewrite: 65/10 − -134/10",
+                "Subtract numerators: 199/10",
+                "Simplify: 199/10"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 5,
+              "questionText": "Subtract: -57/4 − (-28/3)",
+              "questionLatex": "Subtract: -57/4 − (-28/3)",
+              "correctAnswer": "-59/12",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 12",
+                "Rewrite: -171/12 − -112/12",
+                "Subtract numerators: -59/12",
+                "Simplify: -59/12"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        },
+        {
+          "difficulty": 4,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "Subtract: 29/2 − 11/6",
+              "questionLatex": "Subtract: 29/2 − 11/6",
+              "correctAnswer": "38/3",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 12",
+                "Rewrite: 174/12 − 22/12",
+                "Subtract numerators: 152/12",
+                "Simplify: 38/3"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "Subtract: 7 − (-3/2)",
+              "questionLatex": "Subtract: 7 − (-3/2)",
+              "correctAnswer": "17/2",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 2",
+                "Rewrite: 14/2 − -3/2",
+                "Subtract numerators: 17/2",
+                "Simplify: 17/2"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "Subtract: -3 − (-14)",
+              "questionLatex": "Subtract: -3 − (-14)",
+              "correctAnswer": "11",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 1",
+                "Rewrite: -3/1 − -14/1",
+                "Subtract numerators: 11/1",
+                "Simplify: 11"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 4,
+              "questionText": "Subtract: -8 − (-37/3)",
+              "questionLatex": "Subtract: -8 − (-37/3)",
+              "correctAnswer": "13/3",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 3",
+                "Rewrite: -24/3 − -37/3",
+                "Subtract numerators: 13/3",
+                "Simplify: 13/3"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 5,
+              "questionText": "Subtract: -10 − 5",
+              "questionLatex": "Subtract: -10 − 5",
+              "correctAnswer": "-15",
+              "answerType": "decimal_or_fraction",
+              "solutionSteps": [
+                "Find a common denominator: 1",
+                "Rewrite: -10/1 − 5/1",
+                "Subtract numerators: -15/1",
+                "Simplify: -15"
+              ],
+              "reviewerCalculation": "",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

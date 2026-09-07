@@ -1,0 +1,35 @@
+{
+  "auditTitle": "Grade 7 Rational Addition, Subtraction, and Contextual Application — Mathematical Invariants",
+  "status": "Source-level evidence only; qualified educator review and production acceptance remain required.",
+  "methodology": "Each result is independently recomputed from values visible in the generated prompt. Randomness is replaced by recorded deterministic seeds for reproducibility.",
+  "scope": {
+    "primaryAuditScope": [
+      "M7.NS.1.1",
+      "M7.NS.1.2",
+      "M7.NS.1.3",
+      "M7.NS.1.4"
+    ],
+    "remediatedAdjacentApplicationScope": "M7.NS.4.1"
+  },
+  "totalVerified": 4800,
+  "results": {
+    "addition:difficulty-1": 100,
+    "subtraction:difficulty-1": 100,
+    "contextual-application:difficulty-1": 1000,
+    "addition:difficulty-2": 100,
+    "subtraction:difficulty-2": 100,
+    "contextual-application:difficulty-2": 1000,
+    "addition:difficulty-3": 100,
+    "subtraction:difficulty-3": 100,
+    "contextual-application:difficulty-3": 1000,
+    "addition:difficulty-4": 100,
+    "subtraction:difficulty-4": 100,
+    "contextual-application:difficulty-4": 1000
+  },
+  "contextualBranchesObserved": [
+    "debt_fraction",
+    "elevation",
+    "mean",
+    "tax_and_split"
+  ]
+}

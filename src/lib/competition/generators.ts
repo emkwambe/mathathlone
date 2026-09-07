@@ -3090,7 +3090,7 @@ export function generate_g7_compound_probability(difficulty: DifficultyLevel): G
 // EOG PATCH: NEW G7 GENERATORS (3 new functions from NCDPI 2026 audit)
 // =============================================================================
 
-// PATCH A: M7.NS.1.3 — Rational Number Word Problems (5 sub-patterns)
+// PATCH A: M7.NS.4.1 — Rational Number Word Problems (four deterministic sub-patterns)
 export function generate_g7_ns_rational_word_problem(difficulty: DifficultyLevel): GeneratedQuestion {
   // Sub-pattern 1: mean of signed numbers
   if (difficulty === 1 || (difficulty === 2 && Math.random() < 0.5)) {
@@ -3098,7 +3098,7 @@ export function generate_g7_ns_rational_word_problem(difficulty: DifficultyLevel
     const sum = vals.reduce((a, b) => a + b, 0);
     const mean = sum / 4;
     const meanStr = Number.isInteger(mean) ? String(mean) : (Math.round(mean * 100) / 100).toString();
-    return g7Wrap(difficulty, 'g7_ns_rational_word_problem', 'M7.NS.1.3', 'Rational Number Word Problems', {
+    return g7Wrap(difficulty, 'g7_ns_rational_word_problem', 'M7.NS.4.1', 'Rational Number Word Problems', {
       question: `The temperatures (in °F) recorded over 4 days were ${vals.join(', ')}. What was the mean temperature?`,
       answer: meanStr,
       solution_steps: [
@@ -3115,7 +3115,7 @@ export function generate_g7_ns_rational_word_problem(difficulty: DifficultyLevel
     const total = Math.round(price * (1 + taxPct / 100) * 100) / 100;
     const people = randomInt(2, 5);
     const share = Math.round((total / people) * 100) / 100;
-    return g7Wrap(difficulty, 'g7_ns_rational_word_problem', 'M7.NS.1.3', 'Rational Number Word Problems', {
+    return g7Wrap(difficulty, 'g7_ns_rational_word_problem', 'M7.NS.4.1', 'Rational Number Word Problems', {
       question: `A meal costs $${price}. With ${taxPct}% tax, the total is split equally among ${people} people. How much does each person pay (in dollars)?`,
       answer: String(share),
       solution_steps: [
@@ -3132,7 +3132,7 @@ export function generate_g7_ns_rational_word_problem(difficulty: DifficultyLevel
     const change = randomInt(5, 50);
     const steps = randomInt(2, 5);
     const end = start + change * steps;
-    return g7Wrap(difficulty, 'g7_ns_rational_word_problem', 'M7.NS.1.3', 'Rational Number Word Problems', {
+    return g7Wrap(difficulty, 'g7_ns_rational_word_problem', 'M7.NS.4.1', 'Rational Number Word Problems', {
       question: `A submarine is at ${start} feet relative to sea level. It rises ${change} feet per minute for ${steps} minutes. What is its new depth?`,
       answer: String(end),
       solution_steps: [
@@ -3142,19 +3142,28 @@ export function generate_g7_ns_rational_word_problem(difficulty: DifficultyLevel
       answer_type: 'integer',
     });
   }
-  // Sub-pattern 4: fraction of a negative quantity (DOK 3)
+  // Sub-pattern 4: fraction of a negative quantity (DOK 3).
+  // One selected fraction object drives the prompt and the calculation. Keeping
+  // these values together is a correctness requirement, not a presentation detail.
   const whole = randomInt(2, 8);
-  const frac = [1/2, 1/3, 2/3, 1/4, 3/4][randomInt(0, 4)]!;
-  const fracStr = [['1','2'],['1','3'],['2','3'],['1','4'],['3','4']][randomInt(0, 4)]!;
-  const debt = -(whole * parseInt(fracStr[1]!));
-  const portion = Math.round(debt * frac);
-  return g7Wrap(difficulty, 'g7_ns_rational_word_problem', 'M7.NS.1.3', 'Rational Number Word Problems', {
-    question: `A business owes $${Math.abs(debt)}. It pays off ${fracStr[0]}/${fracStr[1]} of the debt. How much does it still owe (as a negative number)?`,
-    answer: String(debt - portion),
+  const fractionChoices = [
+    { numerator: 1, denominator: 2 },
+    { numerator: 1, denominator: 3 },
+    { numerator: 2, denominator: 3 },
+    { numerator: 1, denominator: 4 },
+    { numerator: 3, denominator: 4 },
+  ] as const;
+  const fraction = fractionChoices[randomInt(0, fractionChoices.length - 1)]!;
+  const debt = -(whole * fraction.denominator);
+  const portion = (debt * fraction.numerator) / fraction.denominator;
+  const remaining = debt - portion;
+  return g7Wrap(difficulty, 'g7_ns_rational_word_problem', 'M7.NS.4.1', 'Rational Number Word Problems', {
+    question: `A business owes $${Math.abs(debt)}. It pays off ${fraction.numerator}/${fraction.denominator} of the debt. How much does it still owe (as a negative number)?`,
+    answer: String(remaining),
     solution_steps: [
       `Debt: $${Math.abs(debt)} (represented as ${debt})`,
-      `Paid: ${fracStr[0]}/${fracStr[1]} × ${debt} = ${portion}`,
-      `Remaining: ${debt} − ${portion} = ${debt - portion}`,
+      `Paid: ${fraction.numerator}/${fraction.denominator} × ${debt} = ${portion}`,
+      `Remaining: ${debt} − ${portion} = ${remaining}`,
     ],
     answer_type: 'integer',
   });
