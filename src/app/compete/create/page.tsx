@@ -47,12 +47,8 @@ import {
 import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { ProtectedRouteLoadingFallback } from '@/components/auth/ProtectedRouteLoadingFallback';
-import { ContentReadinessNotice } from '@/components/content/ContentReadinessNotice';
 import { usePracticeGeneratorAvailability } from '@/hooks/usePracticeGeneratorAvailability';
-import {
-  getSelectedContentReadiness,
-  hasCuratedAnnouncedSkill,
-} from '@/lib/content/readiness';
+import { hasCuratedAnnouncedSkill } from '@/lib/content/announced-skills';
 import {
   createHeat,
   type HeatType,
@@ -560,10 +556,6 @@ export default function CreateHeatPage() {
   );
   const allSelectedConceptsHavePracticeGenerators =
     practiceGeneratorAvailability.status === 'ready' && unavailableSelectedConcepts.length === 0;
-  const selectedContentReadiness = useMemo(
-    () => getSelectedContentReadiness(selectedCourse?.code, selectedConcepts),
-    [selectedCourse?.code, selectedConcepts],
-  );
   const missingAnnouncedSkillCount = useMemo(
     () => selectedConcepts.filter((concept) => !hasCuratedAnnouncedSkill(concept.announced_skill)).length,
     [selectedConcepts],
@@ -861,12 +853,6 @@ export default function CreateHeatPage() {
 
               {selectedCourse && (
                 <div className="mb-5">
-                  <ContentReadinessNotice
-                    readiness={selectedContentReadiness}
-                    selectedConceptCount={selectedCount}
-                    missingAnnouncedSkillCount={missingAnnouncedSkillCount}
-                    purpose="competition_preparation"
-                  />
                   {practiceGeneratorAvailability.status === 'loading' && (
                     <p className="mt-3 text-xs text-slate-500">Checking implemented practice generators for the selected concepts…</p>
                   )}

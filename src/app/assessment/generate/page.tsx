@@ -42,11 +42,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { ProtectedRouteLoadingFallback } from '@/components/auth/ProtectedRouteLoadingFallback';
 import { usePracticeGeneratorAvailability } from '@/hooks/usePracticeGeneratorAvailability';
 import type { AssessmentDocument } from '@/lib/assessment/assembler';
-import { ContentReadinessNotice } from '@/components/content/ContentReadinessNotice';
-import {
-  getSelectedContentReadiness,
-  hasCuratedAnnouncedSkill,
-} from '@/lib/content/readiness';
+import { hasCuratedAnnouncedSkill } from '@/lib/content/announced-skills';
 import {
   ASSESSMENT_FORMAT_CONFIGS,
   getAssessmentQuestionPlan,
@@ -673,10 +669,6 @@ export default function GenerateAssessmentPage() {
   );
   const allSelectedConceptsHavePracticeGenerators =
     practiceGeneratorAvailability.status === 'ready' && unavailableSelectedConcepts.length === 0;
-  const selectedContentReadiness = useMemo(
-    () => getSelectedContentReadiness(selectedCourse?.code, selectedConcepts),
-    [selectedCourse?.code, selectedConcepts],
-  );
   const missingAnnouncedSkillCount = useMemo(
     () => selectedConcepts.filter((concept) => !hasCuratedAnnouncedSkill(concept.announced_skill)).length,
     [selectedConcepts],
@@ -1008,12 +1000,6 @@ export default function GenerateAssessmentPage() {
                 ))}
               </div>
               <div className="mt-4 space-y-3">
-                <ContentReadinessNotice
-                  readiness={selectedContentReadiness}
-                  selectedConceptCount={selectedCount}
-                  missingAnnouncedSkillCount={missingAnnouncedSkillCount}
-                  purpose={isHeatPreparation ? 'competition_preparation' : 'standalone_practice'}
-                />
                 {practiceGeneratorAvailability.status === 'loading' && (
                   <p className="text-xs text-slate-500">Checking implemented practice generators for the selected concepts…</p>
                 )}
@@ -1192,7 +1178,6 @@ export default function GenerateAssessmentPage() {
               }
             />
             <SummaryRow label="Concepts" value={`${selectedCount} selected`} />
-            <SummaryRow label="Readiness" value={selectedContentReadiness.label} />
             <SummaryRow
               label="Document"
               value={DOC_TYPES.find((d) => d.key === docType)?.label ?? docType}
