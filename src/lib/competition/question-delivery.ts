@@ -159,6 +159,20 @@ function clamp01(n: number): number {
   return n;
 }
 
+/**
+ * Visual generators lack a verified atomic-concept mapping. An explicit list
+ * of atomic concept IDs is therefore a strict scope boundary: visual capacity
+ * is zero and all slots must come from scope-mapped static or procedural
+ * content. Topic-wide/legacy paths retain the existing visual pool.
+ */
+export function visualGeneratorCapacityForScope(
+  explicitConceptIds?: string[] | null
+): number {
+  return explicitConceptIds && explicitConceptIds.length > 0
+    ? 0
+    : Object.keys(VISUAL_GENERATORS).length;
+}
+
 function pickDifficulty(min: number, max: number): DifficultyLevel {
   return randomInRange(Math.max(1, min), Math.min(4, max)) as DifficultyLevel;
 }
@@ -446,6 +460,12 @@ export async function generateAndInsertQuestions(
     profile,
     conceptIds,
   } = params;
+  // An explicit atomic-concept selection is an authoritative content scope.
+  // Visual generators have no one-to-one atomic-concept mapping, so they must
+  // never supplement an explicitly selected scope. Any unavailable MC slots
+  // are deterministically backfilled by static questions mapped to those
+  // concepts or by the selected procedural generators.
+  const hasExplicitConceptSelection = Boolean(conceptIds && conceptIds.length > 0);
 
   // Profile, when supplied, drives the effective depth range used at
   // generation time. Falls back to the explicit depthMin/depthMax args so
@@ -517,12 +537,17 @@ export async function generateAndInsertQuestions(
       ? await loadStaticPool(supabase, unitTopicId, depthMin, depthMax, conceptIds ?? null)
       : [];
 
-  // Visual pool — each visual generator can be called repeatedly with
-  // different random seeds, but we treat the distinct-generator count as the
-  // practical cap to keep questions varied within a Heat.
-  const visualKeyCount = Object.keys(VISUAL_GENERATORS).length;
+  // Visual generators have no verified atomic-concept mapping. They are
+  // permitted only on legacy/topic-wide selection paths; explicit concept IDs
+  // define a strict, non-expandable content boundary.
+  const visualKeyCount = visualGeneratorCapacityForScope(conceptIds);
 
-  console.log('[question-delivery] pools:', { generators: generators.length, staticPool: staticPool.length, visualKeyCount });
+  console.log('[question-delivery] pools:', {
+    generators: generators.length,
+    staticPool: staticPool.length,
+    visualKeyCount,
+    hasExplicitConceptSelection,
+  });
 
   // ── Backfill spillover ────────────────────────────────────────────────────
   // Per the spec: if a pool is short, push the shortfall to the OTHER MC pool.
@@ -665,6 +690,9 @@ export async function generateAndInsertQuestions(
   }
 
   // --- Visual questions -------------------------------------------------------
+  // visualCount is zero for an explicit atomic-concept selection; see the
+  // pool construction above. That prevents any unmapped visual content from
+  // escaping the teacher's selected scope.
   // Shuffle without replacement so each visual generator is used at most once
   // per Heat — this matches the cap used in the backfill math above and
   // keeps the question set varied.

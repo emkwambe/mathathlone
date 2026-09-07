@@ -96,7 +96,8 @@ The original ratio-table defect was a presentation defect: values were flattened
 | `RP-004` | Major | Worksheet-to-Heat preparation flow has not been rehearsed in production with a rostered class. | Complete the designated teacher workflow and compare independently generated practice and Heat items. | Open release gate |
 | `RP-005` | Major | Difficulty levels were not reliably differentiated across the three generator families. | All three generators now use explicit non-overlapping numerical or representation progressions. | Closed in source; qualified sign-off pending |
 | `RP-006` | Major | Repeated procedural prompts could appear in one assembled session. | Shared bounded retry prevents exact duplicate student-visible prompts in worksheets and procedural Heat items. | Closed in source; production session evidence pending |
-| `RP-007` | Major | The student briefing exposed raw internal concept labels rather than concise approved skill labels. | Store only the three reviewed Grade 6 labels as manual `announced_skill` metadata; reject competition preparation when a selected label is missing. | Source fix pending deployment and production evidence |
+| `RP-007` | Major | The student briefing exposed raw internal concept labels rather than concise approved skill labels. | Store only the three reviewed Grade 6 labels as manual `announced_skill` metadata; reject competition preparation when a selected label is missing. | Deployed; production worksheet and PDF evidence passed |
+| `RP-008` | Critical | A short Heat created with three explicit Grade 6 ratio concept IDs admitted unmapped visual questions outside that scope. The Heat was detected before start, with zero participants. | Treat an explicit atomic-concept selection as a strict content boundary: disable unmapped visual fallback and backfill only from selected procedural generators or static questions whose concept mapping matches the selected IDs. Preserve the invalid unstarted Heat as an audit record; validate and deploy the correction before any replacement Heat. | Open release gate |
 
 ## 7. Remaining release evidence
 
@@ -107,9 +108,10 @@ The course may be marked **Ready** only when all items below are complete.
 3. A ratio-table item is readable as a two-column table in the page view and in a saved Chrome PDF.
 4. The Practice Review stays within the pilot page target: normally at most four student-question pages and no spurious blank answer-key page.
 5. Returning from the worksheet restores the selected class, course, concepts, mode, profile, timing, and content division in the Heat Builder.
-6. A teacher launches a short class-bound practice Heat and confirms it generates different unit-rate, ratio-table, and ratio-word-problem instances from the worksheet.
+6. A teacher launches a short class-bound practice Heat and confirms that **every** generated question is mapped to the selected three concepts, then confirms fresh unit-rate, ratio-table, and ratio-word-problem instances against the worksheet.
 7. The worksheet and Heat evidence each show no duplicate student-visible procedural prompt.
 8. A Mathlete outside the rostered class is denied entry to that class-bound Heat.
+9. `RP-008` is closed only after the explicit-concept scope correction is deployed and a replacement Heat contains no unmapped visual or other out-of-scope content.
 
 ## 8. Conditional configuration recommendation
 
@@ -129,4 +131,4 @@ Do **not** announce this scope to real classrooms until the remaining sign-off a
 
 The selected Grade 6 scope now has stronger mathematical controls than a technical smoke test: an explicit no-waiver correctness veto, machine-verified arithmetic invariants, retained non-repeating review samples, independent recomputation evidence, calibrated difficulty bands, and a shared duplicate-resistance mechanism.
 
-The current mathematical evidence is favorable, but the release remains intentionally conservative. A qualified educator’s review of the retained set and the production worksheet-to-Heat rehearsal are the remaining gates before the platform owner can issue a defensible Grade 6 intraclass pilot release decision.
+The current mathematical evidence is favorable, but the release remains intentionally conservative. The rejected unstarted Heat confirms that a technically successful worksheet does not waive Heat-content verification. A qualified educator’s review of the retained set, deployment of the strict explicit-concept scope correction, and a new clean production worksheet-to-Heat rehearsal are the remaining gates before the platform owner can issue a defensible Grade 6 intraclass pilot release decision.
