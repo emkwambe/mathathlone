@@ -1,0 +1,1605 @@
+{
+  "auditTitle": "Grade 6 Coverage-Gap Closure — Qualified Mathematical Review Set",
+  "status": "Pending qualified Grade 6 educator sign-off; staged generator mappings remain inactive.",
+  "generatedAtUtc": "2026-09-07T16:32:41.846Z",
+  "noAiStatement": "Every prompt, answer, solution step, and audit result in this set is produced by versioned deterministic code. AI was not used to create or classify student content.",
+  "reviewerInstruction": "Independently recompute every answer from the visible prompt. Mark reject for any mathematical error, ambiguity, invalid unit, implausible context, answer/prompt mismatch, or inappropriate representation. For every concept flagged for representation review, explicitly decide whether the textual structured representation adequately assesses the named concept before any activation decision.",
+  "scope": {
+    "course": "NC Grade 6 Math",
+    "sourceGapClosures": 7,
+    "samplesPerGeneratorPerDifficulty": 3,
+    "expectedTotalSamples": 84
+  },
+  "generators": [
+    {
+      "lessonNumber": "M6.EE.5.2",
+      "generatorType": "g6_ee_write_dependent_equation",
+      "internalScopeDescription": "Write an equation relating a constant rate and a dependent quantity.",
+      "representationReviewRequired": false,
+      "difficulties": [
+        {
+          "difficulty": 1,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "A car travels at 8 miles per hour. Let d be distance in miles and t be time in hours. Write an equation relating d and t.",
+              "questionLatex": "A car travels at 8 miles per hour. Let d be distance in miles and t be time in hours. Write an equation relating d and t.",
+              "correctAnswer": "d = 8t",
+              "answerType": "equation",
+              "solutionSteps": [
+                "Distance = rate × time.",
+                "d = 8t."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "A student earns $11 per hour. Let e be earnings in dollars and h be hours worked. Write an equation relating e and h.",
+              "questionLatex": "A student earns $11 per hour. Let e be earnings in dollars and h be hours worked. Write an equation relating e and h.",
+              "correctAnswer": "e = 11h",
+              "answerType": "equation",
+              "solutionSteps": [
+                "Earnings = rate × hours.",
+                "e = 11h."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "A printer makes 10 pages per minute. Let p be pages printed and m be minutes. Write an equation relating p and m.",
+              "questionLatex": "A printer makes 10 pages per minute. Let p be pages printed and m be minutes. Write an equation relating p and m.",
+              "correctAnswer": "p = 10m",
+              "answerType": "equation",
+              "solutionSteps": [
+                "Pages = rate × minutes.",
+                "p = 10m."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        },
+        {
+          "difficulty": 2,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "A printer makes 23 pages per minute. Let p be pages printed and m be minutes. Write an equation relating p and m.",
+              "questionLatex": "A printer makes 23 pages per minute. Let p be pages printed and m be minutes. Write an equation relating p and m.",
+              "correctAnswer": "p = 23m",
+              "answerType": "equation",
+              "solutionSteps": [
+                "Pages = rate × minutes.",
+                "p = 23m."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "A car travels at 11 miles per hour. Let d be distance in miles and t be time in hours. Write an equation relating d and t.",
+              "questionLatex": "A car travels at 11 miles per hour. Let d be distance in miles and t be time in hours. Write an equation relating d and t.",
+              "correctAnswer": "d = 11t",
+              "answerType": "equation",
+              "solutionSteps": [
+                "Distance = rate × time.",
+                "d = 11t."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "A printer makes 2 pages per minute. Let p be pages printed and m be minutes. Write an equation relating p and m.",
+              "questionLatex": "A printer makes 2 pages per minute. Let p be pages printed and m be minutes. Write an equation relating p and m.",
+              "correctAnswer": "p = 2m",
+              "answerType": "equation",
+              "solutionSteps": [
+                "Pages = rate × minutes.",
+                "p = 2m."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        },
+        {
+          "difficulty": 3,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "A student earns $19 per hour. Let e be earnings in dollars and h be hours worked. Write an equation relating e and h.",
+              "questionLatex": "A student earns $19 per hour. Let e be earnings in dollars and h be hours worked. Write an equation relating e and h.",
+              "correctAnswer": "e = 19h",
+              "answerType": "equation",
+              "solutionSteps": [
+                "Earnings = rate × hours.",
+                "e = 19h."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "A car travels at 20 miles per hour. Let d be distance in miles and t be time in hours. Write an equation relating d and t.",
+              "questionLatex": "A car travels at 20 miles per hour. Let d be distance in miles and t be time in hours. Write an equation relating d and t.",
+              "correctAnswer": "d = 20t",
+              "answerType": "equation",
+              "solutionSteps": [
+                "Distance = rate × time.",
+                "d = 20t."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "A car travels at 3 miles per hour. Let d be distance in miles and t be time in hours. Write an equation relating d and t.",
+              "questionLatex": "A car travels at 3 miles per hour. Let d be distance in miles and t be time in hours. Write an equation relating d and t.",
+              "correctAnswer": "d = 3t",
+              "answerType": "equation",
+              "solutionSteps": [
+                "Distance = rate × time.",
+                "d = 3t."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        },
+        {
+          "difficulty": 4,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "A printer makes 69 pages per minute. Let p be pages printed and m be minutes. Write an equation relating p and m.",
+              "questionLatex": "A printer makes 69 pages per minute. Let p be pages printed and m be minutes. Write an equation relating p and m.",
+              "correctAnswer": "p = 69m",
+              "answerType": "equation",
+              "solutionSteps": [
+                "Pages = rate × minutes.",
+                "p = 69m."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "A printer makes 72 pages per minute. Let p be pages printed and m be minutes. Write an equation relating p and m.",
+              "questionLatex": "A printer makes 72 pages per minute. Let p be pages printed and m be minutes. Write an equation relating p and m.",
+              "correctAnswer": "p = 72m",
+              "answerType": "equation",
+              "solutionSteps": [
+                "Pages = rate × minutes.",
+                "p = 72m."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "A car travels at 67 miles per hour. Let d be distance in miles and t be time in hours. Write an equation relating d and t.",
+              "questionLatex": "A car travels at 67 miles per hour. Let d be distance in miles and t be time in hours. Write an equation relating d and t.",
+              "correctAnswer": "d = 67t",
+              "answerType": "equation",
+              "solutionSteps": [
+                "Distance = rate × time.",
+                "d = 67t."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "lessonNumber": "M6.GEO.1.4",
+      "generatorType": "g6_geo_area_composite_6",
+      "internalScopeDescription": "Find composite area by decomposing rectangles and triangles.",
+      "representationReviewRequired": true,
+      "difficulties": [
+        {
+          "difficulty": 1,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "A composite garden is made from a 9 m by 5 m rectangle and a non-overlapping triangle with base 6 m and height 7 m. What is the total area in square meters?",
+              "questionLatex": "A composite garden is made from a 9 m by 5 m rectangle and a non-overlapping triangle with base 6 m and height 7 m. What is the total area in square meters?",
+              "correctAnswer": "66",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Rectangle area: 9 × 5 = 45 m².",
+                "Triangle area: ½ × 6 × 7 = 21 m².",
+                "Total area: 45 + 21 = 66 m²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "A composite garden is made from a 10 m by 9 m rectangle and a non-overlapping triangle with base 6 m and height 3 m. What is the total area in square meters?",
+              "questionLatex": "A composite garden is made from a 10 m by 9 m rectangle and a non-overlapping triangle with base 6 m and height 3 m. What is the total area in square meters?",
+              "correctAnswer": "99",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Rectangle area: 10 × 9 = 90 m².",
+                "Triangle area: ½ × 6 × 3 = 9 m².",
+                "Total area: 90 + 9 = 99 m²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "A composite garden is made from a 10 m by 6 m rectangle and a non-overlapping triangle with base 10 m and height 3 m. What is the total area in square meters?",
+              "questionLatex": "A composite garden is made from a 10 m by 6 m rectangle and a non-overlapping triangle with base 10 m and height 3 m. What is the total area in square meters?",
+              "correctAnswer": "75",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Rectangle area: 10 × 6 = 60 m².",
+                "Triangle area: ½ × 10 × 3 = 15 m².",
+                "Total area: 60 + 15 = 75 m²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        },
+        {
+          "difficulty": 2,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "A composite garden is made from a 4 m by 14 m rectangle and a non-overlapping triangle with base 10 m and height 4 m. What is the total area in square meters?",
+              "questionLatex": "A composite garden is made from a 4 m by 14 m rectangle and a non-overlapping triangle with base 10 m and height 4 m. What is the total area in square meters?",
+              "correctAnswer": "76",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Rectangle area: 4 × 14 = 56 m².",
+                "Triangle area: ½ × 10 × 4 = 20 m².",
+                "Total area: 56 + 20 = 76 m²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "A composite garden is made from a 7 m by 11 m rectangle and a non-overlapping triangle with base 5 m and height 14 m. What is the total area in square meters?",
+              "questionLatex": "A composite garden is made from a 7 m by 11 m rectangle and a non-overlapping triangle with base 5 m and height 14 m. What is the total area in square meters?",
+              "correctAnswer": "112",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Rectangle area: 7 × 11 = 77 m².",
+                "Triangle area: ½ × 5 × 14 = 35 m².",
+                "Total area: 77 + 35 = 112 m²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "A composite garden is made from a 7 m by 9 m rectangle and a non-overlapping triangle with base 8 m and height 8 m. What is the total area in square meters?",
+              "questionLatex": "A composite garden is made from a 7 m by 9 m rectangle and a non-overlapping triangle with base 8 m and height 8 m. What is the total area in square meters?",
+              "correctAnswer": "95",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Rectangle area: 7 × 9 = 63 m².",
+                "Triangle area: ½ × 8 × 8 = 32 m².",
+                "Total area: 63 + 32 = 95 m²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        },
+        {
+          "difficulty": 3,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "A composite garden is made from a 15 m by 3 m rectangle and a non-overlapping triangle with base 18 m and height 14 m. What is the total area in square meters?",
+              "questionLatex": "A composite garden is made from a 15 m by 3 m rectangle and a non-overlapping triangle with base 18 m and height 14 m. What is the total area in square meters?",
+              "correctAnswer": "171",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Rectangle area: 15 × 3 = 45 m².",
+                "Triangle area: ½ × 18 × 14 = 126 m².",
+                "Total area: 45 + 126 = 171 m²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "A composite garden is made from a 10 m by 8 m rectangle and a non-overlapping triangle with base 18 m and height 6 m. What is the total area in square meters?",
+              "questionLatex": "A composite garden is made from a 10 m by 8 m rectangle and a non-overlapping triangle with base 18 m and height 6 m. What is the total area in square meters?",
+              "correctAnswer": "134",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Rectangle area: 10 × 8 = 80 m².",
+                "Triangle area: ½ × 18 × 6 = 54 m².",
+                "Total area: 80 + 54 = 134 m²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "An L-shaped patio fits inside a 16 m by 16 m rectangle. A 2 m by 2 m rectangular corner is cut out. What is the area of the patio in square meters?",
+              "questionLatex": "An L-shaped patio fits inside a 16 m by 16 m rectangle. A 2 m by 2 m rectangular corner is cut out. What is the area of the patio in square meters?",
+              "correctAnswer": "252",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Area of the outside rectangle: 16 × 16 = 256 m².",
+                "Area removed: 2 × 2 = 4 m².",
+                "Composite area: 256 − 4 = 252 m²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        },
+        {
+          "difficulty": 4,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "An L-shaped patio fits inside a 8 m by 24 m rectangle. A 2 m by 20 m rectangular corner is cut out. What is the area of the patio in square meters?",
+              "questionLatex": "An L-shaped patio fits inside a 8 m by 24 m rectangle. A 2 m by 20 m rectangular corner is cut out. What is the area of the patio in square meters?",
+              "correctAnswer": "152",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Area of the outside rectangle: 8 × 24 = 192 m².",
+                "Area removed: 2 × 20 = 40 m².",
+                "Composite area: 192 − 40 = 152 m²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "A composite garden is made from a 18 m by 6 m rectangle and a non-overlapping triangle with base 16 m and height 12 m. What is the total area in square meters?",
+              "questionLatex": "A composite garden is made from a 18 m by 6 m rectangle and a non-overlapping triangle with base 16 m and height 12 m. What is the total area in square meters?",
+              "correctAnswer": "204",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Rectangle area: 18 × 6 = 108 m².",
+                "Triangle area: ½ × 16 × 12 = 96 m².",
+                "Total area: 108 + 96 = 204 m²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "A composite garden is made from a 12 m by 21 m rectangle and a non-overlapping triangle with base 4 m and height 7 m. What is the total area in square meters?",
+              "questionLatex": "A composite garden is made from a 12 m by 21 m rectangle and a non-overlapping triangle with base 4 m and height 7 m. What is the total area in square meters?",
+              "correctAnswer": "266",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Rectangle area: 12 × 21 = 252 m².",
+                "Triangle area: ½ × 4 × 7 = 14 m².",
+                "Total area: 252 + 14 = 266 m²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "lessonNumber": "M6.GEO.2.2",
+      "generatorType": "g6_geo_surface_area_prism_6",
+      "internalScopeDescription": "Compute rectangular- or triangular-prism surface area from stated dimensions.",
+      "representationReviewRequired": true,
+      "difficulties": [
+        {
+          "difficulty": 1,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "A rectangular prism has length 5 cm, width 2 cm, and height 8 cm. Find its total surface area in square centimeters.",
+              "questionLatex": "A rectangular prism has length 5 cm, width 2 cm, and height 8 cm. Find its total surface area in square centimeters.",
+              "correctAnswer": "132",
+              "answerType": "integer",
+              "solutionSteps": [
+                "A rectangular prism has two 5 by 2 faces, two 5 by 8 faces, and two 2 by 8 faces.",
+                "Surface area = 2(10 + 40 + 16).",
+                "= 2(66) = 132 cm²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "A rectangular prism has length 7 cm, width 7 cm, and height 3 cm. Find its total surface area in square centimeters.",
+              "questionLatex": "A rectangular prism has length 7 cm, width 7 cm, and height 3 cm. Find its total surface area in square centimeters.",
+              "correctAnswer": "182",
+              "answerType": "integer",
+              "solutionSteps": [
+                "A rectangular prism has two 7 by 7 faces, two 7 by 3 faces, and two 7 by 3 faces.",
+                "Surface area = 2(49 + 21 + 21).",
+                "= 2(91) = 182 cm²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "A rectangular prism has length 3 cm, width 8 cm, and height 3 cm. Find its total surface area in square centimeters.",
+              "questionLatex": "A rectangular prism has length 3 cm, width 8 cm, and height 3 cm. Find its total surface area in square centimeters.",
+              "correctAnswer": "114",
+              "answerType": "integer",
+              "solutionSteps": [
+                "A rectangular prism has two 3 by 8 faces, two 3 by 3 faces, and two 8 by 3 faces.",
+                "Surface area = 2(24 + 9 + 24).",
+                "= 2(57) = 114 cm²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        },
+        {
+          "difficulty": 2,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "A rectangular prism has length 8 cm, width 5 cm, and height 12 cm. Find its total surface area in square centimeters.",
+              "questionLatex": "A rectangular prism has length 8 cm, width 5 cm, and height 12 cm. Find its total surface area in square centimeters.",
+              "correctAnswer": "392",
+              "answerType": "integer",
+              "solutionSteps": [
+                "A rectangular prism has two 8 by 5 faces, two 8 by 12 faces, and two 5 by 12 faces.",
+                "Surface area = 2(40 + 96 + 60).",
+                "= 2(196) = 392 cm²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "A rectangular prism has length 2 cm, width 2 cm, and height 3 cm. Find its total surface area in square centimeters.",
+              "questionLatex": "A rectangular prism has length 2 cm, width 2 cm, and height 3 cm. Find its total surface area in square centimeters.",
+              "correctAnswer": "32",
+              "answerType": "integer",
+              "solutionSteps": [
+                "A rectangular prism has two 2 by 2 faces, two 2 by 3 faces, and two 2 by 3 faces.",
+                "Surface area = 2(4 + 6 + 6).",
+                "= 2(16) = 32 cm²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "A rectangular prism has length 6 cm, width 12 cm, and height 4 cm. Find its total surface area in square centimeters.",
+              "questionLatex": "A rectangular prism has length 6 cm, width 12 cm, and height 4 cm. Find its total surface area in square centimeters.",
+              "correctAnswer": "288",
+              "answerType": "integer",
+              "solutionSteps": [
+                "A rectangular prism has two 6 by 12 faces, two 6 by 4 faces, and two 12 by 4 faces.",
+                "Surface area = 2(72 + 24 + 48).",
+                "= 2(144) = 288 cm²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        },
+        {
+          "difficulty": 3,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "A triangular prism has two congruent right-triangular bases with legs 6 cm and 8 cm and hypotenuse 10 cm. The prism is 4 cm long. Find its total surface area in square centimeters.",
+              "questionLatex": "A triangular prism has two congruent right-triangular bases with legs 6 cm and 8 cm and hypotenuse 10 cm. The prism is 4 cm long. Find its total surface area in square centimeters.",
+              "correctAnswer": "144",
+              "answerType": "integer",
+              "solutionSteps": [
+                "One triangular base has area ½ × 6 × 8 = 24 cm².",
+                "The two bases have total area 48 cm².",
+                "The lateral area is 4(6 + 8 + 10) = 96 cm².",
+                "Surface area: 48 + 96 = 144 cm²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "A triangular prism has two congruent right-triangular bases with legs 8 cm and 15 cm and hypotenuse 17 cm. The prism is 15 cm long. Find its total surface area in square centimeters.",
+              "questionLatex": "A triangular prism has two congruent right-triangular bases with legs 8 cm and 15 cm and hypotenuse 17 cm. The prism is 15 cm long. Find its total surface area in square centimeters.",
+              "correctAnswer": "720",
+              "answerType": "integer",
+              "solutionSteps": [
+                "One triangular base has area ½ × 8 × 15 = 60 cm².",
+                "The two bases have total area 120 cm².",
+                "The lateral area is 15(8 + 15 + 17) = 600 cm².",
+                "Surface area: 120 + 600 = 720 cm²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "A rectangular prism has length 4 cm, width 5 cm, and height 15 cm. Find its total surface area in square centimeters.",
+              "questionLatex": "A rectangular prism has length 4 cm, width 5 cm, and height 15 cm. Find its total surface area in square centimeters.",
+              "correctAnswer": "310",
+              "answerType": "integer",
+              "solutionSteps": [
+                "A rectangular prism has two 4 by 5 faces, two 4 by 15 faces, and two 5 by 15 faces.",
+                "Surface area = 2(20 + 60 + 75).",
+                "= 2(155) = 310 cm²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        },
+        {
+          "difficulty": 4,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "A rectangular prism has length 10 cm, width 16 cm, and height 13 cm. Find its total surface area in square centimeters.",
+              "questionLatex": "A rectangular prism has length 10 cm, width 16 cm, and height 13 cm. Find its total surface area in square centimeters.",
+              "correctAnswer": "996",
+              "answerType": "integer",
+              "solutionSteps": [
+                "A rectangular prism has two 10 by 16 faces, two 10 by 13 faces, and two 16 by 13 faces.",
+                "Surface area = 2(160 + 130 + 208).",
+                "= 2(498) = 996 cm²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "A rectangular prism has length 10 cm, width 5 cm, and height 12 cm. Find its total surface area in square centimeters.",
+              "questionLatex": "A rectangular prism has length 10 cm, width 5 cm, and height 12 cm. Find its total surface area in square centimeters.",
+              "correctAnswer": "460",
+              "answerType": "integer",
+              "solutionSteps": [
+                "A rectangular prism has two 10 by 5 faces, two 10 by 12 faces, and two 5 by 12 faces.",
+                "Surface area = 2(50 + 120 + 60).",
+                "= 2(230) = 460 cm²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "A triangular prism has two congruent right-triangular bases with legs 5 cm and 12 cm and hypotenuse 13 cm. The prism is 3 cm long. Find its total surface area in square centimeters.",
+              "questionLatex": "A triangular prism has two congruent right-triangular bases with legs 5 cm and 12 cm and hypotenuse 13 cm. The prism is 3 cm long. Find its total surface area in square centimeters.",
+              "correctAnswer": "150",
+              "answerType": "integer",
+              "solutionSteps": [
+                "One triangular base has area ½ × 5 × 12 = 30 cm².",
+                "The two bases have total area 60 cm².",
+                "The lateral area is 3(5 + 12 + 13) = 90 cm².",
+                "Surface area: 60 + 90 = 150 cm²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "lessonNumber": "M6.GEO.2.3",
+      "generatorType": "g6_geo_surface_area_pyramid_net_6",
+      "internalScopeDescription": "Compute pyramid surface area from an explicitly stated net structure.",
+      "representationReviewRequired": true,
+      "difficulties": [
+        {
+          "difficulty": 1,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "A net for a square pyramid has a 6 cm by 6 cm square base and four congruent triangular faces. Each triangle has base 6 cm and perpendicular height 6 cm. What is the total surface area of the pyramid in square centimeters?",
+              "questionLatex": "A net for a square pyramid has a 6 cm by 6 cm square base and four congruent triangular faces. Each triangle has base 6 cm and perpendicular height 6 cm. What is the total surface area of the pyramid in square centimeters?",
+              "correctAnswer": "108",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Base area: 6 × 6 = 36 cm².",
+                "One triangular face: ½ × 6 × 6 = 18 cm².",
+                "Surface area: 36 + 4(18) = 108 cm²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "A net for a rectangular pyramid has a 3 cm by 4 cm rectangular base. Two triangular faces have base 3 cm and perpendicular height 4 cm, and two triangular faces have base 4 cm and perpendicular height 4 cm. What is the total surface area in square centimeters?",
+              "questionLatex": "A net for a rectangular pyramid has a 3 cm by 4 cm rectangular base. Two triangular faces have base 3 cm and perpendicular height 4 cm, and two triangular faces have base 4 cm and perpendicular height 4 cm. What is the total surface area in square centimeters?",
+              "correctAnswer": "40",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Base area: 3 × 4 = 12 cm².",
+                "The two length-base triangles have total area 3 × 4 = 12 cm².",
+                "The two width-base triangles have total area 4 × 4 = 16 cm².",
+                "Surface area: 12 + 12 + 16 = 40 cm²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "A net for a rectangular pyramid has a 6 cm by 2 cm rectangular base. Two triangular faces have base 6 cm and perpendicular height 5 cm, and two triangular faces have base 2 cm and perpendicular height 5 cm. What is the total surface area in square centimeters?",
+              "questionLatex": "A net for a rectangular pyramid has a 6 cm by 2 cm rectangular base. Two triangular faces have base 6 cm and perpendicular height 5 cm, and two triangular faces have base 2 cm and perpendicular height 5 cm. What is the total surface area in square centimeters?",
+              "correctAnswer": "52",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Base area: 6 × 2 = 12 cm².",
+                "The two length-base triangles have total area 6 × 5 = 30 cm².",
+                "The two width-base triangles have total area 2 × 5 = 10 cm².",
+                "Surface area: 12 + 30 + 10 = 52 cm²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        },
+        {
+          "difficulty": 2,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "A net for a square pyramid has a 3 cm by 3 cm square base and four congruent triangular faces. Each triangle has base 3 cm and perpendicular height 15 cm. What is the total surface area of the pyramid in square centimeters?",
+              "questionLatex": "A net for a square pyramid has a 3 cm by 3 cm square base and four congruent triangular faces. Each triangle has base 3 cm and perpendicular height 15 cm. What is the total surface area of the pyramid in square centimeters?",
+              "correctAnswer": "99",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Base area: 3 × 3 = 9 cm².",
+                "One triangular face: ½ × 3 × 15 = 22.5 cm².",
+                "Surface area: 9 + 4(22.5) = 99 cm²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "A net for a square pyramid has a 2 cm by 2 cm square base and four congruent triangular faces. Each triangle has base 2 cm and perpendicular height 3 cm. What is the total surface area of the pyramid in square centimeters?",
+              "questionLatex": "A net for a square pyramid has a 2 cm by 2 cm square base and four congruent triangular faces. Each triangle has base 2 cm and perpendicular height 3 cm. What is the total surface area of the pyramid in square centimeters?",
+              "correctAnswer": "16",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Base area: 2 × 2 = 4 cm².",
+                "One triangular face: ½ × 2 × 3 = 3 cm².",
+                "Surface area: 4 + 4(3) = 16 cm²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "A net for a square pyramid has a 7 cm by 7 cm square base and four congruent triangular faces. Each triangle has base 7 cm and perpendicular height 10 cm. What is the total surface area of the pyramid in square centimeters?",
+              "questionLatex": "A net for a square pyramid has a 7 cm by 7 cm square base and four congruent triangular faces. Each triangle has base 7 cm and perpendicular height 10 cm. What is the total surface area of the pyramid in square centimeters?",
+              "correctAnswer": "189",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Base area: 7 × 7 = 49 cm².",
+                "One triangular face: ½ × 7 × 10 = 35 cm².",
+                "Surface area: 49 + 4(35) = 189 cm²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        },
+        {
+          "difficulty": 3,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "A net for a rectangular pyramid has a 9 cm by 7 cm rectangular base. Two triangular faces have base 9 cm and perpendicular height 10 cm, and two triangular faces have base 7 cm and perpendicular height 10 cm. What is the total surface area in square centimeters?",
+              "questionLatex": "A net for a rectangular pyramid has a 9 cm by 7 cm rectangular base. Two triangular faces have base 9 cm and perpendicular height 10 cm, and two triangular faces have base 7 cm and perpendicular height 10 cm. What is the total surface area in square centimeters?",
+              "correctAnswer": "223",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Base area: 9 × 7 = 63 cm².",
+                "The two length-base triangles have total area 9 × 10 = 90 cm².",
+                "The two width-base triangles have total area 7 × 10 = 70 cm².",
+                "Surface area: 63 + 90 + 70 = 223 cm²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "A net for a rectangular pyramid has a 5 cm by 8 cm rectangular base. Two triangular faces have base 5 cm and perpendicular height 7 cm, and two triangular faces have base 8 cm and perpendicular height 7 cm. What is the total surface area in square centimeters?",
+              "questionLatex": "A net for a rectangular pyramid has a 5 cm by 8 cm rectangular base. Two triangular faces have base 5 cm and perpendicular height 7 cm, and two triangular faces have base 8 cm and perpendicular height 7 cm. What is the total surface area in square centimeters?",
+              "correctAnswer": "131",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Base area: 5 × 8 = 40 cm².",
+                "The two length-base triangles have total area 5 × 7 = 35 cm².",
+                "The two width-base triangles have total area 8 × 7 = 56 cm².",
+                "Surface area: 40 + 35 + 56 = 131 cm²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "A net for a rectangular pyramid has a 10 cm by 3 cm rectangular base. Two triangular faces have base 10 cm and perpendicular height 14 cm, and two triangular faces have base 3 cm and perpendicular height 14 cm. What is the total surface area in square centimeters?",
+              "questionLatex": "A net for a rectangular pyramid has a 10 cm by 3 cm rectangular base. Two triangular faces have base 10 cm and perpendicular height 14 cm, and two triangular faces have base 3 cm and perpendicular height 14 cm. What is the total surface area in square centimeters?",
+              "correctAnswer": "212",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Base area: 10 × 3 = 30 cm².",
+                "The two length-base triangles have total area 10 × 14 = 140 cm².",
+                "The two width-base triangles have total area 3 × 14 = 42 cm².",
+                "Surface area: 30 + 140 + 42 = 212 cm²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        },
+        {
+          "difficulty": 4,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "A net for a square pyramid has a 4 cm by 4 cm square base and four congruent triangular faces. Each triangle has base 4 cm and perpendicular height 13 cm. What is the total surface area of the pyramid in square centimeters?",
+              "questionLatex": "A net for a square pyramid has a 4 cm by 4 cm square base and four congruent triangular faces. Each triangle has base 4 cm and perpendicular height 13 cm. What is the total surface area of the pyramid in square centimeters?",
+              "correctAnswer": "120",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Base area: 4 × 4 = 16 cm².",
+                "One triangular face: ½ × 4 × 13 = 26 cm².",
+                "Surface area: 16 + 4(26) = 120 cm²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "A net for a rectangular pyramid has a 11 cm by 2 cm rectangular base. Two triangular faces have base 11 cm and perpendicular height 4 cm, and two triangular faces have base 2 cm and perpendicular height 4 cm. What is the total surface area in square centimeters?",
+              "questionLatex": "A net for a rectangular pyramid has a 11 cm by 2 cm rectangular base. Two triangular faces have base 11 cm and perpendicular height 4 cm, and two triangular faces have base 2 cm and perpendicular height 4 cm. What is the total surface area in square centimeters?",
+              "correctAnswer": "74",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Base area: 11 × 2 = 22 cm².",
+                "The two length-base triangles have total area 11 × 4 = 44 cm².",
+                "The two width-base triangles have total area 2 × 4 = 8 cm².",
+                "Surface area: 22 + 44 + 8 = 74 cm²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "A net for a square pyramid has a 2 cm by 2 cm square base and four congruent triangular faces. Each triangle has base 2 cm and perpendicular height 11 cm. What is the total surface area of the pyramid in square centimeters?",
+              "questionLatex": "A net for a square pyramid has a 2 cm by 2 cm square base and four congruent triangular faces. Each triangle has base 2 cm and perpendicular height 11 cm. What is the total surface area of the pyramid in square centimeters?",
+              "correctAnswer": "48",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Base area: 2 × 2 = 4 cm².",
+                "One triangular face: ½ × 2 × 11 = 11 cm².",
+                "Surface area: 4 + 4(11) = 48 cm²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "lessonNumber": "M6.GEO.4.1",
+      "generatorType": "g6_geo_area_real_world_6",
+      "internalScopeDescription": "Solve a real-world area application.",
+      "representationReviewRequired": false,
+      "difficulties": [
+        {
+          "difficulty": 1,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "A rectangular classroom floor is 6 m long and 10 m wide. What is its area in square meters?",
+              "questionLatex": "A rectangular classroom floor is 6 m long and 10 m wide. What is its area in square meters?",
+              "correctAnswer": "60",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Area = length × width.",
+                "6 × 10 = 60 m²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "A rectangular classroom floor is 3 m long and 4 m wide. What is its area in square meters?",
+              "questionLatex": "A rectangular classroom floor is 3 m long and 4 m wide. What is its area in square meters?",
+              "correctAnswer": "12",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Area = length × width.",
+                "3 × 4 = 12 m²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "A triangular banner has a base of 10 cm and a height of 4 cm. What is its area in square centimeters?",
+              "questionLatex": "A triangular banner has a base of 10 cm and a height of 4 cm. What is its area in square centimeters?",
+              "correctAnswer": "20",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Area = ½ × base × height.",
+                "½ × 10 × 4 = 20 cm²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        },
+        {
+          "difficulty": 2,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "A rectangular classroom floor is 18 m long and 11 m wide. What is its area in square meters?",
+              "questionLatex": "A rectangular classroom floor is 18 m long and 11 m wide. What is its area in square meters?",
+              "correctAnswer": "198",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Area = length × width.",
+                "18 × 11 = 198 m²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "A rectangular classroom floor is 16 m long and 9 m wide. What is its area in square meters?",
+              "questionLatex": "A rectangular classroom floor is 16 m long and 9 m wide. What is its area in square meters?",
+              "correctAnswer": "144",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Area = length × width.",
+                "16 × 9 = 144 m²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "A parallelogram-shaped garden has a base of 13 m and a perpendicular height of 3 m. What is its area in square meters?",
+              "questionLatex": "A parallelogram-shaped garden has a base of 13 m and a perpendicular height of 3 m. What is its area in square meters?",
+              "correctAnswer": "39",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Area = base × perpendicular height.",
+                "13 × 3 = 39 m²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        },
+        {
+          "difficulty": 3,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "A triangular banner has a base of 13 cm and a height of 24 cm. What is its area in square centimeters?",
+              "questionLatex": "A triangular banner has a base of 13 cm and a height of 24 cm. What is its area in square centimeters?",
+              "correctAnswer": "156",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Area = ½ × base × height.",
+                "½ × 13 × 24 = 156 cm²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "A parallelogram-shaped garden has a base of 6 m and a perpendicular height of 4 m. What is its area in square meters?",
+              "questionLatex": "A parallelogram-shaped garden has a base of 6 m and a perpendicular height of 4 m. What is its area in square meters?",
+              "correctAnswer": "24",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Area = base × perpendicular height.",
+                "6 × 4 = 24 m²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "A rectangular classroom floor is 18 m long and 21 m wide. What is its area in square meters?",
+              "questionLatex": "A rectangular classroom floor is 18 m long and 21 m wide. What is its area in square meters?",
+              "correctAnswer": "378",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Area = length × width.",
+                "18 × 21 = 378 m²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        },
+        {
+          "difficulty": 4,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "A rectangular classroom floor is 27 m long and 27 m wide. What is its area in square meters?",
+              "questionLatex": "A rectangular classroom floor is 27 m long and 27 m wide. What is its area in square meters?",
+              "correctAnswer": "729",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Area = length × width.",
+                "27 × 27 = 729 m²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "A parallelogram-shaped garden has a base of 17 m and a perpendicular height of 22 m. What is its area in square meters?",
+              "questionLatex": "A parallelogram-shaped garden has a base of 17 m and a perpendicular height of 22 m. What is its area in square meters?",
+              "correctAnswer": "374",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Area = base × perpendicular height.",
+                "17 × 22 = 374 m²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "A rectangular classroom floor is 5 m long and 5 m wide. What is its area in square meters?",
+              "questionLatex": "A rectangular classroom floor is 5 m long and 5 m wide. What is its area in square meters?",
+              "correctAnswer": "25",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Area = length × width.",
+                "5 × 5 = 25 m²."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "lessonNumber": "M6.GEO.4.3",
+      "generatorType": "g6_geo_volume_word_6",
+      "internalScopeDescription": "Solve a real-world rectangular-prism volume application.",
+      "representationReviewRequired": false,
+      "difficulties": [
+        {
+          "difficulty": 1,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "A fish tank is 7 dm long, 4 dm wide, and 7 dm high. What is its volume?",
+              "questionLatex": "A fish tank is 7 dm long, 4 dm wide, and 7 dm high. What is its volume?",
+              "correctAnswer": "196",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Volume = length × width × height.",
+                "7 × 4 × 7 = 196 dm³."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "A fish tank is 3 dm long, 7 dm wide, and 6 dm high. What is its volume?",
+              "questionLatex": "A fish tank is 3 dm long, 7 dm wide, and 6 dm high. What is its volume?",
+              "correctAnswer": "126",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Volume = length × width × height.",
+                "3 × 7 × 6 = 126 dm³."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "A sandbox is 2 m long, 3 m wide, and 6 m deep. What is its volume?",
+              "questionLatex": "A sandbox is 2 m long, 3 m wide, and 6 m deep. What is its volume?",
+              "correctAnswer": "36",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Volume = length × width × height.",
+                "2 × 3 × 6 = 36 m³."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        },
+        {
+          "difficulty": 2,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "A storage box is 12 cm long, 12 cm wide, and 5 cm high. What is its volume?",
+              "questionLatex": "A storage box is 12 cm long, 12 cm wide, and 5 cm high. What is its volume?",
+              "correctAnswer": "720",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Volume = length × width × height.",
+                "12 × 12 × 5 = 720 cm³."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "A fish tank is 2 dm long, 4 dm wide, and 10 dm high. What is its volume?",
+              "questionLatex": "A fish tank is 2 dm long, 4 dm wide, and 10 dm high. What is its volume?",
+              "correctAnswer": "80",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Volume = length × width × height.",
+                "2 × 4 × 10 = 80 dm³."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "A sandbox is 12 m long, 9 m wide, and 11 m deep. What is its volume?",
+              "questionLatex": "A sandbox is 12 m long, 9 m wide, and 11 m deep. What is its volume?",
+              "correctAnswer": "1188",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Volume = length × width × height.",
+                "12 × 9 × 11 = 1188 m³."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        },
+        {
+          "difficulty": 3,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "A fish tank is 8 dm long, 6 dm wide, and 4 dm high. What is its volume?",
+              "questionLatex": "A fish tank is 8 dm long, 6 dm wide, and 4 dm high. What is its volume?",
+              "correctAnswer": "192",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Volume = length × width × height.",
+                "8 × 6 × 4 = 192 dm³."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "A fish tank is 10 dm long, 16 dm wide, and 4 dm high. What is its volume?",
+              "questionLatex": "A fish tank is 10 dm long, 16 dm wide, and 4 dm high. What is its volume?",
+              "correctAnswer": "640",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Volume = length × width × height.",
+                "10 × 16 × 4 = 640 dm³."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "A sandbox is 7 m long, 6 m wide, and 10 m deep. What is its volume?",
+              "questionLatex": "A sandbox is 7 m long, 6 m wide, and 10 m deep. What is its volume?",
+              "correctAnswer": "420",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Volume = length × width × height.",
+                "7 × 6 × 10 = 420 m³."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        },
+        {
+          "difficulty": 4,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "A sandbox is 6 m long, 19 m wide, and 11 m deep. What is its volume?",
+              "questionLatex": "A sandbox is 6 m long, 19 m wide, and 11 m deep. What is its volume?",
+              "correctAnswer": "1254",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Volume = length × width × height.",
+                "6 × 19 × 11 = 1254 m³."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "A storage box is 7 cm long, 11 cm wide, and 11 cm high. What is its volume?",
+              "questionLatex": "A storage box is 7 cm long, 11 cm wide, and 11 cm high. What is its volume?",
+              "correctAnswer": "847",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Volume = length × width × height.",
+                "7 × 11 × 11 = 847 cm³."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "A fish tank is 9 dm long, 8 dm wide, and 19 dm high. What is its volume?",
+              "questionLatex": "A fish tank is 9 dm long, 8 dm wide, and 19 dm high. What is its volume?",
+              "correctAnswer": "1368",
+              "answerType": "integer",
+              "solutionSteps": [
+                "Volume = length × width × height.",
+                "9 × 8 × 19 = 1368 dm³."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "lessonNumber": "M6.NS.4.6",
+      "generatorType": "g6_ns_identify_coordinate_plane_point_6",
+      "internalScopeDescription": "Identify an ordered pair, quadrant, or axis from stated coordinate information.",
+      "representationReviewRequired": true,
+      "difficulties": [
+        {
+          "difficulty": 1,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "On a coordinate plane, point P is located at (3, -1). In which quadrant is point P?",
+              "questionLatex": "On a coordinate plane, point P is located at (3, -1). In which quadrant is point P?",
+              "correctAnswer": "IV",
+              "answerType": "text",
+              "solutionSteps": [
+                "The x-coordinate is 3 and the y-coordinate is -1.",
+                "A point with those signs is in Quadrant IV."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "Starting at the origin on a coordinate plane, move 1 units right and 1 units down. What ordered pair names the point?",
+              "questionLatex": "Starting at the origin on a coordinate plane, move 1 units right and 1 units down. What ordered pair names the point?",
+              "correctAnswer": "(1, -1)",
+              "answerType": "text",
+              "solutionSteps": [
+                "Horizontal movement gives x = 1.",
+                "Vertical movement gives y = -1.",
+                "The ordered pair is (1, -1)."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "Starting at the origin on a coordinate plane, move 3 units left and 5 units down. What ordered pair names the point?",
+              "questionLatex": "Starting at the origin on a coordinate plane, move 3 units left and 5 units down. What ordered pair names the point?",
+              "correctAnswer": "(-3, -5)",
+              "answerType": "text",
+              "solutionSteps": [
+                "Horizontal movement gives x = -3.",
+                "Vertical movement gives y = -5.",
+                "The ordered pair is (-3, -5)."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        },
+        {
+          "difficulty": 2,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "On a coordinate plane, the point (0, 2) lies on which axis?",
+              "questionLatex": "On a coordinate plane, the point (0, 2) lies on which axis?",
+              "correctAnswer": "y-axis",
+              "answerType": "text",
+              "solutionSteps": [
+                "One coordinate is 0.",
+                "(0, 2) lies on the y-axis."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "On a coordinate plane, the point (0, 5) lies on which axis?",
+              "questionLatex": "On a coordinate plane, the point (0, 5) lies on which axis?",
+              "correctAnswer": "y-axis",
+              "answerType": "text",
+              "solutionSteps": [
+                "One coordinate is 0.",
+                "(0, 5) lies on the y-axis."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "On a coordinate plane, point P is located at (-4, 5). In which quadrant is point P?",
+              "questionLatex": "On a coordinate plane, point P is located at (-4, 5). In which quadrant is point P?",
+              "correctAnswer": "II",
+              "answerType": "text",
+              "solutionSteps": [
+                "The x-coordinate is -4 and the y-coordinate is 5.",
+                "A point with those signs is in Quadrant II."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        },
+        {
+          "difficulty": 3,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "Starting at the origin on a coordinate plane, move 8 units right and 8 units down. What ordered pair names the point?",
+              "questionLatex": "Starting at the origin on a coordinate plane, move 8 units right and 8 units down. What ordered pair names the point?",
+              "correctAnswer": "(8, -8)",
+              "answerType": "text",
+              "solutionSteps": [
+                "Horizontal movement gives x = 8.",
+                "Vertical movement gives y = -8.",
+                "The ordered pair is (8, -8)."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "On a coordinate plane, the point (0, 9) lies on which axis?",
+              "questionLatex": "On a coordinate plane, the point (0, 9) lies on which axis?",
+              "correctAnswer": "y-axis",
+              "answerType": "text",
+              "solutionSteps": [
+                "One coordinate is 0.",
+                "(0, 9) lies on the y-axis."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "On a coordinate plane, the point (0, 6) lies on which axis?",
+              "questionLatex": "On a coordinate plane, the point (0, 6) lies on which axis?",
+              "correctAnswer": "y-axis",
+              "answerType": "text",
+              "solutionSteps": [
+                "One coordinate is 0.",
+                "(0, 6) lies on the y-axis."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        },
+        {
+          "difficulty": 4,
+          "samples": [
+            {
+              "sample": 1,
+              "questionText": "Starting at the origin on a coordinate plane, move 3 units left and 3 units down. What ordered pair names the point?",
+              "questionLatex": "Starting at the origin on a coordinate plane, move 3 units left and 3 units down. What ordered pair names the point?",
+              "correctAnswer": "(-3, -3)",
+              "answerType": "text",
+              "solutionSteps": [
+                "Horizontal movement gives x = -3.",
+                "Vertical movement gives y = -3.",
+                "The ordered pair is (-3, -3)."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 2,
+              "questionText": "On a coordinate plane, the point (0, -9) lies on which axis?",
+              "questionLatex": "On a coordinate plane, the point (0, -9) lies on which axis?",
+              "correctAnswer": "y-axis",
+              "answerType": "text",
+              "solutionSteps": [
+                "One coordinate is 0.",
+                "(0, -9) lies on the y-axis."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            },
+            {
+              "sample": 3,
+              "questionText": "Starting at the origin on a coordinate plane, move 2 units right and 10 units down. What ordered pair names the point?",
+              "questionLatex": "Starting at the origin on a coordinate plane, move 2 units right and 10 units down. What ordered pair names the point?",
+              "correctAnswer": "(2, -10)",
+              "answerType": "text",
+              "solutionSteps": [
+                "Horizontal movement gives x = 2.",
+                "Vertical movement gives y = -10.",
+                "The ordered pair is (2, -10)."
+              ],
+              "reviewerCalculation": "",
+              "reviewerRepresentationDecision": "pending",
+              "reviewerInitials": "",
+              "reviewerDate": "",
+              "reviewerDecision": "pending"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

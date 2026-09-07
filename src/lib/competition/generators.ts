@@ -8946,6 +8946,279 @@ export function generate_g6_geo_volume_rect_prism_frac(difficulty: DifficultyLev
   });
 }
 
+// 31. M6.EE.5.2 — Write an Equation Relating Dependent and Independent Variables
+export function generate_g6_ee_write_dependent_equation(difficulty: DifficultyLevel): GeneratedQuestion {
+  const maxRate = difficulty === 1 ? 12 : difficulty === 2 ? 25 : difficulty === 3 ? 45 : 75;
+  const rate = randomInt(2, maxRate);
+  const contexts = [
+    {
+      question: `A car travels at ${rate} miles per hour. Let d be distance in miles and t be time in hours. Write an equation relating d and t.`,
+      answer: `d = ${rate}t`,
+      steps: [`Distance = rate × time.`, `d = ${rate}t.`],
+    },
+    {
+      question: `A student earns $${rate} per hour. Let e be earnings in dollars and h be hours worked. Write an equation relating e and h.`,
+      answer: `e = ${rate}h`,
+      steps: [`Earnings = rate × hours.`, `e = ${rate}h.`],
+    },
+    {
+      question: `A printer makes ${rate} pages per minute. Let p be pages printed and m be minutes. Write an equation relating p and m.`,
+      answer: `p = ${rate}m`,
+      steps: [`Pages = rate × minutes.`, `p = ${rate}m.`],
+    },
+  ] as const;
+  const context = contexts[randomInt(0, contexts.length - 1)]!;
+  return g7Wrap(difficulty, 'g6_ee_write_dependent_equation', 'M6.EE.5.2', 'Writing a Rate Equation', {
+    question: context.question,
+    answer: context.answer,
+    solution_steps: [...context.steps],
+    answer_type: 'equation',
+  });
+}
+
+// 32. M6.GEO.1.4 — Area of a Composite Polygon by Decomposition
+export function generate_g6_geo_area_composite_6(difficulty: DifficultyLevel): GeneratedQuestion {
+  const max = difficulty === 1 ? 10 : difficulty === 2 ? 14 : difficulty === 3 ? 18 : 24;
+  const useLShape = difficulty >= 3 && Math.random() < 0.5;
+  if (useLShape) {
+    const outerWidth = randomInt(8, max);
+    const outerHeight = randomInt(7, max);
+    const cutoutWidth = randomInt(2, Math.max(2, outerWidth - 3));
+    const cutoutHeight = randomInt(2, Math.max(2, outerHeight - 3));
+    const area = outerWidth * outerHeight - cutoutWidth * cutoutHeight;
+    return g7Wrap(difficulty, 'g6_geo_area_composite_6', 'M6.GEO.1.4', 'Area by Decomposition', {
+      question: `An L-shaped patio fits inside a ${outerWidth} m by ${outerHeight} m rectangle. A ${cutoutWidth} m by ${cutoutHeight} m rectangular corner is cut out. What is the area of the patio in square meters?`,
+      answer: String(area),
+      solution_steps: [
+        `Area of the outside rectangle: ${outerWidth} × ${outerHeight} = ${outerWidth * outerHeight} m².`,
+        `Area removed: ${cutoutWidth} × ${cutoutHeight} = ${cutoutWidth * cutoutHeight} m².`,
+        `Composite area: ${outerWidth * outerHeight} − ${cutoutWidth * cutoutHeight} = ${area} m².`,
+      ],
+      answer_type: 'integer',
+    });
+  }
+
+  const rectangleWidth = randomInt(4, max);
+  const rectangleHeight = randomInt(3, max);
+  let triangleBase = randomInt(3, max);
+  const triangleHeight = randomInt(2, max);
+  if ((triangleBase * triangleHeight) % 2 !== 0) triangleBase += 1;
+  const rectangleArea = rectangleWidth * rectangleHeight;
+  const triangleArea = (triangleBase * triangleHeight) / 2;
+  const area = rectangleArea + triangleArea;
+  return g7Wrap(difficulty, 'g6_geo_area_composite_6', 'M6.GEO.1.4', 'Area by Decomposition', {
+    question: `A composite garden is made from a ${rectangleWidth} m by ${rectangleHeight} m rectangle and a non-overlapping triangle with base ${triangleBase} m and height ${triangleHeight} m. What is the total area in square meters?`,
+    answer: String(area),
+    solution_steps: [
+      `Rectangle area: ${rectangleWidth} × ${rectangleHeight} = ${rectangleArea} m².`,
+      `Triangle area: ½ × ${triangleBase} × ${triangleHeight} = ${triangleArea} m².`,
+      `Total area: ${rectangleArea} + ${triangleArea} = ${area} m².`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// 33. M6.GEO.2.2 — Surface Area of Rectangular and Triangular Prisms
+export function generate_g6_geo_surface_area_prism_6(difficulty: DifficultyLevel): GeneratedQuestion {
+  const max = difficulty === 1 ? 8 : difficulty === 2 ? 12 : difficulty === 3 ? 16 : 20;
+  const useTriangularPrism = difficulty >= 2 && Math.random() < 0.4;
+  if (useTriangularPrism) {
+    const triples = difficulty === 2
+      ? [[3, 4, 5], [6, 8, 10]]
+      : [[3, 4, 5], [5, 12, 13], [6, 8, 10], [8, 15, 17]];
+    const [legA, legB, hypotenuse] = triples[randomInt(0, triples.length - 1)]!;
+    const prismLength = randomInt(2, max);
+    const baseArea = (legA * legB) / 2;
+    const lateralArea = prismLength * (legA + legB + hypotenuse);
+    const area = 2 * baseArea + lateralArea;
+    return g7Wrap(difficulty, 'g6_geo_surface_area_prism_6', 'M6.GEO.2.2', 'Surface Area of a Triangular Prism', {
+      question: `A triangular prism has two congruent right-triangular bases with legs ${legA} cm and ${legB} cm and hypotenuse ${hypotenuse} cm. The prism is ${prismLength} cm long. Find its total surface area in square centimeters.`,
+      answer: String(area),
+      solution_steps: [
+        `One triangular base has area ½ × ${legA} × ${legB} = ${baseArea} cm².`,
+        `The two bases have total area ${2 * baseArea} cm².`,
+        `The lateral area is ${prismLength}(${legA} + ${legB} + ${hypotenuse}) = ${lateralArea} cm².`,
+        `Surface area: ${2 * baseArea} + ${lateralArea} = ${area} cm².`,
+      ],
+      answer_type: 'integer',
+    });
+  }
+
+  const length = randomInt(2, max);
+  const width = randomInt(2, max);
+  const height = randomInt(2, max);
+  const lw = length * width;
+  const lh = length * height;
+  const wh = width * height;
+  const area = 2 * (lw + lh + wh);
+  return g7Wrap(difficulty, 'g6_geo_surface_area_prism_6', 'M6.GEO.2.2', 'Surface Area of a Rectangular Prism', {
+    question: `A rectangular prism has length ${length} cm, width ${width} cm, and height ${height} cm. Find its total surface area in square centimeters.`,
+    answer: String(area),
+    solution_steps: [
+      `A rectangular prism has two ${length} by ${width} faces, two ${length} by ${height} faces, and two ${width} by ${height} faces.`,
+      `Surface area = 2(${lw} + ${lh} + ${wh}).`,
+      `= 2(${lw + lh + wh}) = ${area} cm².`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// 34. M6.GEO.4.1 — Real-World Area Application
+export function generate_g6_geo_area_real_world_6(difficulty: DifficultyLevel): GeneratedQuestion {
+  const max = difficulty === 1 ? 12 : difficulty === 2 ? 18 : difficulty === 3 ? 24 : 30;
+  const kind = (['rectangular_floor', 'triangular_banner', 'parallelogram_garden'] as const)[randomInt(0, 2)]!;
+  if (kind === 'rectangular_floor') {
+    const length = randomInt(3, max);
+    const width = randomInt(3, max);
+    const area = length * width;
+    return g7Wrap(difficulty, 'g6_geo_area_real_world_6', 'M6.GEO.4.1', 'Real-World Area', {
+      question: `A rectangular classroom floor is ${length} m long and ${width} m wide. What is its area in square meters?`,
+      answer: String(area),
+      solution_steps: [`Area = length × width.`, `${length} × ${width} = ${area} m².`],
+      answer_type: 'integer',
+    });
+  }
+  if (kind === 'triangular_banner') {
+    let base = randomInt(4, max);
+    const height = randomInt(3, max);
+    if ((base * height) % 2 !== 0) base += 1;
+    const area = (base * height) / 2;
+    return g7Wrap(difficulty, 'g6_geo_area_real_world_6', 'M6.GEO.4.1', 'Real-World Area', {
+      question: `A triangular banner has a base of ${base} cm and a height of ${height} cm. What is its area in square centimeters?`,
+      answer: String(area),
+      solution_steps: [`Area = ½ × base × height.`, `½ × ${base} × ${height} = ${area} cm².`],
+      answer_type: 'integer',
+    });
+  }
+  const base = randomInt(4, max);
+  const height = randomInt(3, max);
+  const area = base * height;
+  return g7Wrap(difficulty, 'g6_geo_area_real_world_6', 'M6.GEO.4.1', 'Real-World Area', {
+    question: `A parallelogram-shaped garden has a base of ${base} m and a perpendicular height of ${height} m. What is its area in square meters?`,
+    answer: String(area),
+    solution_steps: [`Area = base × perpendicular height.`, `${base} × ${height} = ${area} m².`],
+    answer_type: 'integer',
+  });
+}
+
+// 35. M6.GEO.4.3 — Real-World Rectangular-Prism Volume Application
+export function generate_g6_geo_volume_word_6(difficulty: DifficultyLevel): GeneratedQuestion {
+  const max = difficulty === 1 ? 8 : difficulty === 2 ? 12 : difficulty === 3 ? 16 : 20;
+  const length = randomInt(2, max);
+  const width = randomInt(2, max);
+  const height = randomInt(2, max);
+  const volume = length * width * height;
+  const contexts = [
+    `A storage box is ${length} cm long, ${width} cm wide, and ${height} cm high.`,
+    `A fish tank is ${length} dm long, ${width} dm wide, and ${height} dm high.`,
+    `A sandbox is ${length} m long, ${width} m wide, and ${height} m deep.`,
+  ] as const;
+  const context = contexts[randomInt(0, contexts.length - 1)]!;
+  const unit = context.includes('cm') ? 'cm³' : context.includes('dm') ? 'dm³' : 'm³';
+  return g7Wrap(difficulty, 'g6_geo_volume_word_6', 'M6.GEO.4.3', 'Real-World Rectangular-Prism Volume', {
+    question: `${context} What is its volume?`,
+    answer: String(volume),
+    solution_steps: [
+      `Volume = length × width × height.`,
+      `${length} × ${width} × ${height} = ${volume} ${unit}.`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// 36. M6.GEO.2.3 — Surface Area from a Pyramid Net
+export function generate_g6_geo_surface_area_pyramid_net_6(difficulty: DifficultyLevel): GeneratedQuestion {
+  const maxBase = difficulty === 1 ? 6 : difficulty === 2 ? 8 : difficulty === 3 ? 10 : 12;
+  const useSquareBase = Math.random() < 0.6;
+  if (useSquareBase) {
+    const side = randomInt(2, maxBase);
+    const triangleHeight = randomInt(3, difficulty === 1 ? 8 : 15);
+    const baseArea = side * side;
+    const oneTriangleArea = (side * triangleHeight) / 2;
+    const area = baseArea + 4 * oneTriangleArea;
+    return g7Wrap(difficulty, 'g6_geo_surface_area_pyramid_net_6', 'M6.GEO.2.3', 'Surface Area from a Square-Pyramid Net', {
+      question: `A net for a square pyramid has a ${side} cm by ${side} cm square base and four congruent triangular faces. Each triangle has base ${side} cm and perpendicular height ${triangleHeight} cm. What is the total surface area of the pyramid in square centimeters?`,
+      answer: String(area),
+      solution_steps: [
+        `Base area: ${side} × ${side} = ${baseArea} cm².`,
+        `One triangular face: ½ × ${side} × ${triangleHeight} = ${oneTriangleArea} cm².`,
+        `Surface area: ${baseArea} + 4(${oneTriangleArea}) = ${area} cm².`,
+      ],
+      answer_type: 'integer',
+    });
+  }
+
+  const length = randomInt(3, maxBase);
+  const width = randomInt(2, maxBase);
+  const triangleHeight = randomInt(3, difficulty === 1 ? 8 : 15);
+  const baseArea = length * width;
+  const lateralArea = length * triangleHeight + width * triangleHeight;
+  const area = baseArea + lateralArea;
+  return g7Wrap(difficulty, 'g6_geo_surface_area_pyramid_net_6', 'M6.GEO.2.3', 'Surface Area from a Rectangular-Pyramid Net', {
+    question: `A net for a rectangular pyramid has a ${length} cm by ${width} cm rectangular base. Two triangular faces have base ${length} cm and perpendicular height ${triangleHeight} cm, and two triangular faces have base ${width} cm and perpendicular height ${triangleHeight} cm. What is the total surface area in square centimeters?`,
+    answer: String(area),
+    solution_steps: [
+      `Base area: ${length} × ${width} = ${baseArea} cm².`,
+      `The two length-base triangles have total area ${length} × ${triangleHeight} = ${length * triangleHeight} cm².`,
+      `The two width-base triangles have total area ${width} × ${triangleHeight} = ${width * triangleHeight} cm².`,
+      `Surface area: ${baseArea} + ${length * triangleHeight} + ${width * triangleHeight} = ${area} cm².`,
+    ],
+    answer_type: 'integer',
+  });
+}
+
+// 37. M6.NS.4.6 — Coordinate-Plane Point Identification
+export function generate_g6_ns_identify_coordinate_plane_point_6(difficulty: DifficultyLevel): GeneratedQuestion {
+  const bound = difficulty === 1 ? 5 : difficulty === 2 ? 7 : difficulty === 3 ? 9 : 10;
+  const task = (['ordered_pair_from_moves', 'quadrant_from_pair', 'axis_from_pair'] as const)[randomInt(0, 2)]!;
+  if (task === 'ordered_pair_from_moves') {
+    let x = randomInt(-bound, bound);
+    let y = randomInt(-bound, bound);
+    while (x === 0 || y === 0) {
+      x = randomInt(-bound, bound);
+      y = randomInt(-bound, bound);
+    }
+    const horizontal = x > 0 ? `${x} units right` : `${Math.abs(x)} units left`;
+    const vertical = y > 0 ? `${y} units up` : `${Math.abs(y)} units down`;
+    return g7Wrap(difficulty, 'g6_ns_identify_coordinate_plane_point_6', 'M6.NS.4.6', 'Coordinate-Plane Point Identification', {
+      question: `Starting at the origin on a coordinate plane, move ${horizontal} and ${vertical}. What ordered pair names the point?`,
+      answer: `(${x}, ${y})`,
+      solution_steps: [
+        `Horizontal movement gives x = ${x}.`,
+        `Vertical movement gives y = ${y}.`,
+        `The ordered pair is (${x}, ${y}).`,
+      ],
+      answer_type: 'text',
+    });
+  }
+  if (task === 'quadrant_from_pair') {
+    let x = randomInt(-bound, bound);
+    let y = randomInt(-bound, bound);
+    while (x === 0 || y === 0) {
+      x = randomInt(-bound, bound);
+      y = randomInt(-bound, bound);
+    }
+    const quadrant = x > 0 && y > 0 ? 'I' : x < 0 && y > 0 ? 'II' : x < 0 && y < 0 ? 'III' : 'IV';
+    return g7Wrap(difficulty, 'g6_ns_identify_coordinate_plane_point_6', 'M6.NS.4.6', 'Coordinate-Plane Point Identification', {
+      question: `On a coordinate plane, point P is located at (${x}, ${y}). In which quadrant is point P?`,
+      answer: quadrant,
+      solution_steps: [`The x-coordinate is ${x} and the y-coordinate is ${y}.`, `A point with those signs is in Quadrant ${quadrant}.`],
+      answer_type: 'text',
+    });
+  }
+
+  const onXAxis = Math.random() < 0.5;
+  const coordinate = randomInt(1, bound) * (Math.random() < 0.5 ? -1 : 1);
+  const pair = onXAxis ? `(${coordinate}, 0)` : `(0, ${coordinate})`;
+  const axis = onXAxis ? 'x-axis' : 'y-axis';
+  return g7Wrap(difficulty, 'g6_ns_identify_coordinate_plane_point_6', 'M6.NS.4.6', 'Coordinate-Plane Point Identification', {
+    question: `On a coordinate plane, the point ${pair} lies on which axis?`,
+    answer: axis,
+    solution_steps: [`One coordinate is 0.`, `${pair} lies on the ${axis}.`],
+    answer_type: 'text',
+  });
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // BATCH 7: SP — Statistics (G6)
 // ─────────────────────────────────────────────────────────────────────────────
@@ -9421,12 +9694,19 @@ export const GENERATORS: Record<string, (difficulty: DifficultyLevel) => Generat
   g6_ee_combine_like_terms_6:     generate_g6_ee_combine_like_terms_6,
   g6_ee_solve_one_step_add_sub:   generate_g6_ee_solve_one_step_add_sub,
   g6_ee_solve_one_step_mul_div:   generate_g6_ee_solve_one_step_mul_div,
-  // BATCH 6: GEO Area & Volume (5)
+  g6_ee_write_dependent_equation: generate_g6_ee_write_dependent_equation,
+  g6_ns_identify_coordinate_plane_point_6: generate_g6_ns_identify_coordinate_plane_point_6,
+  // BATCH 6: GEO Area & Volume (5 + deterministic coverage closures)
   g6_geo_area_triangle_6:         generate_g6_geo_area_triangle_6,
   g6_geo_area_parallelogram:      generate_g6_geo_area_parallelogram,
   g6_geo_area_trapezoid:          generate_g6_geo_area_trapezoid,
+  g6_geo_area_composite_6:        generate_g6_geo_area_composite_6,
+  g6_geo_surface_area_prism_6:    generate_g6_geo_surface_area_prism_6,
   g6_geo_volume_rect_prism_whole: generate_g6_geo_volume_rect_prism_whole,
   g6_geo_volume_rect_prism_frac:  generate_g6_geo_volume_rect_prism_frac,
+  g6_geo_area_real_world_6:       generate_g6_geo_area_real_world_6,
+  g6_geo_volume_word_6:           generate_g6_geo_volume_word_6,
+  g6_geo_surface_area_pyramid_net_6: generate_g6_geo_surface_area_pyramid_net_6,
   // BATCH 7: SP Statistics (4)
   g6_sp_five_number_summary:      generate_g6_sp_five_number_summary,
   g6_sp_compute_center_stats:     generate_g6_sp_compute_center_stats,
