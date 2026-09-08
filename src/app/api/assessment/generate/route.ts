@@ -13,9 +13,9 @@ import {
   type AssessmentPurpose,
 } from '@/lib/assessment/assembler';
 import {
-  getImplementedPracticeGeneratorCandidates,
-  getImplementedPracticeConceptIds,
-} from '@/lib/assessment/practice-generator-availability';
+  getConceptAvailability,
+  getUnavailableConceptIds,
+} from '@/lib/content/concept-availability';
 import {
   ASSESSMENT_FORMAT_CONFIGS,
   getAssessmentQuestionBudget,
@@ -62,9 +62,10 @@ async function getAuthorizedWorksheetRole() {
 }
 
 /**
- * Read-only preflight used by the curriculum pickers. It returns only which
- * selected concept IDs have an active deterministic practice generator; it
- * never creates a question, reveals answers, or changes any record.
+ * Read-only preflight used by the curriculum pickers. It classifies explicit
+ * procedural and static source evidence without creating a question, revealing
+ * answers, or changing any record. A concept is delivery-available only when
+ * the current worksheet and Heat paths can safely honor that source.
  */
 export async function GET(req: NextRequest) {
   try {
@@ -77,21 +78,11 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Choose between 1 and 128 valid concepts to check practice-generator availability.' }, { status: 400 });
     }
 
-    const { data: generators, error: generatorError } = await authorization.supabase
-      .from('question_generators')
-      .select('concept_id, generator_type')
-      .in('concept_id', conceptIds)
-      .eq('is_active', true);
-    if (generatorError) {
-      return NextResponse.json({ error: 'Could not check practice-generator availability.' }, { status: 500 });
-    }
-
-    return NextResponse.json({
-      implementedConceptIds: Array.from(getImplementedPracticeConceptIds(generators ?? [])),
-    });
+    const conceptAvailability = await getConceptAvailability(authorization.supabase, conceptIds);
+    return NextResponse.json({ conceptAvailability });
   } catch (err) {
     console.error('[GET /api/assessment/generate]', err);
-    return NextResponse.json({ error: 'Could not check practice-generator availability.' }, { status: 500 });
+    return NextResponse.json({ error: 'Could not check content-source availability.' }, { status: 500 });
   }
 }
 
@@ -214,27 +205,27 @@ export async function POST(req: NextRequest) {
       new Set(selectedConcepts.map((concept) => topicNameById.get(concept.unit_topic_id)).filter((name): name is string => !!name)),
     );
 
-    const { data: generators, error: generatorError } = await supabase
-      .from('question_generators')
-      .select('concept_id, generator_type')
-      .in('concept_id', conceptIds)
-      .eq('is_active', true);
-    if (generatorError) {
-      return NextResponse.json({ error: 'Could not load practice generators for the selected concepts.' }, { status: 500 });
-    }
-
-    const candidates = getImplementedPracticeGeneratorCandidates(generators ?? []);
-    const coveredConceptIds = new Set(candidates.map((candidate) => candidate.conceptId));
-    const missingConceptNames = conceptIds
-      .filter((conceptId) => !coveredConceptIds.has(conceptId))
+    const conceptAvailability = await getConceptAvailability(supabase, conceptIds);
+    const unavailableConceptIds = getUnavailableConceptIds(conceptAvailability);
+    const unavailableConceptNames = conceptIds
+      .filter((conceptId) => unavailableConceptIds.has(conceptId))
       .map((conceptId) => conceptNameById.get(conceptId) ?? 'an unnamed concept');
 
-    if (missingConceptNames.length > 0) {
+    if (unavailableConceptNames.length > 0) {
       return NextResponse.json(
-        { error: `No active implemented practice generator is available for: ${missingConceptNames.join(', ')}. Remove those concepts or activate their generators before creating a worksheet.` },
+        {
+          error: `No approved implemented question source is available in the current worksheet delivery path for: ${unavailableConceptNames.join(', ')}. Remove those concepts or complete their source implementation and review before creating a worksheet.`,
+        },
         { status: 422 },
       );
     }
+
+    const candidates = conceptAvailability.flatMap((availability) =>
+      availability.implementedGeneratorTypes.map((generatorType) => ({
+        conceptId: availability.conceptId,
+        generatorType,
+      })),
+    );
 
     const doc = assembleAssessment(
       candidates.map((candidate) => candidate.generatorType),

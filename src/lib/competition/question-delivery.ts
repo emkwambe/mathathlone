@@ -347,6 +347,7 @@ async function loadStaticPool(
     .from('static_questions')
     .select('id, concept_id, question_text, question_latex, options, correct_answer, difficulty')
     .eq('is_active', true)
+    .eq('is_verified', true)
     .gte('difficulty', depthMin)
     .lte('difficulty', depthMax);
 

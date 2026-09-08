@@ -190,11 +190,27 @@ interface TopicTreeNodeProps {
   onToggleConcept: (id: string) => void;
   onToggleTopic: (id: string) => void;
   unavailableConceptIds: ReadonlySet<string>;
+  availabilityReady: boolean;
+  availabilityReasonByConceptId: ReadonlyMap<string, string | null>;
 }
 
-function TopicTreeNode({ topic, concepts, expanded, selectedConceptIds, onToggleExpand, onToggleConcept, onToggleTopic, unavailableConceptIds }: TopicTreeNodeProps) {
-  const selectedInTopic = concepts.filter((c) => selectedConceptIds.has(c.id)).length;
-  const allSelected = concepts.length > 0 && selectedInTopic === concepts.length;
+function TopicTreeNode({
+  topic,
+  concepts,
+  expanded,
+  selectedConceptIds,
+  onToggleExpand,
+  onToggleConcept,
+  onToggleTopic,
+  unavailableConceptIds,
+  availabilityReady,
+  availabilityReasonByConceptId,
+}: TopicTreeNodeProps) {
+  const availableConcepts = availabilityReady
+    ? concepts.filter((concept) => !unavailableConceptIds.has(concept.id))
+    : [];
+  const selectedInTopic = availableConcepts.filter((concept) => selectedConceptIds.has(concept.id)).length;
+  const allSelected = availableConcepts.length > 0 && selectedInTopic === availableConcepts.length;
   const someSelected = selectedInTopic > 0 && !allSelected;
   return (
     <div className="border border-gray-200 rounded-lg overflow-hidden">
@@ -202,19 +218,23 @@ function TopicTreeNode({ topic, concepts, expanded, selectedConceptIds, onToggle
         <button type="button" onClick={onToggleExpand} className="p-1 rounded hover:bg-gray-200 text-gray-500" aria-label={expanded ? 'Collapse' : 'Expand'}>
           {expanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
         </button>
-        <label className="flex items-center gap-2 flex-1 cursor-pointer select-none">
+        <label className={`flex items-center gap-2 flex-1 select-none ${availabilityReady && availableConcepts.length > 0 ? 'cursor-pointer' : 'cursor-not-allowed'}`}>
           <span
             role="checkbox"
             aria-checked={allSelected ? 'true' : someSelected ? 'mixed' : 'false'}
-            onClick={(e) => { e.preventDefault(); onToggleTopic(topic.id); }}
-            className={`inline-flex items-center justify-center w-4 h-4 rounded border ${allSelected ? 'bg-indigo-600 border-indigo-600 text-white' : someSelected ? 'bg-indigo-100 border-indigo-400 text-indigo-700' : 'bg-white border-gray-300'}`}
+            aria-disabled={!availabilityReady || availableConcepts.length === 0}
+            onClick={(e) => {
+              e.preventDefault();
+              if (availabilityReady && availableConcepts.length > 0) onToggleTopic(topic.id);
+            }}
+            className={`inline-flex items-center justify-center w-4 h-4 rounded border ${allSelected ? 'bg-indigo-600 border-indigo-600 text-white' : someSelected ? 'bg-indigo-100 border-indigo-400 text-indigo-700' : 'bg-white border-gray-300'} ${!availabilityReady || availableConcepts.length === 0 ? 'opacity-50' : ''}`}
           >
             {allSelected && <Check className="w-3 h-3" />}
             {someSelected && <Minus className="w-3 h-3" />}
           </span>
           <span className="text-sm font-medium text-gray-800">{topic.name}</span>
         </label>
-        <span className="text-xs text-gray-400">{selectedInTopic} / {concepts.length}</span>
+        <span className="text-xs text-gray-400">{selectedInTopic} / {availableConcepts.length} available</span>
       </div>
       {expanded && (
         <div className="px-3 py-2 space-y-1 bg-white">
@@ -222,10 +242,16 @@ function TopicTreeNode({ topic, concepts, expanded, selectedConceptIds, onToggle
             <p className="text-xs text-gray-400 italic py-1">No concepts in this topic yet.</p>
           ) : (
             concepts.map((c) => {
-              const isUnavailable = selectedConceptIds.has(c.id) && unavailableConceptIds.has(c.id);
+              const isSelected = selectedConceptIds.has(c.id);
+              const isUnavailable = unavailableConceptIds.has(c.id);
+              const isDisabled = !isSelected && (!availabilityReady || isUnavailable);
               return (
-                <label key={c.id} className="flex items-center gap-2 px-2 py-1 rounded hover:bg-gray-50 cursor-pointer select-none">
-                  <input type="checkbox" checked={selectedConceptIds.has(c.id)} onChange={() => onToggleConcept(c.id)} className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
+                <label
+                  key={c.id}
+                  title={isUnavailable ? availabilityReasonByConceptId.get(c.id) ?? 'This concept is not yet available for worksheet or Heat practice.' : undefined}
+                  className={`flex items-center gap-2 px-2 py-1 rounded select-none ${isDisabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer hover:bg-gray-50'}`}
+                >
+                  <input type="checkbox" checked={isSelected} disabled={isDisabled} onChange={() => onToggleConcept(c.id)} className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 disabled:cursor-not-allowed" />
                   <span className="min-w-0 text-sm text-gray-700">
                     {hasCuratedAnnouncedSkill(c.announced_skill)
                       ? c.announced_skill
@@ -236,7 +262,7 @@ function TopicTreeNode({ topic, concepts, expanded, selectedConceptIds, onToggle
                       <span className="ml-2 text-[11px] text-slate-400">{c.lesson_number}</span>
                     )}
                     {isUnavailable && (
-                      <span className="ml-2 text-[11px] font-medium text-red-600">Practice generator unavailable</span>
+                      <span className="ml-2 text-[11px] font-medium text-red-600">Not yet available for worksheet or Heat</span>
                     )}
                   </span>
                 </label>
@@ -278,10 +304,7 @@ export default function CreateHeatPage() {
     lastSel,
     selectDivision,
     selectCourse,
-    toggleConcept,
-    toggleTopic,
     toggleExpand,
-    selectAllConcepts,
     clearAllConcepts,
     setMode,
     setProfile,
@@ -546,20 +569,57 @@ export default function CreateHeatPage() {
     () => selectedConcepts.map((concept) => concept.id),
     [selectedConcepts],
   );
+  // Resolve source evidence for the complete visible course tree, rather than
+  // only after a teacher has selected a concept. A catalogue row is never
+  // assumed usable merely because it is visible in the course tree.
   const practiceGeneratorAvailability = usePracticeGeneratorAvailability(
-    selectedConceptIdList,
-    isAuthenticated && selectedConceptIdList.length > 0,
+    concepts.map((concept) => concept.id),
+    isAuthenticated && concepts.length > 0,
+  );
+  const unavailableConceptIds = useMemo(
+    () => practiceGeneratorAvailability.status === 'ready'
+      ? practiceGeneratorAvailability.unavailableConceptIds
+      : new Set<string>(),
+    [practiceGeneratorAvailability.status, practiceGeneratorAvailability.unavailableConceptIds],
+  );
+  const availableConceptIds = useMemo(
+    () => concepts
+      .filter((concept) => practiceGeneratorAvailability.status === 'ready' && !unavailableConceptIds.has(concept.id))
+      .map((concept) => concept.id),
+    [concepts, practiceGeneratorAvailability.status, unavailableConceptIds],
+  );
+  const availabilityReasonByConceptId = useMemo(
+    () => new Map(
+      Array.from(practiceGeneratorAvailability.availabilityByConceptId.values())
+        .map((availability) => [availability.conceptId, availability.unavailableReason]),
+    ),
+    [practiceGeneratorAvailability.availabilityByConceptId],
   );
   const unavailableSelectedConcepts = useMemo(
-    () => selectedConcepts.filter((concept) => practiceGeneratorAvailability.unavailableConceptIds.has(concept.id)),
-    [selectedConcepts, practiceGeneratorAvailability.unavailableConceptIds],
+    () => selectedConcepts.filter((concept) => unavailableConceptIds.has(concept.id)),
+    [selectedConcepts, unavailableConceptIds],
   );
   const allSelectedConceptsHavePracticeGenerators =
     practiceGeneratorAvailability.status === 'ready' && unavailableSelectedConcepts.length === 0;
-  const missingAnnouncedSkillCount = useMemo(
-    () => selectedConcepts.filter((concept) => !hasCuratedAnnouncedSkill(concept.announced_skill)).length,
-    [selectedConcepts],
-  );
+
+  const toggleAvailableConcept = useCallback((conceptId: string) => {
+    if (unavailableConceptIds.has(conceptId)) return;
+    dispatch({ type: 'TOGGLE_CONCEPT', payload: conceptId });
+  }, [dispatch, unavailableConceptIds]);
+
+  const toggleAvailableTopic = useCallback((topicId: string) => {
+    if (practiceGeneratorAvailability.status !== 'ready') return;
+    const topicConceptIds = (conceptsByTopic.get(topicId) ?? [])
+      .filter((concept) => !unavailableConceptIds.has(concept.id))
+      .map((concept) => concept.id);
+    if (topicConceptIds.length === 0) return;
+    dispatch({ type: 'TOGGLE_TOPIC', payload: { topicId, conceptIds: topicConceptIds } });
+  }, [conceptsByTopic, dispatch, practiceGeneratorAvailability.status, unavailableConceptIds]);
+
+  const selectAllAvailableConcepts = useCallback(() => {
+    if (practiceGeneratorAvailability.status !== 'ready') return;
+    dispatch({ type: 'SET_SELECTED_CONCEPTS', payload: availableConceptIds });
+  }, [availableConceptIds, dispatch, practiceGeneratorAvailability.status]);
 
   // ── Practice worksheet handoff ───────────────────────────────────────────
   const handlePrepareWorksheet = useCallback(() => {
@@ -570,11 +630,11 @@ export default function CreateHeatPage() {
       return;
     }
     if (practiceGeneratorAvailability.status !== 'ready') {
-      dispatch({ type: 'SET_ERROR', payload: 'Checking whether every selected concept has an implemented practice generator. Please wait before preparing a worksheet.' });
+      dispatch({ type: 'SET_ERROR', payload: 'Checking approved question-source availability for the course concepts. Please wait before preparing a worksheet.' });
       return;
     }
     if (unavailableSelectedConcepts.length > 0) {
-      dispatch({ type: 'SET_ERROR', payload: 'Remove each selected concept marked “Practice generator unavailable” before preparing a worksheet. The selection was not changed automatically.' });
+      dispatch({ type: 'SET_ERROR', payload: 'Remove each selected concept marked “Not yet available for worksheet or Heat” before preparing a worksheet. A saved selection is not changed automatically.' });
       return;
     }
     saveWorksheetPreparationDraft({
@@ -598,8 +658,8 @@ export default function CreateHeatPage() {
     if (selectedClass.roster_count < 1) { dispatch({ type: 'SET_ERROR', payload: `Add at least one Mathlete to ${selectedClass.name} before creating its classroom Heat.` }); return; }
     if (!selectedDivision || !selectedCourse) { dispatch({ type: 'SET_ERROR', payload: 'Pick a division and course before creating the Heat.' }); return; }
     if (!enoughConcepts) { dispatch({ type: 'SET_ERROR', payload: `Select at least ${MIN_CONCEPTS} concepts to create a Heat.` }); return; }
-    if (practiceGeneratorAvailability.status !== 'ready') { dispatch({ type: 'SET_ERROR', payload: 'Checking whether every selected concept has an implemented practice generator. Please wait before creating a Heat.' }); return; }
-    if (unavailableSelectedConcepts.length > 0) { dispatch({ type: 'SET_ERROR', payload: 'Remove each selected concept marked “Practice generator unavailable” before creating a Heat. The selection was not changed automatically.' }); return; }
+    if (practiceGeneratorAvailability.status !== 'ready') { dispatch({ type: 'SET_ERROR', payload: 'Checking approved question-source availability for the course concepts. Please wait before creating a Heat.' }); return; }
+    if (unavailableSelectedConcepts.length > 0) { dispatch({ type: 'SET_ERROR', payload: 'Remove each selected concept marked “Not yet available for worksheet or Heat” before creating a Heat. A saved selection is not changed automatically.' }); return; }
     dispatch({ type: 'SET_ERROR', payload: null });
     dispatch({ type: 'SET_CREATING', payload: true });
     try {
@@ -854,7 +914,12 @@ export default function CreateHeatPage() {
               {selectedCourse && (
                 <div className="mb-5">
                   {practiceGeneratorAvailability.status === 'loading' && (
-                    <p className="mt-3 text-xs text-slate-500">Checking implemented practice generators for the selected concepts…</p>
+                    <p className="mt-3 text-xs text-slate-500">Checking approved question sources for the course concepts…</p>
+                  )}
+                  {practiceGeneratorAvailability.status === 'ready' && (
+                    <p className="mt-3 text-xs text-slate-600">
+                      {availableConceptIds.length} of {concepts.length} course concepts are currently available for worksheet or Heat delivery. Concepts without a supported approved source remain visible but cannot be selected.
+                    </p>
                   )}
                   {practiceGeneratorAvailability.status === 'error' && (
                     <p className="mt-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-800">
@@ -864,9 +929,9 @@ export default function CreateHeatPage() {
                   {unavailableSelectedConcepts.length > 0 && (
                     <p className="mt-3 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs leading-relaxed text-amber-900">
                       {unavailableSelectedConcepts.length === 1
-                        ? `Remove “${unavailableSelectedConcepts[0]?.name}” before preparing a worksheet or launching a Heat. It has no active implemented practice generator.`
-                        : `Remove the ${unavailableSelectedConcepts.length} selected concepts marked “Practice generator unavailable” before preparing a worksheet or launching a Heat. They have no active implemented practice generators.`}
-                      {' '}The selection has not been changed automatically.
+                        ? `Remove “${unavailableSelectedConcepts[0]?.name}” before preparing a worksheet or launching a Heat. It does not have an approved source supported by the current delivery path.`
+                        : `Remove the ${unavailableSelectedConcepts.length} selected concepts marked “Not yet available for worksheet or Heat” before preparing a worksheet or launching a Heat. They do not have approved sources supported by the current delivery path.`}
+                      {' '}A saved preparation selection is never changed automatically.
                     </p>
                   )}
                 </div>
@@ -889,7 +954,14 @@ export default function CreateHeatPage() {
                       {!enoughConcepts && <span className="ml-1 text-amber-700">(need at least {MIN_CONCEPTS})</span>}
                     </p>
                     <div className="flex gap-2">
-                      <button type="button" onClick={selectAllConcepts} className="text-xs text-indigo-600 hover:underline">Select all</button>
+                      <button
+                        type="button"
+                        onClick={selectAllAvailableConcepts}
+                        disabled={practiceGeneratorAvailability.status !== 'ready'}
+                        className="text-xs text-indigo-600 hover:underline disabled:text-gray-400 disabled:no-underline disabled:cursor-not-allowed"
+                      >
+                        Select all available
+                      </button>
                       <span className="text-gray-300 text-xs">·</span>
                       <button type="button" onClick={clearAllConcepts} className="text-xs text-gray-500 hover:underline">Clear</button>
                     </div>
@@ -903,9 +975,11 @@ export default function CreateHeatPage() {
                         expanded={expandedTopics.has(t.id)}
                         selectedConceptIds={selectedConceptIds}
                         onToggleExpand={() => toggleExpand(t.id)}
-                        onToggleConcept={toggleConcept}
-                        onToggleTopic={toggleTopic}
-                        unavailableConceptIds={practiceGeneratorAvailability.unavailableConceptIds}
+                        onToggleConcept={toggleAvailableConcept}
+                        onToggleTopic={toggleAvailableTopic}
+                        unavailableConceptIds={unavailableConceptIds}
+                        availabilityReady={practiceGeneratorAvailability.status === 'ready'}
+                        availabilityReasonByConceptId={availabilityReasonByConceptId}
                       />
                     ))}
                   </div>
@@ -1079,7 +1153,7 @@ export default function CreateHeatPage() {
                   {selectedCourse && !enoughConcepts && <p>· Select at least {MIN_CONCEPTS} concepts</p>}
                   {selectedConcepts.length > 0 && practiceGeneratorAvailability.status === 'loading' && <p>· Wait for practice-generator coverage to be checked</p>}
                   {selectedConcepts.length > 0 && practiceGeneratorAvailability.status === 'error' && <p>· Restore practice-generator coverage before continuing</p>}
-                  {unavailableSelectedConcepts.length > 0 && <p>· Remove every concept marked “Practice generator unavailable”</p>}
+                  {unavailableSelectedConcepts.length > 0 && <p>· Remove every concept marked “Not yet available for worksheet or Heat”</p>}
                 </div>
               )}
 

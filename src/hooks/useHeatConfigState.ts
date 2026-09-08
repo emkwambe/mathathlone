@@ -174,14 +174,15 @@ function reducer(state: HeatConfigState, action: HeatConfigAction): HeatConfigSt
       return { ...state, courses: action.payload, loadingCourses: false };
 
     case 'SET_TREE': {
-      const allIds = new Set(action.payload.concepts.map((c) => c.id));
       const firstTopicId = action.payload.topics[0]?.id;
       return {
         ...state,
         unitTopics: action.payload.topics,
         concepts: action.payload.concepts,
-        // Default: select all concepts so teacher can launch immediately.
-        selectedConceptIds: allIds,
+        // A curriculum catalogue is not a delivery catalogue. Start with an
+        // explicit empty selection; the builder permits only concepts that the
+        // source-aware preflight confirms as deliverable.
+        selectedConceptIds: new Set(),
         // Expand only the first topic to avoid a wall of open cards.
         expandedTopics: firstTopicId ? new Set([firstTopicId]) : new Set(),
         loadingConcepts: false,
@@ -255,7 +256,10 @@ function reducer(state: HeatConfigState, action: HeatConfigAction): HeatConfigSt
     }
 
     case 'SELECT_ALL_CONCEPTS':
-      return { ...state, selectedConceptIds: new Set(state.concepts.map((c) => c.id)) };
+      // The UI uses SET_SELECTED_CONCEPTS with a source-filtered list. Keeping
+      // this reducer case empty prevents a stale caller from re-selecting the
+      // entire curriculum catalogue without availability evidence.
+      return { ...state, selectedConceptIds: new Set() };
 
     case 'CLEAR_ALL_CONCEPTS':
       return { ...state, selectedConceptIds: new Set() };

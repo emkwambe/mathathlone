@@ -17,6 +17,7 @@
 // =============================================================================
 
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { getConceptAvailability, getUnavailableConceptIds } from '@/lib/content/concept-availability';
 import { generateAndInsertQuestions } from './question-delivery';
 
 // -----------------------------------------------------------------------------
@@ -295,6 +296,20 @@ export async function createHeat(
   const { data: { user }, error: authError } = await supabase.auth.getUser();
   if (authError || !user) {
     throw new Error('Must be signed in to create a Heat');
+  }
+
+  // An explicit atomic-concept selection is a strict delivery contract. Check
+  // it again here (not only in the browser) before creating any persistent Heat
+  // row. A direct caller cannot use the curriculum catalogue to bypass source
+  // availability, runtime generator-key, or static-verification safeguards.
+  if (params.concept_ids && params.concept_ids.length > 0) {
+    const sourceAvailability = await getConceptAvailability(supabase, params.concept_ids);
+    const unavailableConceptIds = getUnavailableConceptIds(sourceAvailability);
+    if (unavailableConceptIds.size > 0) {
+      throw new Error(
+        `Every selected concept needs an approved source supported by the current Heat delivery path. ${unavailableConceptIds.size} selected concept${unavailableConceptIds.size === 1 ? ' is' : 's are'} not yet available.`,
+      );
+    }
   }
 
   // Resolve legacy topic_id placeholder (heats.topic_id NOT NULL FK)

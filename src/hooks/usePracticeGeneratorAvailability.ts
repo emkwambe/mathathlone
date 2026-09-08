@@ -2,31 +2,81 @@
 
 import { useEffect, useMemo, useState } from 'react';
 
+export type ConceptSourceState =
+  | 'procedural'
+  | 'static'
+  | 'mixed'
+  | 'unverified_static'
+  | 'unavailable';
+
+export interface ClientConceptAvailability {
+  conceptId: string;
+  sourceState: ConceptSourceState;
+  implementedGeneratorTypes: string[];
+  verifiedStaticItemCount: number;
+  unverifiedStaticItemCount: number;
+  deliveryAvailable: boolean;
+  unavailableReason: string | null;
+}
+
 export type PracticeGeneratorAvailabilityState =
-  | { status: 'idle' | 'loading'; unavailableConceptIds: Set<string>; error: null }
-  | { status: 'ready'; unavailableConceptIds: Set<string>; error: null }
-  | { status: 'error'; unavailableConceptIds: Set<string>; error: string };
+  | {
+    status: 'idle' | 'loading';
+    unavailableConceptIds: Set<string>;
+    availabilityByConceptId: ReadonlyMap<string, ClientConceptAvailability>;
+    error: null;
+  }
+  | {
+    status: 'ready';
+    unavailableConceptIds: Set<string>;
+    availabilityByConceptId: ReadonlyMap<string, ClientConceptAvailability>;
+    error: null;
+  }
+  | {
+    status: 'error';
+    unavailableConceptIds: Set<string>;
+    availabilityByConceptId: ReadonlyMap<string, ClientConceptAvailability>;
+    error: string;
+  };
 
 type StoredAvailabilityState = PracticeGeneratorAvailabilityState & {
   conceptIdsKey: string;
 };
 
+const EMPTY_AVAILABILITY = new Map<string, ClientConceptAvailability>();
+
 const IDLE_AVAILABILITY: PracticeGeneratorAvailabilityState = {
   status: 'idle',
   unavailableConceptIds: new Set(),
+  availabilityByConceptId: EMPTY_AVAILABILITY,
   error: null,
 };
 
 const LOADING_AVAILABILITY: PracticeGeneratorAvailabilityState = {
   status: 'loading',
   unavailableConceptIds: new Set(),
+  availabilityByConceptId: EMPTY_AVAILABILITY,
   error: null,
 };
 
+function isAvailabilityRow(value: unknown): value is ClientConceptAvailability {
+  if (typeof value !== 'object' || value === null) return false;
+  const row = value as Record<string, unknown>;
+  return typeof row.conceptId === 'string'
+    && typeof row.sourceState === 'string'
+    && Array.isArray(row.implementedGeneratorTypes)
+    && row.implementedGeneratorTypes.every((generatorType) => typeof generatorType === 'string')
+    && typeof row.verifiedStaticItemCount === 'number'
+    && typeof row.unverifiedStaticItemCount === 'number'
+    && typeof row.deliveryAvailable === 'boolean'
+    && (typeof row.unavailableReason === 'string' || row.unavailableReason === null);
+}
+
 /**
- * Performs a read-only preflight against the same deterministic generator
- * registry that the worksheet API uses. It returns availability metadata only:
- * no questions, answers, scores, or records are created or exposed.
+ * Performs a read-only, source-aware preflight against the same deterministic
+ * availability contract used at the worksheet boundary. It exposes no questions,
+ * answers, scores, or records; it only distinguishes deliverable sources from
+ * catalogue entries that are not yet supported by current worksheet/Heat paths.
  */
 export function usePracticeGeneratorAvailability(
   conceptIds: readonly string[],
@@ -53,22 +103,25 @@ export function usePracticeGeneratorAvailability(
         if (!response.ok || typeof payload !== 'object' || payload === null) {
           throw new Error(
             (payload as { error?: string } | null)?.error
-              ?? 'Could not check practice-generator availability.',
+              ?? 'Could not check content-source availability.',
           );
         }
-        const implemented = (payload as { implementedConceptIds?: unknown }).implementedConceptIds;
-        if (!Array.isArray(implemented) || !implemented.every((id) => typeof id === 'string')) {
-          throw new Error('Could not verify practice-generator availability.');
+        const rows = (payload as { conceptAvailability?: unknown }).conceptAvailability;
+        if (!Array.isArray(rows) || !rows.every(isAvailabilityRow)) {
+          throw new Error('Could not verify concept source availability.');
         }
-        return new Set(implemented);
+        return rows;
       })
-      .then((implementedConceptIds) => {
+      .then((rows) => {
         if (cancelled) return;
+        const availabilityByConceptId = new Map(rows.map((row) => [row.conceptId, row]));
+        const requestedIds = conceptIdsKey.split(',');
         setState({
           status: 'ready',
           unavailableConceptIds: new Set(
-            conceptIdsKey.split(',').filter((conceptId) => !implementedConceptIds.has(conceptId)),
+            requestedIds.filter((conceptId) => !availabilityByConceptId.get(conceptId)?.deliveryAvailable),
           ),
+          availabilityByConceptId,
           error: null,
           conceptIdsKey,
         });
@@ -78,7 +131,8 @@ export function usePracticeGeneratorAvailability(
         setState({
           status: 'error',
           unavailableConceptIds: new Set(),
-          error: error instanceof Error ? error.message : 'Could not check practice-generator availability.',
+          availabilityByConceptId: EMPTY_AVAILABILITY,
+          error: error instanceof Error ? error.message : 'Could not check content-source availability.',
           conceptIdsKey,
         });
       });
