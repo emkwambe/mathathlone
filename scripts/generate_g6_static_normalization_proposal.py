@@ -146,11 +146,30 @@ def expected_values(rows: list[dict[str, Any]], include_new: bool = True) -> str
 
 
 def migration_sql(rows: list[dict[str, Any]]) -> str:
-    values = expected_values(rows)
+    source_rows = [
+        {
+            "id": row["static_question_id"],
+            "lesson_number": row["lesson_number"],
+            "question_type": row["question_type"],
+            "before_question_text": row["question_text"],
+            "before_options": row["options"],
+            "correct_answer": row["correct_answer"],
+            "before_explanation": row["explanation"],
+            "after_question_text": row["normalized_question_text"],
+            "after_options": row["normalized_options"],
+            "after_explanation": row["normalized_explanation"],
+        }
+        for row in rows
+    ]
+    payload = json.dumps(source_rows, ensure_ascii=False, separators=(",", ":"))
     return f"""-- 055_normalize_g6_static_readability.sql
 --
 -- Guarded Grade 6 static source normalization.
 -- Generated deterministically from the live read-only 33-item export.
+--
+-- SQL Editor compatibility: all reviewed rows are carried inside one server-side
+-- DO block. No temporary table is used, so no SQL Editor statement boundary can
+-- discard the reviewed source set before its precondition checks run.
 --
 -- Allowed changes, and only to the exact IDs below:
 --   1) trim edge whitespace from question_text and option text;
@@ -162,52 +181,51 @@ def migration_sql(rows: list[dict[str, Any]]) -> str:
 -- any item outside this exact 33-item set.
 --
 -- Do NOT run until the matching source manifest and read-only preflight have
--- been inspected. This script fails before update if live source text drifts.
+-- been inspected. The block fails before update if live source text drifts.
 
-BEGIN;
-
-CREATE TEMP TABLE _g6_static_normalization_expected (
-  id uuid PRIMARY KEY,
-  lesson_number text NOT NULL,
-  question_type text NOT NULL,
-  before_question_text text NOT NULL,
-  before_options jsonb NOT NULL,
-  correct_answer text NOT NULL,
-  before_explanation text NOT NULL,
-  after_question_text text NOT NULL,
-  after_options jsonb NOT NULL,
-  after_explanation text NOT NULL
-) ON COMMIT DROP;
-
-INSERT INTO _g6_static_normalization_expected (
-  id, lesson_number, question_type, before_question_text, before_options,
-  correct_answer, before_explanation, after_question_text, after_options,
-  after_explanation
-)
-VALUES
-    {values};
-
-DO $$
+DO $g6_static_normalization$
 DECLARE
   expected_count integer := {len(rows)};
+  source_rows jsonb := $g6_static_source${payload}$g6_static_source$::jsonb;
+  supplied_count integer;
+  distinct_id_count integer;
   matching_count integer;
-  g6_count integer;
+  updated_count integer;
+  postcondition_count integer;
 BEGIN
-  SELECT COUNT(*) INTO g6_count
-  FROM public.static_questions AS sq
-  JOIN _g6_static_normalization_expected AS e ON e.id = sq.id
-  JOIN public.atomic_concepts AS ac ON ac.lesson_number = sq.concept_id
-  JOIN public.unit_topics AS ut ON ut.id = ac.unit_topic_id
-  JOIN public.courses AS c ON c.id = ut.course_id
-  WHERE c.code = 'G6';
+  SELECT COUNT(*), COUNT(DISTINCT e.id)
+  INTO supplied_count, distinct_id_count
+  FROM jsonb_to_recordset(source_rows) AS e(
+    id uuid,
+    lesson_number text,
+    question_type text,
+    before_question_text text,
+    before_options jsonb,
+    correct_answer text,
+    before_explanation text,
+    after_question_text text,
+    after_options jsonb,
+    after_explanation text
+  );
 
-  IF g6_count <> expected_count THEN
-    RAISE EXCEPTION 'Expected % Grade 6 static IDs, found %. No normalization applied.', expected_count, g6_count;
+  IF supplied_count <> expected_count OR distinct_id_count <> expected_count THEN
+    RAISE EXCEPTION 'The embedded reviewed source set is invalid: expected % unique rows, found % rows and % unique IDs. No normalization applied.', expected_count, supplied_count, distinct_id_count;
   END IF;
 
   SELECT COUNT(*) INTO matching_count
   FROM public.static_questions AS sq
-  JOIN _g6_static_normalization_expected AS e ON e.id = sq.id
+  JOIN jsonb_to_recordset(source_rows) AS e(
+    id uuid,
+    lesson_number text,
+    question_type text,
+    before_question_text text,
+    before_options jsonb,
+    correct_answer text,
+    before_explanation text,
+    after_question_text text,
+    after_options jsonb,
+    after_explanation text
+  ) ON e.id = sq.id
   JOIN public.atomic_concepts AS ac ON ac.lesson_number = sq.concept_id
   JOIN public.unit_topics AS ut ON ut.id = ac.unit_topic_id
   JOIN public.courses AS c ON c.id = ut.course_id
@@ -224,24 +242,45 @@ BEGIN
   IF matching_count <> expected_count THEN
     RAISE EXCEPTION 'Live Grade 6 static source differs from the reviewed manifest: expected % exact candidate rows, found %. No normalization applied.', expected_count, matching_count;
   END IF;
-END $$;
 
-UPDATE public.static_questions AS sq
-SET
-  question_text = e.after_question_text,
-  options = e.after_options,
-  explanation = e.after_explanation
-FROM _g6_static_normalization_expected AS e
-WHERE sq.id = e.id;
+  UPDATE public.static_questions AS sq
+  SET
+    question_text = e.after_question_text,
+    options = e.after_options,
+    explanation = e.after_explanation
+  FROM jsonb_to_recordset(source_rows) AS e(
+    id uuid,
+    lesson_number text,
+    question_type text,
+    before_question_text text,
+    before_options jsonb,
+    correct_answer text,
+    before_explanation text,
+    after_question_text text,
+    after_options jsonb,
+    after_explanation text
+  )
+  WHERE sq.id = e.id;
 
-DO $$
-DECLARE
-  expected_count integer := {len(rows)};
-  verified_count integer;
-BEGIN
-  SELECT COUNT(*) INTO verified_count
+  GET DIAGNOSTICS updated_count = ROW_COUNT;
+  IF updated_count <> expected_count THEN
+    RAISE EXCEPTION 'Expected to normalize % rows but updated %. Transaction rolled back.', expected_count, updated_count;
+  END IF;
+
+  SELECT COUNT(*) INTO postcondition_count
   FROM public.static_questions AS sq
-  JOIN _g6_static_normalization_expected AS e ON e.id = sq.id
+  JOIN jsonb_to_recordset(source_rows) AS e(
+    id uuid,
+    lesson_number text,
+    question_type text,
+    before_question_text text,
+    before_options jsonb,
+    correct_answer text,
+    before_explanation text,
+    after_question_text text,
+    after_options jsonb,
+    after_explanation text
+  ) ON e.id = sq.id
   WHERE sq.concept_id = e.lesson_number
     AND sq.question_type = e.question_type
     AND sq.question_text IS NOT DISTINCT FROM e.after_question_text
@@ -251,12 +290,10 @@ BEGIN
     AND sq.is_active = TRUE
     AND COALESCE(sq.is_verified, FALSE) = FALSE;
 
-  IF verified_count <> expected_count THEN
-    RAISE EXCEPTION 'Postcondition failed: expected % normalized rows with unchanged answer/activity/verification state, found %. Transaction rolled back.', expected_count, verified_count;
+  IF postcondition_count <> expected_count THEN
+    RAISE EXCEPTION 'Postcondition failed: expected % normalized rows with unchanged answer/activity/verification state, found %. Transaction rolled back.', expected_count, postcondition_count;
   END IF;
-END $$;
-
-COMMIT;
+END $g6_static_normalization$;
 """
 
 

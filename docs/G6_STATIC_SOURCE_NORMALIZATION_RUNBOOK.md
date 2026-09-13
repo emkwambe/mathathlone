@@ -41,7 +41,7 @@ Second, after a passing preflight and only after an explicit decision to make th
 Get-Content "supabase\migrations\055_normalize_g6_static_readability.sql" -Raw | Set-Clipboard
 ```
 
-Paste it into a new Supabase SQL Editor query and select **Run** once. It runs in one transaction and aborts rather than partially changing rows if any exact precondition or postcondition fails.
+Paste it into a new Supabase SQL Editor query and select **Run** once. The corrected version keeps the reviewed source set inside one server-side block; it does not depend on a temporary table surviving between editor statements. It aborts rather than partially changing rows if any exact precondition or postcondition fails.
 
 Third, run the read-only postcheck:
 
