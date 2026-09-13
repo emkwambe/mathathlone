@@ -1,0 +1,494 @@
+{
+  "manifest_type": "g6_static_readability_normalization_v1",
+  "status": "proposal only; database write is not performed by this generator",
+  "generated_at_utc": "2026-09-13T14:24:43+00:00",
+  "source_export": "/home/ubuntu/upload/pasted_content_12.txt",
+  "item_count": 33,
+  "allowed_transformations": [
+    "trim question_text edge whitespace",
+    "append terminal question mark only when trimmed question_text lacks clear terminal punctuation",
+    "trim option text edge whitespace",
+    "collapse repeated explanation whitespace to one space"
+  ],
+  "explicitly_unchanged_fields": [
+    "atomic_concept_id",
+    "lesson_number",
+    "concept_name",
+    "question_type",
+    "correct_answer",
+    "correct_answer_index",
+    "difficulty",
+    "question_latex",
+    "question_image_url",
+    "option_images",
+    "solution_steps",
+    "category",
+    "tags",
+    "is_active",
+    "is_verified"
+  ],
+  "items": [
+    {
+      "static_question_id": "2acb712d-db45-457c-9089-a7869a416460",
+      "atomic_concept_id": "d04f4f79-ad33-411a-8ce6-3f0d7f884859",
+      "topic_code": "G6.EE",
+      "lesson_number": "M6.EE.1.3",
+      "concept_name": "Identifying Parts of an Algebraic Expression",
+      "before_sha256": "4ea4fe001f93d40ff567847533113871fbff7c5ee1801f8e2d6dd5a0ce38e1f8",
+      "after_sha256": "b648693fe24dadf379107fe220acd62cb75efdbc87a420b3f3850db0397414b0",
+      "changes": {
+        "question_text": true,
+        "options": false,
+        "explanation": false
+      }
+    },
+    {
+      "static_question_id": "68c88803-4aa2-46a6-b979-ec3ec2fd8579",
+      "atomic_concept_id": "d04f4f79-ad33-411a-8ce6-3f0d7f884859",
+      "topic_code": "G6.EE",
+      "lesson_number": "M6.EE.1.3",
+      "concept_name": "Identifying Parts of an Algebraic Expression",
+      "before_sha256": "8609ca2cb244e75770ba136d6ab5920897cca9d19fcff1245e22dd2417f07646",
+      "after_sha256": "85bfe29a8d248aae2e42cee2de8a60b7f17451dfbebf6143771fa725ff215674",
+      "changes": {
+        "question_text": true,
+        "options": false,
+        "explanation": false
+      }
+    },
+    {
+      "static_question_id": "d7da2c15-29df-4f94-9fe9-adac8f4b0ad8",
+      "atomic_concept_id": "d04f4f79-ad33-411a-8ce6-3f0d7f884859",
+      "topic_code": "G6.EE",
+      "lesson_number": "M6.EE.1.3",
+      "concept_name": "Identifying Parts of an Algebraic Expression",
+      "before_sha256": "507b129c2da1be2043bc7c6fbea2efbfe29fd2501e6f990de7eb437fb4bac092",
+      "after_sha256": "b0f405b58c800cc82444ca4265aa64a4b02ddb70647bf4da8ff108d30f169c38",
+      "changes": {
+        "question_text": true,
+        "options": false,
+        "explanation": false
+      }
+    },
+    {
+      "static_question_id": "3f8c370e-4f71-4d1b-bdf4-2200ea59a3db",
+      "atomic_concept_id": "71a4333e-54c9-458b-928e-15ad77210bdf",
+      "topic_code": "G6.EE",
+      "lesson_number": "M6.EE.3.1",
+      "concept_name": "Understanding What it Means to Solve an Equation or Inequality",
+      "before_sha256": "6268c96eee39fde1051b0ca7bb1be79034267ab325a36a1762ed7bcf378a9412",
+      "after_sha256": "416bd02957a3e06d2af80603694bc09a528dbeb5b15e6d5bde28dafd729ff1de",
+      "changes": {
+        "question_text": true,
+        "options": false,
+        "explanation": true
+      }
+    },
+    {
+      "static_question_id": "966d9d5f-125c-4d97-bf04-a4fa043b76b7",
+      "atomic_concept_id": "71a4333e-54c9-458b-928e-15ad77210bdf",
+      "topic_code": "G6.EE",
+      "lesson_number": "M6.EE.3.1",
+      "concept_name": "Understanding What it Means to Solve an Equation or Inequality",
+      "before_sha256": "d08b254afc8c729e78a3f31bcfbb8b08dc0dbe4cf1a29afc16ad30371d4888df",
+      "after_sha256": "567a050588451fa83cb831dfd5c4d4b2d0c90e34fb099245f6f8b5b9d5deb4b6",
+      "changes": {
+        "question_text": true,
+        "options": false,
+        "explanation": true
+      }
+    },
+    {
+      "static_question_id": "3146a26b-c379-4120-b918-40684f040d9f",
+      "atomic_concept_id": "e4c018c9-ae9c-4eec-8fe2-ce2d768486cf",
+      "topic_code": "G6.EE",
+      "lesson_number": "M6.EE.4.1",
+      "concept_name": "Writing Inequalities to Represent Constraints (x>c, x<c, etc.)",
+      "before_sha256": "8d1244fe0ca23540347cf438ec6353f3190235acfcf2bcf130daef0d856a7f59",
+      "after_sha256": "03d9f478a4d4a08dfffddc21de9f9657c5ba7d187145cc6ec60a5d230ab30e42",
+      "changes": {
+        "question_text": true,
+        "options": false,
+        "explanation": false
+      }
+    },
+    {
+      "static_question_id": "c5ed474f-bc4f-4148-9592-edad53276dcc",
+      "atomic_concept_id": "e4c018c9-ae9c-4eec-8fe2-ce2d768486cf",
+      "topic_code": "G6.EE",
+      "lesson_number": "M6.EE.4.1",
+      "concept_name": "Writing Inequalities to Represent Constraints (x>c, x<c, etc.)",
+      "before_sha256": "62808e499600c2868bd0723124fa46cf291f692dcc941d11cbdb90743aae28f5",
+      "after_sha256": "3015c5aa24deab62cbed55596181f86d6a44965e6209c54d446a817fba3fef52",
+      "changes": {
+        "question_text": true,
+        "options": false,
+        "explanation": false
+      }
+    },
+    {
+      "static_question_id": "5cbcccce-1ffb-4577-a6d3-1a62c8a91fbd",
+      "atomic_concept_id": "5ea8b9ed-9a8b-4397-b9bd-8c854ce57562",
+      "topic_code": "G6.EE",
+      "lesson_number": "M6.EE.5.1",
+      "concept_name": "Using Variables to Represent Two Quantities in a Real-World Relationship",
+      "before_sha256": "6c6c882a3d248a0cef04b9bc8c3e851932138fb6b9344cde5a82456a557af69f",
+      "after_sha256": "75dba2bdda1e2b0ebbd02589fc58bef82826f4be1c42307ff7f6f587c0fbd10d",
+      "changes": {
+        "question_text": true,
+        "options": false,
+        "explanation": false
+      }
+    },
+    {
+      "static_question_id": "f62048af-75b9-4579-b7f5-3891d0bea086",
+      "atomic_concept_id": "5ea8b9ed-9a8b-4397-b9bd-8c854ce57562",
+      "topic_code": "G6.EE",
+      "lesson_number": "M6.EE.5.1",
+      "concept_name": "Using Variables to Represent Two Quantities in a Real-World Relationship",
+      "before_sha256": "1c3d7843f7b5160e6a6e69d641ede0d80f43b036b55375a1c56bc31a29b24bb9",
+      "after_sha256": "3557fb0b270c52207eb4b16bdcb804109610b031a07fd966fb12a5cb093bb628",
+      "changes": {
+        "question_text": true,
+        "options": false,
+        "explanation": false
+      }
+    },
+    {
+      "static_question_id": "84d14d9f-b4a0-473c-81be-5df5beb469f7",
+      "atomic_concept_id": "dce3dea3-b7b0-45cd-a78d-faaceba349cf",
+      "topic_code": "G6.GEO",
+      "lesson_number": "M6.GEO.2.1",
+      "concept_name": "Understanding Polyhedra and Nets",
+      "before_sha256": "92bfe15c7cf8366dcf06708f9884b5219d0440ae742d72719b25757fb8608c6e",
+      "after_sha256": "906749d786c8065301efa6d1820659a88b79e4cd6b782fb6072ca090ab03d10c",
+      "changes": {
+        "question_text": true,
+        "options": false,
+        "explanation": false
+      }
+    },
+    {
+      "static_question_id": "d89b310b-a522-4e3d-b4d0-4b4596178953",
+      "atomic_concept_id": "dce3dea3-b7b0-45cd-a78d-faaceba349cf",
+      "topic_code": "G6.GEO",
+      "lesson_number": "M6.GEO.2.1",
+      "concept_name": "Understanding Polyhedra and Nets",
+      "before_sha256": "29255fc4fb4f4aa4e026af619944761d24718f6186196123864fc4b38f31defb",
+      "after_sha256": "07ce954827603d5ced6edeefb1d57044334bd2f8d76483863074989c676a5e0b",
+      "changes": {
+        "question_text": true,
+        "options": false,
+        "explanation": false
+      }
+    },
+    {
+      "static_question_id": "f238dda9-5470-4d12-8f15-e4ee78c72c6a",
+      "atomic_concept_id": "22f7191b-a349-42ef-9ae0-c3e865fc0cce",
+      "topic_code": "G6.GEO",
+      "lesson_number": "M6.GEO.3.1",
+      "concept_name": "Understanding Volume of Right Rectangular Prisms",
+      "before_sha256": "73da083105bc0c2608805148b4642128290910724cd26b8affaf64f1bad26941",
+      "after_sha256": "2f1ba65f1db9a46d9527c77612591e70a086a94404137a047b6f9360ea57d7bc",
+      "changes": {
+        "question_text": true,
+        "options": false,
+        "explanation": false
+      }
+    },
+    {
+      "static_question_id": "f0c26925-0703-4ed7-abb7-3dd1dbd5b95d",
+      "atomic_concept_id": "d1fc7240-da3e-4ffb-9cda-cd28ea2b07f9",
+      "topic_code": "G6.GEO",
+      "lesson_number": "M6.GEO.4.2",
+      "concept_name": "Solving Real-World Problems Involving Surface Area",
+      "before_sha256": "fe069af9cd577a67711eeaca5b86903c9d9e3fe957c863e64d01fcfbe90123c4",
+      "after_sha256": "e41f6a54b4089bb7ef8def4696e23fb09c55334408e31628ac71beee512f552f",
+      "changes": {
+        "question_text": true,
+        "options": false,
+        "explanation": false
+      }
+    },
+    {
+      "static_question_id": "398bf61a-25a7-433d-bd1e-81844a291cf4",
+      "atomic_concept_id": "fd4a528d-54bc-4b5e-a861-b733b1a08815",
+      "topic_code": "G6.NS",
+      "lesson_number": "M6.NS.2.1",
+      "concept_name": "Understanding Fraction Division (Conceptually)",
+      "before_sha256": "b31fce2b660b8d699153a354726bbd2df874d636990e84f905062c17e1b28812",
+      "after_sha256": "c1575f4a3e3bbd6539270ce414b77e6df1da339b897937f5c8464a3a87af8185",
+      "changes": {
+        "question_text": true,
+        "options": false,
+        "explanation": false
+      }
+    },
+    {
+      "static_question_id": "cc4dc9f7-4dca-4431-a135-4bb783c689b1",
+      "atomic_concept_id": "fd4a528d-54bc-4b5e-a861-b733b1a08815",
+      "topic_code": "G6.NS",
+      "lesson_number": "M6.NS.2.1",
+      "concept_name": "Understanding Fraction Division (Conceptually)",
+      "before_sha256": "17068579f254a68ae1a88b22f2fe32b7097d29bc1a4edf9c1d87bb44b3260964",
+      "after_sha256": "fccd020d408f39f28247508ed38d260825bfc3bd09e4ef87b4f1d94c30da2864",
+      "changes": {
+        "question_text": true,
+        "options": false,
+        "explanation": false
+      }
+    },
+    {
+      "static_question_id": "d59e9723-3806-4bbb-b432-379c9ae5ae30",
+      "atomic_concept_id": "fd4a528d-54bc-4b5e-a861-b733b1a08815",
+      "topic_code": "G6.NS",
+      "lesson_number": "M6.NS.2.1",
+      "concept_name": "Understanding Fraction Division (Conceptually)",
+      "before_sha256": "a078a5cae24b7e23a901df6e0477af9f2c2d33584b73ac1f694973826bebff91",
+      "after_sha256": "4156ceab8a41147e14f810d07a5a911aba1968557ec8fde2bf6560de23796448",
+      "changes": {
+        "question_text": true,
+        "options": false,
+        "explanation": true
+      }
+    },
+    {
+      "static_question_id": "2ece3a90-b00b-4b19-ae45-6fb61aab7571",
+      "atomic_concept_id": "631e8c0a-f14a-49c7-803a-baafe7c5ce81",
+      "topic_code": "G6.NS",
+      "lesson_number": "M6.NS.4.1",
+      "concept_name": "Understanding Positive and Negative Numbers in Context",
+      "before_sha256": "2b110a9e13fe0da016522bbbfb3395ca8d4899945e293fddc4092ca81f5e620e",
+      "after_sha256": "90652e0aadd072341f3f8bbb7d22deb215c9cc827e7ee92c157ebc3ddfec011b",
+      "changes": {
+        "question_text": true,
+        "options": false,
+        "explanation": false
+      }
+    },
+    {
+      "static_question_id": "a36b625c-f582-4582-aa52-fb1d52dd5a4b",
+      "atomic_concept_id": "631e8c0a-f14a-49c7-803a-baafe7c5ce81",
+      "topic_code": "G6.NS",
+      "lesson_number": "M6.NS.4.1",
+      "concept_name": "Understanding Positive and Negative Numbers in Context",
+      "before_sha256": "c7ddec675df4b3cb0a82422aa9cc74b7ebeb0160da6f3e8ca2bfd177c9831cea",
+      "after_sha256": "b819bafd2c91742c9f50d2992a8613bfb24dd6061f173621ff5a1c10bf24e35b",
+      "changes": {
+        "question_text": true,
+        "options": false,
+        "explanation": false
+      }
+    },
+    {
+      "static_question_id": "0e3f26e7-7c76-4546-8fb7-d1bb24e28292",
+      "atomic_concept_id": "6e81b90e-587e-45f8-a7ed-dcf146eed349",
+      "topic_code": "G6.NS",
+      "lesson_number": "M6.NS.4.2",
+      "concept_name": "Understanding Integers and Opposites",
+      "before_sha256": "80ea237b6bdfe898c7ebf2b657e30cc2a78166c1d337115e04a1b61582eafdd0",
+      "after_sha256": "9d122ee1bcb0da5f2119b0998689f352500c42b8a7c93d8115540eabc9ac0c5c",
+      "changes": {
+        "question_text": true,
+        "options": false,
+        "explanation": false
+      }
+    },
+    {
+      "static_question_id": "40969ff7-0930-40e6-b31d-ca0687d47185",
+      "atomic_concept_id": "6e81b90e-587e-45f8-a7ed-dcf146eed349",
+      "topic_code": "G6.NS",
+      "lesson_number": "M6.NS.4.2",
+      "concept_name": "Understanding Integers and Opposites",
+      "before_sha256": "7b6825f45ad313649074bf900da714003bd8ff7bf3d143722b9ea0b7f9e1e00a",
+      "after_sha256": "8c126b2ea8faacc433417cc01e3895670ec1fc11ba0b753db843626ba0c45aa8",
+      "changes": {
+        "question_text": true,
+        "options": false,
+        "explanation": false
+      }
+    },
+    {
+      "static_question_id": "1c68a49f-3f59-4caa-b2a3-93489e254060",
+      "atomic_concept_id": "76b6f3cd-39b0-4435-a35e-21dac1ce1bc7",
+      "topic_code": "G6.RP",
+      "lesson_number": "M6.RP.1.1",
+      "concept_name": "Understanding Ratios (Definition and Different Forms)",
+      "before_sha256": "af0ba1f01d1a87b419ed773760a873a5158798e784e964105303203b770b031e",
+      "after_sha256": "310349b65ddf66300def83ad96c70ccce404ea44ba3984f8dff6a32e4884eee9",
+      "changes": {
+        "question_text": true,
+        "options": false,
+        "explanation": false
+      }
+    },
+    {
+      "static_question_id": "c25c4ff4-9035-4226-ba28-76ef19574b3d",
+      "atomic_concept_id": "76b6f3cd-39b0-4435-a35e-21dac1ce1bc7",
+      "topic_code": "G6.RP",
+      "lesson_number": "M6.RP.1.1",
+      "concept_name": "Understanding Ratios (Definition and Different Forms)",
+      "before_sha256": "a0fd3b90b979ca39e0aaafcffc13859eba61c60c0eca4720126085a6030268b4",
+      "after_sha256": "dae685193880c39269de147d4c0a57ed6ba806c2b2d9cad490c35c5608b3dcc1",
+      "changes": {
+        "question_text": true,
+        "options": false,
+        "explanation": false
+      }
+    },
+    {
+      "static_question_id": "5814a4c0-0b23-4518-96fe-de63212aca39",
+      "atomic_concept_id": "abf3aeea-1fa9-4d37-b950-8675d27e617f",
+      "topic_code": "G6.RP",
+      "lesson_number": "M6.RP.1.2",
+      "concept_name": "Understanding Rates and Unit Rates",
+      "before_sha256": "9ea1987e7f341ce01efcdb616ce01dbb252504430fbe6d5ac34b91f4c9212eaa",
+      "after_sha256": "15fccfa1053bcf2835280a9ab1643adc51ae09a23e82428e442300c595ee5a60",
+      "changes": {
+        "question_text": true,
+        "options": false,
+        "explanation": false
+      }
+    },
+    {
+      "static_question_id": "57124bd5-f00e-4c62-ac9f-971d292587d7",
+      "atomic_concept_id": "cf52da91-9b3a-4638-a43a-ad4ebfe60a3e",
+      "topic_code": "G6.RP",
+      "lesson_number": "M6.RP.3.1",
+      "concept_name": "Understanding Percentages as Rates Per 100",
+      "before_sha256": "6f8b40b47a9b9031b8fdb668809d9177ce0903f94974fdd8928f17809629d296",
+      "after_sha256": "70f9c1c840e0e771c8dca9b257613d38b61f854c8cfce49e9e23759eab7257aa",
+      "changes": {
+        "question_text": true,
+        "options": false,
+        "explanation": false
+      }
+    },
+    {
+      "static_question_id": "5c4f052d-b32e-45b2-8f98-8e242bef3449",
+      "atomic_concept_id": "cf52da91-9b3a-4638-a43a-ad4ebfe60a3e",
+      "topic_code": "G6.RP",
+      "lesson_number": "M6.RP.3.1",
+      "concept_name": "Understanding Percentages as Rates Per 100",
+      "before_sha256": "03e707d8579af429c57913d28a993723ede75dcc89dccd44a58bc520773cd79b",
+      "after_sha256": "7e15dc1300956092239357b671fa45b834602fad79aaf3ba68578f743557ec8d",
+      "changes": {
+        "question_text": true,
+        "options": false,
+        "explanation": false
+      }
+    },
+    {
+      "static_question_id": "6387be34-849b-49b0-b391-e5ddee875bcb",
+      "atomic_concept_id": "40243520-4b30-4859-a1dd-c20826ce9d9d",
+      "topic_code": "G6.SP",
+      "lesson_number": "M6.SP.1.1",
+      "concept_name": "Understanding Statistical Questions",
+      "before_sha256": "335a7ffca8f515dd895a78289a43484c6fb89f175128c0ba7c3f99caaa0d8292",
+      "after_sha256": "890358f6477209a0db006981b9476e15b16acf2083383999d19e0188ff20ff7c",
+      "changes": {
+        "question_text": true,
+        "options": true,
+        "explanation": false
+      }
+    },
+    {
+      "static_question_id": "81a06b69-e403-4f04-ba95-4bcd7bf2720b",
+      "atomic_concept_id": "26b31274-4f92-416e-80c1-c5c6259a1fc3",
+      "topic_code": "G6.SP",
+      "lesson_number": "M6.SP.1.2",
+      "concept_name": "Understanding Data Distributions and Data Sets",
+      "before_sha256": "f0a74dfdcd018f2546068df0ada71fac0d0d9c5f3d3f0ee2a3e6a7a6c10f45a3",
+      "after_sha256": "e9314bab235643172112d525c44eae43c3ce07003d8b61dbc55b180a27354b90",
+      "changes": {
+        "question_text": true,
+        "options": false,
+        "explanation": false
+      }
+    },
+    {
+      "static_question_id": "5a9025c6-eddb-4937-816f-7ea50e079529",
+      "atomic_concept_id": "35ba851a-0f63-4218-8d50-87e44c5b4c13",
+      "topic_code": "G6.SP",
+      "lesson_number": "M6.SP.2.1",
+      "concept_name": "Representing Data on Dot Plots and Histograms",
+      "before_sha256": "a5d220d8ae35d2ff0d9f357ad3a1922c395d2919b6e776cc427080c5c1d4a998",
+      "after_sha256": "afc54e43bf7de8be0cb2b3e31155a95edab7623e45c3a1dd13a627128055c1dc",
+      "changes": {
+        "question_text": true,
+        "options": false,
+        "explanation": false
+      }
+    },
+    {
+      "static_question_id": "95a88626-1bcc-41b9-94eb-b7cf3e64668c",
+      "atomic_concept_id": "e499a9ed-4d37-47a6-859e-82c1705e02c7",
+      "topic_code": "G6.SP",
+      "lesson_number": "M6.SP.4.1",
+      "concept_name": "Describing the Overall Shape of Data Distributions (Symmetry, Skew, Peaks)",
+      "before_sha256": "f72320ef5b5d79c55a68b42e3b6a91ffca10c6077aecf0c367a44d3548c9b2a2",
+      "after_sha256": "f72320ef5b5d79c55a68b42e3b6a91ffca10c6077aecf0c367a44d3548c9b2a2",
+      "changes": {
+        "question_text": false,
+        "options": false,
+        "explanation": false
+      }
+    },
+    {
+      "static_question_id": "e508b24a-6785-4e23-ab96-12b784a90a76",
+      "atomic_concept_id": "74b77a5f-b720-4c0e-a907-0e16a516ad5a",
+      "topic_code": "G6.SP",
+      "lesson_number": "M6.SP.4.2",
+      "concept_name": "Identifying Outliers in Data Distributions",
+      "before_sha256": "8c4c2efaaa61ec2b0b26ff7d266f48eac4e3ce9832e52c57e481b735643249ac",
+      "after_sha256": "58ef7ed760834c43c8792dd324a2c01db437619da162daa885fce24310bd062e",
+      "changes": {
+        "question_text": true,
+        "options": false,
+        "explanation": false
+      }
+    },
+    {
+      "static_question_id": "04984eaa-b3dd-497e-b39d-6d0534fcfd04",
+      "atomic_concept_id": "95c930b9-144c-4980-942a-1e3ac3d5e9df",
+      "topic_code": "G6.SP",
+      "lesson_number": "M6.SP.5.1",
+      "concept_name": "Summarizing Numerical Data Sets in Relation to their Context (Part 1)",
+      "before_sha256": "0797a7045587dc1705a4d47607e01b35a3230c9744016b83b900e0bd86277d9d",
+      "after_sha256": "28a0a3b81b9f1ed1c5b961251b83ab63b9816a1f6171bff41f06938e2065f70d",
+      "changes": {
+        "question_text": true,
+        "options": false,
+        "explanation": false
+      }
+    },
+    {
+      "static_question_id": "606c8082-2025-4982-a376-eed6d95c4cd2",
+      "atomic_concept_id": "4e447edc-5840-424f-9921-adbb71d0b88a",
+      "topic_code": "G6.SP",
+      "lesson_number": "M6.SP.5.2",
+      "concept_name": "Summarizing Numerical Data Sets in Relation to their Context (Part 2)",
+      "before_sha256": "71f2abf3949bddfc0c0489003d489043fe108da8705a2d42e1b1f4f5d2cd3be9",
+      "after_sha256": "991cfa119ecd2e0f8f977824b6f5e38d53b1da0d1673fef1be802b78464d1eae",
+      "changes": {
+        "question_text": true,
+        "options": false,
+        "explanation": false
+      }
+    },
+    {
+      "static_question_id": "90b231df-485f-476c-aae3-188fe002fda3",
+      "atomic_concept_id": "4e447edc-5840-424f-9921-adbb71d0b88a",
+      "topic_code": "G6.SP",
+      "lesson_number": "M6.SP.5.2",
+      "concept_name": "Summarizing Numerical Data Sets in Relation to their Context (Part 2)",
+      "before_sha256": "6cb6a9219935a20af4fd5fd87acca86d5664095ba26ddb2f5e9f8b5bb9e0b208",
+      "after_sha256": "677ebb7f8fe958bfb1ccce5291db35bacc0f060ec184ee5baadf59ccc07d4933",
+      "changes": {
+        "question_text": true,
+        "options": false,
+        "explanation": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "rule_pack_id": "g6-readable-multiple-choice-v1",
+  "status": "proposed deterministic release criteria; changes require explicit platform-owner approval",
+  "applies_to": {
+    "course_code": "G6",
+    "question_type": "multiple_choice",
+    "delivery_targets": ["worksheet", "review", "heat"]
+  },
+  "prompt": {
+    "minimum_visible_characters": 15,
+    "maximum_visible_characters": 360,
+    "accepted_terminal_punctuation": ["?", ":"],
+    "forbid_leading_or_trailing_whitespace": true,
+    "forbid_repeated_whitespace": true,
+    "forbid_unresolved_placeholders": ["TBD", "TODO", "[insert", "lorem ipsum"],
+    "flag_ascii_comparison_operators": ["<=", ">="],
+    "flag_unpaired_parentheses": true
+  },
+  "options": {
+    "minimum_visible_characters": 1,
+    "maximum_visible_characters": 180,
+    "forbid_leading_or_trailing_whitespace": true,
+    "forbid_repeated_whitespace": true,
+    "require_unique_normalized_text": true,
+    "canonical_keys": ["A", "B", "C", "D"]
+  },
+  "explanation": {
+    "minimum_visible_characters": 15,
+    "maximum_visible_characters": 500,
+    "forbid_leading_or_trailing_whitespace": true,
+    "forbid_repeated_whitespace": true
+  },
+  "notes": [
+    "The rule pack checks readable form, not mathematical truth or curriculum alignment.",
+    "A clear multiple-choice answer-choice stem may end in a colon; a direct question must end in a question mark. The deterministic program does not rewrite wording merely to alter punctuation.",
+    "A flagged ASCII comparator requires a source-format decision: use clear mathematical notation in the approved visible prompt or document a justified exception.",
+    "A rule failure is a hold for correction; this program does not edit text automatically."
+  ]
+}
