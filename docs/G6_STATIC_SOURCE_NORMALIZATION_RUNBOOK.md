@@ -33,7 +33,7 @@ Paste it in a **new Supabase SQL Editor query** and select **Run**. Continue onl
 | `mismatched_items` | `0` |
 | `preflight_decision` | `SAFE_TO_REVIEW_WRITE_MIGRATION` |
 
-If any value differs, stop. Do not run the migration; the live source may have changed since the manifest was built.
+If any value differs, stop. Do not run the migration; the live source may have changed since the manifest was built. If the preflight returns a source-drift stop immediately after an interrupted or errored SQL Editor attempt, run the separately supplied read-only state diagnostic before taking any further action. Never retry a blocked write migration until that diagnostic confirms the current rows.
 
 Second, after a passing preflight and only after an explicit decision to make the formatting-only change, copy the guarded migration:
 
