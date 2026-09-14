@@ -1,0 +1,97 @@
+{
+  "rule_pack_id": "G6-RP-STATIC-MATH-001",
+  "rule_pack_version": "0.1.0-draft",
+  "status": "draft",
+  "purpose": "Human-authored mathematical predicates for deterministic evaluation of the five named Grade 6 Ratios static candidates. This template contains no approved mathematical conclusion and cannot verify, activate, or make any source selectable.",
+  "approval": {
+    "approved_by": null,
+    "approved_at": null,
+    "approval_reference": null
+  },
+  "evaluator_contract": {
+    "allowed_rule_types": [
+      "expected_correct_option"
+    ],
+    "prohibited_behaviors": [
+      "natural_language_inference",
+      "answer_generation",
+      "paraphrasing",
+      "automatic_approval",
+      "automatic_database_update"
+    ],
+    "pass_requirement": "A rule may pass only when the rule pack and the individual rule are approved, the item ID and atomic-concept mapping match exactly, a reviewed source fingerprint matches, and the explicitly entered expected correct option equals the stored option key.",
+    "hold_requirement": "Any missing approval, missing expected option, missing source fingerprint, unsupported rule type, item mismatch, or answer mismatch produces HOLD or FAIL."
+  },
+  "rules": [
+    {
+      "rule_id": "G6.RP.1.1.PART_TO_TOTAL.001",
+      "status": "draft",
+      "static_question_id": "1c68a49f-3f59-4caa-b2a3-93489e254060",
+      "atomic_concept_id": null,
+      "lesson_number": "M6.RP.1.1",
+      "rule_type": "expected_correct_option",
+      "expected_correct_option": null,
+      "source_observation_sha256": null,
+      "human_mathematical_statement": null,
+      "evidence_reference": null,
+      "approved_by": null,
+      "approved_at": null
+    },
+    {
+      "rule_id": "G6.RP.1.1.RATIO_ORDER.002",
+      "status": "draft",
+      "static_question_id": "c25c4ff4-9035-4226-ba28-76ef19574b3d",
+      "atomic_concept_id": null,
+      "lesson_number": "M6.RP.1.1",
+      "rule_type": "expected_correct_option",
+      "expected_correct_option": null,
+      "source_observation_sha256": null,
+      "human_mathematical_statement": null,
+      "evidence_reference": null,
+      "approved_by": null,
+      "approved_at": null
+    },
+    {
+      "rule_id": "G6.RP.1.2.UNIT_RATE_DEFINITION.001",
+      "status": "draft",
+      "static_question_id": "5814a4c0-0b23-4518-96fe-de63212aca39",
+      "atomic_concept_id": null,
+      "lesson_number": "M6.RP.1.2",
+      "rule_type": "expected_correct_option",
+      "expected_correct_option": null,
+      "source_observation_sha256": null,
+      "human_mathematical_statement": null,
+      "evidence_reference": null,
+      "approved_by": null,
+      "approved_at": null
+    },
+    {
+      "rule_id": "G6.RP.3.1.PERCENT_PER_HUNDRED.001",
+      "status": "draft",
+      "static_question_id": "57124bd5-f00e-4c62-ac9f-971d292587d7",
+      "atomic_concept_id": null,
+      "lesson_number": "M6.RP.3.1",
+      "rule_type": "expected_correct_option",
+      "expected_correct_option": null,
+      "source_observation_sha256": null,
+      "human_mathematical_statement": null,
+      "evidence_reference": null,
+      "approved_by": null,
+      "approved_at": null
+    },
+    {
+      "rule_id": "G6.RP.3.1.PART_PER_HUNDRED.002",
+      "status": "draft",
+      "static_question_id": "5c4f052d-b32e-45b2-8f98-8e242bef3449",
+      "atomic_concept_id": null,
+      "lesson_number": "M6.RP.3.1",
+      "rule_type": "expected_correct_option",
+      "expected_correct_option": null,
+      "source_observation_sha256": null,
+      "human_mathematical_statement": null,
+      "evidence_reference": null,
+      "approved_by": null,
+      "approved_at": null
+    }
+  ]
+}
