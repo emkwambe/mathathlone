@@ -62,9 +62,17 @@ The following actions are prohibited in this workflow:
 - Do not set a rule or pack to `approved` merely to make the evaluator pass.
 - Do not set `is_verified = true`, insert a review-ledger approval, activate migration-054 generators, deploy code, or create student artifacts from this runbook.
 
-## Current Draft Result
+## Local Draft Fixture
 
-The unfilled template was evaluated against the 33-item Grade 6 source export and correctly produced **0 passes and 5 holds**. This confirms the evaluator fails closed until explicit qualified-review inputs exist.
+The repository includes `docs/PILOT_CONTENT_AUDIT_EVIDENCE/g6-ratios-static-draft-fixture.json`, a five-item historical snapshot used only to prove that the unfilled template fails closed on a developer or reviewer workstation. It is **not a live export** and must never be used for a mathematical approval, source fingerprint binding, review-ledger record, `is_verified` change, or availability decision.
+
+The local draft-only command is:
+
+```powershell
+python scripts\\evaluate_g6_ratios_static_math_rules.py --items docs\\PILOT_CONTENT_AUDIT_EVIDENCE\\g6-ratios-static-draft-fixture.json --rule-pack config\\g6_ratios_static_math_rule_pack.template.json --output-json docs\\PILOT_CONTENT_AUDIT_EVIDENCE\\g6-ratios-static-math-rule-evaluation.draft.json --output-md docs\\PILOT_CONTENT_AUDIT_EVIDENCE\\g6-ratios-static-math-rule-evaluation.draft.md
+```
+
+The unfilled template correctly produces **0 passes and 5 holds**. This proves the evaluator fails closed until explicit qualified-review inputs exist.
 
 ## Later Guarded Sequence
 

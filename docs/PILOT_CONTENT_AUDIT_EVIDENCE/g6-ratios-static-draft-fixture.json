@@ -1,0 +1,207 @@
+[
+  {
+    "topic_code": "G6.RP",
+    "topic_name": "Ratios and Proportional Relationships",
+    "atomic_concept_id": "76b6f3cd-39b0-4435-a35e-21dac1ce1bc7",
+    "lesson_number": "M6.RP.1.1",
+    "concept_name": "Understanding Ratios (Definition and Different Forms)",
+    "static_question_id": "1c68a49f-3f59-4caa-b2a3-93489e254060",
+    "question_type": "multiple_choice",
+    "question_text": "A class has 12 boys and 16 girls. Which correctly expresses the ratio of boys to the total number of students ",
+    "question_latex": null,
+    "question_image_url": null,
+    "options": [
+      {
+        "key": "A",
+        "text": "12:16"
+      },
+      {
+        "key": "B",
+        "text": "16:12"
+      },
+      {
+        "key": "C",
+        "text": "12:28"
+      },
+      {
+        "key": "D",
+        "text": "28:12"
+      }
+    ],
+    "option_images": null,
+    "correct_answer": "C",
+    "correct_answer_index": null,
+    "explanation": "Ratio of boys to total = 12 : (12 + 16) = 12 : 28.",
+    "solution_steps": null,
+    "difficulty": 1,
+    "category": null,
+    "tags": [],
+    "is_active": true,
+    "is_verified": false,
+    "created_at": "2026-06-06 01:39:53.928015+00"
+  },
+  {
+    "topic_code": "G6.RP",
+    "topic_name": "Ratios and Proportional Relationships",
+    "atomic_concept_id": "cf52da91-9b3a-4638-a43a-ad4ebfe60a3e",
+    "lesson_number": "M6.RP.3.1",
+    "concept_name": "Understanding Percentages as Rates Per 100",
+    "static_question_id": "57124bd5-f00e-4c62-ac9f-971d292587d7",
+    "question_type": "multiple_choice",
+    "question_text": "Which correctly expresses 45% as a rate per 100 ",
+    "question_latex": null,
+    "question_image_url": null,
+    "options": [
+      {
+        "key": "A",
+        "text": "45/10"
+      },
+      {
+        "key": "B",
+        "text": "45/1000"
+      },
+      {
+        "key": "C",
+        "text": "45/100"
+      },
+      {
+        "key": "D",
+        "text": "4.5/100"
+      }
+    ],
+    "option_images": null,
+    "correct_answer": "C",
+    "correct_answer_index": null,
+    "explanation": "Percent means 'per hundred,' so 45% = 45 per 100 = 45/100.",
+    "solution_steps": null,
+    "difficulty": 1,
+    "category": null,
+    "tags": [],
+    "is_active": true,
+    "is_verified": false,
+    "created_at": "2026-06-06 01:39:53.928015+00"
+  },
+  {
+    "topic_code": "G6.RP",
+    "topic_name": "Ratios and Proportional Relationships",
+    "atomic_concept_id": "abf3aeea-1fa9-4d37-b950-8675d27e617f",
+    "lesson_number": "M6.RP.1.2",
+    "concept_name": "Understanding Rates and Unit Rates",
+    "static_question_id": "5814a4c0-0b23-4518-96fe-de63212aca39",
+    "question_type": "multiple_choice",
+    "question_text": "Which statement BEST defines a unit rate ",
+    "question_latex": null,
+    "question_image_url": null,
+    "options": [
+      {
+        "key": "A",
+        "text": "A ratio that compares two quantities with the same units"
+      },
+      {
+        "key": "B",
+        "text": "A rate with a denominator of 1"
+      },
+      {
+        "key": "C",
+        "text": "Any fraction less than 1"
+      },
+      {
+        "key": "D",
+        "text": "A rate that equals exactly 100"
+      }
+    ],
+    "option_images": null,
+    "correct_answer": "B",
+    "correct_answer_index": null,
+    "explanation": "A unit rate expresses the value per 1 unit of the second quantity (denominator = 1).",
+    "solution_steps": null,
+    "difficulty": 1,
+    "category": null,
+    "tags": [],
+    "is_active": true,
+    "is_verified": false,
+    "created_at": "2026-06-06 01:39:53.928015+00"
+  },
+  {
+    "topic_code": "G6.RP",
+    "topic_name": "Ratios and Proportional Relationships",
+    "atomic_concept_id": "cf52da91-9b3a-4638-a43a-ad4ebfe60a3e",
+    "lesson_number": "M6.RP.3.1",
+    "concept_name": "Understanding Percentages as Rates Per 100",
+    "static_question_id": "5c4f052d-b32e-45b2-8f98-8e242bef3449",
+    "question_type": "multiple_choice",
+    "question_text": "A store says 3 out of every 100 items are returned. What percent of items are returned ",
+    "question_latex": null,
+    "question_image_url": null,
+    "options": [
+      {
+        "key": "A",
+        "text": "0.03%"
+      },
+      {
+        "key": "B",
+        "text": "3%"
+      },
+      {
+        "key": "C",
+        "text": "30%"
+      },
+      {
+        "key": "D",
+        "text": "300%"
+      }
+    ],
+    "option_images": null,
+    "correct_answer": "B",
+    "correct_answer_index": null,
+    "explanation": "3 out of 100 = 3/100 = 3%.",
+    "solution_steps": null,
+    "difficulty": 1,
+    "category": null,
+    "tags": [],
+    "is_active": true,
+    "is_verified": false,
+    "created_at": "2026-06-06 01:39:53.928015+00"
+  },
+  {
+    "topic_code": "G6.RP",
+    "topic_name": "Ratios and Proportional Relationships",
+    "atomic_concept_id": "76b6f3cd-39b0-4435-a35e-21dac1ce1bc7",
+    "lesson_number": "M6.RP.1.1",
+    "concept_name": "Understanding Ratios (Definition and Different Forms)",
+    "static_question_id": "c25c4ff4-9035-4226-ba28-76ef19574b3d",
+    "question_type": "multiple_choice",
+    "question_text": "Which of the following is NOT an equivalent way to write the ratio 3 to 5 ",
+    "question_latex": null,
+    "question_image_url": null,
+    "options": [
+      {
+        "key": "A",
+        "text": "3:5"
+      },
+      {
+        "key": "B",
+        "text": "3/5"
+      },
+      {
+        "key": "C",
+        "text": "5/3"
+      },
+      {
+        "key": "D",
+        "text": "3 to 5"
+      }
+    ],
+    "option_images": null,
+    "correct_answer": "C",
+    "correct_answer_index": null,
+    "explanation": "3 to 5, 3:5, and 3/5 are all equivalent. 5/3 reverses the relationship.",
+    "solution_steps": null,
+    "difficulty": 1,
+    "category": null,
+    "tags": [],
+    "is_active": true,
+    "is_verified": false,
+    "created_at": "2026-06-06 01:39:53.928015+00"
+  }
+]
