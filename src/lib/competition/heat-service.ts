@@ -18,6 +18,7 @@
 
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { getConceptAvailability, getUnavailableConceptIds } from '@/lib/content/concept-availability';
+import { resolveExactSourceDeliveryPlan } from '@/lib/content/source-delivery-service';
 import { generateAndInsertQuestions } from './question-delivery';
 
 // -----------------------------------------------------------------------------
@@ -85,6 +86,8 @@ export interface CreateHeatParams {
    * unit_topic_id (legacy single-topic path).
    */
   concept_ids?: string[] | null;
+  /** Server-issued record of finite static IDs used in the linked preparation worksheet. */
+  preparation_source_use_id?: string | null;
   depth_min: number;                      // legacy depth — still written for back-compat
   depth_max: number;
   /**
@@ -302,6 +305,33 @@ export async function createHeat(
   // it again here (not only in the browser) before creating any persistent Heat
   // row. A direct caller cannot use the curriculum catalogue to bypass source
   // availability, runtime generator-key, or static-verification safeguards.
+  let sourcePlan: Awaited<ReturnType<typeof resolveExactSourceDeliveryPlan>> | undefined;
+  let excludedStaticIds: string[] = [];
+  if (params.preparation_source_use_id) {
+    const { data: sourceUseRecord, error: sourceUseError } = await supabase
+      .from('worksheet_static_source_use_records')
+      .select('created_by, class_id, concept_ids, static_question_ids')
+      .eq('id', params.preparation_source_use_id)
+      .maybeSingle();
+    const record = sourceUseRecord as {
+      created_by: string;
+      class_id: string;
+      concept_ids: string[];
+      static_question_ids: string[];
+    } | null;
+    if (sourceUseError || !record || record.created_by !== user.id) {
+      throw new Error('The linked preparation source record is unavailable for this teacher.');
+    }
+    if (record.class_id !== (params.class_id ?? null)) {
+      throw new Error('The linked preparation source record belongs to a different classroom.');
+    }
+    const selectedIds = Array.from(new Set(params.concept_ids ?? [])).sort();
+    const recordedIds = Array.from(new Set(record.concept_ids ?? [])).sort();
+    if (selectedIds.length === 0 || selectedIds.length !== recordedIds.length || selectedIds.some((id, index) => id !== recordedIds[index])) {
+      throw new Error('The linked preparation source record does not match the selected Heat concepts.');
+    }
+    excludedStaticIds = Array.from(new Set(record.static_question_ids ?? []));
+  }
   if (params.concept_ids && params.concept_ids.length > 0) {
     const sourceAvailability = await getConceptAvailability(supabase, params.concept_ids);
     const unavailableConceptIds = getUnavailableConceptIds(sourceAvailability);
@@ -310,6 +340,11 @@ export async function createHeat(
         `Every selected concept needs an approved source supported by the current Heat delivery path. ${unavailableConceptIds.size} selected concept${unavailableConceptIds.size === 1 ? ' is' : 's are'} not yet available.`,
       );
     }
+    sourcePlan = await resolveExactSourceDeliveryPlan(supabase, {
+      conceptIds: params.concept_ids,
+      questionCount: params.question_count,
+      excludedStaticIds,
+    });
   }
 
   // Resolve legacy topic_id placeholder (heats.topic_id NOT NULL FK)
@@ -400,8 +435,9 @@ export async function createHeat(
       questionCount: params.question_count,
       frRatio: params.fr_ratio,
       mcRatio: params.mc_ratio,
-      mcVisualShare: params.mc_visual_share,
-    });
+        mcVisualShare: params.mc_visual_share,
+        sourcePlan,
+      });
   } catch (err) {
     // If question generation fails, mark the Heat cancelled rather than
     // leaving a zombie row. The caller can retry from scratch.

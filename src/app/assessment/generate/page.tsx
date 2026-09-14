@@ -51,6 +51,7 @@ import {
 } from '@/lib/assessment/config';
 import {
   loadWorksheetPreparationDraft,
+  saveWorksheetPreparationDraft,
   type WorksheetPreparationDraft,
   WORKSHEET_PREPARATION_RETURN_HREF,
 } from '@/lib/assessment/preparation-draft';
@@ -773,6 +774,7 @@ export default function GenerateAssessmentPage() {
           docType: isHeatPreparation ? 'review' : docType,
           difficulty,
           purpose: isHeatPreparation ? 'competition_preparation' : 'standalone_practice',
+          preparationClassId: isHeatPreparation ? preparationDraft?.classId ?? null : null,
           questionCount,
         }),
       });
@@ -784,6 +786,12 @@ export default function GenerateAssessmentPage() {
       }
 
       const doc: AssessmentDocument = payload.doc;
+      if (isHeatPreparation && preparationDraft && typeof payload.staticSourceUseRecordId === 'string') {
+        saveWorksheetPreparationDraft({
+          ...preparationDraft,
+          sourceUseId: payload.staticSourceUseRecordId,
+        });
+      }
 
       // Hand the document to the preview route via sessionStorage.
       window.sessionStorage.setItem('mathathlone:assessment:doc', JSON.stringify(doc));
@@ -801,6 +809,7 @@ export default function GenerateAssessmentPage() {
     docType,
     selectedTopicSummary,
     isHeatPreparation,
+    preparationDraft,
     questionCount,
     practiceGeneratorAvailability.status,
     unavailableSelectedConcepts.length,

@@ -189,9 +189,9 @@ export default function AssessmentDoc({ doc }: { doc: AssessmentDocument }) {
                     {sectionA.map((q) => (
                       <li key={`KA-${q.number}`} className="flex gap-2">
                         <span className="min-w-[28px] font-medium">{q.number}.</span>
-                        <span className="font-bold">{q.correctOption}</span>
+                        <span className="font-bold">{q.correctOption ?? ''}</span>
                         <span className="text-gray-500">—</span>
-                        <Math text={q.answer} />
+                        <Math text={q.answer ?? ''} />
                       </li>
                     ))}
                   </ol>
@@ -283,11 +283,11 @@ function AnswerKeyFR({ q, num }: { q: AssessmentQuestion; num: number }) {
     <li>
       <div className="flex gap-2">
         <span className="min-w-[28px] font-medium">{num}.</span>
-        <Math text={q.answer} className="font-bold" />
+        <Math text={q.answer ?? ''} className="font-bold" />
       </div>
-      {q.solutionSteps.length > 0 && (
+      {(q.solutionSteps ?? []).length > 0 && (
         <ol className="ml-7 mt-1 list-decimal space-y-0.5 text-[9pt] text-gray-600">
-          {q.solutionSteps.map((step, i) => (
+          {(q.solutionSteps ?? []).map((step, i) => (
             <li key={i}>
               <Math text={step} />
             </li>

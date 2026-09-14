@@ -13,6 +13,8 @@ export interface WorksheetPreparationDraft {
   questionCount: number;
   durationMinutes: number;
   classId: string;
+  /** Server-issued record that stores static IDs privately for a later linked Heat. */
+  sourceUseId?: string | null;
 }
 
 export function saveWorksheetPreparationDraft(draft: WorksheetPreparationDraft): void {
@@ -39,7 +41,8 @@ export function loadWorksheetPreparationDraft(): WorksheetPreparationDraft | nul
       !draft.questionProfile ||
       !draft.integrityLevel ||
       !draft.questionCount ||
-      !draft.durationMinutes
+      !draft.durationMinutes ||
+      (draft.sourceUseId !== undefined && draft.sourceUseId !== null && typeof draft.sourceUseId !== 'string')
     ) {
       return null;
     }

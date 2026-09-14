@@ -10,12 +10,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServer } from '@/lib/supabase/server';
 import {
   assembleAssessment,
+  redactAssessmentForStudent,
   type AssessmentPurpose,
 } from '@/lib/assessment/assembler';
 import {
   getConceptAvailability,
   getUnavailableConceptIds,
 } from '@/lib/content/concept-availability';
+import { resolveExactSourceDeliveryPlan } from '@/lib/content/source-delivery-service';
 import {
   ASSESSMENT_FORMAT_CONFIGS,
   getAssessmentQuestionBudget,
@@ -58,7 +60,7 @@ async function getAuthorizedWorksheetRole() {
     return { supabase, error: NextResponse.json({ error: 'Only teachers and parents can view practice-generator availability.' }, { status: 403 }) };
   }
 
-  return { supabase, role, error: null };
+  return { supabase, role, userId: user.id, error: null };
 }
 
 /**
@@ -90,7 +92,7 @@ export async function POST(req: NextRequest) {
   try {
     const authorization = await getAuthorizedWorksheetRole();
     if (authorization.error) return authorization.error;
-    const { supabase, role } = authorization;
+    const { supabase, role, userId } = authorization;
 
     const body: unknown = await req.json();
     if (!isRecord(body)) {
@@ -102,6 +104,7 @@ export async function POST(req: NextRequest) {
     const courseId = body.courseId;
     const rawConceptIds = body.conceptIds;
     const purpose = isAssessmentPurpose(body.purpose) ? body.purpose : 'standalone_practice';
+    const preparationClassId = body.preparationClassId;
 
     if (purpose === 'competition_preparation' && role !== 'teacher') {
       return NextResponse.json({ error: 'Only teachers can create worksheets linked to a classroom Heat.' }, { status: 403 });
@@ -123,6 +126,9 @@ export async function POST(req: NextRequest) {
     }
 
     const typedDocType = docType as AssessmentType;
+    if (role !== 'teacher' && ['quiz', 'test', 'makeup'].includes(typedDocType)) {
+      return NextResponse.json({ error: 'Only teachers may create an assessment with an answer key.' }, { status: 403 });
+    }
     const requestedQuestionCount = body.questionCount ?? getAssessmentQuestionBudget(typedDocType);
     const formatConfig = ASSESSMENT_FORMAT_CONFIGS[typedDocType];
     if (!isAssessmentQuestionCountAllowed(typedDocType, requestedQuestionCount)) {
@@ -220,15 +226,56 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const candidates = conceptAvailability.flatMap((availability) =>
-      availability.implementedGeneratorTypes.map((generatorType) => ({
-        conceptId: availability.conceptId,
-        generatorType,
-      })),
-    );
+    let deliveryPlan;
+    try {
+      deliveryPlan = await resolveExactSourceDeliveryPlan(supabase, {
+        conceptIds,
+        questionCount: requestedQuestionCount,
+      });
+    } catch (error) {
+      return NextResponse.json(
+        {
+          error: error instanceof Error
+            ? `The selected concepts cannot meet this exact worksheet request: ${error.message}`
+            : 'The selected concepts cannot meet this exact worksheet request.',
+        },
+        { status: 422 },
+      );
+    }
+
+    let staticSourceUseRecordId: string | null = null;
+    const plannedStaticIds = deliveryPlan.candidates
+      .filter((candidate) => candidate.kind === 'static')
+      .map((candidate) => candidate.sourceStaticId);
+    if (purpose === 'competition_preparation' && plannedStaticIds.length > 0) {
+      if (typeof preparationClassId !== 'string' || !UUID_RE.test(preparationClassId)) {
+        return NextResponse.json(
+          { error: 'A classroom-bound preparation worksheet using static questions requires a valid class record.' },
+          { status: 400 },
+        );
+      }
+      const { data: sourceUseRecord, error: sourceUseError } = await supabase
+        .from('worksheet_static_source_use_records')
+        .insert({
+          created_by: userId,
+          class_id: preparationClassId,
+          course_id: courseId,
+          concept_ids: conceptIds,
+          static_question_ids: plannedStaticIds,
+        })
+        .select('id')
+        .single();
+      if (sourceUseError || !sourceUseRecord) {
+        return NextResponse.json(
+          { error: 'Could not record the finite static sources used for this linked preparation worksheet. No worksheet was returned.' },
+          { status: 500 },
+        );
+      }
+      staticSourceUseRecordId = (sourceUseRecord as { id: string }).id;
+    }
 
     const doc = assembleAssessment(
-      candidates.map((candidate) => candidate.generatorType),
+      [],
       [difficulty as number],
       typedDocType,
       (course as { name: string }).name,
@@ -243,12 +290,15 @@ export async function POST(req: NextRequest) {
           ? 'Your Heat will assess these skills using new question instances. This worksheet does not include future competition questions.'
           : undefined,
         returnHref: purpose === 'competition_preparation' ? '/compete/create?preparation=return' : undefined,
-        candidates,
+        deliveryPlan,
         questionCount: requestedQuestionCount,
       },
     );
 
-    return NextResponse.json({ doc }, { status: 200 });
+    return NextResponse.json({
+      doc: redactAssessmentForStudent(doc),
+      staticSourceUseRecordId,
+    }, { status: 200 });
   } catch (err) {
     console.error('[POST /api/assessment/generate]', err);
     return NextResponse.json({ error: 'Could not generate the worksheet. Please try again.' }, { status: 500 });

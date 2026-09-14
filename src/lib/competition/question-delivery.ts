@@ -12,6 +12,7 @@
 // =============================================================================
 
 import type { SupabaseClient } from '@supabase/supabase-js';
+import type { SourceDeliveryPlan } from '../content/source-delivery-plan';
 import {
   generateQuestion,
   GENERATORS,
@@ -80,6 +81,8 @@ export interface GenerateQuestionsParams {
   depthMin: number;                    // 1..4 (used as fallback)
   depthMax: number;                    // 1..4 (used as fallback)
   questionCount: number;
+  /** Server-resolved exact source plan for an explicit atomic-concept request. */
+  sourcePlan?: SourceDeliveryPlan;
 
   // -- CTA framework knobs (docs/CTA_SCORING_FRAMEWORK.md) -------------------
   // Heats are composed of two question families:
@@ -382,6 +385,123 @@ interface HeatQuestionInsert {
   time_limit_seconds: number;
 }
 
+function sameIdSet(left: readonly string[], right: readonly string[]): boolean {
+  return left.length === right.length && left.every((id) => right.includes(id));
+}
+
+/**
+ * Uses an already-resolved exact source plan. The plan contains only selected
+ * concepts and approved static items; it has already rejected finite-pool
+ * repetition and count shortfall. This insertion path introduces no visual or
+ * topic-wide fallback.
+ */
+async function generateAndInsertQuestionsFromSourcePlan(
+  supabase: SupabaseClient,
+  params: GenerateQuestionsParams,
+  sourcePlan: SourceDeliveryPlan,
+): Promise<void> {
+  const requestedConceptIds = Array.from(new Set(params.conceptIds ?? []));
+  if (!sameIdSet(requestedConceptIds, sourcePlan.requestedConceptIds)) {
+    throw new Error('The exact source plan does not match the selected Heat concepts.');
+  }
+  if (sourcePlan.requestedQuestionCount !== params.questionCount || sourcePlan.candidates.length !== params.questionCount) {
+    throw new Error('The exact source plan does not meet the requested Heat question count.');
+  }
+
+  const generatorIds = Array.from(new Set(
+    sourcePlan.candidates
+      .filter((candidate) => candidate.kind === 'procedural')
+      .map((candidate) => candidate.generatorId),
+  ));
+  if (generatorIds.some((id) => !isUuid(id))) {
+    throw new Error('The exact source plan contains a malformed procedural source identifier.');
+  }
+  if (generatorIds.length > 0) {
+    const { data, error } = await supabase
+      .from('question_generators')
+      .select('id, concept_id, generator_type, is_active')
+      .in('id', generatorIds)
+      .eq('is_active', true);
+    if (error || (data ?? []).length !== generatorIds.length) {
+      throw new Error('A procedural source changed after exact planning. Create a new Heat plan instead.');
+    }
+    const expectedById = new Map(
+      sourcePlan.candidates
+        .filter((candidate): candidate is Extract<SourceDeliveryPlan['candidates'][number], { kind: 'procedural' }> => candidate.kind === 'procedural')
+        .map((candidate) => [candidate.generatorId, candidate]),
+    );
+    for (const row of (data ?? []) as Array<{ id: string; concept_id: string; generator_type: string }>) {
+      const expected = expectedById.get(row.id);
+      if (!expected || expected.conceptId !== row.concept_id || expected.generatorType !== row.generator_type) {
+        throw new Error('A procedural source mapping changed after exact planning. Create a new Heat plan instead.');
+      }
+    }
+  }
+
+  const inserts: HeatQuestionInsert[] = [];
+  const usedProceduralQuestionSignatures = new Set<string>();
+  for (const candidate of sourcePlan.candidates) {
+    if (candidate.kind === 'static') {
+      inserts.push({
+        heat_id: params.heatId,
+        question_number: 0,
+        generator_id: null,
+        difficulty: candidate.difficulty,
+        question_latex: candidate.questionLatex ?? candidate.questionText,
+        question_text: candidate.questionText,
+        correct_answer: candidate.correctAnswer,
+        answer_type: 'text',
+        solution_steps: {
+          kind: 'static',
+          source_static_id: candidate.sourceStaticId,
+          concept_id: candidate.conceptId,
+          lesson_number: candidate.lessonNumber,
+          concept_name: candidate.conceptName,
+          content_sha256: candidate.contentSha256,
+          options: candidate.options,
+        },
+        points_value: pointsForDifficulty(candidate.difficulty),
+        time_limit_seconds: 45,
+      });
+      continue;
+    }
+
+    const fn = (GENERATORS as Record<string, (difficulty: DifficultyLevel) => GeneratedQuestion | undefined>)[candidate.generatorType];
+    if (!fn) throw new Error(`The planned generator ${candidate.generatorType} is no longer implemented.`);
+    const difficulty = pickDifficulty(params.depthMin, params.depthMax);
+    const generated = generateDistinctQuestion(
+      (level) => {
+        const question = generateQuestion(candidate.generatorType, level);
+        if (!question) throw new Error(`Generator ${candidate.generatorType} returned no question.`);
+        return question;
+      },
+      difficulty,
+      usedProceduralQuestionSignatures,
+      candidate.generatorType,
+    );
+    inserts.push({
+      heat_id: params.heatId,
+      question_number: 0,
+      generator_id: candidate.generatorId,
+      difficulty,
+      question_latex: generated.question_latex,
+      question_text: generated.question_text,
+      correct_answer: generated.correct_answer,
+      answer_type: generated.answer_type,
+      solution_steps: generated.solution_steps ?? [],
+      points_value: pointsForDifficulty(difficulty),
+      time_limit_seconds: timeLimitForDifficulty(difficulty),
+    });
+  }
+
+  if (inserts.length !== params.questionCount) {
+    throw new Error('Exact Heat source planning did not produce the requested question count.');
+  }
+  const finalQuestions = shuffle(inserts).map((question, index) => ({ ...question, question_number: index + 1 }));
+  const { error } = await supabase.from('heat_questions').insert(finalQuestions);
+  if (error) throw new Error(`Failed to insert exact-source Heat questions: ${error.message}`);
+}
+
 /**
  * Generates `questionCount` questions for the given Heat and INSERTs them.
  *
@@ -454,6 +574,11 @@ export async function generateAndInsertQuestions(
   supabase: SupabaseClient,
   params: GenerateQuestionsParams
 ): Promise<void> {
+  if (params.sourcePlan) {
+    await generateAndInsertQuestionsFromSourcePlan(supabase, params, params.sourcePlan);
+    return;
+  }
+
   const {
     heatId,
     unitTopicId,

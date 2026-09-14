@@ -672,6 +672,7 @@ export default function CreateHeatPage() {
         content_division_id: selectedContentDivision?.id ?? selectedDivision.id,
         unit_topic_id: null,
         concept_ids: conceptIdsArr,
+        preparation_source_use_id: worksheetReturnDraft?.sourceUseId ?? null,
         depth_min: profileMeta.depth_min,
         depth_max: profileMeta.depth_max,
         question_profile: questionProfile,
@@ -705,7 +706,7 @@ export default function CreateHeatPage() {
     } finally {
       dispatch({ type: 'SET_CREATING', payload: false });
     }
-  }, [selectedClass, selectedDivision, selectedCourse, enoughConcepts, selectedConceptIds, questionProfile, mode, currentMode, integrityLevel, questionCount, durationMinutes, profile?.school_id, practiceGeneratorAvailability.status, unavailableSelectedConcepts.length, supabase, router, dispatch, MIN_CONCEPTS]);
+  }, [selectedClass, selectedDivision, selectedCourse, enoughConcepts, selectedConceptIds, questionProfile, mode, currentMode, integrityLevel, questionCount, durationMinutes, profile?.school_id, worksheetReturnDraft?.sourceUseId, practiceGeneratorAvailability.status, unavailableSelectedConcepts.length, supabase, router, dispatch, MIN_CONCEPTS]);
 
   // ── Loading state ─────────────────────────────────────────────────────────
   if (authLoading || loadingCurriculum) {

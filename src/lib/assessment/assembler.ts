@@ -1,20 +1,14 @@
 // =============================================================================
 // MathAthlone — Take-Home Assessment Assembler
 // =============================================================================
-// Builds a printable assessment document (Practice Review / Quiz / Homework /
-// Unit Test / Makeup Test) from a set of generator types. This is a standalone
-// tool: it takes generator types directly and does NOT depend on a heat.
-//
-// NOTE on generator output shape: the canonical fields on a GeneratedQuestion
-// are `question_text` / `question_latex` / `correct_answer`. The friendlier
-// `question` / `answer` aliases are only backfilled by generateQuestion()'s
-// ensureAliases shim — when we call GENERATORS[type] directly (as we do here)
-// the legacy inline generators leave them undefined. So every read below falls
-// back to the canonical field.
+// Builds printable assessment documents from a server-resolved source plan.
+// Procedural sources create fresh deterministic instances; static sources are
+// finite exact-mapped items validated before this assembler receives them.
 // =============================================================================
 
 import { GENERATORS, type DifficultyLevel, type GeneratedQuestion } from '@/lib/competition/generators';
 import { generateDistinctQuestion } from '@/lib/competition/question-uniqueness';
+import type { SourceDeliveryCandidate, SourceDeliveryPlan } from '@/lib/content/source-delivery-plan';
 import {
   ASSESSMENT_FORMAT_CONFIGS,
   getAssessmentQuestionPlan,
@@ -27,17 +21,20 @@ export interface AssessmentQuestion {
   number: number;
   type: 'mc' | 'fr';
   section: 'A' | 'B';
+  /** Internal delivery identity; student-safe copies remove static source IDs. */
   generatorType: string;
-  /** Canonical concept selected for this practice item. */
   conceptId: string;
   question: string;
-  answer: string;
+  answer?: string;
   answerType: string;
-  options?: string[];      // MC: exactly 4 options, correct answer is one of them
-  correctOption?: string;  // MC: which letter (A/B/C/D) is correct
+  options?: string[];
+  correctOption?: string;
   points: number;
   workspaceLines: number;
-  solutionSteps: string[];
+  solutionSteps?: string[];
+  sourceKind: 'procedural' | 'static';
+  sourceStaticId?: string;
+  sourceContentSha256?: string;
 }
 
 export type AssessmentPurpose = 'standalone_practice' | 'competition_preparation';
@@ -51,16 +48,12 @@ export interface AssessmentDocument {
   title: string;
   course: string;
   topics: string[];
-  /** Manually curated student-facing skills. This excludes internal concept names, generator IDs, and answers. */
   announcedSkills: string[];
   purpose: AssessmentPurpose;
-  /** Student-safe statement explaining independent later Heat generation. */
   preparationNote?: string;
-  /** Optional teacher-only navigation back to the original Heat configuration. */
   returnHref?: string;
   date: string;
   type: AssessmentType;
-  /** Teacher-selected document length, validated by the generation API. */
   questionCount: number;
   sections: {
     A: AssessmentQuestion[];
@@ -68,44 +61,37 @@ export interface AssessmentDocument {
   };
   totalPoints: number;
   heatCode: string;
-  /** Teacher answer key is rendered for formal assessments, not practice. */
   showAnswerKey: boolean;
 }
 
 const TITLES: Record<AssessmentType, string> = {
-  review:   'Practice Review',
-  quiz:     'Quiz',
+  review: 'Practice Review',
+  quiz: 'Quiz',
   homework: 'Homework',
-  test:     'Unit Test',
-  makeup:   'Makeup Test',
+  test: 'Unit Test',
+  makeup: 'Makeup Test',
 };
 
-// Formal assessments ship with a teacher answer key; practice handouts don't.
 const ANSWER_KEY_TYPES = new Set<AssessmentType>(['quiz', 'test', 'makeup']);
 
 /** Re-exported for existing server-only callers. */
 export { getAssessmentQuestionBudget } from '@/lib/assessment/config';
 
-// Pull the human-facing question/answer regardless of which field the
-// generator populated.
 function readQuestion(q: any): string {
-  // Printable worksheets prefer a generator's explicit formatted version
-  // (for example a KaTeX ratio table). Live Heat delivery continues to use
-  // question_text, which remains a plain-text accessible prompt.
   return String(q?.question_latex ?? q?.question ?? q?.question_text ?? '');
 }
 function readAnswer(q: any): string {
   return String(q?.answer ?? q?.correct_answer ?? '');
 }
 function readSteps(q: any): string[] {
-  return Array.isArray(q?.solution_steps) ? q.solution_steps : [];
+  return Array.isArray(q?.solution_steps) ? q.solution_steps.map(String) : [];
 }
 
 function fisherYates<T>(arr: T[]): T[] {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
+    [a[i], a[j]] = [a[j]!, a[i]!];
   }
   return a;
 }
@@ -113,68 +99,53 @@ function fisherYates<T>(arr: T[]): T[] {
 function buildMCOptions(
   correct: string,
   genType: string,
-  difficulty: number
+  difficulty: number,
 ): { options: string[]; correctOption: string } {
   const num = parseFloat(correct);
   let distractors: string[] = [];
 
   if (!isNaN(num) && isFinite(num) && num !== 0 && /^-?\d*\.?\d+$/.test(correct.trim())) {
-    // Numeric: build distractors using common mistake patterns
     const d1 = String(Math.round(num * 1.25 * 100) / 100);
     const d2 = String(Math.round(num * 0.75 * 100) / 100);
     const d3 = String(Math.round((num + Math.abs(num) * 0.5) * 100) / 100);
-    distractors = [d1, d2, d3].filter(d => d !== correct);
+    distractors = [d1, d2, d3].filter((value) => value !== correct);
   } else {
-    // Expression/fraction: run generator a few more times for organic distractors
     const fn = (GENERATORS as Record<string, (d: number) => any>)[genType];
     if (fn) {
       for (let i = 0; i < 8 && distractors.length < 3; i++) {
         try {
-          const alt = fn(Math.max(1, difficulty - 1) as 1 | 2 | 3 | 4);
-          const altAnswer = readAnswer(alt);
-          if (altAnswer && altAnswer !== correct && !distractors.includes(altAnswer)) {
-            distractors.push(altAnswer);
-          }
-        } catch {}
+          const altAnswer = readAnswer(fn(Math.max(1, difficulty - 1) as 1 | 2 | 3 | 4));
+          if (altAnswer && altAnswer !== correct && !distractors.includes(altAnswer)) distractors.push(altAnswer);
+        } catch {
+          // A failed distractor attempt is not a reason to change source scope.
+        }
       }
     }
   }
 
-  // Pad to exactly 3 distractors if needed
   const fallbacks = ['Cannot be determined', 'None of the above', 'Insufficient information'];
-  while (distractors.length < 3) {
-    distractors.push(fallbacks[distractors.length]!);
-  }
+  while (distractors.length < 3) distractors.push(fallbacks[distractors.length]!);
 
-  // Shuffle all 4 options and track correct letter
   const allOptions = fisherYates([correct, ...distractors.slice(0, 3)]);
-  const letters = ['A', 'B', 'C', 'D'];
   const correctIndex = allOptions.indexOf(correct);
-  const correctOption = letters[correctIndex] ?? 'A';
-
-  return { options: allOptions, correctOption };
+  return { options: allOptions, correctOption: ['A', 'B', 'C', 'D'][correctIndex] ?? 'A' };
 }
 
 export interface AssembleAssessmentOptions {
-  /** Manually curated student-facing labels for the selected curriculum concepts. */
   announcedSkills?: string[];
-  /** Makes the worksheet’s student-facing purpose explicit. */
   purpose?: AssessmentPurpose;
-  /** Student-safe independent-question explanation for competition preparation. */
   preparationNote?: string;
-  /** Teacher-only route back to the Heat Builder after printing. */
   returnHref?: string;
-  /** Concept-linked generator candidates resolved and validated on the server. */
   candidates?: AssessmentGeneratorCandidate[];
-  /** Bounded teacher-selected question count for this document. */
+  /** A server-resolved exact source plan overrides raw procedural candidates. */
+  deliveryPlan?: SourceDeliveryPlan;
   questionCount?: number;
 }
 
-/**
- * Build a varied practice deck that gives every selected concept one item before
- * any eligible generator type repeats. A later Heat invokes its own generation
- * path, so none of this document's generated values are reused as Heat items.
- */
+type AssessmentDeliveryCandidate =
+  | { kind: 'procedural'; conceptId: string; generatorType: string }
+  | Extract<SourceDeliveryCandidate, { kind: 'static' }>;
+
 function buildPracticeDeck(
   generatorTypes: string[],
   questionCount: number,
@@ -183,7 +154,6 @@ function buildPracticeDeck(
   const usable = candidates.length > 0
     ? candidates
     : [...new Set(generatorTypes)].map((generatorType) => ({ conceptId: '', generatorType }));
-
   const uniqueCandidates = Array.from(
     new Map(usable.map((candidate) => [`${candidate.conceptId}:${candidate.generatorType}`, candidate])).values(),
   );
@@ -198,10 +168,6 @@ function buildPracticeDeck(
 
   const deck: AssessmentGeneratorCandidate[] = [];
   const usedTypes = new Set<string>();
-
-  // Coverage pass: take one candidate for each requested concept, only while a
-  // question slot remains. API validation prevents a selected set larger than
-  // the chosen document budget.
   for (const conceptId of fisherYates(Array.from(byConcept.keys()))) {
     if (deck.length >= questionCount) break;
     const choices = fisherYates(byConcept.get(conceptId) ?? []);
@@ -210,28 +176,58 @@ function buildPracticeDeck(
     deck.push(candidate);
     usedTypes.add(candidate.generatorType);
   }
-
-  // Variety pass: fill remaining slots using every available generator type
-  // before repeating one. Procedural generators can safely create fresh values
-  // on repeated invocation when the selected set is smaller than the document.
   while (deck.length < questionCount) {
     const cycle = fisherYates(uniqueCandidates);
     let added = false;
     for (const candidate of cycle) {
       if (deck.length >= questionCount) break;
-      if (usedTypes.has(candidate.generatorType) && usedTypes.size < new Set(uniqueCandidates.map((item) => item.generatorType)).size) {
-        continue;
-      }
+      if (usedTypes.has(candidate.generatorType) && usedTypes.size < new Set(uniqueCandidates.map((item) => item.generatorType)).size) continue;
       deck.push(candidate);
       usedTypes.add(candidate.generatorType);
       added = true;
     }
-    if (!added) {
-      usedTypes.clear();
-    }
+    if (!added) usedTypes.clear();
   }
-
   return deck;
+}
+
+function toAssessmentDeck(
+  generatorTypes: string[],
+  questionCount: number,
+  options: AssembleAssessmentOptions,
+): AssessmentDeliveryCandidate[] {
+  if (options.deliveryPlan) {
+    if (options.deliveryPlan.requestedQuestionCount !== questionCount || options.deliveryPlan.candidates.length !== questionCount) {
+      throw new Error('The exact source plan does not satisfy the requested worksheet question count.');
+    }
+    return options.deliveryPlan.candidates;
+  }
+  return buildPracticeDeck(generatorTypes, questionCount, options.candidates)
+    .map((candidate) => ({ kind: 'procedural' as const, ...candidate }));
+}
+
+/**
+ * Removes student-inappropriate answer and source fields before JSON reaches the
+ * browser. It is intentionally applied server-side for Practice Review and
+ * competition-preparation documents, not merely hidden by the print component.
+ */
+export function redactAssessmentForStudent(doc: AssessmentDocument): AssessmentDocument {
+  if (doc.showAnswerKey) return doc;
+  const redactQuestion = (question: AssessmentQuestion): AssessmentQuestion => ({
+    ...question,
+    answer: undefined,
+    correctOption: undefined,
+    solutionSteps: [],
+    sourceStaticId: undefined,
+    sourceContentSha256: undefined,
+  });
+  return {
+    ...doc,
+    sections: {
+      A: doc.sections.A.map(redactQuestion),
+      B: doc.sections.B.map(redactQuestion),
+    },
+  };
 }
 
 export function assembleAssessment(
@@ -245,75 +241,102 @@ export function assembleAssessment(
 ): AssessmentDocument {
   const cfg = ASSESSMENT_FORMAT_CONFIGS[type];
   const questionPlan = getAssessmentQuestionPlan(type, options.questionCount);
-  const deck = buildPracticeDeck(generatorTypes, questionPlan.questionCount, options.candidates);
-  const frCount = questionPlan.freeResponseCount;
+  const deck = toAssessmentDeck(generatorTypes, questionPlan.questionCount, options);
+  const maxFreeResponse = Math.min(
+    questionPlan.freeResponseCount,
+    deck.filter((candidate) => candidate.kind === 'procedural').length,
+  );
+  let remainingFreeResponse = maxFreeResponse;
   const sectionA: AssessmentQuestion[] = [];
   const sectionB: AssessmentQuestion[] = [];
   const usedQuestionSignatures = new Set<string>();
 
-  deck.forEach((candidate, i) => {
-    const difficulty = (difficulties[i % Math.max(difficulties.length, 1)] ?? 2) as 1 | 2 | 3 | 4;
-    const fn = (GENERATORS as Record<string, (d: number) => any>)[candidate.generatorType];
-    if (!fn) return;
+  deck.forEach((candidate, index) => {
+    if (candidate.kind === 'static') {
+      sectionA.push({
+        number: sectionA.length + 1,
+        type: 'mc',
+        section: 'A',
+        generatorType: 'static',
+        conceptId: candidate.conceptId,
+        question: candidate.questionLatex ?? candidate.questionText,
+        answer: candidate.correctAnswer,
+        answerType: 'text',
+        options: candidate.options.map((option) => option.text),
+        correctOption: candidate.correctAnswer,
+        points: cfg.multipleChoicePoints,
+        workspaceLines: 0,
+        solutionSteps: [candidate.explanation],
+        sourceKind: 'static',
+        sourceStaticId: candidate.sourceStaticId,
+        sourceContentSha256: candidate.contentSha256,
+      });
+      return;
+    }
 
-    let q: GeneratedQuestion;
+    const difficulty = (difficulties[index % Math.max(difficulties.length, 1)] ?? 2) as 1 | 2 | 3 | 4;
+    const fn = (GENERATORS as Record<string, (d: number) => any>)[candidate.generatorType];
+    if (!fn) throw new Error(`No implemented worksheet generator exists for ${candidate.generatorType}.`);
+
+    let generated: GeneratedQuestion;
     try {
-      q = generateDistinctQuestion(
+      generated = generateDistinctQuestion(
         fn as (level: DifficultyLevel) => GeneratedQuestion,
         difficulty as DifficultyLevel,
         usedQuestionSignatures,
         candidate.generatorType,
       );
     } catch (error) {
-      throw new Error(
-        `Could not assemble a unique practice question for ${candidate.generatorType}: ${error instanceof Error ? error.message : 'unknown error'}`,
-      );
+      throw new Error(`Could not assemble a unique practice question for ${candidate.generatorType}: ${error instanceof Error ? error.message : 'unknown error'}`);
     }
 
-    const isFR = i < frCount;
-    const question = readQuestion(q);
-    const answer = readAnswer(q);
-    const answerType = String(q?.answer_type ?? '');
-    const solutionSteps = readSteps(q);
-    const conceptId = candidate.conceptId || String(q?.concept_id ?? '');
+    const isFreeResponse = remainingFreeResponse > 0;
+    if (isFreeResponse) remainingFreeResponse -= 1;
+    const question = readQuestion(generated);
+    const answer = readAnswer(generated);
+    const answerType = String(generated?.answer_type ?? '');
+    const solutionSteps = readSteps(generated);
+    const questionBase = {
+      conceptId: candidate.conceptId || String(generated?.concept_id ?? ''),
+      question,
+      answer,
+      answerType,
+      points: isFreeResponse ? cfg.freeResponsePoints : cfg.multipleChoicePoints,
+      sourceKind: 'procedural' as const,
+    };
 
-    if (isFR) {
+    if (isFreeResponse) {
       sectionB.push({
         number: sectionB.length + 1,
         type: 'fr',
         section: 'B',
         generatorType: candidate.generatorType,
-        conceptId,
-        question,
-        answer,
-        answerType,
-        points: cfg.freeResponsePoints,
+        ...questionBase,
         workspaceLines: cfg.workspaceLines,
         solutionSteps,
       });
     } else {
-      const { options: mcOptions, correctOption } = buildMCOptions(answer, candidate.generatorType, difficulty);
+      const mc = buildMCOptions(answer, candidate.generatorType, difficulty);
       sectionA.push({
         number: sectionA.length + 1,
         type: 'mc',
         section: 'A',
         generatorType: candidate.generatorType,
-        conceptId,
-        question,
-        answer,
-        answerType,
-        options: mcOptions,
-        correctOption,
-        points: cfg.multipleChoicePoints,
+        ...questionBase,
+        options: mc.options,
+        correctOption: mc.correctOption,
         workspaceLines: 0,
         solutionSteps,
       });
     }
   });
 
-  const totalPoints =
-    sectionA.reduce((s, q) => s + q.points, 0) +
-    sectionB.reduce((s, q) => s + q.points, 0);
+  if (sectionA.length + sectionB.length !== questionPlan.questionCount) {
+    throw new Error('The worksheet assembler did not produce the exact requested source-plan count.');
+  }
+
+  const totalPoints = sectionA.reduce((sum, question) => sum + question.points, 0)
+    + sectionB.reduce((sum, question) => sum + question.points, 0);
 
   return {
     title: TITLES[type],
@@ -323,9 +346,7 @@ export function assembleAssessment(
     purpose: options.purpose ?? 'standalone_practice',
     preparationNote: options.preparationNote,
     returnHref: options.returnHref,
-    date: new Date().toLocaleDateString('en-US', {
-      year: 'numeric', month: 'long', day: 'numeric'
-    }),
+    date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
     type,
     questionCount: questionPlan.questionCount,
     sections: { A: sectionA, B: sectionB },

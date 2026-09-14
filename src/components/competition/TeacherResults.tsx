@@ -363,7 +363,10 @@ export default function TeacherResults({ heatId, heatCode, integrityLevel }: Tea
                 ?? 'visual';
               conceptKeys.add(`visual:${k}`);
             } else if ((q.solution_steps as any)?.kind === 'static') {
-              conceptKeys.add(`static:${q.id}`);
+              const staticConcept = (q.solution_steps as any)?.concept_id
+                ?? (q.solution_steps as any)?.lesson_number
+                ?? q.id;
+              conceptKeys.add(`concept:${staticConcept}`);
             }
           }
           const ranked = Array.from(topicCounts.entries())
@@ -1050,9 +1053,19 @@ function buildConceptBuckets(subs: SubmissionRow[]): ConceptBucket[] {
       label = visualName;
       category = 'visual';
     } else if (s.heat_questions?.solution_steps?.kind === 'static') {
-      key = 'static';
-      label = 'Concept review';
-      category = 'static';
+      const staticMetadata = s.heat_questions.solution_steps as any;
+      const staticConceptId = typeof staticMetadata?.concept_id === 'string'
+        ? staticMetadata.concept_id
+        : typeof staticMetadata?.lesson_number === 'string'
+          ? staticMetadata.lesson_number
+          : q.id;
+      key = `concept:${staticConceptId}`;
+      label = typeof staticMetadata?.concept_name === 'string' && staticMetadata.concept_name.trim()
+        ? staticMetadata.concept_name
+        : typeof staticMetadata?.lesson_number === 'string' && staticMetadata.lesson_number.trim()
+          ? staticMetadata.lesson_number
+          : 'Reviewed static concept';
+      category = 'concept';
     } else {
       key = 'other';
       label = 'Other';
