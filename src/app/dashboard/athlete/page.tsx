@@ -2,6 +2,11 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createSupabaseServer } from '@/lib/supabase/server';
 import MissingProfile from '@/components/auth/MissingProfile';
+import {
+  dashboardPathForRole,
+  highestActiveDashboardRole,
+  isMathleteDashboardRole,
+} from '@/lib/auth/dashboard-routing';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,6 +16,20 @@ export default async function AthleteDashboard() {
   // Get current user (middleware already redirects unauthenticated users)
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/auth/login');
+
+  // Direct navigation to /dashboard/athlete must not turn an educator account
+  // into a Mathlete session. Resolve the authoritative active role set before
+  // loading any student-only dashboard data. Accounts with no active role keep
+  // the existing recoverable Mathlete profile route below.
+  const { data: roleRows } = await supabase
+    .from('user_roles')
+    .select('role')
+    .eq('user_id', user.id)
+    .eq('is_active', true);
+  const activeRole = highestActiveDashboardRole((roleRows ?? []).map((row) => row.role));
+  if (!isMathleteDashboardRole(activeRole)) {
+    redirect(dashboardPathForRole(activeRole));
+  }
 
   // Get user profile. If it's missing we render a recoverable error instead
   // of redirecting — redirecting to /auth/login would bounce through the

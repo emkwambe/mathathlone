@@ -3,6 +3,11 @@
 import Link from 'next/link';
 import { LayoutDashboard, LogIn, LogOut } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import {
+  dashboardPathForRole,
+  highestActiveDashboardRole,
+  isMathleteDashboardRole,
+} from '@/lib/auth/dashboard-routing';
 
 type AccountControlsProps = {
   tone?: 'dark' | 'light';
@@ -48,8 +53,15 @@ export default function AccountControls({ tone = 'dark' }: AccountControlsProps)
     );
   }
 
-  const isMathlete = claims?.user_role === 'mathlete';
-  const homeHref = isMathlete ? '/dashboard/athlete' : '/dashboard';
+  // Claims may briefly be stale after a role change. Prefer the highest known
+  // role among the claim and profile for client-facing copy; the server-side
+  // /dashboard route remains authoritative for the final destination.
+  const resolvedRole = highestActiveDashboardRole([
+    claims?.user_role,
+    profile?.role,
+  ]);
+  const isMathlete = isMathleteDashboardRole(resolvedRole);
+  const homeHref = isMathlete ? dashboardPathForRole(resolvedRole) : '/dashboard';
   const homeLabel = isMathlete ? 'Mathlete Home' : 'Dashboard';
   const identity = profile?.display_name || user?.email || 'Signed in';
 

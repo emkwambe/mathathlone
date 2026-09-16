@@ -165,7 +165,10 @@ function EducatorLogin({ next }: { next: string | null }) {
       return;
     }
 
-    router.replace(next ?? '/dashboard/teacher');
+    // The generic dashboard resolves the account's highest active user_roles
+    // assignment on the server. The login form selected by the user is only a
+    // credential-entry UX and must never decide the account's home route.
+    router.replace(next ?? '/dashboard');
   };
 
   return (
@@ -364,9 +367,11 @@ function MathleteLogin({ next }: { next: string | null }) {
       }
 
       // A protected Heat invitation always preserves its exact destination
-      // through ?next=. Otherwise, authenticated Mathletes land in their
-      // identity-first home rather than the event-code entry screen.
-      const dest = next ?? '/dashboard/athlete';
+      // through ?next=. Otherwise, route through the generic dashboard, which
+      // deterministically resolves the highest active role. This prevents an
+      // educator who used the Mathlete login form from being sent to Mathlete
+      // Home merely because of the chosen credential-entry screen.
+      const dest = next ?? '/dashboard';
       router.replace(dest);
     },
     [signIn, loginId, password, next, router]
