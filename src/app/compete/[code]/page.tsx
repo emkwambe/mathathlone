@@ -37,6 +37,11 @@ import {
 import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import {
+  classHeatEntryRoleLabel,
+  isEducatorClassHeatAccount,
+  shouldAutoJoinClassHeat,
+} from '@/lib/auth/class-heat-entry';
+import {
   joinHeat,
   startHeat,
   type Heat,
@@ -120,7 +125,21 @@ export default function HeatLobbyPage() {
   }, [params]);
 
   const supabase = useMemo(() => createClient(), []);
-  const { user, profile, loading: authLoading, isAuthenticated } = useAuth();
+  const {
+    user,
+    profile,
+    claims,
+    loading: authLoading,
+    isAuthenticated,
+  } = useAuth();
+  const isEducatorAccount = isEducatorClassHeatAccount({
+    claimedRole: claims?.user_role,
+    profileRole: profile?.role,
+  });
+  const accountRoleLabel = classHeatEntryRoleLabel({
+    claimedRole: claims?.user_role,
+    profileRole: profile?.role,
+  });
 
   // ── Heat metadata (one-time fetch with JOINs) ───────────────────────────
   const [heat, setHeat] = useState<HeatWithMeta | null>(null);
@@ -420,7 +439,10 @@ export default function HeatLobbyPage() {
   // ── Auto-join students (idempotent) ────────────────────────────────────
   useEffect(() => {
     if (!heat || !user) return;
-    if (isTeacher) return;
+    if (!shouldAutoJoinClassHeat({
+      isHeatCreator: isTeacher,
+      isEducatorAccount,
+    })) return;
     if (hasJoined || joinAttemptedRef.current) return;
     if (!effectiveStatus || !JOINABLE_STATUSES.includes(effectiveStatus)) return;
 
@@ -442,7 +464,7 @@ export default function HeatLobbyPage() {
     return () => {
       cancelled = true;
     };
-  }, [heat, user, isTeacher, hasJoined, effectiveStatus, code, supabase]);
+  }, [heat, user, isTeacher, isEducatorAccount, hasJoined, effectiveStatus, code, supabase]);
 
   // ── Already-joined detection from the live participants list ───────────
   useEffect(() => {
@@ -708,6 +730,8 @@ export default function HeatLobbyPage() {
     <LobbyView
       heat={heat}
       isTeacher={isTeacher}
+      isEducatorViewer={isEducatorAccount && !isTeacher}
+      educatorRoleLabel={accountRoleLabel}
       hasJoined={hasJoined}
       joinError={joinError}
       participants={participants.map((p) => ({
@@ -740,6 +764,8 @@ interface LobbyParticipant {
 function LobbyView({
   heat,
   isTeacher,
+  isEducatorViewer,
+  educatorRoleLabel,
   hasJoined,
   joinError,
   participants,
@@ -752,6 +778,8 @@ function LobbyView({
 }: {
   heat: HeatWithMeta;
   isTeacher: boolean;
+  isEducatorViewer: boolean;
+  educatorRoleLabel: string;
   hasJoined: boolean;
   joinError: string | null;
   participants: LobbyParticipant[];
@@ -798,7 +826,7 @@ function LobbyView({
         </div>
 
         {/* Errors */}
-        {joinError && !isTeacher && (
+        {joinError && !isTeacher && !isEducatorViewer && (
           <div className="mb-6 flex items-start gap-2 p-3 rounded-lg bg-red-500/10 border border-red-400/30 text-red-200 text-sm">
             <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
             <span>{joinError}</span>
@@ -843,8 +871,24 @@ function LobbyView({
           </div>
         )}
 
+        {/* Educator accounts are never auto-enrolled as Mathletes. */}
+        {isEducatorViewer && (
+          <div className="mb-6 rounded-2xl border border-amber-300/35 bg-amber-300/10 p-5 text-center text-amber-100">
+            <p className="font-semibold">Educator access</p>
+            <p className="mt-2 text-sm leading-6 text-amber-100/85">
+              You are signed in as {educatorRoleLabel.replace(/_/g, ' ')}. This roster-only Heat can be joined only by an active Mathlete in its class.
+            </p>
+            <Link
+              href="/dashboard"
+              className="mt-4 inline-flex rounded-lg bg-white/10 px-3 py-2 text-xs font-semibold text-white hover:bg-white/20"
+            >
+              Return to dashboard
+            </Link>
+          </div>
+        )}
+
         {/* Student "waiting" panel */}
-        {!isTeacher && (
+        {!isTeacher && !isEducatorViewer && (
           <div className="bg-white/10 backdrop-blur-lg border border-white/15 rounded-2xl p-5 md:p-6 mb-6 text-center">
             {hasJoined ? (
               <>

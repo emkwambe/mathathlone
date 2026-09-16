@@ -30,6 +30,10 @@ import {
 import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import AccountControls from '@/components/navigation/AccountControls';
+import {
+  classHeatEntryRoleLabel,
+  isEducatorClassHeatAccount,
+} from '@/lib/auth/class-heat-entry';
 
 // -----------------------------------------------------------------------------
 // CODE NORMALIZATION (live, per-keystroke)
@@ -87,7 +91,20 @@ function normalizeHeatCode(raw: string): string {
 export default function JoinHeatPage() {
   const router = useRouter();
   const supabase = useMemo(() => createClient(), []);
-  const { isAuthenticated, loading: authLoading } = useAuth();
+  const {
+    isAuthenticated,
+    loading: authLoading,
+    claims,
+    profile,
+  } = useAuth();
+  const isEducatorAccount = isEducatorClassHeatAccount({
+    claimedRole: claims?.user_role,
+    profileRole: profile?.role,
+  });
+  const accountRoleLabel = classHeatEntryRoleLabel({
+    claimedRole: claims?.user_role,
+    profileRole: profile?.role,
+  });
 
   const [rawCode, setRawCode] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -104,6 +121,11 @@ export default function JoinHeatPage() {
   }, [error]);
 
   const handleJoin = useCallback(async () => {
+    if (isEducatorAccount) {
+      setError('You are signed in as an educator. Educator accounts can host or monitor a class Heat but cannot join it as a Mathlete.');
+      return;
+    }
+
     if (!isWellFormed) {
       setError('Heat codes look like MA-XXXX. Check with your teacher.');
       return;
@@ -175,7 +197,7 @@ export default function JoinHeatPage() {
     } finally {
       setChecking(false);
     }
-  }, [isWellFormed, normalized, supabase, isAuthenticated, router]);
+  }, [isWellFormed, normalized, supabase, isAuthenticated, isEducatorAccount, router]);
 
   const handleSubmit = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
@@ -219,6 +241,23 @@ export default function JoinHeatPage() {
           </p>
         </div>
 
+        {isAuthenticated && isEducatorAccount && (
+          <div className="mb-6 rounded-2xl border border-amber-300/35 bg-amber-300/10 p-4 text-left text-sm text-amber-100">
+            <p className="font-semibold">Educator account detected</p>
+            <p className="mt-1 leading-5 text-amber-100/85">
+              You are signed in as <span className="font-medium">{accountRoleLabel.replace(/_/g, ' ')}</span>.
+              Class Heats are joined only by active rostered Mathletes. Use your dashboard to host or monitor a Heat.
+            </p>
+            <Link
+              href="/dashboard"
+              className="mt-3 inline-flex items-center gap-2 rounded-lg bg-white/10 px-3 py-2 text-xs font-semibold text-white hover:bg-white/20"
+            >
+              Go to dashboard
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+        )}
+
         {/* Card */}
         <form
           onSubmit={handleSubmit}
@@ -231,7 +270,8 @@ export default function JoinHeatPage() {
             id="heat-code"
             type="text"
             inputMode="text"
-            autoFocus
+            autoFocus={!isEducatorAccount}
+            disabled={isEducatorAccount}
             autoCapitalize="characters"
             autoCorrect="off"
             autoComplete="off"
@@ -261,9 +301,9 @@ export default function JoinHeatPage() {
 
           <button
             type="submit"
-            disabled={!isWellFormed || checking || authLoading}
+            disabled={!isWellFormed || checking || authLoading || isEducatorAccount}
             className={`mt-6 w-full flex items-center justify-center gap-2 py-4 rounded-xl font-bold text-base md:text-lg transition-all shadow-lg ${
-              !isWellFormed || checking || authLoading
+              !isWellFormed || checking || authLoading || isEducatorAccount
                 ? 'bg-white/10 text-white/40 cursor-not-allowed'
                 : 'bg-gradient-to-r from-amber-400 to-orange-500 text-black hover:from-amber-300 hover:to-orange-400 active:scale-[0.98]'
             }`}
@@ -273,6 +313,8 @@ export default function JoinHeatPage() {
                 <Loader2 className="w-5 h-5 animate-spin" />
                 Checking…
               </>
+            ) : isEducatorAccount ? (
+              'Mathlete account required'
             ) : (
               <>
                 Join Heat
