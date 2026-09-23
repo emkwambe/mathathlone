@@ -47,6 +47,7 @@ import {
   type Heat,
   type HeatStatus,
 } from '@/lib/competition/heat-service';
+import { requiresLobbyReview } from '@/lib/competition/lobby-review';
 import {
   useHeatParticipants,
   useHeatRealtime,
@@ -78,7 +79,6 @@ type LoadState =
   | 'loading'
   | 'found'
   | 'not_found'
-  | 'expired_lobby'
   | 'session_expired'
   | 'student_locked_out'
   | 'error';
@@ -252,9 +252,8 @@ export default function HeatLobbyPage() {
   // be visible to a follow-up SELECT (RLS, replication, prepared-statement
   // caches). We retry up to 3 times with 1-second intervals before giving
   // up, and we set a 10-second overall hard cap so the spinner never spins
-  // forever. BUG 1/2/5: missing rows, cancelled/complete heats, expired
-  // sessions, and stale lobbies each get a specific error message instead
-  // of an infinite spinner.
+  // forever. Missing rows, cancelled/complete heats, and expired sessions
+  // each get a specific error message instead of an infinite spinner.
   //
   // BUG 6 fix — DO NOT add `user` (or any object Supabase re-emits on
   // TOKEN_REFRESHED) to the dependency array of this effect. When the tab
@@ -279,7 +278,6 @@ export default function HeatLobbyPage() {
     const MAX_ATTEMPTS = 3;
     const ATTEMPT_DELAY_MS = 1000;
     const HARD_TIMEOUT_MS = 10_000;
-    const LOBBY_EXPIRY_MS = 30 * 60 * 1000;             // 30 min
 
     (async () => {
       setLoadState('loading');
@@ -344,30 +342,7 @@ export default function HeatLobbyPage() {
             elapsedMs: Date.now() - startedAt,
           });
 
-          // BUG 2: auto-expire stale lobbies (status='lobby' AND > 30 min old).
           const isOwner = !!user && heatRow.created_by === user.id;
-          if (
-            heatRow.status === 'lobby' &&
-            heatRow.created_at &&
-            Date.now() - new Date(heatRow.created_at).getTime() > LOBBY_EXPIRY_MS
-          ) {
-            console.warn('[HeatLobby] load:lobby_expired', {
-              code,
-              created_at: heatRow.created_at,
-            });
-            // Only the creator can flip it (RLS). If anyone else lands on it,
-            // we still surface the expired UI so they don't sit in the lobby.
-            if (isOwner) {
-              await supabase
-                .from('heats')
-                .update({ status: 'cancelled' })
-                .eq('id', heatRow.id);
-            }
-            setHeat({ ...heatRow, status: 'cancelled' as any });
-            setIsTeacher(isOwner);
-            setLoadState('expired_lobby');
-            return;
-          }
 
           // FIX 3 — calculating-timeout recovery. If a Heat got stuck in
           // 'calculating' (scoring-service crashed, network blip, etc.) and
@@ -544,16 +519,6 @@ export default function HeatLobbyPage() {
           label: 'Log in',
           href: `/auth/login?next=${encodeURIComponent(`/compete/${code}`)}`,
         }}
-      />
-    );
-  }
-  if (loadState === 'expired_lobby') {
-    return (
-      <FullScreenMessage
-        icon={<AlertTriangle className="w-10 h-10 text-amber-300" />}
-        title="This Heat expired"
-        message="It sat in the lobby for more than 30 minutes without starting. Ask your teacher to create a fresh one."
-        action={{ label: 'Back to compete', href: '/compete' }}
       />
     );
   }
@@ -746,6 +711,7 @@ export default function HeatLobbyPage() {
       copied={copied}
       onCopyCode={handleCopyCode}
       currentUserId={user?.id ?? null}
+      needsLobbyReview={requiresLobbyReview(heat.status, heat.created_at)}
     />
   );
 }
@@ -775,6 +741,7 @@ function LobbyView({
   copied,
   onCopyCode,
   currentUserId,
+  needsLobbyReview,
 }: {
   heat: HeatWithMeta;
   isTeacher: boolean;
@@ -789,6 +756,7 @@ function LobbyView({
   copied: boolean;
   onCopyCode: () => void;
   currentUserId: string | null;
+  needsLobbyReview: boolean;
 }) {
   const difficulty = difficultyLabel(heat.depth_min, heat.depth_max);
   const courseName = heat.unit_topic?.course?.name ?? '';
@@ -836,6 +804,14 @@ function LobbyView({
           <div className="mb-6 flex items-start gap-2 p-3 rounded-lg bg-red-500/10 border border-red-400/30 text-red-200 text-sm">
             <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
             <span>{startError}</span>
+          </div>
+        )}
+        {isTeacher && needsLobbyReview && (
+          <div className="mb-6 rounded-2xl border border-amber-300/35 bg-amber-300/10 p-5 text-amber-100">
+            <p className="font-semibold">Lobby review suggested</p>
+            <p className="mt-1 text-sm leading-6 text-amber-100/85">
+              This Heat has been in the lobby for more than 30 minutes. It remains available and has not been changed automatically. Review the scope and roster before starting it; if it should be retired, record an explicit cancellation decision.
+            </p>
           </div>
         )}
 
