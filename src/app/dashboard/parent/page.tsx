@@ -14,6 +14,7 @@ import Link from 'next/link';
 import { createSupabaseServer } from '@/lib/supabase/server';
 import MissingProfile from '@/components/auth/MissingProfile';
 import { User, Trophy, TrendingUp, ArrowRight, Star } from 'lucide-react';
+import MathAthloneBrand from '@/components/brand/MathAthloneBrand';
 
 export const dynamic = 'force-dynamic';
 
@@ -106,8 +107,8 @@ export default async function ParentDashboard() {
     <div className="min-h-screen bg-[#0a0f1e] text-white">
       <header className="border-b border-white/10 bg-[#0d1424]/80 backdrop-blur-sm sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="text-xl font-bold">
-            Math<span className="text-amber-400">Athlone</span>
+          <Link href="/" aria-label="MathAthlone home">
+            <MathAthloneBrand surface="indigo" size="sm" />
           </Link>
           <div className="flex items-center gap-4">
             <span className="text-sm text-gray-300">{(profile as any).display_name}</span>

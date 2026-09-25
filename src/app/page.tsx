@@ -13,6 +13,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import LiveStats from '@/components/landing/LiveStats';
+import MathAthloneBrand from '@/components/brand/MathAthloneBrand';
 
 // ────────────────────────────────────────────────────────────
 // ANIMATED COUNTER (intersection observer)
@@ -253,10 +254,9 @@ export default function LandingPage() {
       {/* ── NAV ─────────────────────────────────────────── */}
       <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-lg border-b border-gray-100">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="text-2xl">🏟️</span>
-            <span className="text-xl font-bold text-gray-900 tracking-tight">MathAthlone</span>
-          </div>
+          <Link href="/" aria-label="MathAthlone home">
+            <MathAthloneBrand surface="white" size="md" />
+          </Link>
           <div className="hidden md:flex items-center gap-8 text-sm text-gray-500">
             <a href="#features" className="hover:text-gray-900 transition-colors">Features</a>
             <a href="#demo" className="hover:text-gray-900 transition-colors">Live demo</a>
@@ -426,8 +426,7 @@ export default function LandingPage() {
                   <p className="text-xs text-gray-400">Annual events</p>
                 </div>
                 <div className="rounded-xl bg-indigo-50 p-5 text-center border-2 border-indigo-200">
-                  <p className="text-sm font-semibold text-indigo-600 mb-3 uppercase tracking-wider">MathAthlone</p>
-                  <p className="text-2xl mb-2">🏟️</p>
+                  <div className="mb-3 flex justify-center"><MathAthloneBrand surface="white" size="sm" /></div>
                   <p className="text-xs text-indigo-600 font-medium">School curriculum</p>
                   <p className="text-xs text-indigo-600 font-medium">Everyone competes</p>
                   <p className="text-xs text-indigo-600 font-medium">All classrooms</p>
@@ -857,8 +856,7 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto px-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-2">
-              <span className="text-xl">🏟️</span>
-              <span className="text-lg font-bold text-white">MathAthlone</span>
+              <MathAthloneBrand surface="indigo" size="sm" />
               <span className="text-gray-500 text-sm ml-2">by Mpingo Systems</span>
             </div>
             <p className="text-xs text-gray-600">

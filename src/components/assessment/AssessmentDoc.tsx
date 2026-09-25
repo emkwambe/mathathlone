@@ -11,6 +11,7 @@
 import 'katex/dist/katex.min.css';
 import { renderMathText } from '@/lib/assessment/katex-helpers';
 import type { AssessmentDocument, AssessmentQuestion } from '@/lib/assessment/assembler';
+import MathAthloneBrand from '@/components/brand/MathAthloneBrand';
 
 const MC_LETTERS = ['A', 'B', 'C', 'D'];
 
@@ -65,8 +66,8 @@ export default function AssessmentDoc({ doc }: { doc: AssessmentDocument }) {
           {/* Header */}
           <header>
           <div className="flex items-center justify-between">
-            <span className="text-[18pt] font-bold">MathAthlone</span>
-            <span className="text-[18pt]">🔥</span>
+            <MathAthloneBrand surface="print" size="lg" />
+            <span className="text-[9pt] font-semibold uppercase tracking-[0.16em]">Practice &amp; Competition</span>
           </div>
           <h1 className="mt-1 text-[20pt] font-bold leading-tight">{doc.title}</h1>
           <div className="mt-1 flex flex-wrap justify-between gap-2 text-[11pt]">

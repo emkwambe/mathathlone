@@ -7,6 +7,7 @@ import {
   highestActiveDashboardRole,
   isMathleteDashboardRole,
 } from '@/lib/auth/dashboard-routing';
+import MathAthloneBrand from '@/components/brand/MathAthloneBrand';
 
 export const dynamic = 'force-dynamic';
 
@@ -138,8 +139,8 @@ export default async function AthleteDashboard() {
       {/* Header */}
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold text-blue-600">
-            Math<span className="text-amber-500">Athlone</span>
+          <Link href="/" aria-label="MathAthlone home">
+            <MathAthloneBrand surface="white" size="md" />
           </Link>
           <div className="flex items-center gap-4">
             <Link href="/leaderboard" className="text-sm text-gray-500 hover:text-blue-600 transition">

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { createSupabaseBrowser } from '@/lib/supabase/client';
+import MathAthloneBrand from '@/components/brand/MathAthloneBrand';
 
 export default function ResetPasswordPage() {
   const router = useRouter();
@@ -100,11 +101,11 @@ export default function ResetPasswordPage() {
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
-          <Link href="/">
-            <h1 className="text-4xl font-bold text-white">
-              Math<span className="text-amber-400">Athlone</span>
-            </h1>
-          </Link>
+          <h1>
+            <Link href="/" aria-label="MathAthlone home">
+              <MathAthloneBrand surface="indigo" size="lg" />
+            </Link>
+          </h1>
           <p className="text-blue-200 mt-2">Create a new password</p>
         </div>
 

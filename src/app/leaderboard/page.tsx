@@ -8,6 +8,7 @@
 // =============================================================================
 import Link from 'next/link';
 import { createSupabaseServer } from '@/lib/supabase/server';
+import MathAthloneBrand from '@/components/brand/MathAthloneBrand';
 
 export const dynamic = 'force-dynamic';
 
@@ -88,8 +89,8 @@ export default async function LeaderboardPage() {
       {/* Header */}
       <header className="bg-white shadow-sm">
         <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold text-blue-600">
-            Math<span className="text-amber-500">Athlone</span>
+          <Link href="/" aria-label="MathAthlone home">
+            <MathAthloneBrand surface="white" size="md" />
           </Link>
           <nav className="flex items-center gap-4 text-sm text-gray-500">
             <Link href="/dashboard/athlete" className="hover:text-blue-600 transition">Dashboard</Link>

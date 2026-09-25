@@ -30,6 +30,7 @@ import {
 import { createClient } from '@/lib/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import AccountControls from '@/components/navigation/AccountControls';
+import MathAthloneBrand from '@/components/brand/MathAthloneBrand';
 import {
   classHeatEntryRoleLabel,
   isEducatorClassHeatAccount,
@@ -208,8 +209,8 @@ export default function JoinHeatPage() {
     <div className="relative flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-indigo-950 via-indigo-900 to-purple-900 px-4 py-12 pt-28">
       <header className="absolute inset-x-0 top-0 border-b border-white/10 bg-indigo-950/70 backdrop-blur">
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-3">
-          <Link href="/" className="text-lg font-bold tracking-tight text-white hover:text-amber-200">
-            Math<span className="text-amber-300">Athlone</span>
+          <Link href="/" aria-label="MathAthlone home">
+            <MathAthloneBrand surface="indigo" size="sm" />
           </Link>
           <AccountControls />
         </div>

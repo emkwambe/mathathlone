@@ -11,6 +11,7 @@ import {
   Loader2,
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import MathAthloneBrand from '@/components/brand/MathAthloneBrand';
 
 // -----------------------------------------------------------------------------
 // SHARED HELPERS
@@ -67,11 +68,11 @@ function RolePicker({ next }: { next: string | null }) {
       <div className="w-full max-w-3xl">
         {/* Logo */}
         <div className="text-center mb-10">
-          <Link href="/">
-            <h1 className="text-4xl font-bold text-white">
-              Math<span className="text-amber-400">Athlone</span>
-            </h1>
-          </Link>
+          <h1>
+            <Link href="/" aria-label="MathAthlone home">
+              <MathAthloneBrand surface="indigo" size="lg" />
+            </Link>
+          </h1>
           <p className="text-blue-200 mt-2">Sign in to continue</p>
         </div>
 
@@ -176,11 +177,11 @@ function EducatorLogin({ next }: { next: string | null }) {
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
-          <Link href="/">
-            <h1 className="text-4xl font-bold text-white">
-              Math<span className="text-amber-400">Athlone</span>
-            </h1>
-          </Link>
+          <h1>
+            <Link href="/" aria-label="MathAthlone home">
+              <MathAthloneBrand surface="indigo" size="lg" />
+            </Link>
+          </h1>
           <p className="text-blue-200 mt-2">Welcome back, coach!</p>
         </div>
 
@@ -382,11 +383,11 @@ function MathleteLogin({ next }: { next: string | null }) {
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
-          <Link href="/">
-            <h1 className="text-4xl font-bold text-white">
-              Math<span className="text-amber-400">Athlone</span>
-            </h1>
-          </Link>
+          <h1>
+            <Link href="/" aria-label="MathAthlone home">
+              <MathAthloneBrand surface="indigo" size="lg" />
+            </Link>
+          </h1>
           <p className="text-indigo-200 mt-2">Sign in to your Mathlete Home</p>
         </div>
 
