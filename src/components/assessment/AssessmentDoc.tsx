@@ -65,9 +65,8 @@ export default function AssessmentDoc({ doc }: { doc: AssessmentDocument }) {
         <div className={`assessment-student-copy${doc.showAnswerKey ? ' has-answer-key' : ''}`}>
           {/* Header */}
           <header>
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-end">
             <MathAthloneBrand surface="print" size="lg" />
-            <span className="text-[9pt] font-semibold uppercase tracking-[0.16em]">Practice &amp; Competition</span>
           </div>
           <h1 className="mt-1 text-[20pt] font-bold leading-tight">{doc.title}</h1>
           <div className="mt-1 flex flex-wrap justify-between gap-2 text-[11pt]">
