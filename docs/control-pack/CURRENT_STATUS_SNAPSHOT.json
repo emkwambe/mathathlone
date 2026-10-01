@@ -1,0 +1,52 @@
+{
+  "schema_version": "1.0",
+  "snapshot_status": "baseline_requires_live_refresh",
+  "snapshot_date": "2026-10-01",
+  "repository": {
+    "remote": "https://github.com/emkwambe/mathathlone.git",
+    "branch": "main",
+    "commit": "8375f87",
+    "commit_subject": "fix(worksheet): align brand lockup at top right"
+  },
+  "program": {
+    "current_primary_grade": "G6",
+    "grade_transition_policy": "Do not close G6 or begin another grade as the primary certification effort until the current grade passes Gates A-F in the charter.",
+    "owner_authority_required_for": [
+      "source verification",
+      "staged generator activation",
+      "grade closure",
+      "production deployment",
+      "Heat participation",
+      "classroom release"
+    ]
+  },
+  "last_known_grade6_evidence": {
+    "evidence_status": "historical_until_refreshed",
+    "source": "prior controlled-pilot readiness evidence; refresh with current read-only SQL before use",
+    "concepts_total": 61,
+    "active_procedural_or_runtime_supported_concepts": 34,
+    "static_only_concepts": 20,
+    "active_unverified_static_items": 33,
+    "inactive_staged_generator_mappings": 7,
+    "active_verified_static_items": 0,
+    "static_review_ledger_records": 0,
+    "worksheet_static_source_use_records": 0,
+    "release_blockers": [
+      "G6 static-only sources require owner-controlled review and verification.",
+      "Seven staged generator mappings remain inactive pending source-specific audit and owner decision.",
+      "Worksheet print/PDF fidelity must be owner-accepted.",
+      "Production role/admission checks and controlled acceptance evidence must be refreshed after current deployment changes."
+    ]
+  },
+  "protected_heat_records": {
+    "cancelled_trial_codes": ["MA-QCBU", "MA-KYXS", "MA-SRE7"],
+    "prior_acceptance_code": "MA-7A7H",
+    "handling": "Do not reuse, start, cancel, modify, or create replacement Heat records without explicit owner approval for that exact action."
+  },
+  "refresh_requirements": [
+    "Confirm origin/main commit before each work packet.",
+    "Run fresh read-only database evidence for the exact grade/topic scope.",
+    "Record query text or deterministic script and result reference.",
+    "Reconcile any difference from this historical baseline before analysis."
+  ]
+}
