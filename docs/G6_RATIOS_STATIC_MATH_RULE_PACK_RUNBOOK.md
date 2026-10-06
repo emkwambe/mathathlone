@@ -42,14 +42,17 @@ The evaluator is:
 scripts/evaluate_g6_ratios_static_math_rules.py
 ```
 
-It accepts a read-only item export and a completed rule pack. A `PASS` requires all of the following conditions:
+It accepts a read-only item export and a completed rule pack. The caller must explicitly identify the source with `--source-kind live_export` for a result to be eligible for mathematical `PASS` evidence. A `fixture` source is always HOLD-only, even if its contents are edited to resemble an approved export. A `PASS` requires all of the following conditions:
 
-1. The pack and the individual rule are marked `approved` and have approval references.
+1. The pack and the individual rule are marked `approved`, have approval references, approver identifiers, and valid ISO approval dates.
 2. The static item ID, atomic-concept UUID, and lesson number match exactly.
 3. The current live-source fingerprint equals the approved observed fingerprint.
 4. The explicit expected option is one of `A`–`D`, is displayed, and matches the stored answer key.
 5. The reviewer has recorded a mathematical statement, evidence reference, approver, and approval date.
 6. The item remains active.
+7. The export has exactly the expected five unique rule records, no duplicate item IDs, valid A–D option keys, and internally consistent answer-index data.
+
+The evidence output records the item-export and rule-pack paths and SHA-256 hashes. The evaluator exits with code `0` only when every evaluated rule passes and there are no global validation issues; any HOLD exits nonzero.
 
 A deterministic `PASS` is **mathematical-rule evidence only**. It remains insufficient by itself for static verification. The later verification decision must also consider the existing structural/readability results, exact-source delivery capacity, pedagogical/presentability decision, and a separate guarded ledger/`is_verified` action.
 
@@ -69,10 +72,10 @@ The repository includes `docs/PILOT_CONTENT_AUDIT_EVIDENCE/g6-ratios-static-draf
 The local draft-only command is:
 
 ```powershell
-python scripts\\evaluate_g6_ratios_static_math_rules.py --items docs\\PILOT_CONTENT_AUDIT_EVIDENCE\\g6-ratios-static-draft-fixture.json --rule-pack config\\g6_ratios_static_math_rule_pack.template.json --output-json docs\\PILOT_CONTENT_AUDIT_EVIDENCE\\g6-ratios-static-math-rule-evaluation.draft.json --output-md docs\\PILOT_CONTENT_AUDIT_EVIDENCE\\g6-ratios-static-math-rule-evaluation.draft.md
+python scripts\\evaluate_g6_ratios_static_math_rules.py --items docs\\PILOT_CONTENT_AUDIT_EVIDENCE\\g6-ratios-static-draft-fixture.json --rule-pack config\\g6_ratios_static_math_rule_pack.template.json --source-kind fixture --output-json docs\\PILOT_CONTENT_AUDIT_EVIDENCE\\g6-ratios-static-math-rule-evaluation.draft.json --output-md docs\\PILOT_CONTENT_AUDIT_EVIDENCE\\g6-ratios-static-math-rule-evaluation.draft.md
 ```
 
-The unfilled template correctly produces **0 passes and 5 holds**. This proves the evaluator fails closed until explicit qualified-review inputs exist.
+The unfilled template correctly produces **0 passes and 5 holds** and exits nonzero because the fixture is not eligible for approval evidence. This proves the evaluator fails closed until explicit qualified-review inputs and a fresh marked live export exist.
 
 ## Later Guarded Sequence
 
