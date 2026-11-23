@@ -6,6 +6,7 @@ import {
   Archive,
   CheckCircle2,
   Copy,
+  CreditCard,
   KeyRound,
   Loader2,
   Plus,
@@ -13,11 +14,13 @@ import {
   RefreshCw,
   RotateCcw,
   ShieldCheck,
+  Sparkles,
   UserMinus,
   UserPlus,
   Users,
   X,
 } from 'lucide-react';
+import { followBillingRedirect } from './billing-redirect';
 
 type Classroom = {
   id: string;
@@ -76,7 +79,10 @@ function previewSummary(preview: RosterPreview) {
   return `${create} new account${create === 1 ? '' : 's'} ready to create${alreadyActive ? `; ${alreadyActive} already active` : ''}${attention ? `; ${attention} need attention` : ''}.`;
 }
 
-export default function ClassRosterConsole() {
+export default function ClassRosterConsole({ billingEnabled = false, isPro = false }: { billingEnabled?: boolean; isPro?: boolean }) {
+  const [upgradePrompt, setUpgradePrompt] = useState<string | null>(null);
+  const [startingCheckout, setStartingCheckout] = useState(false);
+  const [openingPortal, setOpeningPortal] = useState(false);
   const [classes, setClasses] = useState<Classroom[]>([]);
   const [selectedClassId, setSelectedClassId] = useState<string | null>(null);
   const [roster, setRoster] = useState<RosterStudent[]>([]);
@@ -152,7 +158,7 @@ export default function ClassRosterConsole() {
 
   const createClass = async (event: FormEvent) => {
     event.preventDefault();
-    setError(null); setSuccess(null); dismissCredentials();
+    setError(null); setSuccess(null); setUpgradePrompt(null); dismissCredentials();
     const grade = Number(gradeLevel);
     if (!name.trim() || !Number.isInteger(grade)) {
       setError('Enter a class name and choose a grade.');
@@ -166,6 +172,10 @@ export default function ClassRosterConsole() {
         body: JSON.stringify({ name, grade_level: grade }),
       });
       const payload = await response.json().catch(() => null);
+      if (billingEnabled && response.status === 402 && payload?.code === 'upgrade_required') {
+        setUpgradePrompt(apiError(payload, 'Upgrade to MathAthlone Pro for unlimited classes.'));
+        return;
+      }
       if (!response.ok) throw new Error(apiError(payload, 'Could not create the class.'));
       setName(''); setGradeLevel('');
       setSuccess(`${payload.classroom.name} was created. Prepare and review its roster next.`);
@@ -327,6 +337,28 @@ export default function ClassRosterConsole() {
     }
   };
 
+  const startCheckout = async () => {
+    setError(null); setSuccess(null);
+    setStartingCheckout(true);
+    try {
+      await followBillingRedirect('/api/billing/checkout', { plan: 'pro' }, 'Could not start checkout. Please try again.');
+    } catch (err: unknown) {
+      setError(errorMessage(err, 'Could not start checkout. Please try again.'));
+      setStartingCheckout(false);
+    }
+  };
+
+  const openBillingPortal = async () => {
+    setError(null); setSuccess(null);
+    setOpeningPortal(true);
+    try {
+      await followBillingRedirect('/api/billing/portal', {}, 'Could not open billing. Please try again.');
+    } catch (err: unknown) {
+      setError(errorMessage(err, 'Could not open billing. Please try again.'));
+      setOpeningPortal(false);
+    }
+  };
+
   const printCards = () => window.print();
   const copyClassCode = async () => {
     if (!selectedClass) return;
@@ -345,11 +377,26 @@ export default function ClassRosterConsole() {
             <h2 className="mt-1 text-xl font-bold text-slate-900">Create a class and prepare Mathlete access</h2>
             <p className="mt-1 max-w-2xl text-sm leading-6 text-slate-600">Create each pilot class once. Review a privacy-safe roster before accounts are created, secure new cards privately, and keep class-bound Heat access tied to active enrollment.</p>
           </div>
-          <button type="button" onClick={() => void loadClasses()} className="inline-flex shrink-0 items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"><RefreshCw className="h-4 w-4" /> Refresh</button>
+          <div className="flex shrink-0 flex-wrap justify-end gap-2">
+            {billingEnabled && isPro && <button type="button" onClick={() => void openBillingPortal()} disabled={openingPortal} className="inline-flex items-center gap-2 rounded-lg border border-indigo-200 bg-indigo-50 px-3 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-100 disabled:opacity-50">{openingPortal ? <Loader2 className="h-4 w-4 animate-spin" /> : <CreditCard className="h-4 w-4" />} Manage billing</button>}
+            <button type="button" onClick={() => void loadClasses()} className="inline-flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"><RefreshCw className="h-4 w-4" /> Refresh</button>
+          </div>
         </div>
 
         {error && <Notice tone="error" text={error} />}
         {success && <Notice tone="success" text={success} />}
+        {billingEnabled && upgradePrompt && (
+          <div className="mb-4 flex flex-col gap-3 rounded-xl border border-indigo-200 bg-indigo-50 p-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-start gap-2">
+              <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-indigo-600" />
+              <div>
+                <p className="text-sm font-semibold text-indigo-950">Upgrade to MathAthlone Pro</p>
+                <p className="mt-1 text-sm text-indigo-900">{upgradePrompt} Pro is $59 per year.</p>
+              </div>
+            </div>
+            <button type="button" onClick={() => void startCheckout()} disabled={startingCheckout} className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-50">{startingCheckout ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />} Upgrade to Pro</button>
+          </div>
+        )}
 
         <form onSubmit={createClass} className="grid gap-3 rounded-xl bg-slate-50 p-4 md:grid-cols-[1fr_150px_auto]">
           <input value={name} onChange={(event) => setName(event.target.value)} maxLength={100} placeholder="Class name, e.g. Grade 7 Math — Period 2" className="rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none focus:border-indigo-500" />

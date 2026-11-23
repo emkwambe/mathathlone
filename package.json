@@ -13,12 +13,14 @@
     "type-check": "tsc --noEmit",
     "test": "vitest",
     "test:coverage": "vitest --coverage",
+    "smoke": "node scripts/smoke.mjs",
     "db:generate": "supabase gen types typescript --local > src/types/supabase.ts",
     "db:migrate": "supabase db push",
     "db:seed": "supabase db seed",
     "seed:nc": "tsx scripts/seed-mathathlone-nc.ts"
   },
   "dependencies": {
+    "@mpingosystems/billing": "0.1.1",
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.47.10",
     "clsx": "^2.1.1",

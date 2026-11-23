@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServer } from '@/lib/supabase/server';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { billing, billingEnabled, FREE_CLASSROOM_LIMIT, PRO_FEATURE } from '@/lib/billing';
 
 export const dynamic = 'force-dynamic';
 
@@ -135,6 +136,26 @@ export async function POST(request: NextRequest) {
   }
 
   try {
+    // Free plan: up to FREE_CLASSROOM_LIMIT active classrooms per teacher. Archived classes do not count.
+    // Sufficient at route level only while public.classes has no INSERT/UPDATE RLS policy.
+    // Skipped entirely while BILLING_MODE is off.
+    if (billingEnabled()) {
+      const { count: activeCount, error: countError } = await admin
+        .from('classes')
+        .select('id', { count: 'exact', head: true })
+        .eq('teacher_id', context.user.id)
+        .eq('is_active', true);
+      if (countError || activeCount === null) {
+        return NextResponse.json({ error: 'Could not check your class limit. Please try again.' }, { status: 503 });
+      }
+      if (activeCount >= FREE_CLASSROOM_LIMIT && !(await billing.can({ type: 'user', id: context.user.id }, PRO_FEATURE))) {
+        return NextResponse.json({
+          error: `The free plan includes ${FREE_CLASSROOM_LIMIT} active classes. Upgrade to MathAthlone Pro for unlimited classes.`,
+          code: 'upgrade_required',
+        }, { status: 402 });
+      }
+    }
+
     const { data: duplicate, error: duplicateError } = await admin
       .from('classes')
       .select('id')

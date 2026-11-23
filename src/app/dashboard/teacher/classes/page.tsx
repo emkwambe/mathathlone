@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { ChevronLeft } from 'lucide-react';
 import { createSupabaseServer } from '@/lib/supabase/server';
 import ClassRosterConsole from '@/components/classes/ClassRosterConsole';
+import { billing, billingEnabled, PRO_FEATURE } from '@/lib/billing';
 
 export const dynamic = 'force-dynamic';
 
@@ -19,6 +20,11 @@ export default async function TeacherClassesPage() {
 
   if (!profile || profile.role !== 'teacher') redirect('/403');
 
+  // Server-side, fails closed: only shows "Manage billing". The classroom limit itself is enforced in POST /api/classes.
+  // With BILLING_MODE off, no billing UI is rendered and no billing query runs.
+  const showBilling = billingEnabled();
+  const isPro = showBilling ? await billing.can({ type: 'user', id: user.id }, PRO_FEATURE) : false;
+
   return (
     <main className="min-h-screen bg-slate-50 px-4 py-8">
       <div className="mx-auto max-w-6xl">
@@ -30,7 +36,7 @@ export default async function TeacherClassesPage() {
           <h1 className="mt-1 text-3xl font-bold tracking-tight text-slate-950">Classes and Mathlete access</h1>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">Set up the classes you teach, import only the students on each roster, and prepare private Mathlete login cards before a classroom Heat.</p>
         </div>
-        <ClassRosterConsole />
+        <ClassRosterConsole billingEnabled={showBilling} isPro={isPro} />
       </div>
     </main>
   );
